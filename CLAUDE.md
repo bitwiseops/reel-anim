@@ -53,9 +53,11 @@ idea → sceneggiatura → revisione tecnica → animazione (animatore: `.py` + 
 presentatore guarda → registrazione (gobbo, clip) → montaggio → social → approvazione → pubblica (container REELS).
 
 ## Registrazione guidata (fase 5, da fare prima della registrazione vera)
-`uv run reel registra <file>`: interfaccia (server stdlib + pagina con webcam e gobbo) in cui il presentatore vede
-se stesso e la VOCE della scena, registra con un tasto e la clip si salva da sola in `contenuti/media/<slug>/scena-NN.*`
-(evento `clip` nel db, ffprobe con durata vs stima), poi passa alla scena successiva.
+`uv run reel registra <file>`: **app desktop nativa in Python** (Tkinter + ffmpeg avfoundation) in cui il
+presentatore vede se stesso e il testo da recitare, registra con un tasto e la clip si salva da sola in
+`contenuti/media/<slug>/scena-NN.*` (evento `clip` nel db, ffprobe con durata vs stima). Decisione aperta: (A) una
+clip per scena con gobbo, oppure (B) una presa unica con l'anteprima del reel e il testo sincronizzato sui beat, poi
+spezzata per scene dai tempi noti. Dettagli e pro/contro nel piano.
 
 ## Da esplorare
 - Best practice Manim: cercare un MCP server o un sito di riferimento con gli snippet più usati (docs.manim.community
