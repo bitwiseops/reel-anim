@@ -1,0 +1,59 @@
+# Identità e misure del canale: tutto ciò che è "brand" sta qui, non nel codice.
+# Per un override locale non versionato crea config.local.toml con le stesse sezioni (merge per chiave).
+
+[canale]
+nome = ""                 # vuoto = nessun piede a schermo
+handle = ""               # es. "@mio_handle"
+
+[presentatore]
+nome = "Presentatore"     # usato nel gobbo e nei report
+avatar = "assets/presentatore/avatar.png"   # segnaposto per l'anteprima senza clip (uv run reel setup lo genera)
+
+[video]
+larghezza = 1080
+altezza = 1920
+fps = 30
+
+[palette]                 # tema scuro pieno, niente gradienti
+sfondo = "#111318"
+testo = "#F2F2F5"
+attenuato = "#9A9DAB"
+accento = "#FFC24B"       # una sola parola evidenziata per scena
+secondario = "#7AA2FF"
+terziario = "#5BD6A3"
+
+[font]
+famiglia = "Inter Variable"
+mono = "JetBrains Mono"
+file = ["assets/fonts/InterVariable.ttf", "assets/fonts/InterVariable-Italic.ttf",
+        "assets/fonts/JetBrainsMono-Variable.ttf", "assets/fonts/JetBrainsMono-Italic-Variable.ttf"]
+
+[safe_area]               # px coperti dall'interfaccia di Instagram nei Reel
+alto = 220
+destra = 120
+basso = 340
+sinistra = 60
+
+[riquadro]                # riquadro del presentatore
+forma = "cerchio"         # cerchio | arrotondato
+dimensione_px = 360
+raggio_px = 48            # solo arrotondato
+posizione = "basso-destra"   # basso-destra | basso-sinistra | alto-destra | alto-sinistra
+margine_px = 24
+
+[schermo]                 # cornice del b-roll / screen recording (px, dentro la safe area)
+x = 60
+y = 520
+larghezza = 960
+altezza = 1080
+raggio_px = 36
+
+[voce_sintetica]          # solo per l'anteprima senza clip
+comando = "say"
+voce = "Alice"
+parole_al_secondo = 2.8   # stima usata anche da `reel valida`
+velocita_wpm = 170        # passata a `say -r`
+
+[transizioni]
+tipo = "dissolvenza"      # taglio | dissolvenza
+durata_s = 0.25

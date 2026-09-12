@@ -1,0 +1,30 @@
+[project]
+name = "reel-anim"
+version = "0.1.0"
+description = "Reel esplicativi 9:16 generati da script: animazioni Manim, riquadro del presentatore, montaggio ffmpeg"
+requires-python = ">=3.12"
+dependencies = [
+    "manim>=0.21,<0.22",
+    "pillow>=11",
+    "pyyaml>=6",
+    "requests>=2.32",
+]
+
+[project.scripts]
+reel = "tools.reel.__main__:main"
+cruscotto = "tools.cruscotto.server:main"
+pubblica = "tools.pubblica:main"
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["tools"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["slow: test lenti con Manim e ffmpeg"]
