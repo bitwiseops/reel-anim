@@ -52,6 +52,11 @@ reel 30-60 s. La durata reale di ogni scena la decide la clip registrata; senza 
 idea → sceneggiatura → revisione tecnica → animazione (animatore: `.py` + anteprima `--prova`) → fermata: il
 presentatore guarda → registrazione (gobbo, clip) → montaggio → social → approvazione → pubblica (container REELS).
 
+## Registrazione guidata (fase 5, da fare prima della registrazione vera)
+`uv run reel registra <file>`: interfaccia (server stdlib + pagina con webcam e gobbo) in cui il presentatore vede
+se stesso e la VOCE della scena, registra con un tasto e la clip si salva da sola in `contenuti/media/<slug>/scena-NN.*`
+(evento `clip` nel db, ffprobe con durata vs stima), poi passa alla scena successiva.
+
 ## Da esplorare
 - Best practice Manim: cercare un MCP server o un sito di riferimento con gli snippet più usati (docs.manim.community
   «examples», manim-community/awesome-manim, plugin) e distillarli in `docs/animazioni.md` per l'agente animatore.
