@@ -19,8 +19,10 @@ import numpy as np
 from manim import (BOLD, DOWN, LEFT, ORIGIN, RIGHT, UL, UP, AnimationGroup, Arrow, Create, FadeIn, FadeOut,
                    FadeTransform, GrowArrow, GrowFromEdge, Indicate, LaggedStart, Line, MarkupText, Mobject, Rectangle,
                    RoundedRectangle, SurroundingRectangle, Text, Transform, VGroup, VMobject)
+from manim import Code, SVGMobject, ValueTracker, linear
+from manim.constants import CapStyleType, LineJointType
 
-from .config import Config, carica
+from .config import RADICE, Config, carica
 from .misure import CORPO_PX, font_size_per, px, tratto
 
 _RE_EV = re.compile(r"==(.+?)==")
@@ -541,7 +543,130 @@ class Messaggio(Titolo):
         return LaggedStart(*anims, lag_ratio=0.6, group=self, **kw)
 
 
+
+# --- icone, contatore che scorre, codice ----------------------------------------------------------------
+
+CARTELLA_ICONE = RADICE / "assets" / "icone"
+
+
+class Icona(VGroup):
+    """Icona a tratto da assets/icone/<nome>.svg (set Lucide, licenza ISC) in un colore della palette.
+    Altre icone: scarica l'SVG da lucide.dev nella stessa cartella."""
+
+    def __init__(self, nome: str, altezza_px: float = 120, colore: str | None = None, **kw):
+        super().__init__(**kw)
+        f = CARTELLA_ICONE / f"{nome}.svg"
+        if not f.exists():
+            raise FileNotFoundError(f"icona «{nome}» assente in assets/icone/ (ci sono: {', '.join(Icona.disponibili())})")
+        self.svg = SVGMobject(str(f), height=px(altezza_px))
+        self.svg.set_fill(opacity=0).set_stroke(colore or _cfg().palette.testo, width=tratto(altezza_px * 2 / 24), opacity=1)
+        for m in self.svg.family_members_with_points():
+            m.cap_style = CapStyleType.ROUND
+            m.joint_type = LineJointType.ROUND
+        self.add(self.svg)
+
+    @staticmethod
+    def disponibili() -> list[str]:
+        return sorted(p.stem for p in CARTELLA_ICONE.glob("*.svg"))
+
+    def entra(self, **kw):
+        return Create(self.svg, lag_ratio=0.15, **kw)
+
+
+class ContatoreScorre(VGroup):
+    """Numero grande che scorre fino a un valore (con separatore delle migliaia all'italiana).
+    Dopo lo scorrimento chiama ferma(): toglie l'aggiornamento e il fotogramma finale resta statico."""
+
+    def __init__(self, valore: float = 0, etichetta: str | None = None, decimali: int = 0, colore: str | None = None, **kw):
+        super().__init__(**kw)
+        cfg = _cfg()
+        self.colore = colore or cfg.palette.accento
+        self.decimali = decimali
+        self.valore = ValueTracker(valore)
+        self._scritto = self._formato(valore)
+        self.numero = self._crea(self._scritto)
+        self.add(self.numero)
+        if etichetta:
+            self.etich = testo(etichetta, "etichetta", colore=cfg.palette.attenuato).next_to(self.numero, DOWN, buff=px(12),
+                                                                                           aligned_edge=LEFT)
+            self.add(self.etich)
+        self.numero.add_updater(self._aggiorna)
+
+    def _formato(self, v: float) -> str:
+        return f"{v:,.{self.decimali}f}".replace(",", " ").replace(".", ",").replace(" ", ".")
+
+    def _crea(self, s: str) -> Blocco:
+        return testo(s, "messaggio", colore=self.colore, peso=BOLD, mono=True)
+
+    def _aggiorna(self, m) -> None:
+        s = self._formato(self.valore.get_value())
+        if s != self._scritto:   # Pango solo quando il numero scritto cambia
+            self._scritto = s
+            m.become(self._crea(s).move_to(m, aligned_edge=LEFT))
+
+    def scorri(self, a: float, **kw):
+        kw.setdefault("rate_func", linear)
+        return self.valore.animate(**kw).set_value(a)
+
+    def ferma(self) -> None:
+        self.numero.clear_updaters()
+
+    def entra(self, **kw):
+        return FadeIn(self, scale=0.8, **kw)
+
+
+def _stile_codice(cfg: Config):
+    """Stile Pygments con i colori della palette (Code di Manim 0.21 prende i colori solo dallo stile)."""
+    from pygments.style import Style
+    from pygments.token import Comment, Keyword, Name, Number, Operator, Punctuation, String
+    from pygments.token import Text as TestoCodice
+    p = cfg.palette
+
+    class StilePalette(Style):
+        background_color = p.sfondo
+        line_number_color = p.attenuato
+        styles = {TestoCodice: p.testo, Name: p.testo, Keyword: f"bold {p.accento}", Name.Function: p.secondario,
+                  Name.Class: p.secondario, Name.Builtin: p.secondario, String: p.terziario, Number: p.secondario,
+                  Comment: f"italic {p.attenuato}", Operator: p.attenuato, Punctuation: p.attenuato}
+
+    return StilePalette
+
+
+class Codice(VGroup):
+    """Blocco di codice evidenziato con i colori della palette (Pygments + Pango: niente LaTeX), corpo «token».
+    Poche righe corte (~28 caratteri): se è più largo di larghezza_px solleva un errore, non rimpicciolisce."""
+
+    def __init__(self, codice: str, linguaggio: str = "python", larghezza_px: float = 900, **kw):
+        super().__init__(**kw)
+        cfg = _cfg()
+        p = cfg.palette
+        self.codice = Code(code_string=codice.strip("\n"), language=linguaggio, formatter_style=_stile_codice(cfg),
+                           add_line_numbers=False, background="rectangle",
+                           background_config={"buff": px(36), "fill_color": p.sfondo, "stroke_color": p.attenuato,
+                                              "stroke_width": tratto(3), "corner_radius": px(24), "fill_opacity": 1},
+                           paragraph_config={"font": cfg.font.mono, "font_size": font_size_per(CORPO_PX["token"]),
+                                             "line_spacing": 0.6})
+        if self.codice.width > px(larghezza_px) + 1e-6:
+            raise ValueError(f"codice largo {self.codice.width * cfg.px_per_unita:.0f} px (massimo {larghezza_px:.0f}): "
+                             "accorcia le righe (~28 caratteri)")
+        self.add(self.codice)
+
+    def riga(self, i: int):
+        return self.codice.code_lines[i]
+
+    def entra(self, **kw):
+        return FadeIn(self, shift=UP * 0.2, **kw)
+
+    def righe_una_alla_volta(self, lag: float = 0.3, **kw):
+        return LaggedStart(FadeIn(self.codice.background), *[FadeIn(r, shift=RIGHT * 0.1) for r in self.codice.code_lines],
+                           lag_ratio=lag, **kw)
+
+    def evidenzia_riga(self, i: int, **kw):
+        self.riquadro = Evidenzia(self.riga(i), buff=px(10))
+        return Create(self.riquadro, **kw)
+
+
 __all__ = ["testo", "markup", "piano", "avvolgi", "tratto", "Riga", "Blocco", "Titolo", "Caption", "Etichetta", "Barrato",
            "Freccia", "Carta", "Barra", "Classifica", "Token", "Frase", "Lista", "Contatore", "Evidenzia", "CorniceSchermo",
-           "Piede", "Messaggio", "FadeIn", "FadeOut", "FadeTransform", "Indicate", "LaggedStart", "AnimationGroup",
+           "Piede", "Messaggio", "Icona", "ContatoreScorre", "Codice", "FadeIn", "FadeOut", "FadeTransform", "Indicate", "LaggedStart", "AnimationGroup",
            "Transform", "Create"]

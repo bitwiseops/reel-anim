@@ -33,6 +33,16 @@ def cartella_media(r: Reel) -> Path:
     return RADICE / "contenuti" / "media" / r.slug
 
 
+def _riquadro_su_schermo(riquadro: str) -> bool:
+    """Il riquadro del presentatore in quella posizione tocca la cornice [schermo] del config?"""
+    from ..anim.config import carica
+    from .compositing import posizione_riquadro
+    cfg = carica()
+    x, y, d = posizione_riquadro(cfg, riquadro)
+    sc = cfg.dati["schermo"]
+    return x < sc["x"] + sc["larghezza"] and x + d > sc["x"] and y < sc["y"] + sc["altezza"] and y + d > sc["y"]
+
+
 def check(r: Reel) -> list[Diagnostica]:
     L = LIMITI
     d: list[Diagnostica] = []
@@ -90,8 +100,8 @@ def check(r: Reel) -> list[Diagnostica]:
             f = cartella_media(r) / s.schermo
             if not f.exists():
                 e(f"SCHERMO: file '{s.schermo}' non trovato in {f.parent.relative_to(RADICE)}/")
-        if s.tipo == "schermo" and s.riquadro_effettivo() != "no":
-            pass  # il riquadro sopra lo schermo è ammesso: la cornice lascia libera la fascia in basso
+        if s.schermo and s.riquadro_effettivo() != "no" and _riquadro_su_schermo(s.riquadro_effettivo()):
+            a(f"il riquadro ({s.riquadro_effettivo()}) copre la cornice del b-roll: usa RIQUADRO: alto-destra, alto-sinistra o no")
         sec = durata_stimata_s(s)
         totale += sec
         if sec > L["scena_max_s"]:

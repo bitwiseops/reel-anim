@@ -5,6 +5,7 @@ import hashlib
 import json
 import sys
 import time
+import traceback
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
@@ -15,7 +16,8 @@ from . import clip as clipmod
 from . import compositing, fotogrammi
 from .contact_sheet import genera as contact
 from .ffmpeg import ffprobe
-from .manim_render import AnimazioneMancante, carica_modulo, classe_scena, file_animazione, hash_sorgenti, renderizza
+from .manim_render import (AnimazioneMancante, carica_modulo, classe_scena, file_animazione, hash_sorgenti, lint_animazione,
+                           renderizza)
 from .model import Diagnostica, Reel, Scena, avviso, errore
 from .stima import CODA_S as CODA_STIMA_S
 from .stima import durata_stimata_s
@@ -91,10 +93,14 @@ def dati_scena(s: Scena, t: TempiScena) -> dict:
 
 def anima(r: Reel, diag: list[Diagnostica], out: Path, qualita: str = "l", solo: int | None = None, debug: bool = False,
           cfg: Config | None = None) -> list[dict]:
-    """Solo Manim, per l'animatore: stessi tempi dell'anteprima (voce sintetica in cache se non c'è la clip).
+    """Solo Manim, per l'animatore: stessi tempi dell'anteprima (voce sintetica in cache se non c'è la clip), controllo
+    statico del file, controlli automatici sulle scene, errori di una scena che non fermano le altre.
     Produce _anima/…/scena-NN.mp4, scene/NN.png e fotogrammi/NN-filmstrip.png."""
     cfg = cfg or carica()
-    mod = carica_modulo(file_animazione(r.slug))
+    path = file_animazione(r.slug)
+    mod = carica_modulo(path)
+    for n, msg in lint_animazione(path):
+        diag.append(avviso(f"{path.name}:{n}: {msg}"))
     info = []
     con_voce = True
     for s in r.scene:
@@ -109,20 +115,28 @@ def anima(r: Reel, diag: list[Diagnostica], out: Path, qualita: str = "l", solo:
                 diag.append(avviso(f"{e}: tempi stimati a parole, diversi da quelli dell'anteprima"))
         if t is None:
             t = tempi_scena(r, s, cfg=cfg)
+        base = {"scena": s.n, "tipo_scena": s.tipo, "durata_s": t.durata_s, "inizi_frasi_s": t.inizi_frasi_s,
+                "origine_tempi": t.origine_tempi}
         try:
             cls = classe_scena(mod, s.n)
         except AnimazioneMancante as e:
             diag.append(errore(str(e), s.riga, s.n))
+            info.append({**base, "errore": str(e), "traceback": ""})
             continue
         t0 = time.time()
-        res = renderizza(cls, t.durata_s, dati_scena(s, t), out / "_anima", f"scena-{s.n:02d}", qualita, trasparente=False,
-                         debug=debug, cfg=cfg)
-        for a in res.avvisi:
+        try:
+            res = renderizza(cls, t.durata_s, dati_scena(s, t), out / "_anima", f"scena-{s.n:02d}", qualita, trasparente=False,
+                             debug=debug, cfg=cfg)
+        except Exception as e:  # noqa: BLE001 — l'errore di una scena non deve fermare le altre
+            diag.append(errore(f"render fallito: {type(e).__name__}: {e}", s.riga, s.n))
+            info.append({**base, "errore": f"{type(e).__name__}: {e}",
+                         "traceback": "".join(traceback.format_exception(e))[-1500:]})
+            continue
+        for a in res.avvisi + res.controlli:
             diag.append(avviso(a, s.riga, s.n))
         png = fotogrammi.fotogramma_chiave(res.video, t.durata_s, out / "scene" / f"{s.n:02d}.png")
         fs = fotogrammi.filmstrip_scena(res.video, t.durata_s, out / "fotogrammi" / f"{s.n:02d}-filmstrip.png")
-        info.append({"scena": s.n, "tipo_scena": s.tipo, "durata_s": t.durata_s, "inizi_frasi_s": t.inizi_frasi_s,
-                     "origine_tempi": t.origine_tempi, "avvisi_tempi": res.avvisi, "grafica": str(res.video.relative_to(out)),
+        info.append({**base, "avvisi_tempi": res.avvisi, "controlli": res.controlli, "grafica": str(res.video.relative_to(out)),
                      "png": str(png.relative_to(out)), "filmstrip": str(fs.relative_to(out)),
                      "tempo_manim_s": round(time.time() - t0, 1)})
     return info
@@ -149,6 +163,8 @@ def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None 
     pezzi: list[tuple[Path, float]] = []
     cache = _cache(out)
     firma = hash_sorgenti(file_animazione(r.slug))
+    for n, msg in lint_animazione(file_animazione(r.slug)):
+        diag.append(avviso(f"{file_animazione(r.slug).name}:{n}: {msg}"))
     usa_prova = False
     for s in r.scene:
         if solo and s.n != solo:
@@ -174,13 +190,19 @@ def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None 
         t1 = time.time()
         if (isinstance(voce_cache, dict) and voce_cache.get("chiave") == chiave and voce_cache.get("grafica")
                 and (out / voce_cache["grafica"]).exists()):
-            grafica, avvisi_tempi = out / voce_cache["grafica"], list(voce_cache.get("avvisi", []))
+            grafica = out / voce_cache["grafica"]
+            avvisi_tempi, controlli = list(voce_cache.get("avvisi", [])), list(voce_cache.get("controlli", []))
         else:
-            res = renderizza(cls, t.durata_s, dati, out / "_manim", f"scena-{s.n:02d}", qualita, trasparente=bool(schermo), cfg=cfg)
-            grafica, avvisi_tempi = res.video, res.avvisi
-            cache[f"{s.n:02d}"] = {"chiave": chiave, "grafica": str(grafica.relative_to(out)), "avvisi": avvisi_tempi}
+            try:
+                res = renderizza(cls, t.durata_s, dati, out / "_manim", f"scena-{s.n:02d}", qualita, trasparente=bool(schermo), cfg=cfg)
+            except Exception as e:  # noqa: BLE001 — l'errore di una scena non deve fermare le altre
+                diag.append(errore(f"render fallito: {type(e).__name__}: {e}", s.riga, s.n))
+                continue
+            grafica, avvisi_tempi, controlli = res.video, res.avvisi, res.controlli
+            cache[f"{s.n:02d}"] = {"chiave": chiave, "grafica": str(grafica.relative_to(out)), "avvisi": avvisi_tempi,
+                                   "controlli": controlli}
             _salva_cache(out, cache)
-        for a in avvisi_tempi:
+        for a in avvisi_tempi + controlli:
             diag.append(avviso(a, s.riga, s.n))
         tm = time.time() - t1
         tempi["manim"] += tm
@@ -198,7 +220,7 @@ def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None 
         elementi.append({"ordine": s.n, "tipo": "png", "file": str(png.relative_to(out)), "scena": s.n, "tipo_scena": s.tipo,
                          "durata_s": t.durata_s, "parole_voce": s.parole_voce, "durata_stimata_s": durata_stimata_s(s, cfg),
                          "origine_durata": t.origine, "inizi_frasi_s": t.inizi_frasi_s, "origine_tempi": t.origine_tempi,
-                         "avvisi_tempi": avvisi_tempi, "riquadro": riq, "schermo": s.schermo,
+                         "avvisi_tempi": avvisi_tempi, "controlli": controlli, "riquadro": riq, "schermo": s.schermo,
                          "filmstrip": str(fs.relative_to(out)), "grafica": str(grafica.relative_to(out)),
                          "video": str(dest.relative_to(out)), "tempo_manim_s": round(tm, 1), "tempo_ffmpeg_s": round(tc, 1)})
         pezzi.append((dest, t.durata_s))

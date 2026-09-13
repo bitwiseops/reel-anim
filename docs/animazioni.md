@@ -15,7 +15,7 @@ all'agente animatore; la sezione 11 serve anche allo sceneggiatore. Esempio comp
 6. **Mai oltre il confine del beat**: l'ingresso sta nel primo 35-60 % del beat, poi si tiene fermo.
 7. **Azzera e ricostruisci**: ogni beat dichiara cosa resta; il resto esce all'inizio del beat dopo.
 8. **Spessori dei tratti con `tratto(px)`**, mai con `px()`.
-9. **Nei componenti, animazioni composte con `group=self`.**
+9. **Nei componenti, animazioni composte con `group=self`** quando il componente è già tutto in scena (sezione 10).
 10. **Niente LaTeX, niente gradienti, niente colori scritti a mano**: `self.cfg.palette`.
 
 ## 2. Ciclo di lavoro
@@ -33,7 +33,12 @@ Si parte da una sceneggiatura in `stato: rivisto` (`uv run reel valida <file>` s
    ```
    scena 2 [spiegazione] 8.1s · beat 0.0 / 3.0 / 5.9 s (voce-sintetica) · manim 0.6s → …/scene/02.png  …
       ⚠ beat(1) parte 0.13 s dopo l'inizio della frase 2: accorcia le animazioni del beat 0
+      ✗ testo-piccolo (fine beat 1): «esempio: numeri inventati» alto 30 px (minimo 36) [px 60,812→420,842]
    ```
+   `⚠` sono gli avvisi di tempo, `✗` i controlli automatici (sezione 2bis). Con `--json` lo stesso resoconto esce
+   come un solo oggetto JSON su stdout (`ok`, `scene[]` con `inizi_frasi_s`, `avvisi_tempi`, `controlli`, e `errore`
+   con `traceback` se il render di una scena fallisce: le altre scene vanno avanti). È il formato da leggere per
+   l'agente.
 3. Guarda, al posto del video (Claude Code non vede i video), in `contenuti/render/<slug>/`:
    - `scene/NN.png`: il fotogramma al 60 % della scena, a piena risoluzione;
    - `fotogrammi/NN-filmstrip.png`: 6 fotogrammi con il loro istante: controlla che ogni ingresso cada sulla sua
@@ -54,6 +59,28 @@ Comandi: anima ×N giri, monta --prova --anteprima (reel 51 s, 0 errori, 0 avvis
 Avvisi rimasti: …
 Cosa non ci stava / domande: …
 ```
+
+## 2bis. Controlli automatici
+
+`ScenaReel` controlla da sola lo stato della scena alla fine di ogni beat (quando chiami `beat(i)`) e alla
+chiusura. Ogni violazione dice cosa, quando e dove (px della tela, origine in alto a sinistra); una violazione già
+segnalata non si ripete nei beat dopo. **Zero violazioni prima di consegnare.**
+
+| Controllo | Cosa trova | Rimedio |
+|---|---|---|
+| `testo-piccolo` | testo sotto 36 px (anche dopo uno `scale`) | corpo del ruolo giusto, meno testo; mai scalare sotto il minimo |
+| `testo-fuori` | testo fuori dalla safe area (sotto l'interfaccia di Instagram) | `area.metti(...)` dentro `self.area.contenuto` |
+| `riquadro` | qualcosa sul riquadro del presentatore | sposta o riduci; nelle scene `schermo` `RIQUADRO: alto-destra` |
+| `testo-coperto` | un testo sotto una forma piena disegnata dopo | ordine dentro `play`, `group=self`, `set_z_index` |
+| `testi-sovrapposti` | due testi uno sull'altro | `arrange`/`next_to` con `buff`; azzera il beat precedente |
+| `colore`, `gradiente` | colori fuori palette (spesso il bianco o il rosso di default di Manim), riempimenti a più colori | `self.cfg.palette` |
+
+Prima del render, un controllo statico del file segnala con il numero di riga i costrutti vietati: LaTeX
+(`MathTex`, `Tex`, `BraceLabel`, `DecimalNumber` senza `mob_class=Text`, `BarChart`…), `to_edge`/`to_corner`,
+`stroke_width=px(...)`, colori scritti in esadecimale, gradienti, 3D.
+
+Limiti: i controlli guardano i riquadri di ingombro, non i pixel; non vedono il b-roll delle scene `schermo` né le
+immagini; il corpo del testo di `Codice` lo garantisce il componente (solleva un errore se non ci sta).
 
 ## 3. Anatomia del file
 
@@ -145,7 +172,8 @@ Regole:
 - **Scene `schermo`**: il b-roll sta in `self.area.schermo` (lo mette sotto il montaggio); disegna la
   `CorniceSchermo(self.area.schermo)` e le etichette sopra o accanto. Per indicare un punto dell'immagine usa
   `area_px(self.cfg, x0, y0, x1, y1)` in pixel della tela (l'immagine è posata in `[schermo] x, y` del config).
-  Se il riquadro copre una parte importante del b-roll, spostalo con `RIQUADRO: alto-destra` nella sceneggiatura.
+  La cornice (`[schermo]`: x 60, y 600, 900×980 px) lascia libera la fascia alta: nelle scene `schermo` il riquadro
+  va in alto (`RIQUADRO: alto-destra` o `alto-sinistra`); `reel valida` avvisa se copre la cornice.
 - **Spazio vuoto**: meglio un'area ariosa che dieci elementi piccoli; ma una metà dello schermo vuota per tutta la
   scena è spreco: centra il gruppo nell'area (`a.metti(g, "centro", "sinistra")`).
 
@@ -213,9 +241,28 @@ Note: `Evidenzia(buff=...)` è in **unità**, non in px: scrivi `buff=px(12)`. `
 `aggiorna()` usano l'indice originale della voce, anche dopo un riordino. `Frase.aggiungi(token, da=...)` fa
 volare il cartellino dal punto `da` (es. `cl.token(0)` dall'etichetta della barra).
 
-Prossimamente (non ancora nella libreria): `Flusso`/`Nodo` (passi in verticale, uno per beat, il passo attivo in
-accento), `Ciclo` (stati su un cerchio con un punto che viaggia), `Confronto` (prima/dopo), `Corrispondenza`
-(due colonne unite da linee), `Graffa`, `Codice`, `Griglia`/`Tabella`, `Icona` (SVG), contatore che scorre.
+Sempre da `tools.anim.componenti`:
+
+| Componente | Quando | Animazioni |
+|---|---|---|
+| `Icona(nome, altezza_px=120, colore=None)` | un concetto con un simbolo (`Icona.disponibili()`: set Lucide in `assets/icone/`) | `entra()` |
+| `ContatoreScorre(valore, etichetta, decimali=0)` | un numero che corre fino al valore (70.000.000.000) | `entra()`, `scorri(a)`, poi `ferma()` |
+| `Codice(codice, linguaggio="python")` | 3-6 righe corte (~28 caratteri) di codice o di prompt, colori dalla palette | `entra()`, `righe_una_alla_volta()`, `evidenzia_riga(i)` |
+
+Diagrammi, da `tools.anim.diagrammi`:
+
+| Componente | Quando | Animazioni |
+|---|---|---|
+| `Flusso(passi, larghezza_px=760)` | passi in colonna uniti da frecce, uno per beat | `entra_passo(i)`, `attiva(i)`, `entra()` |
+| `Nodo(s)` | un passo isolato | `entra()`, `accendi()`, `spegni()` |
+| `Ciclo(stati, raggio_px=300)` | un ciclo (pensa → agisci → osserva) con un punto che viaggia | `entra()`, `vai()`, `accendi(k)` |
+| `Confronto(prima, dopo, titolo_prima, titolo_dopo)` | prima e dopo in colonna | `mostra_prima()`, `boccia()`, `mostra_dopo()` |
+| `Corrispondenza(sinistra, destra)` | abbinamenti fra due colonne | `entra()`, `collega(i, j, giusto=True)` |
+| `Graffa(mob, s, direzione=RIGHT)` | «questo gruppo è il contesto» | `entra()` |
+| `Tabella(righe, intestazione=True)` | poche righe × 2-3 colonne | `entra()`, `evidenzia(r, c=None)`; `cella(r, c)`, `riga(r)` |
+
+Per vederli tutti, anche come esempio d'uso: `uv run python -m tools.anim.vetrina` (una scena di prova per
+componente, con i controlli) → `contenuti/render/_vetrina/contact-sheet.png`.
 
 ## 9. Trasformazioni
 
@@ -247,7 +294,10 @@ restare nello stesso posto della lista (è così che `Classifica.aggiorna` fa sc
 
 - **Spessori invisibili**: `stroke_width` si misura in centesimi di unità (1 = 1,2 px qui). Usa `tratto(px)`.
 - **Un riquadro pieno copre il testo**: un `AnimationGroup` o un `LaggedStart` senza `group=` fa aggiungere a
-  Manim un gruppo nuovo in cima alla scena. Nei componenti passa `group=self`.
+  Manim un gruppo nuovo in cima alla scena. Nei componenti passa `group=self` **se il componente è già tutto in
+  scena**; per far entrare solo una parte di un componente ancora fuori scena (`Flusso.entra_passo`) il gruppo non
+  va passato, sennò Manim aggiunge in scena anche le parti non ancora entrate. Il controllo `testo-coperto` lo trova.
+- **Un updater lasciato attivo** (es. `ContatoreScorre` senza `ferma()`) fa ridisegnare ogni fotogramma del finale.
 - **Ordine di impilamento**: gli oggetti nuovi entrano nell'ordine in cui compaiono dentro `self.play(...)`: il
   fondo prima, il testo dopo. Se serve, `mob.set_z_index(1)`.
 - **Due `.animate` sullo stesso oggetto nella stessa `play`: vale solo l'ultima.** Concatenale

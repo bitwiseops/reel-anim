@@ -150,8 +150,9 @@ class Scena06(ScenaReel):
         alto_safe = self.cfg.frame_height / 2 - px(self.cfg.dati["safe_area"]["alto"])
         et = Etichetta(self.scena["testo"][0])
         et.move_to([sch.x0 + et.width / 2, (alto_safe + sch.y1) / 2, 0])
-        # la bolla con il dettaglio vero, in px della tela (immagine 960x1080 posata in x=60, y=520)
-        bolla = area_px(self.cfg, 60 + 316, 520 + 338, 60 + 920, 520 + 502).rettangolo(stroke_opacity=0, fill_opacity=0)
+        # la bolla con il dettaglio vero: px nell'immagine (li stampa genera_chat.py) + dove è posata ([schermo] x, y)
+        x, y = self.cfg.dati["schermo"]["x"], self.cfg.dati["schermo"]["y"]
+        bolla = area_px(self.cfg, x + 256, y + 328, x + 860, y + 492).rettangolo(stroke_opacity=0, fill_opacity=0)
         self.play(cornice.entra(), et.entra(), run_time=0.6)
 
         self.beat(1)

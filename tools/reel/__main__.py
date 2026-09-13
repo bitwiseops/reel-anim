@@ -5,7 +5,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from .model import Diagnostica, Reel
+from .model import Diagnostica, Reel, errore
 from .parser import ErroreParse, parse
 from .validate import check, ha_errori
 
@@ -101,27 +101,40 @@ def cmd_voce(args) -> int:
 
 
 def cmd_anima(args) -> int:
+    import json
     from .manim_render import AnimazioneMancante
     from .monta import anima, out_dir
     r, diag = _carica(Path(args.file))
-    _stampa(diag)
-    if ha_errori(diag):
-        print("-> errori di validazione: nessun render", file=sys.stderr)
-        return 1
+    if not args.json:
+        _stampa(diag)
     out = out_dir(r, args.out)
-    try:
-        info = anima(r, diag, out, args.qualita or "l", args.scena, args.debug)
-    except AnimazioneMancante as e:
-        print(f"-> {e}", file=sys.stderr)
-        return 1
+    n0 = len(diag)
+    info: list[dict] = []
+    if ha_errori(diag):
+        diag.append(errore("errori di validazione: nessun render"))
+    else:
+        try:
+            info = anima(r, diag, out, args.qualita or "l", args.scena, args.debug)
+        except AnimazioneMancante as e:
+            diag.append(errore(str(e)))
+    ok = not ha_errori(diag)
+    if args.json:   # per l'agente animatore: un solo oggetto JSON su stdout
+        print(json.dumps({"ok": ok, "cartella": str(out), "scene": info, "diagnostica": [d.to_dict() for d in diag]},
+                         ensure_ascii=False, indent=1))
+        return 0 if ok else 1
     for i in info:
+        if "errore" in i:
+            print(f"scena {i['scena']}: ERRORE {i['errore']}\n{i['traceback']}")
+            continue
         beat = " / ".join(f"{x:.1f}" for x in i["inizi_frasi_s"]) or "nessuno"
         print(f"scena {i['scena']} [{i['tipo_scena']}] {i['durata_s']:.1f}s · beat {beat} s ({i['origine_tempi']}) · "
               f"manim {i['tempo_manim_s']}s → {out / i['png']}  {out / i['filmstrip']}")
         for a in i["avvisi_tempi"]:
             print(f"   ⚠ {a}")
-    _stampa([d for d in diag if d.livello == "errore"])
-    return 1 if ha_errori(diag) else 0
+        for c in i["controlli"]:
+            print(f"   ✗ {c}")
+    _stampa([d for d in diag[n0:] if d.scena is None or d.livello == "errore"])
+    return 0 if ok else 1
 
 
 def cmd_monta(args) -> int:
@@ -199,6 +212,7 @@ def main(argv: list[str] | None = None) -> int:
     p.set_defaults(fn=cmd_voce)
     p = sub.add_parser("anima", help="solo Manim: fotogrammi chiave e filmstrip per l'animatore"); comune(p)
     p.add_argument("--scena", type=int, default=None); p.add_argument("--qualita", choices="lmh", default=None); p.add_argument("--debug", action="store_true")
+    p.add_argument("--json", action="store_true", help="un solo oggetto JSON su stdout (per l'agente animatore)")
     p.set_defaults(fn=cmd_anima)
     p = sub.add_parser("monta", help="Manim + compositing + concat → reel-9x16.mp4, cover, report"); comune(p)
     p.add_argument("--prova", action="store_true", help="senza clip: voce sintetica e avatar segnaposto (non pubblicabile)")

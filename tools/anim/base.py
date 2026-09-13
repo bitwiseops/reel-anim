@@ -8,6 +8,7 @@ from manim import DOWN, LEFT, RIGHT, UP, Rectangle, Scene, VGroup
 from manim import config as config_manim
 
 from .config import Config, carica, registra_font
+from .controlli import Violazione, esegui_controlli
 from .misure import px
 
 ANTICIPO_S = 0.1   # il beat parte 3 fotogrammi prima della frase: l'occhio deve arrivare con la voce, non dopo
@@ -128,6 +129,9 @@ class ScenaReel(Scene):
         registra_font(self.cfg)
         self.area: Aree = aree(self.cfg, self.scena.get("riquadro"))
         self.avvisi: list[str] = []
+        self.controlli: list[Violazione] = []
+        self._visti: set[tuple[str, str]] = set()
+        self._escludi: set[int] = set()   # guide di debug: fuori dai controlli
         voce = list(self.scena.get("voce") or [])
         inizi = self.scena.get("inizi_frasi_s")
         if inizi and len(inizi) == len(voce):
@@ -165,6 +169,8 @@ class ScenaReel(Scene):
             raise ValueError(f"beat({i}): la scena non ha VOCE, usa fino_a(frazione)")
         if not 0 <= i < n:
             raise IndexError(f"beat({i}): la VOCE ha {n} frasi, i beat vanno da 0 a {n - 1}")
+        if i > 0:
+            self.verifica(f"fine beat {i - 1}")
         obiettivo = max(0.0, self.inizi_frasi[i] - self.ANTICIPO_S)
         ritardo = self.t - obiettivo
         if ritardo > self._fotogramma + 1e-6:
@@ -185,7 +191,17 @@ class ScenaReel(Scene):
         fine = self.inizi_frasi[i + 1] if i + 1 < len(self.inizi_frasi) else self.durata_s
         return max(0.0, fine - self.inizi_frasi[i])
 
+    def verifica(self, momento: str) -> None:
+        """Controlli automatici sullo stato attuale (tools/anim/controlli.py). Li chiamano beat() e chiudi(): a mano
+        solo per un istante particolare. Una violazione già vista in un beat precedente non si ripete."""
+        for v in esegui_controlli(self, momento, self._escludi):
+            chiave = (v.controllo, v.messaggio)
+            if chiave not in self._visti:
+                self._visti.add(chiave)
+                self.controlli.append(v)
+
     def chiudi(self) -> None:
+        self.verifica("fine scena")
         if self.t > self.durata_s + self._fotogramma + 1e-6:
             self.avvisi.append(f"la scena dura {self.t:.2f} s ma la clip {self.durata_s:.2f} s: il finale viene tagliato")
         self.attendi_fino(self.durata_s)
@@ -193,7 +209,9 @@ class ScenaReel(Scene):
     # --- costruzione ---------------------------------------------------------------------------------
     def construct(self) -> None:
         if self.debug:
-            self.add(self.guide())
+            g = self.guide()
+            self._escludi.update(id(m) for m in g.get_family())
+            self.add(g)
         self.costruisci()
         self.chiudi()
 

@@ -16,7 +16,9 @@ Piano completo: `~/.claude/plans/dobbiamo-revisionare-il-modello-lovely-piglet.m
   minimi di leggibilità, `FATTORE_FONT_SIZE` misurato con `calibra.py`), `base` (`ScenaReel` con `durata_s`,
   `beat(i)` sugli inizi delle frasi, `durata_beat`, `arrotonda`, `fino_a`, `chiudi`, aree contenuto/riquadro/schermo, `debug` con guide), `componenti` (Titolo,
   Caption, Etichetta, Barrato, Freccia, Carta, Barra, Classifica, Token, Frase, Lista, Contatore, Evidenzia,
-  CorniceSchermo, Piede, Messaggio), `prova` (scena di prova della fase 0)
+  CorniceSchermo, Piede, Messaggio, Icona, ContatoreScorre, Codice), `diagrammi` (Nodo, Flusso, Ciclo, Confronto,
+  Corrispondenza, Graffa, Tabella), `controlli` (controlli automatici a fine beat), `vetrina` (una scena di prova per
+  componente: `uv run python -m tools.anim.vetrina`), `prova` (scena di prova della fase 0)
 - `tools/reel/` — grammatica e montaggio: `model`, `parser`, `validate` (`LIMITI`, fonte unica), `stima`, `gobbo`,
   `clip`, `voce` (`say`), `manim_render`, `compositing` (filtergraph ffmpeg: b-roll, riquadro con maschera, audio,
   concat con xfade), `fotogrammi`, `contact_sheet`, `monta`, `__main__` (CLI `uv run reel`)
@@ -26,12 +28,17 @@ Piano completo: `~/.claude/plans/dobbiamo-revisionare-il-modello-lovely-piglet.m
 - `templates/reel.md` — grammatica della sceneggiatura (blocco-commento) · `templates/esempio-reel.md` — esempio
   completo (7 scene, tutti i tipi e tutti i componenti) con `contenuti/animazioni/esempio-reel.py` e il b-roll versionato
   in `contenuti/media/esempio-reel/`: `uv run reel monta templates/esempio-reel.md --prova --anteprima` (~20 s)
-- `docs/animazioni.md` — manuale dell'agente animatore (regole, tempi, componenti, trappole, fonti)
-- `assets/fonts/` (Inter Variable, JetBrains Mono) · `assets/presentatore/avatar.png` (segnaposto da `reel setup`)
+- `docs/` — `sceneggiatura.md` (grammatica, limiti, come si scrive la VOCE), `animazioni.md` (manuale
+  dell'animatore: regole, tempi, componenti, controlli, trappole, fonti), `registrazione.md` (clip del presentatore)
+- `assets/fonts/` (Inter Variable, JetBrains Mono) · `assets/presentatore/avatar.png` (segnaposto da `reel setup`) ·
+  `assets/icone/` (SVG Lucide, licenza ISC)
+
+## Stato
+Fasi 0 e 1 chiuse (2026-09-13, branch `fase-1-esempio`). Prossima: fase 2, il primo reel vero con gli agenti.
 
 ## Comandi
 `uv run reel setup` · `valida <file>` · `gobbo <file> [--scrivi]` · `clip <file>` · `voce <file>` ·
-`anima <file> [--scena N] [--qualita l|m|h] [--debug]` · `monta <file> [--prova] [--anteprima] [--scena N]` ·
+`anima <file> [--scena N] [--qualita l|m|h] [--debug] [--json]` · `monta <file> [--prova] [--anteprima] [--scena N]` ·
 `uv run pytest -q` (i test `slow` usano Manim e ffmpeg). `--prova` = voce sintetica + avatar segnaposto: anteprima
 completa senza il presentatore, **non pubblicabile**.
 
@@ -47,7 +54,7 @@ scena `inizi_frasi_s`, `origine_tempi`, `avvisi_tempi` (beat in ritardo, scena c
 
 ## Convenzioni
 - Tutto in italiano (codice: nomi italiani come in io-e-lia). Nessun riferimento a un brand nel codice.
-- **Prima di animare leggere `docs/animazioni.md`.**
+- **Prima di animare leggere `docs/animazioni.md`.** Si consegna con zero avvisi di tempo (`⚠`) e zero controlli (`✗`).
 - Animazioni: solo `Text`/`MarkupText` (Pango, niente LaTeX), font e colori dal config, testo mai sotto 36 px,
   contenuto dentro `self.area.contenuto` (lascia libero il riquadro), nessun gradiente. Manim è deterministico.
   Testo con `testo()` (righe ad altezza costante; `.parola("x")` dà i glifi di una parola); posizioni con
@@ -70,7 +77,8 @@ clip per scena con gobbo, oppure (B) una presa unica con l'anteprima del reel e 
 spezzata per scene dai tempi noti. Dettagli e pro/contro nel piano.
 
 ## Prossimi passi della libreria
-- Esplorazione della community fatta (2026-09-13, fonti in `docs/animazioni.md` §13): nessun plugin da installare.
-- Da fare: nuovi componenti (Flusso, Ciclo, Confronto, Corrispondenza, Graffa, Codice, Griglia, Icona SVG, contatore
-  che scorre) e controlli automatici sulle scene (fuori area o sul riquadro, sovrapposizioni, corpo < 36 px, colori
-  fuori palette; `anima` che restituisce un JSON). Per le clip vere: allineamento ASR delle frasi (fase 5).
+- Fatto (2026-09-13): esplorazione della community (fonti in `docs/animazioni.md` §13, nessun plugin da installare);
+  componenti per diagrammi, icone, codice, contatore che scorre; controlli automatici a fine beat, controllo statico
+  del file, `anima --json`.
+- Da fare: allineamento ASR delle frasi per le clip vere (fase 5); controlli sui pixel dei fotogrammi chiave
+  (b-roll e immagini, che i controlli sugli ingombri non vedono).

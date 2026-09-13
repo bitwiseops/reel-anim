@@ -4,6 +4,7 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 import inspect
+import re
 import sys
 from pathlib import Path
 from types import ModuleType
@@ -23,7 +24,34 @@ class AnimazioneMancante(RuntimeError):
 
 class Render(NamedTuple):
     video: Path
-    avvisi: list[str]   # ScenaReel.avvisi: beat in ritardo, scena che sfora
+    avvisi: list[str]      # ScenaReel.avvisi: beat in ritardo, scena che sfora
+    controlli: list[str]   # ScenaReel.controlli: testo piccolo/fuori/coperto/sovrapposto, riquadro, colori
+
+
+_LINT = [
+    (re.compile(r"\b(MathTex|Tex|SingleStringMathTex|BraceLabel|BarChart|IntegerTable|DecimalTable|MathTable|Variable)\s*\("),
+     "usa LaTeX (vietato): vedi docs/animazioni.md §10"),
+    (re.compile(r"\b(DecimalNumber|Integer)\s*\((?![^)]*mob_class)"), "DecimalNumber/Integer usano LaTeX senza mob_class=Text"),
+    (re.compile(r"\.get_(tex|text)\s*\("), "Brace.get_text/get_tex usano LaTeX: brace.put_at_tip(testo(...))"),
+    (re.compile(r"\.to_(edge|corner)\s*\("), "to_edge/to_corner misurano dal bordo della tela: usa area.metti(...)"),
+    (re.compile(r"stroke_width\s*=\s*px\("), "spessore con px(): usa tratto(px)"),
+    (re.compile(r"(?<![\w&])#[0-9A-Fa-f]{6}\b"), "colore scritto a mano: usa self.cfg.palette"),
+    (re.compile(r"gradient", re.I), "gradienti vietati"),
+    (re.compile(r"\bThreeDScene\b"), "niente 3D"),
+]
+
+
+def lint_animazione(path: Path) -> list[tuple[int, str]]:
+    """Controllo statico del file delle animazioni: (riga, problema) per i costrutti vietati dalle regole del repo."""
+    out = []
+    for n, riga in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        if riga.lstrip().startswith("#"):
+            continue
+        codice = re.sub(r"\s#\s.*$", "", riga)
+        for rx, msg in _LINT:
+            if rx.search(codice):
+                out.append((n, msg))
+    return out
 
 
 def file_animazione(slug: str) -> Path:
@@ -75,4 +103,4 @@ def renderizza(cls: type[ScenaReel], durata_s: float, scena: dict, out_dir: Path
     with tempconfig(opzioni_manim(cfg, qualita, trasparente=trasparente, media_dir=out_dir, output_file=nome)):
         s = cls(durata_s=durata_s, scena=scena, debug=debug)
         s.render()
-        return Render(Path(s.renderer.file_writer.movie_file_path), list(s.avvisi))
+        return Render(Path(s.renderer.file_writer.movie_file_path), list(s.avvisi), [str(v) for v in s.controlli])
