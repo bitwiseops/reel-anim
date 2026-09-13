@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(uv run reel:*)",
+      "Bash(uv run pytest:*)",
+      "Bash(uv run python -m tools.anim.vetrina:*)"
+    ]
+  }
+}

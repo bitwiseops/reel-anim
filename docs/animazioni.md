@@ -48,7 +48,13 @@ Si parte da una sceneggiatura in `stato: rivisto` (`uv run reel valida <file>` s
    uv run reel monta <file.md> --prova --anteprima
    ```
    e controlla `contact-sheet.png` e `report.json` (per scena: `inizi_frasi_s`, `origine_tempi`, `avvisi_tempi`).
-5. Scrivi le «Note di animazione» nella sceneggiatura (beat scelti, cosa non ci stava, tempi Manim) e porta lo
+5. **Fotogrammi fitti** prima di consegnare: il filmstrip ne ha 6 e i controlli guardano solo la fine dei beat, così
+   un testo che sparisce o lampeggia *durante* un'animazione passa inosservato. Per ogni scena:
+   ```
+   ffmpeg -v error -y -i contenuti/render/<slug>/_scene/05.mp4 -vf "fps=4,scale=180:-1,tile=14x2" -frames:v 1 <scratchpad>/05.png
+   ```
+   e guarda l'immagine: nessun testo deve sparire, lampeggiare o finire coperto fra un fotogramma e l'altro.
+6. Scrivi le «Note di animazione» nella sceneggiatura (beat scelti, cosa non ci stava, tempi Manim) e porta lo
    stato a `animato`.
 
 Chiudi sempre con un rapporto breve:
@@ -176,6 +182,12 @@ Regole:
   va in alto (`RIQUADRO: alto-destra` o `alto-sinistra`); `reel valida` avvisa se copre la cornice.
 - **Spazio vuoto**: meglio un'area ariosa che dieci elementi piccoli; ma una metà dello schermo vuota per tutta la
   scena è spreco: centra il gruppo nell'area (`a.metti(g, "centro", "sinistra")`).
+- **Filo visivo e continuità fra le scene** (il presentatore l'ha apprezzato nel primo reel): 2-3 oggetti che
+  ritornano per tutto il reel con lo stesso aspetto, e **ogni scena che parte dall'ultimo fotogramma della
+  precedente**, ricostruito con funzioni di impaginazione condivise nel file (`disposizione_NN()`,
+  `stato_finale_NN()`): la dissolvenza fra le scene non si vede e gli oggetti non saltano. Esempio:
+  `contenuti/animazioni/generativa-non-creativa.py`. Per compattare o far crescere una carta, tienila a pezzi
+  (riquadro, titolo, righe) con il riquadro sotto (`set_z_index(-1)`) e passa da uno stato all'altro con `Transform`.
 
 ## 6. Testo
 
@@ -297,6 +309,15 @@ restare nello stesso posto della lista (è così che `Classifica.aggiorna` fa sc
   Manim un gruppo nuovo in cima alla scena. Nei componenti passa `group=self` **se il componente è già tutto in
   scena**; per far entrare solo una parte di un componente ancora fuori scena (`Flusso.entra_passo`) il gruppo non
   va passato, sennò Manim aggiunge in scena anche le parti non ancora entrate. Il controllo `testo-coperto` lo trova.
+- **…anche solo durante le animazioni (e lo z_index non basta)**: durante una `play` il renderer disegna gli oggetti
+  «in movimento» (dal primo animato nella lista della scena fino in fondo) sopra un'immagine fissa degli altri; lo
+  `z_index` vale solo dentro ciascuno dei due insiemi. Un riquadro pieno finito in un gruppo accodato da un
+  `LaggedStart` senza `group=` copre i testi fermi in quella `play` e in tutte le successive che animano qualcosa
+  che nella lista sta prima di lui: il titolo di una carta che sparisce per mezzo secondo mentre la carta cresce.
+  Rimedio: `group=` un oggetto **già in scena** (per una carta tenuta a pezzi, il suo riquadro). I controlli non lo
+  vedono (girano a fine beat, a scena ferma): lo trovano solo i fotogrammi fitti (§2, passo 5).
+- **`FadeOut` di un `VGroup` nuovo fatto di pezzi già in scena** li lascia in scena, trasparenti: un `FadeOut` per
+  pezzo (`*[FadeOut(m) for m in pezzi]`).
 - **Un updater lasciato attivo** (es. `ContatoreScorre` senza `ferma()`) fa ridisegnare ogni fotogramma del finale.
 - **Ordine di impilamento**: gli oggetti nuovi entrano nell'ordine in cui compaiono dentro `self.play(...)`: il
   fondo prima, il testo dopo. Se serve, `mob.set_z_index(1)`.

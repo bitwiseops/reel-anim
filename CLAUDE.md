@@ -32,9 +32,14 @@ Piano completo: `~/.claude/plans/dobbiamo-revisionare-il-modello-lovely-piglet.m
   dell'animatore: regole, tempi, componenti, controlli, trappole, fonti), `registrazione.md` (clip del presentatore)
 - `assets/fonts/` (Inter Variable, JetBrains Mono) · `assets/presentatore/avatar.png` (segnaposto da `reel setup`) ·
   `assets/icone/` (SVG Lucide, licenza ISC)
+- `.claude/agents/` — `sceneggiatore` (idea → sceneggiatura, `reel valida`), `revisore-tecnico` (claim anche nelle
+  animazioni, `stato: rivisto`), `animatore` (`.py` + `anima --json` + fotogrammi + `monta --prova --anteprima`,
+  `stato: animato`; non tocca `tools/`) · `.claude/commands/pipeline.md` — `/pipeline <file>`: una tappa, poi fermata
 
 ## Stato
-Fasi 0 e 1 chiuse (2026-09-13, branch `fase-1-esempio`). Prossima: fase 2, il primo reel vero con gli agenti.
+Fasi 0 e 1 chiuse (2026-09-13, in `main`). Fase 2 in corso (branch `fase-2-primo-reel`): primo reel vero
+«Generativa non vuol dire creativa» (`contenuti/idee/2026-09-10-llm-perche-generativa.md`, slug
+`generativa-non-creativa`) portato dagli agenti fino a `animato`; fermata: il presentatore guarda l'anteprima.
 
 ## Comandi
 `uv run reel setup` · `valida <file>` · `gobbo <file> [--scrivi]` · `clip <file>` · `voce <file>` ·
@@ -64,10 +69,16 @@ scena `inizi_frasi_s`, `origine_tempi`, `avvisi_tempi` (beat in ritardo, scena c
   `report.json` in `contenuti/render/<slug>/`.
 - Mai pubblicare senza `--pubblica`; la pubblicazione la lancia il presentatore.
 - Aggiornare la memoria (`~/.claude/projects/-Users-bitwise-Projects-reel-anim/memory/`) a ogni milestone.
+- **Gli agenti imparano**: ogni lezione di una sessione, tecnica (trappole, controlli mancanti) o di stile (note del
+  presentatore sui reel), va nella sezione «Lezioni dalle sessioni» dell'agente giusto in `.claude/agents/`, con la
+  data; se riguarda la libreria anche in `docs/animazioni.md` o `docs/sceneggiatura.md`.
 
-## Pipeline prevista (fase 3, da fare)
-idea → sceneggiatura → revisione tecnica → animazione (animatore: `.py` + anteprima `--prova`) → fermata: il
-presentatore guarda → registrazione (gobbo, clip) → montaggio → social → approvazione → pubblica (container REELS).
+## Pipeline (bozza funzionale in fase 2; completa in fase 3)
+idea → sceneggiatura (**fermata 2**) → revisione tecnica (con ❌ ci si ferma) → animazione (animatore: `.py` +
+anteprima `--prova`) → **fermata 3: il presentatore guarda l'anteprima** → registrazione (gobbo, clip) → montaggio →
+social → approvazione → pubblica (container REELS). Idee: `**Stato:** idea → sceneggiata`; sceneggiature:
+`stato: sceneggiatura → rivisto → animato → …`. Mai spostare file tra cartelle: lo fa il presentatore. Fase 3:
+cruscotto, db delle decisioni, ideatore, social-strategist.
 
 ## Registrazione guidata (fase 5, da fare prima della registrazione vera)
 `uv run reel registra <file>`: **app desktop nativa in Python** (Tkinter + ffmpeg avfoundation) in cui il
