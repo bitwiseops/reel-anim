@@ -17,7 +17,7 @@ def unita(u: float) -> float:
 
 
 # Altezza delle MAIUSCOLE in px (misurata con calibra.py) per ogni ruolo tipografico. Nulla sotto MINIMO_PX.
-CORPO_PX = {"titolo": 104, "messaggio": 84, "punto": 92, "caption": 48, "etichetta": 40, "token": 44, "voce": 40, "piede": 28}
+CORPO_PX = {"titolo": 104, "messaggio": 84, "punto": 92, "caption": 48, "etichetta": 40, "token": 44, "voce": 40, "piede": 36}
 MINIMO_PX = 36
 
 # Fattore font_size (Manim/Pango) → altezza in px del testo "Hg" a piena risoluzione; lo scrive calibra.py.
@@ -32,3 +32,9 @@ def font_size_per(px_altezza: float) -> float:
 def safe_area_px() -> dict[str, int]:
     s = carica().dati["safe_area"]
     return {"alto": int(s["alto"]), "destra": int(s["destra"]), "basso": int(s["basso"]), "sinistra": int(s.get("sinistra", 60))}
+
+
+def tratto(n_px: float) -> float:
+    """stroke_width di Manim per un tratto spesso n_px pixel. Cairo disegna stroke_width × 0.01 unità,
+    e con 120 px per unità stroke_width 1 = 1,2 px: px() qui sarebbe sbagliato (linee invisibili)."""
+    return n_px / (PX_PER_UNITA * 0.01)

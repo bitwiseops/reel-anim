@@ -31,6 +31,8 @@ Inline: ==evidenzia== (una per scena: la parola che conta, in colore accento), *
 Limiti: 6-8 scene (min 5, max 9); VOCE ≤ 35 parole per scena (hook ≤ 15), max 4 righe VOCE per scena;
   ogni scena 2,5-14 s stimati; reel 30-60 s. La VOCE è parlato: frasi corte, una cosa per frase.
 Le durate reali le decidono le clip registrate (contenuti/media/<slug>/scena-NN.mov): uv run reel gobbo <file>
+Ogni beat dell'animazione parte con la sua frase VOCE: istanti esatti nell'anteprima con voce sintetica (una frase
+  alla volta), stimati in proporzione alle parole con le clip registrate (per ora).
 -->
 
 ## Scena 1 [hook]

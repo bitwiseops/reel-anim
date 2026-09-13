@@ -7,6 +7,7 @@ import inspect
 import sys
 from pathlib import Path
 from types import ModuleType
+from typing import NamedTuple
 
 from manim import tempconfig
 
@@ -18,6 +19,11 @@ RADICE = Path(__file__).resolve().parents[2]
 
 class AnimazioneMancante(RuntimeError):
     pass
+
+
+class Render(NamedTuple):
+    video: Path
+    avvisi: list[str]   # ScenaReel.avvisi: beat in ritardo, scena che sfora
 
 
 def file_animazione(slug: str) -> Path:
@@ -52,12 +58,21 @@ def hash_classe(cls: type) -> str:
     return hashlib.sha256(src.encode("utf-8")).hexdigest()[:16]
 
 
+def hash_sorgenti(animazione: Path) -> str:
+    """Hash di tutto ciò da cui dipende il render Manim: file delle animazioni, libreria tools/anim, config."""
+    h = hashlib.sha256()
+    for p in [animazione, *sorted((RADICE / "tools" / "anim").glob("*.py")), RADICE / "config.toml", RADICE / "config.local.toml"]:
+        if p.exists():
+            h.update(p.name.encode() + p.read_bytes())
+    return h.hexdigest()[:16]
+
+
 def renderizza(cls: type[ScenaReel], durata_s: float, scena: dict, out_dir: Path, nome: str, qualita: str = "h",
-               trasparente: bool = False, debug: bool = False, cfg: Config | None = None) -> Path:
-    """Renderizza la scena in out_dir/<nome>.(mp4|mov) e ritorna il percorso del file."""
+               trasparente: bool = False, debug: bool = False, cfg: Config | None = None) -> Render:
+    """Renderizza la scena (Manim la scrive in out_dir/videos/<risoluzione>/<nome>.(mp4|mov)); ritorna file e avvisi."""
     cfg = cfg or carica()
     out_dir.mkdir(parents=True, exist_ok=True)
     with tempconfig(opzioni_manim(cfg, qualita, trasparente=trasparente, media_dir=out_dir, output_file=nome)):
         s = cls(durata_s=durata_s, scena=scena, debug=debug)
         s.render()
-        return Path(s.renderer.file_writer.movie_file_path)
+        return Render(Path(s.renderer.file_writer.movie_file_path), list(s.avvisi))

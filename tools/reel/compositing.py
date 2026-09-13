@@ -94,7 +94,8 @@ def comando_scena(src: Sorgenti, dest: Path, cfg: Config | None = None, anteprim
         filtri.append("[br][mskS]alphamerge[brA]")
         filtri.append(f"[{i_base}:v][brA]overlay=x={int(sc['x'])}:y={int(sc['y'])}:shortest=1[base]")
         i_gr = aggiungi("-i", str(src.grafica))
-        filtri.append(f"[base][{i_gr}:v]overlay=0:0:format=auto[v0]")
+        filtri.append(f"[{i_gr}:v]scale={W}:{H}:flags=lanczos,format=rgba[gr]")
+        filtri.append("[base][gr]overlay=0:0:format=auto[v0]")
     else:
         i_gr = aggiungi("-i", str(src.grafica))
         filtri.append(f"[{i_gr}:v]scale={W}:{H}:flags=lanczos,setsar=1[v0]")

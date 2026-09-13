@@ -90,12 +90,13 @@ def cmd_clip(args) -> int:
 
 def cmd_voce(args) -> int:
     from .monta import out_dir
-    from .voce import sintetizza
+    from .voce import sintetizza_frasi
     r, _ = _carica(Path(args.file))
     out = out_dir(r, args.out)
     for s in r.scene:
         if s.voce:
-            print(sintetizza(s.voce_piena, out / "_voce" / f"{s.n:02d}.m4a"))
+            v = sintetizza_frasi(s.voce, out / "_voce" / f"{s.n:02d}.m4a")
+            print(f"scena {s.n}: {v.audio}  {v.durata_s:.2f} s · frasi a {' / '.join(f'{x:.2f}' for x in v.inizi_s)} s")
     return 0
 
 
@@ -114,7 +115,11 @@ def cmd_anima(args) -> int:
         print(f"-> {e}", file=sys.stderr)
         return 1
     for i in info:
-        print(f"scena {i['scena']} [{i['tipo_scena']}] {i['durata_s']:.1f}s  manim {i['tempo_manim_s']}s  → {out / i['png']}  {out / i['filmstrip']}")
+        beat = " / ".join(f"{x:.1f}" for x in i["inizi_frasi_s"]) or "nessuno"
+        print(f"scena {i['scena']} [{i['tipo_scena']}] {i['durata_s']:.1f}s · beat {beat} s ({i['origine_tempi']}) · "
+              f"manim {i['tempo_manim_s']}s → {out / i['png']}  {out / i['filmstrip']}")
+        for a in i["avvisi_tempi"]:
+            print(f"   ⚠ {a}")
     _stampa([d for d in diag if d.livello == "errore"])
     return 1 if ha_errori(diag) else 0
 

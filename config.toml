@@ -53,6 +53,7 @@ comando = "say"
 voce = "Alice"
 parole_al_secondo = 2.8   # stima usata anche da `reel valida`
 velocita_wpm = 170        # passata a `say -r`
+pausa_frasi_s = 0.3       # silenzio tra le frasi: una frase alla volta, così gli inizi sono esatti
 
 [transizioni]
 tipo = "dissolvenza"      # taglio | dissolvenza

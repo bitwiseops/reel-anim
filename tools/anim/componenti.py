@@ -1,7 +1,14 @@
 """Componenti riusabili per le scene del reel (solo Text/MarkupText via Pango; colori e font dal config).
 
-Convenzione: ogni componente è un VGroup posizionabile con i metodi Manim (next_to, move_to, align_to) e ha metodi
-che ritornano Animation (entra, cresci, scegli, …) da passare a `self.play`. Le misure sono in px tramite `px()`.
+Convenzione: ogni componente è un VGroup posizionabile con i metodi Manim (next_to, move_to, align_to, oppure
+`area.metti`) e ha metodi che ritornano Animation (entra, cresci, scegli, …) da passare a `self.play`.
+Misure in px con `px()`; spessori dei tratti con `tratto()` (non px: vedi misure.tratto).
+Le animazioni composte usano `group=self`: senza, Manim aggiunge in cima alla scena un Group nuovo con i pezzi
+animati e un riquadro pieno finisce sopra il testo (la carta «contesto» che perdeva le righe).
+
+Testo: `testo()` ritorna un `Blocco` di `Riga`. Ogni riga ha un'altezza costante (dalla cima della H al fondo
+della g, qualunque lettere contenga), così righe, cartellini e barre si allineano sulla linea di base.
+`blocco.parola("x")` ritorna i glifi di una parola (per barrarla, evidenziarla, colorarla).
 """
 from __future__ import annotations
 
@@ -9,16 +16,18 @@ import html
 import re
 
 import numpy as np
-from manim import (BOLD, DOWN, LEFT, ORIGIN, RIGHT, UP, AnimationGroup, Arrow, Create, FadeIn, FadeOut,
-                   GrowFromEdge, Indicate, LaggedStart, Line, MarkupText, Mobject, Rectangle, RoundedRectangle,
-                   SurroundingRectangle, Text, Transform, VGroup, VMobject)
+from manim import (BOLD, DOWN, LEFT, ORIGIN, RIGHT, UL, UP, AnimationGroup, Arrow, Create, FadeIn, FadeOut,
+                   FadeTransform, GrowArrow, GrowFromEdge, Indicate, LaggedStart, Line, MarkupText, Mobject, Rectangle,
+                   RoundedRectangle, SurroundingRectangle, Text, Transform, VGroup, VMobject)
 
 from .config import Config, carica
-from .misure import CORPO_PX, font_size_per, px
+from .misure import CORPO_PX, font_size_per, px, tratto
 
 _RE_EV = re.compile(r"==(.+?)==")
 _RE_B = re.compile(r"\*\*(.+?)\*\*")
 _RE_I = re.compile(r"\*(.+?)\*")
+_RE_SPAZI = re.compile(r"\s")
+_RE_MARCATORI = re.compile(r"==|\*\*|\*")
 
 
 def _cfg() -> Config:
@@ -45,20 +54,15 @@ def _font_kw(ruolo: str, peso: str | None = None, mono: bool = False) -> dict:
             "weight": peso or "NORMAL"}
 
 
-def testo(s: str, ruolo: str = "caption", colore: str | None = None, peso: str | None = None, mono: bool = False,
-          larghezza_px: float | None = None, allinea: str = "left", line_spacing: float = 0.9) -> MarkupText:
-    """Testo con inline della sceneggiatura, a capo automatico entro larghezza_px (misurato con Pango)."""
-    cfg = _cfg()
-    kw = _font_kw(ruolo, peso, mono)
-    colore = colore or cfg.palette.testo
-    righe = [s]
-    if larghezza_px:
-        righe = avvolgi(s, larghezza_px, kw)
-    m = MarkupText("\n".join(markup(r) for r in righe), color=colore, line_spacing=line_spacing, justify=False,
-                   disable_ligatures=True, **kw)
-    if allinea == "center":
-        pass  # MarkupText centra le righe di default
-    return m
+def _bilancia(righe: list[str]) -> list[str]:
+    """Un ==evidenzia== o **grassetto** che attraversa un a capo viene chiuso a fine riga e riaperto nella successiva."""
+    out, aperti = [], ""
+    for r in righe:
+        r = aperti + r
+        restano = [mk for mk in ("**", "==") if r.count(mk) % 2]
+        aperti = "".join(restano)
+        out.append(r + "".join(reversed(restano)))
+    return out
 
 
 def avvolgi(s: str, larghezza_px: float, kw: dict) -> list[str]:
@@ -68,7 +72,7 @@ def avvolgi(s: str, larghezza_px: float, kw: dict) -> list[str]:
     corrente: list[str] = []
     for p in parole:
         tentativo = " ".join(corrente + [p])
-        w = Text(piano(tentativo), **kw).width * _cfg().px_per_unita
+        w = Text(_RE_MARCATORI.sub("", tentativo), **kw).width * _cfg().px_per_unita  # anche == spezzati a metà
         if corrente and w > larghezza_px:
             righe.append(" ".join(corrente))
             corrente = [p]
@@ -76,7 +80,77 @@ def avvolgi(s: str, larghezza_px: float, kw: dict) -> list[str]:
             corrente.append(p)
     if corrente:
         righe.append(" ".join(corrente))
-    return righe or [s]
+    return _bilancia(righe) if righe else [s]
+
+
+class Riga(VGroup):
+    """Una riga di testo: `glifi` (MarkupText, un glifo per carattere non spazio) + un puntello invisibile alto
+    quanto «Hg», che dà a tutte le righe dello stesso corpo la stessa altezza e la stessa linea di base."""
+
+    def __init__(self, s: str, colore: str, kw: dict, **kwargs):
+        super().__init__(**kwargs)
+        self.piano = piano(s)
+        m = MarkupText("Hg" + markup(s), color=colore, disable_ligatures=True, **kw)
+        self.allineata = len(m.submobjects) == len(_RE_SPAZI.sub("", self.piano)) + 2
+        if self.allineata:
+            h, g = m.submobjects[0], m.submobjects[1]
+            alto, basso = h.get_top()[1], g.get_bottom()[1]
+            m.remove(h, g)
+            x = m.get_left()[0]
+            self.puntello = Line([x, alto, 0], [x, basso, 0], stroke_width=0, stroke_opacity=0)
+            self.glifi = m
+            self.add(self.puntello, m)
+        else:  # conteggio dei glifi inatteso: niente puntello (l'altezza segue le lettere)
+            self.glifi = MarkupText(markup(s), color=colore, disable_ligatures=True, **kw)
+            self.add(self.glifi)
+
+    def parola(self, w: str) -> VGroup | None:
+        i = self.piano.lower().find(w.lower())
+        if i < 0:
+            return None
+        if not self.allineata:
+            return VGroup(self.glifi)
+        prima = len(_RE_SPAZI.sub("", self.piano[:i]))
+        n = len(_RE_SPAZI.sub("", w))
+        return VGroup(*self.glifi.submobjects[prima:prima + n])
+
+
+class Blocco(VGroup):
+    """Testo su una o più righe: a capo automatico entro larghezza_px, «\\n» forza l'a capo."""
+
+    def __init__(self, s: str, ruolo: str = "caption", colore: str | None = None, peso: str | None = None,
+                 mono: bool = False, larghezza_px: float | None = None, allinea: str = "left", interlinea: float = 0.3, **kw):
+        super().__init__(**kw)
+        cfg = _cfg()
+        fkw = _font_kw(ruolo, peso, mono)
+        testi: list[str] = []
+        for par in str(s).split("\n"):
+            testi += avvolgi(par, larghezza_px, fkw) if larghezza_px else [par]
+        self.righe = VGroup(*[Riga(t, colore or cfg.palette.testo, fkw) for t in testi if t.strip()])
+        bordo = {"left": LEFT, "center": ORIGIN, "right": RIGHT}[allinea]
+        self.righe.arrange(DOWN, buff=px(CORPO_PX[ruolo] * interlinea), aligned_edge=bordo)
+        self.add(self.righe)
+
+    @property
+    def glifi(self) -> VGroup:
+        return VGroup(*[r.glifi for r in self.righe])
+
+    def parola(self, w: str) -> VGroup:
+        for r in self.righe:
+            g = r.parola(w)
+            if g is not None:
+                return g
+        raise ValueError(f"«{w}» non compare nel testo «{' '.join(r.piano for r in self.righe)}»")
+
+
+def testo(s: str, ruolo: str = "caption", colore: str | None = None, peso: str | None = None, mono: bool = False,
+          larghezza_px: float | None = None, allinea: str = "left", interlinea: float = 0.3) -> Blocco:
+    """Testo con inline della sceneggiatura nel corpo del ruolo (misure.CORPO_PX)."""
+    return Blocco(s, ruolo, colore, peso, mono, larghezza_px, allinea, interlinea)
+
+
+def _limita(f: float) -> float:
+    return max(0.02, min(1.0, float(f)))
 
 
 # --- componenti ------------------------------------------------------------------------------------------
@@ -84,21 +158,27 @@ def avvolgi(s: str, larghezza_px: float, kw: dict) -> list[str]:
 class Titolo(VGroup):
     """Titolo grande (hook): maiuscolo, grassetto, ==parola== in accento; a capo entro larghezza_px."""
 
-    def __init__(self, s: str, larghezza_px: float = 900, ruolo: str = "titolo", **kw):
+    def __init__(self, s: str, larghezza_px: float = 900, ruolo: str = "titolo", colore: str | None = None,
+                 allinea: str = "left", maiuscolo: bool = True, **kw):
         super().__init__(**kw)
-        self.testo = testo(s.upper() if ruolo == "titolo" else s, ruolo, peso=BOLD, larghezza_px=larghezza_px)
+        self.testo = testo(s.upper() if maiuscolo else s, ruolo, colore=colore, peso=BOLD, larghezza_px=larghezza_px,
+                           allinea=allinea, interlinea=0.14)
+        self.righe = self.testo.righe
         self.add(self.testo)
+
+    def parola(self, w: str) -> VGroup:
+        return self.testo.parola(w)
 
     def entra(self, **kw):
         return FadeIn(self, shift=UP * 0.3, **kw)
 
-    def per_righe(self, lag: float = 0.25):
-        """Le righe compaiono una alla volta (per i titoli su più righe)."""
-        return LaggedStart(*[FadeIn(r, shift=UP * 0.2) for r in self.testo.submobjects] if len(self.testo.submobjects) > 1 else [FadeIn(self)], lag_ratio=lag)
+    def per_righe(self, lag: float = 0.25, **kw):
+        """Le righe compaiono una alla volta."""
+        return LaggedStart(*[FadeIn(r, shift=UP * 0.2) for r in self.righe], lag_ratio=lag, group=self, **kw)
 
 
 class Caption(VGroup):
-    """Didascalia in basso nell'area contenuto (attenuata). `area` è un Area di base.py."""
+    """Didascalia attenuata; con `area` si mette in fondo all'area (un Area di base.py)."""
 
     def __init__(self, s: str, area=None, larghezza_px: float = 880, colore: str | None = None, **kw):
         super().__init__(**kw)
@@ -112,28 +192,32 @@ class Caption(VGroup):
 
 
 class Etichetta(VGroup):
-    """Pillola con una parola chiave (TESTO:)."""
+    """Pillola con una parola chiave (TESTO:). pieno=False: solo contorno."""
 
     def __init__(self, s: str, colore: str | None = None, pieno: bool = True, **kw):
         super().__init__(**kw)
         cfg = _cfg()
         col = colore or cfg.palette.accento
-        t = testo(s, "etichetta", colore=cfg.palette.sfondo if pieno else col, peso=BOLD)
-        box = RoundedRectangle(corner_radius=px(28), width=t.width + px(56), height=t.height + px(36),
-                               stroke_color=col, stroke_width=3, fill_color=col, fill_opacity=1 if pieno else 0)
-        self.add(box, t.move_to(box))
+        self.testo = testo(s, "etichetta", colore=cfg.palette.sfondo if pieno else col, peso=BOLD)
+        h = self.testo.height + px(36)
+        self.box = RoundedRectangle(corner_radius=h / 2, width=self.testo.width + px(64), height=h, stroke_color=col,
+                                    stroke_width=tratto(3), fill_color=col if pieno else cfg.palette.sfondo, fill_opacity=1)
+        self.add(self.box, self.testo.move_to(self.box))
 
     def entra(self, **kw):
         return FadeIn(self, scale=0.85, **kw)
 
 
 class Barrato(VGroup):
-    """Parola con una riga sopra (per «non vuol dire X»)."""
+    """Riga sopra una parola (per «non vuol dire X»): passa i glifi (`blocco.parola("x")`) o un Blocco."""
 
-    def __init__(self, parola: Mobject, colore: str | None = None, **kw):
+    def __init__(self, parola: Mobject, colore: str | None = None, spessore_px: float = 10, **kw):
         super().__init__(**kw)
-        col = colore or _cfg().palette.accento
-        self.riga = Line(parola.get_left(), parola.get_right(), stroke_color=col, stroke_width=px(10)).move_to(parola.get_center())
+        g = getattr(parola, "glifi", parola)
+        y = g.get_center()[1]
+        m = px(10)
+        self.riga = Line([g.get_left()[0] - m, y, 0], [g.get_right()[0] + m, y, 0],
+                         stroke_color=colore or _cfg().palette.accento, stroke_width=tratto(spessore_px))
         self.add(self.riga)
 
     def entra(self, **kw):
@@ -141,46 +225,64 @@ class Barrato(VGroup):
 
 
 class Freccia(VGroup):
-    def __init__(self, da, a, s: str | None = None, colore: str | None = None, **kw):
+    """Freccia da un punto (o mobject) a un altro, con etichetta opzionale sopra."""
+
+    def __init__(self, da, a, s: str | None = None, colore: str | None = None, spessore_px: float = 6, **kw):
         super().__init__(**kw)
         cfg = _cfg()
         col = colore or cfg.palette.attenuato
-        self.freccia = Arrow(da, a, buff=px(12), stroke_width=px(6), color=col, max_tip_length_to_length_ratio=0.15)
+        self.freccia = Arrow(da, a, buff=px(12), stroke_width=tratto(spessore_px), color=col, tip_length=px(34),
+                             max_tip_length_to_length_ratio=0.35, max_stroke_width_to_length_ratio=20)
         self.add(self.freccia)
+        self.etichetta = None
         if s:
             self.etichetta = testo(s, "etichetta", colore=col).next_to(self.freccia, UP, buff=px(8))
             self.add(self.etichetta)
 
     def entra(self, **kw):
-        anims = [GrowFromEdge(self.freccia, self.freccia.get_start(), **kw)]
-        if len(self) > 1:
-            anims.append(FadeIn(self[1]))
-        return AnimationGroup(*anims, lag_ratio=0.5)
+        anims = [GrowArrow(self.freccia)]
+        if self.etichetta is not None:
+            anims.append(FadeIn(self.etichetta))
+        return AnimationGroup(*anims, lag_ratio=0.5, group=self, **kw)
 
 
 class Carta(VGroup):
-    """Scheda con titolo e righe (per «contesto», «prompt», …)."""
+    """Scheda con titolo e righe (per «contesto», «prompt», «biglietto»…); cresce verso il basso con aggiungi_riga."""
 
-    def __init__(self, titolo: str, righe: list[str] | None = None, larghezza_px: float = 880, colore: str | None = None, **kw):
+    def __init__(self, titolo: str, righe: list[str] | None = None, larghezza_px: float = 900, colore: str | None = None, **kw):
         super().__init__(**kw)
         cfg = _cfg()
-        col = colore or cfg.palette.secondario
-        self.titolo = testo(titolo, "etichetta", colore=col, peso=BOLD)
-        self.righe = VGroup(*[testo(r, "caption", larghezza_px=larghezza_px - px(80)) for r in (righe or [])])
-        corpo = VGroup(self.titolo, *self.righe).arrange(DOWN, aligned_edge=LEFT, buff=px(20))
-        self.box = RoundedRectangle(corner_radius=px(28), width=larghezza_px / cfg.px_per_unita,
-                                    height=corpo.height + px(64), stroke_color=col, stroke_width=3, fill_color=cfg.palette.sfondo, fill_opacity=1)
-        corpo.move_to(self.box).align_to(self.box, LEFT).shift(RIGHT * px(40))
-        self.add(self.box, corpo)
+        self.colore = colore or cfg.palette.secondario
+        self.larghezza_px = larghezza_px
+        self.pad = px(40)
+        self.titolo = testo(titolo, "etichetta", colore=self.colore, peso=BOLD)
+        self.righe = VGroup(*[self._riga(r) for r in (righe or [])])
+        self.box = self._box(self._altezza(self.righe))
+        self.add(self.box, self.titolo, self.righe)
+        self.titolo.move_to(self.box.get_corner(UL) + np.array([self.pad, -self.pad, 0]), aligned_edge=UL)
+        prec = self.titolo
+        for r in self.righe:
+            r.next_to(prec, DOWN, aligned_edge=LEFT, buff=px(24))
+            prec = r
 
-    def aggiungi_riga(self, s: str, larghezza_px: float = 880):
-        """Animazione: una nuova riga entra in fondo alla carta (la carta cresce)."""
-        r = testo(s, "caption", larghezza_px=larghezza_px - px(80))
-        ultimo = self.righe[-1] if len(self.righe) else self.titolo
-        r.next_to(ultimo, DOWN, aligned_edge=LEFT, buff=px(20))
+    def _riga(self, s: str) -> Blocco:
+        return testo(s, "caption", larghezza_px=self.larghezza_px - 2 * 40)
+
+    def _altezza(self, righe) -> float:
+        return self.titolo.height + sum(r.height + px(24) for r in righe) + 2 * self.pad
+
+    def _box(self, altezza: float) -> RoundedRectangle:
+        cfg = _cfg()
+        return RoundedRectangle(corner_radius=px(28), width=px(self.larghezza_px), height=altezza, stroke_color=self.colore,
+                                stroke_width=tratto(3), fill_color=cfg.palette.sfondo, fill_opacity=1)
+
+    def aggiungi_riga(self, s: str, **kw):
+        """Animazione: una nuova riga entra in fondo alla carta (la carta cresce verso il basso)."""
+        r = self._riga(s)
+        r.next_to(self.righe[-1] if len(self.righe) else self.titolo, DOWN, aligned_edge=LEFT, buff=px(24))
+        nuovo = self._box(self.box.height + r.height + px(24)).align_to(self.box, UP).align_to(self.box, LEFT)
         self.righe.add(r)
-        nuovo = self.box.copy().stretch_to_fit_height(self.box.height + r.height + px(20)).align_to(self.box, UP)
-        return AnimationGroup(Transform(self.box, nuovo), FadeIn(r, shift=UP * 0.15), lag_ratio=0.3)
+        return AnimationGroup(Transform(self.box, nuovo), FadeIn(r, shift=UP * 0.15), lag_ratio=0.3, group=self, **kw)
 
     def entra(self, **kw):
         return FadeIn(self, shift=UP * 0.2, **kw)
@@ -192,49 +294,76 @@ class Barra(VGroup):
     def __init__(self, s: str, frazione: float, larghezza_px: float = 600, colore: str | None = None, altezza_px: float = 26, **kw):
         super().__init__(**kw)
         cfg = _cfg()
+        self.s = s
         self.colore = colore or cfg.palette.secondario
-        self.frazione = max(0.02, min(1.0, frazione))
+        self.frazione = _limita(frazione)
         self.larghezza_px = larghezza_px
-        self.etichetta = testo(s, "token", colore=cfg.palette.testo)
-        self.pista = Rectangle(width=px(larghezza_px), height=px(altezza_px), stroke_width=0, fill_color=cfg.palette.attenuato, fill_opacity=0.25)
-        self.riempimento = Rectangle(width=px(larghezza_px * self.frazione), height=px(altezza_px), stroke_width=0,
-                                     fill_color=self.colore, fill_opacity=1).align_to(self.pista, LEFT)
-        pista = VGroup(self.pista, self.riempimento)
-        self.add(VGroup(self.etichetta, pista).arrange(DOWN, aligned_edge=LEFT, buff=px(10)))
+        self.etichetta = testo(s, "token")
+        self.pista = Rectangle(width=px(larghezza_px), height=px(altezza_px), stroke_width=0, fill_color=cfg.palette.attenuato,
+                               fill_opacity=0.25)
+        self.pista.next_to(self.etichetta, DOWN, buff=px(12), aligned_edge=LEFT)
+        self.riempimento = Rectangle(width=self._larghezza(self.frazione), height=px(altezza_px), stroke_width=0,
+                                     fill_color=self.colore, fill_opacity=1).move_to(self.pista, aligned_edge=LEFT)
+        self.add(self.etichetta, self.pista, self.riempimento)
+
+    def _larghezza(self, f: float) -> float:
+        return px(self.larghezza_px) * _limita(f)
 
     def cresci(self, **kw):
-        return AnimationGroup(FadeIn(self.etichetta), FadeIn(self.pista), GrowFromEdge(self.riempimento, LEFT), lag_ratio=0.2, **kw)
+        return AnimationGroup(FadeIn(self.etichetta), FadeIn(self.pista), GrowFromEdge(self.riempimento, LEFT), lag_ratio=0.2, group=self, **kw)
 
-    def imposta(self, frazione: float):
+    def bersaglio(self, frazione: float) -> "Barra":
+        """Copia della barra con la nuova lunghezza (per Transform insieme a uno spostamento)."""
+        b = self.copy()
+        b.riempimento.stretch_to_fit_width(self._larghezza(frazione)).align_to(b.pista, LEFT)
+        b.frazione = _limita(frazione)
+        return b
+
+    def imposta(self, frazione: float, **kw):
         """Animazione: la barra cambia lunghezza."""
-        nuovo = Rectangle(width=px(self.larghezza_px * max(0.02, min(1.0, frazione))), height=self.riempimento.height, stroke_width=0,
-                          fill_color=self.colore, fill_opacity=1).align_to(self.pista, LEFT).align_to(self.pista, UP)
-        self.frazione = frazione
-        return Transform(self.riempimento, nuovo)
+        nuovo = self.riempimento.copy().stretch_to_fit_width(self._larghezza(frazione)).align_to(self.pista, LEFT)
+        self.frazione = _limita(frazione)
+        return Transform(self.riempimento, nuovo, **kw)
 
 
 class Classifica(VGroup):
-    """Colonna di candidati con barre (es. «prossima parola»), il primo evidenziato con scegli()."""
+    """Colonna di candidati con barre (es. «prossima parola»). Le voci si danno già in ordine.
+    aggiorna() cambia le lunghezze e riordina; scegli(i) accende la voce i (indice originale)."""
 
     def __init__(self, voci: list[tuple[str, float]], larghezza_px: float = 600, esempio: bool = True, **kw):
         super().__init__(**kw)
         cfg = _cfg()
         self.barre = VGroup(*[Barra(s, f, larghezza_px, colore=cfg.palette.secondario) for s, f in voci])
         self.barre.arrange(DOWN, aligned_edge=LEFT, buff=px(34))
+        self.ordine = list(range(len(voci)))
         self.add(self.barre)
+        self.nota = None
         if esempio:
             self.nota = testo("esempio: numeri inventati", "piede", colore=cfg.palette.attenuato)
-            self.nota.next_to(self.barre, DOWN, aligned_edge=LEFT, buff=px(20))
+            self.nota.next_to(self.barre, DOWN, aligned_edge=LEFT, buff=px(28))
             self.add(self.nota)
 
     def entra(self, lag: float = 0.35, **kw):
         anims = [b.cresci() for b in self.barre]
-        if len(self) > 1:
-            anims.append(FadeIn(self[1]))
-        return LaggedStart(*anims, lag_ratio=lag, **kw)
+        if self.nota is not None:
+            anims.append(FadeIn(self.nota))
+        return LaggedStart(*anims, lag_ratio=lag, group=self, **kw)
+
+    def aggiorna(self, frazioni: list[float], riordina: bool = True, **kw):
+        """Animazione: nuove lunghezze (una per voce, nell'ordine originale); con riordina le barre si scambiano di posto."""
+        posti = [self.barre[k].get_corner(UL) for k in self.ordine]
+        ordine = sorted(range(len(frazioni)), key=lambda k: -frazioni[k]) if riordina else list(self.ordine)
+        anims = []
+        for rango, k in enumerate(ordine):
+            b = self.barre[k]
+            t = b.bersaglio(frazioni[k]).move_to(posti[rango], aligned_edge=UL)
+            anims.append(Transform(b, t))
+            b.frazione = t.frazione
+        self.ordine = ordine
+        return AnimationGroup(*anims, group=self, **kw)
 
     def scegli(self, i: int, **kw):
-        """La voce i diventa color accento e pulsa; le altre sbiadiscono."""
+        """La voce i diventa color accento; le altre sbiadiscono."""
         cfg = _cfg()
         anims = []
         for k, b in enumerate(self.barre):
@@ -242,16 +371,12 @@ class Classifica(VGroup):
                 anims.append(b.riempimento.animate.set_fill(cfg.palette.accento))
                 anims.append(b.etichetta.animate.set_color(cfg.palette.accento))
             else:
-                anims.append(b.animate.set_opacity(0.3))
-        return AnimationGroup(*anims, **kw)
+                anims.append(b.animate.fade(0.65))
+        return AnimationGroup(*anims, group=self, **kw)
 
-    def token(self, i: int) -> "Token":
-        return Token(piano(self.barre[i].etichetta.original_text if hasattr(self.barre[i].etichetta, "original_text") else "")).move_to(self.barre[i].etichetta)
-
-    def riordina(self, voci: list[tuple[str, float]], **kw):
-        """Animazione: nuove voci al posto delle vecchie (stessa posizione)."""
-        nuova = Classifica(voci, self.barre[0].larghezza_px, esempio=len(self) > 1).move_to(self).align_to(self, LEFT).align_to(self, UP)
-        return Transform(self, nuova, **kw)
+    def token(self, i: int, colore: str | None = None) -> "Token":
+        """Un cartellino con la voce i, sovrapposto alla sua etichetta (da far volare con Frase.aggiungi)."""
+        return Token(self.barre[i].s, colore=colore).move_to(self.barre[i].etichetta, aligned_edge=LEFT)
 
 
 class Token(VGroup):
@@ -262,63 +387,63 @@ class Token(VGroup):
         cfg = _cfg()
         col = colore or cfg.palette.attenuato
         self.parola = parola
-        t = testo(parola, "token")
-        self.box = RoundedRectangle(corner_radius=px(16), width=t.width + px(44), height=t.height + px(36),
-                                    stroke_color=col, stroke_width=3, fill_color=cfg.palette.sfondo, fill_opacity=1)
-        self.add(self.box, t.move_to(self.box))
+        self.testo = testo(parola, "token")
+        self.box = RoundedRectangle(corner_radius=px(16), width=self.testo.width + px(44), height=self.testo.height + px(36),
+                                    stroke_color=col, stroke_width=tratto(3), fill_color=cfg.palette.sfondo, fill_opacity=1)
+        self.add(self.box, self.testo.move_to(self.box))
 
     def entra(self, **kw):
         return FadeIn(self, shift=UP * 0.25, **kw)
 
     def evidenzia(self, **kw):
-        return self.box.animate.set_stroke(_cfg().palette.accento, width=5)
+        return self.box.animate(**kw).set_stroke(_cfg().palette.accento, width=tratto(5))
 
 
 class Frase(VGroup):
-    """Riga di cartellini che va a capo entro larghezza_px; aggiungi() anima l'ingresso di un token in coda."""
+    """Riga di cartellini che va a capo entro larghezza_px, ancorata in alto a sinistra in `ancora`.
+    aggiungi() anima l'ingresso di un token in coda (da un punto o con dissolvenza)."""
 
-    def __init__(self, parole: list[str], larghezza_px: float = 900, **kw):
+    def __init__(self, parole: list[str] | tuple = (), larghezza_px: float = 900, ancora=None, **kw):
         super().__init__(**kw)
         self.larghezza_px = larghezza_px
-        self.token = VGroup()
-        for p in parole:
-            self.token.add(Token(p))
-        self._disponi()
+        self.ancora = np.array(ancora if ancora is not None else ORIGIN, dtype=float)
+        self.token = VGroup(*[Token(p) for p in parole])
         self.add(self.token)
+        self._disponi()
+
+    def posiziona(self, ancora) -> "Frase":
+        self.ancora = np.array(ancora, dtype=float)
+        self._disponi()
+        return self
 
     def _disponi(self):
-        x = 0.0
-        y = 0.0
+        if not len(self.token):
+            return
+        x = y = riga_h = 0.0
         gap = px(16)
-        riga_h = 0.0
-        pos = []
         for t in self.token:
             if x > 0 and x + t.width > px(self.larghezza_px):
                 x, y = 0.0, y - riga_h - gap
-            pos.append((x + t.width / 2, y - t.height / 2))
+            t.move_to(np.array([x + t.width / 2, y - t.height / 2, 0.0]))
             x += t.width + gap
             riga_h = max(riga_h, t.height)
-        for t, (cx, cy) in zip(self.token, pos):
-            t.move_to(np.array([cx, cy, 0.0]))
-        # ancora in alto a sinistra: la frase cresce verso il basso
-        if len(self.token):
-            self.token.shift(-self.token.get_corner(UP + LEFT))
+        self.token.shift(self.ancora - self.token.get_corner(UL))
 
-    def aggiungi(self, parola: str | Token, da=None):
-        """Animazione: il token entra in coda (da un punto `da` o con fade)."""
-        origine = self.token.get_corner(UP + LEFT) if len(self.token) else ORIGIN
+    def aggiungi(self, parola: "str | Token", da=None, **kw):
+        """Animazione: il token entra in coda (vola da `da`, un punto o un mobject, oppure dissolvenza)."""
+        if len(self.token):
+            self.ancora = self.token.get_corner(UL)
         t = parola if isinstance(parola, Token) else Token(parola)
         self.token.add(t)
         self._disponi()
-        self.token.shift(origine - self.token.get_corner(UP + LEFT))
         if da is not None:
             dest = t.get_center().copy()
             t.move_to(da)
-            return t.animate.move_to(dest)
-        return FadeIn(t, shift=UP * 0.2)
+            return t.animate(**kw).move_to(dest)
+        return FadeIn(t, shift=UP * 0.2, **kw)
 
     def entra_una_alla_volta(self, lag: float = 0.3, **kw):
-        return LaggedStart(*[FadeIn(t, shift=UP * 0.2) for t in self.token], lag_ratio=lag, **kw)
+        return LaggedStart(*[FadeIn(t, shift=UP * 0.2) for t in self.token], lag_ratio=lag, group=self, **kw)
 
 
 class Lista(VGroup):
@@ -330,16 +455,15 @@ class Lista(VGroup):
         self.voci = VGroup()
         for k, v in enumerate(voci):
             col = cfg.palette.secondario if k % 2 == 0 else cfg.palette.accento
-            tratto = Rectangle(width=px(36), height=px(6), stroke_width=0, fill_color=col, fill_opacity=1)
-            t = testo(v, ruolo, larghezza_px=larghezza_px - px(70))
-            riga = VGroup(tratto, t).arrange(RIGHT, buff=px(24), aligned_edge=UP)
-            tratto.shift(DOWN * (t.height * 0.5 - px(3)))
-            self.voci.add(riga)
+            t = testo(v, ruolo, larghezza_px=larghezza_px - 70)
+            trattino = Rectangle(width=px(36), height=px(8), stroke_width=0, fill_color=col, fill_opacity=1)
+            trattino.next_to(t, LEFT, buff=px(24)).set_y(t.righe[0].glifi.get_center()[1])
+            self.voci.add(VGroup(trattino, t))
         self.voci.arrange(DOWN, aligned_edge=LEFT, buff=px(30))
         self.add(self.voci)
 
     def entra_una_alla_volta(self, lag: float = 0.4, **kw):
-        return LaggedStart(*[FadeIn(v, shift=UP * 0.2) for v in self.voci], lag_ratio=lag, **kw)
+        return LaggedStart(*[FadeIn(v, shift=UP * 0.2) for v in self.voci], lag_ratio=lag, group=self, **kw)
 
 
 class Contatore(VGroup):
@@ -352,19 +476,21 @@ class Contatore(VGroup):
         self.numero = testo(str(valore), "messaggio", colore=self.colore, peso=BOLD, mono=True)
         self.add(self.numero)
         if etichetta:
-            self.etich = testo(etichetta, "etichetta", colore=cfg.palette.attenuato).next_to(self.numero, DOWN, buff=px(8))
+            self.etich = testo(etichetta, "etichetta", colore=cfg.palette.attenuato).next_to(self.numero, DOWN, buff=px(12), aligned_edge=LEFT)
             self.add(self.etich)
 
     def a(self, valore: int | str, **kw):
-        nuovo = testo(str(valore), "messaggio", colore=self.colore, peso=BOLD, mono=True).move_to(self.numero)
+        nuovo = testo(str(valore), "messaggio", colore=self.colore, peso=BOLD, mono=True).move_to(self.numero, aligned_edge=LEFT)
         return Transform(self.numero, nuovo, **kw)
 
     def entra(self, **kw):
         return FadeIn(self, scale=0.8, **kw)
 
 
-def Evidenzia(mob: Mobject, colore: str | None = None, buff: float = 0.12) -> SurroundingRectangle:
-    return SurroundingRectangle(mob, color=colore or _cfg().palette.accento, buff=buff, corner_radius=px(12), stroke_width=px(5))
+def Evidenzia(mob: Mobject, colore: str | None = None, buff: float = 0.15, spessore_px: float = 5) -> SurroundingRectangle:
+    """Riquadro color accento attorno a un mobject (da animare con Create)."""
+    return SurroundingRectangle(mob, color=colore or _cfg().palette.accento, buff=buff, corner_radius=px(16),
+                                stroke_width=tratto(spessore_px))
 
 
 class CorniceSchermo(VGroup):
@@ -375,7 +501,7 @@ class CorniceSchermo(VGroup):
         cfg = _cfg()
         r = int(cfg.dati["schermo"].get("raggio_px", 36))
         self.box = RoundedRectangle(corner_radius=px(r), width=area.larghezza, height=area.altezza,
-                                    stroke_color=colore or cfg.palette.attenuato, stroke_width=4, fill_opacity=0).move_to(area.centro)
+                                    stroke_color=colore or cfg.palette.attenuato, stroke_width=tratto(4), fill_opacity=0).move_to(area.centro)
         self.add(self.box)
 
     def entra(self, **kw):
@@ -383,7 +509,7 @@ class CorniceSchermo(VGroup):
 
 
 class Piede(VGroup):
-    """Handle del canale in basso a sinistra, se configurato."""
+    """Handle del canale in basso a sinistra, se configurato (vuoto altrimenti: controlla len() prima di animarlo)."""
 
     def __init__(self, area, **kw):
         super().__init__(**kw)
@@ -395,28 +521,27 @@ class Piede(VGroup):
             self.add(t)
 
 
-class Messaggio(VGroup):
-    """Messaggio di chiusura: maiuscolo, grassetto, con ==enfasi==; più CTA a pillola."""
+class Messaggio(Titolo):
+    """Messaggio di chiusura: maiuscolo, grassetto, con ==enfasi==; CTA a pillola opzionale sotto."""
 
     def __init__(self, s: str, cta: str | None = None, larghezza_px: float = 900, **kw):
-        super().__init__(**kw)
-        cfg = _cfg()
-        self.testo = testo(s.upper(), "messaggio", peso=BOLD, larghezza_px=larghezza_px)
-        self.add(self.testo)
+        super().__init__(s, larghezza_px=larghezza_px, ruolo="messaggio", **kw)
+        self.cta = None
         if cta:
-            self.cta = Etichetta(cta, colore=cfg.palette.accento)
+            self.cta = Etichetta(cta)
             if self.cta.width > px(larghezza_px):
                 self.cta.scale_to_fit_width(px(larghezza_px))
             self.cta.next_to(self.testo, DOWN, aligned_edge=LEFT, buff=px(44))
             self.add(self.cta)
 
     def entra(self, **kw):
-        anims = [FadeIn(self.testo, shift=UP * 0.2)]
-        if len(self) > 1:
-            anims.append(FadeIn(self[1], scale=0.85))
-        return LaggedStart(*anims, lag_ratio=0.6, **kw)
+        anims = [self.per_righe()]
+        if self.cta is not None:
+            anims.append(FadeIn(self.cta, scale=0.85))
+        return LaggedStart(*anims, lag_ratio=0.6, group=self, **kw)
 
 
-__all__ = ["testo", "markup", "piano", "avvolgi", "Titolo", "Caption", "Etichetta", "Barrato", "Freccia", "Carta", "Barra",
-           "Classifica", "Token", "Frase", "Lista", "Contatore", "Evidenzia", "CorniceSchermo", "Piede", "Messaggio",
-           "FadeIn", "FadeOut", "Indicate", "LaggedStart", "AnimationGroup", "Transform", "Create"]
+__all__ = ["testo", "markup", "piano", "avvolgi", "tratto", "Riga", "Blocco", "Titolo", "Caption", "Etichetta", "Barrato",
+           "Freccia", "Carta", "Barra", "Classifica", "Token", "Frase", "Lista", "Contatore", "Evidenzia", "CorniceSchermo",
+           "Piede", "Messaggio", "FadeIn", "FadeOut", "FadeTransform", "Indicate", "LaggedStart", "AnimationGroup",
+           "Transform", "Create"]

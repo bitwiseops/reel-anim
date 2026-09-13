@@ -1,22 +1,25 @@
-"""Montaggio del reel: per ogni scena durata (clip o voce sintetica) → Manim → compositing; poi concat, fotogrammi, report."""
+"""Montaggio del reel: per ogni scena tempi (clip o voce sintetica) → Manim → compositing; poi concat, fotogrammi, report."""
 from __future__ import annotations
 
 import hashlib
 import json
 import sys
 import time
+from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 
+from ..anim.base import inizi_per_parole
 from ..anim.config import Config, carica
 from . import clip as clipmod
 from . import compositing, fotogrammi
 from .contact_sheet import genera as contact
 from .ffmpeg import ffprobe
-from .manim_render import AnimazioneMancante, carica_modulo, classe_scena, file_animazione, hash_classe, renderizza
-from .model import Diagnostica, Reel, avviso, errore
+from .manim_render import AnimazioneMancante, carica_modulo, classe_scena, file_animazione, hash_sorgenti, renderizza
+from .model import Diagnostica, Reel, Scena, avviso, errore
+from .stima import CODA_S as CODA_STIMA_S
 from .stima import durata_stimata_s
-from .voce import VoceNonDisponibile, durata_s as durata_audio, sintetizza
+from .voce import VoceNonDisponibile, sintetizza_frasi
 
 RADICE = Path(__file__).resolve().parents[2]
 CODA_VOCE_S = 0.5
@@ -48,46 +51,81 @@ def _salva_cache(out: Path, c: dict) -> None:
     (out / "_manim" / "cache.json").write_text(json.dumps(c, indent=1))
 
 
+@dataclass
+class TempiScena:
+    durata_s: float
+    origine: str                      # della durata: clip | voce-sintetica | attributo | stima
+    audio: Path | None = None         # voce sintetica (m4a), se c'è
+    inizi_frasi_s: list[float] = field(default_factory=list)
+    origine_tempi: str = "senza-voce"  # degli inizi delle frasi: voce-sintetica | parole-clip | parole-stima | senza-voce
+
+
+def tempi_scena(r: Reel, s: Scena, voce: bool = False, out: Path | None = None, cfg: Config | None = None) -> TempiScena:
+    """Durata della scena e istante d'inizio di ogni frase della VOCE. In ordine: clip registrata (durata vera, frasi
+    stimate a parole tra i silenzi chiesti dal gobbo) → scena senza voce con durata= → voce sintetica frase per frase
+    (inizi esatti; solo con voce=True) → stima a parole."""
+    c = clipmod.trova(r.slug, s.n)
+    if c:
+        d = float(ffprobe(c).get("durata_s") or 0)
+        if d > 0:
+            da = min(clipmod.SILENZIO_S, d * 0.1)
+            a = max(da, d - clipmod.SILENZIO_S)
+            return TempiScena(round(d, 3), "clip", None, inizi_per_parole(s.voce, da, a), "parole-clip" if s.voce else "senza-voce")
+    if s.durata_min_s is not None and not s.voce:
+        return TempiScena(float(s.durata_min_s), "attributo")
+    if voce and s.voce and out is not None:
+        v = sintetizza_frasi(s.voce, out / "_voce" / f"{s.n:02d}.m4a", cfg)
+        d = v.durata_s + CODA_VOCE_S
+        if s.durata_min_s is not None:
+            d = max(d, s.durata_min_s)
+        return TempiScena(round(d, 3), "voce-sintetica", v.audio, v.inizi_s, "voce-sintetica")
+    d = durata_stimata_s(s, cfg)
+    return TempiScena(d, "stima", None, inizi_per_parole(s.voce, 0.0, max(0.0, d - CODA_STIMA_S)),
+                      "parole-stima" if s.voce else "senza-voce")
+
+
+def dati_scena(s: Scena, t: TempiScena) -> dict:
+    """Ciò che la scena Manim riceve in self.scena (e che entra nella chiave di cache)."""
+    return {**s.to_dict(), "inizi_frasi_s": t.inizi_frasi_s}
+
+
 def anima(r: Reel, diag: list[Diagnostica], out: Path, qualita: str = "l", solo: int | None = None, debug: bool = False,
           cfg: Config | None = None) -> list[dict]:
-    """Solo Manim: per l'animatore. Produce _manim/scena-NN.*, scene/NN.png e fotogrammi/NN-filmstrip.png."""
+    """Solo Manim, per l'animatore: stessi tempi dell'anteprima (voce sintetica in cache se non c'è la clip).
+    Produce _anima/…/scena-NN.mp4, scene/NN.png e fotogrammi/NN-filmstrip.png."""
     cfg = cfg or carica()
     mod = carica_modulo(file_animazione(r.slug))
     info = []
+    con_voce = True
     for s in r.scene:
         if solo and s.n != solo:
             continue
-        durata = durata_scena(r, s)[0]
+        t = None
+        if con_voce:
+            try:
+                t = tempi_scena(r, s, voce=True, out=out, cfg=cfg)
+            except VoceNonDisponibile as e:
+                con_voce = False
+                diag.append(avviso(f"{e}: tempi stimati a parole, diversi da quelli dell'anteprima"))
+        if t is None:
+            t = tempi_scena(r, s, cfg=cfg)
         try:
             cls = classe_scena(mod, s.n)
         except AnimazioneMancante as e:
             diag.append(errore(str(e), s.riga, s.n))
             continue
         t0 = time.time()
-        video = renderizza(cls, durata, s.to_dict(), out / "_manim", f"scena-{s.n:02d}", qualita, trasparente=False, debug=debug, cfg=cfg)
-        png = fotogrammi.fotogramma_chiave(video, durata, out / "scene" / f"{s.n:02d}.png")
-        fs = fotogrammi.filmstrip_scena(video, durata, out / "fotogrammi" / f"{s.n:02d}-filmstrip.png")
-        info.append({"scena": s.n, "tipo_scena": s.tipo, "durata_s": durata, "grafica": str(video.relative_to(out)),
-                     "png": str(png.relative_to(out)), "filmstrip": str(fs.relative_to(out)), "tempo_manim_s": round(time.time() - t0, 1)})
+        res = renderizza(cls, t.durata_s, dati_scena(s, t), out / "_anima", f"scena-{s.n:02d}", qualita, trasparente=False,
+                         debug=debug, cfg=cfg)
+        for a in res.avvisi:
+            diag.append(avviso(a, s.riga, s.n))
+        png = fotogrammi.fotogramma_chiave(res.video, t.durata_s, out / "scene" / f"{s.n:02d}.png")
+        fs = fotogrammi.filmstrip_scena(res.video, t.durata_s, out / "fotogrammi" / f"{s.n:02d}-filmstrip.png")
+        info.append({"scena": s.n, "tipo_scena": s.tipo, "durata_s": t.durata_s, "inizi_frasi_s": t.inizi_frasi_s,
+                     "origine_tempi": t.origine_tempi, "avvisi_tempi": res.avvisi, "grafica": str(res.video.relative_to(out)),
+                     "png": str(png.relative_to(out)), "filmstrip": str(fs.relative_to(out)),
+                     "tempo_manim_s": round(time.time() - t0, 1)})
     return info
-
-
-def durata_scena(r: Reel, s, prova: bool = False, out: Path | None = None, cfg: Config | None = None) -> tuple[float, str, Path | None]:
-    """(durata_s, origine, audio_sintetico). Origine: clip | voce-sintetica | attributo | stima."""
-    c = clipmod.trova(r.slug, s.n)
-    if c:
-        d = float(ffprobe(c).get("durata_s") or 0)
-        if d > 0:
-            return round(d, 3), "clip", None
-    if s.durata_min_s is not None and not s.voce:
-        return float(s.durata_min_s), "attributo", None
-    if prova and s.voce and out is not None:
-        audio = sintetizza(s.voce_piena, out / "_voce" / f"{s.n:02d}.m4a", cfg)
-        d = durata_audio(audio) + CODA_VOCE_S
-        if s.durata_min_s is not None:
-            d = max(d, s.durata_min_s)
-        return round(d, 3), "voce-sintetica", audio
-    return durata_stimata_s(s, cfg), "stima", None
 
 
 def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None = None) -> int:
@@ -110,55 +148,60 @@ def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None 
     clip_info = clipmod.stato(r.slug, [s.n for s in r.scene])
     pezzi: list[tuple[Path, float]] = []
     cache = _cache(out)
+    firma = hash_sorgenti(file_animazione(r.slug))
     usa_prova = False
     for s in r.scene:
         if solo and s.n != solo:
             continue
         try:
-            durata, origine, audio = durata_scena(r, s, prova, out, cfg)
+            t = tempi_scena(r, s, prova, out, cfg)
         except VoceNonDisponibile as e:
             diag.append(errore(str(e), s.riga, s.n))
             return _chiudi(r, diag, out, elementi, clip_info, None, tempi, prova, args)
-        if origine == "stima":
-            if prova:
-                origine = "stima"
-            else:
-                diag.append(errore(f"clip mancante: registra {clipmod.nome_atteso(s.n)} in contenuti/media/{r.slug}/ oppure usa --prova", s.riga, s.n))
-                continue
-        usa_prova = usa_prova or origine in ("voce-sintetica", "stima")
+        if t.origine == "stima" and not prova:
+            diag.append(errore(f"clip mancante: registra {clipmod.nome_atteso(s.n)} in contenuti/media/{r.slug}/ oppure usa --prova", s.riga, s.n))
+            continue
+        usa_prova = usa_prova or t.origine in ("voce-sintetica", "stima")
         try:
             cls = classe_scena(mod, s.n)
         except AnimazioneMancante as e:
             diag.append(errore(str(e), s.riga, s.n))
             continue
         schermo = (clipmod.cartella(r.slug) / s.schermo) if s.schermo else None
-        chiave = f"{hash_classe(cls)}:{durata}:{qualita}:{bool(schermo)}:{json.dumps(s.to_dict(), sort_keys=True)}"
-        grafica = out / "_manim" / (f"scena-{s.n:02d}" + (".mov" if schermo else ".mp4"))
+        dati = dati_scena(s, t)
+        chiave = f"{firma}:{cls.__name__}:{t.durata_s}:{qualita}:{bool(schermo)}:{json.dumps(dati, sort_keys=True)}"
+        voce_cache = cache.get(f"{s.n:02d}")
         t1 = time.time()
-        if cache.get(f"{s.n:02d}") == chiave and grafica.exists():
-            pass
+        if (isinstance(voce_cache, dict) and voce_cache.get("chiave") == chiave and voce_cache.get("grafica")
+                and (out / voce_cache["grafica"]).exists()):
+            grafica, avvisi_tempi = out / voce_cache["grafica"], list(voce_cache.get("avvisi", []))
         else:
-            grafica = renderizza(cls, durata, s.to_dict(), out / "_manim", f"scena-{s.n:02d}", qualita, trasparente=bool(schermo), cfg=cfg)
-            cache[f"{s.n:02d}"] = chiave
+            res = renderizza(cls, t.durata_s, dati, out / "_manim", f"scena-{s.n:02d}", qualita, trasparente=bool(schermo), cfg=cfg)
+            grafica, avvisi_tempi = res.video, res.avvisi
+            cache[f"{s.n:02d}"] = {"chiave": chiave, "grafica": str(grafica.relative_to(out)), "avvisi": avvisi_tempi}
             _salva_cache(out, cache)
+        for a in avvisi_tempi:
+            diag.append(avviso(a, s.riga, s.n))
         tm = time.time() - t1
         tempi["manim"] += tm
         t2 = time.time()
         riq = s.riquadro_effettivo()
-        c = clipmod.trova(r.slug, s.n) if origine == "clip" else None
-        src = compositing.Sorgenti(grafica=grafica, durata_s=durata, riquadro=riq, video_presentatore=c,
-                                   avatar=avatar if (c is None and riq != "no" and avatar.exists()) else None, audio=audio, schermo=schermo)
+        c = clipmod.trova(r.slug, s.n) if t.origine == "clip" else None
+        src = compositing.Sorgenti(grafica=grafica, durata_s=t.durata_s, riquadro=riq, video_presentatore=c,
+                                   avatar=avatar if (c is None and riq != "no" and avatar.exists()) else None, audio=t.audio,
+                                   schermo=schermo)
         dest = compositing.componi_scena(src, out / "_scene" / f"{s.n:02d}.mp4", cfg, anteprima=args.anteprima)
         tc = time.time() - t2
         tempi["compositing"] += tc
-        png = fotogrammi.fotogramma_chiave(dest, durata, out / "scene" / f"{s.n:02d}.png")
-        fs = fotogrammi.filmstrip_scena(dest, durata, out / "fotogrammi" / f"{s.n:02d}-filmstrip.png")
+        png = fotogrammi.fotogramma_chiave(dest, t.durata_s, out / "scene" / f"{s.n:02d}.png")
+        fs = fotogrammi.filmstrip_scena(dest, t.durata_s, out / "fotogrammi" / f"{s.n:02d}-filmstrip.png")
         elementi.append({"ordine": s.n, "tipo": "png", "file": str(png.relative_to(out)), "scena": s.n, "tipo_scena": s.tipo,
-                         "durata_s": durata, "parole_voce": s.parole_voce, "durata_stimata_s": durata_stimata_s(s, cfg),
-                         "origine_durata": origine, "riquadro": riq, "schermo": s.schermo, "filmstrip": str(fs.relative_to(out)),
-                         "grafica": str(grafica.relative_to(out)), "video": str(dest.relative_to(out)),
-                         "tempo_manim_s": round(tm, 1), "tempo_ffmpeg_s": round(tc, 1)})
-        pezzi.append((dest, durata))
+                         "durata_s": t.durata_s, "parole_voce": s.parole_voce, "durata_stimata_s": durata_stimata_s(s, cfg),
+                         "origine_durata": t.origine, "inizi_frasi_s": t.inizi_frasi_s, "origine_tempi": t.origine_tempi,
+                         "avvisi_tempi": avvisi_tempi, "riquadro": riq, "schermo": s.schermo,
+                         "filmstrip": str(fs.relative_to(out)), "grafica": str(grafica.relative_to(out)),
+                         "video": str(dest.relative_to(out)), "tempo_manim_s": round(tm, 1), "tempo_ffmpeg_s": round(tc, 1)})
+        pezzi.append((dest, t.durata_s))
 
     reel_info = None
     if pezzi and not solo and not any(d.livello == "errore" for d in diag):
@@ -186,7 +229,7 @@ def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None 
 
 
 def _chiudi(r: Reel, diag, out: Path, elementi, clip_info, reel_info, tempi, prova: bool, args) -> int:
-    celle = [{"file": out / e["file"], "etichetta": f"{e['scena']:02d} · {e['tipo_scena']} · {e['durata_s']:.1f} s ({e['origine_durata']})",
+    celle = [{"file": out / e["file"], "etichetta": f"{e['scena']:02d} · {e['tipo_scena']}\n{e['durata_s']:.1f} s · {e['origine_durata']}",
               "animata": True, "problema": any(d.scena == e["scena"] and d.livello == "errore" for d in diag)} for e in elementi]
     if reel_info:
         celle.append({"file": out / reel_info["copertina_4x5"], "etichetta": "cover 4:5", "animata": False})

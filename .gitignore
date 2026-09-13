@@ -5,7 +5,8 @@ __pycache__/
 .DS_Store
 .env
 config.local.toml
-contenuti/media/
+contenuti/media/*
+!contenuti/media/esempio-reel/
 contenuti/render/
-media/
+/media/
 assets/presentatore/_maschera-*.png

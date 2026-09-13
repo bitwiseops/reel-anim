@@ -20,7 +20,7 @@ def _font(size: int):
 def genera(elementi: list[dict], diagnostiche: list[Diagnostica], dest: Path, colonne: int = 3,
            larghezza_cella: int = 360) -> Path:
     """elementi: [{file, etichetta, animata: bool, problema: bool, ratio: float}]"""
-    margine, gap, testa = 30, 24, 60
+    margine, gap, testa = 30, 24, 90
     h_cella = int(larghezza_cella * 1.25)
     righe = (len(elementi) + colonne - 1) // colonne
     h_diag = 40 + 34 * max(1, len(diagnostiche))
