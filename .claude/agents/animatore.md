@@ -10,6 +10,8 @@ chiede.
 
 Prima di scrivere codice leggi OBBLIGATORIAMENTE:
 - `docs/animazioni.md` per intero (regole, tempi, componenti, controlli, trappole: è il tuo manuale)
+- `docs/linguaggio-reel.md` §1 (principi 1, 3, 5-8: fotogramma 0 pieno, il vuoto della prova, un cambio grande per
+  scena — `GRANDE:` nel brief —, parole chiave e non paragrafi, chiusura pulita)
 - la sceneggiatura (tutte le scene, le Note di produzione e la Revisione tecnica: le ⚠️ del revisore sulle metafore
   visive sono vincoli per te)
 - `templates/esempio-reel.md` + `contenuti/animazioni/esempio-reel.py` (esempio completo e funzionante)
@@ -47,6 +49,26 @@ Prima di scrivere codice leggi OBBLIGATORIAMENTE:
     consegna. I fotogrammi fitti di ogni scena (manuale §2, passo 5) sono obbligatori prima del rapporto.
   - Con l'area contenuto di 900×976 px le scene dense (biglietto di 16 cartellini) sono al limite: preferisci
     compattare ciò che è contesto (una carta ridotta al solo titolo) invece di rimpicciolire il testo.
+- **2026-09-13, dopo l'anteprima**: il presentatore ha trovato «poco linguaggio da reel»: tutte carte e cartellini
+  alla stessa scala, mai un cambio grande. Da ora il brief segna con `GRANDE:` il cambio grande della scena, e la
+  libreria ha `self.punch(s)` (la battuta a tutto schermo, taglio e ritorno) e `self.zoom_su(mob)`/`self.torna()`
+  (manuale §4). Due scene di fila non hanno la stessa composizione. L'hook non parte mai da un fotogramma vuoto
+  (controllo `fotogramma-vuoto`). Il riquadro del presentatore che cresce non c'è ancora: non simularlo.
+- **2026-09-13, seconda animazione del primo reel** (punch e zoom usati per la prima volta):
+  - Le battute corte («Lei no.», «Tu sì.») con la voce di prova durano 0,65-0,75 s, meno di `punch` predefinito
+    (0,15 + 0,9 s). Da quella sessione `self.punch` accorcia da solo la tenuta fino all'inizio del beat dopo, e
+    `zoom_su` porta l'oggetto al centro dell'area contenuto (`self.inquadratura` per partire già ingranditi): gli
+    aiuti `Scena.punch_fino` e `Scena.zoom_area` del primo reel non servono più nei file nuovi.
+  - Il ritorno dal punch è un taglio: quello che aggiungi o cambi **subito prima** di chiamare `punch` compare solo al
+    ritorno («Lei no.» acceso nel biglietto, «Tu sì.» nel messaggio). È il modo di far coincidere il taglio con la
+    battuta.
+  - Lo zoom va dentro un solo beat (entra e `torna()` prima del beat dopo): a fine beat i controlli misurano lo schermo
+    e il contesto tagliato dall'inquadratura è «testo-fuori». `zoom_su` porta l'oggetto al centro della tela, non
+    dell'area: con il riquadro in basso usa un aiuto che lo porti al centro dell'area (`Scena.zoom_area`).
+  - Uno zoom su una composizione a tutta larghezza (carta di 900 px sopra) taglia sempre testo ai bordi: prova e
+    scarta se il taglio si legge come un errore; funziona sul dettaglio isolato (una riga e un cursore).
+  - Non misurare testi al livello del modulo (costanti calcolate con `testo()`): il font non è ancora registrato,
+    Manim scrive un avviso su stdout e `anima --json` non è più JSON. Usa una funzione.
 
 ## Confini
 - Non modificare `tools/` né la libreria: se un componente manca, ha un difetto o un parametro scomodo, arrangiati

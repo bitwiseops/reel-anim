@@ -15,10 +15,12 @@ idea: contenuti/idee/2026-09-10-llm-perche-generativa.md
 ## Scena 1 [hook]
 TITOLO: Generativa non vuol dire creativa
 SOTTOTITOLO: Vuol dire ==probabile==
+VOCE: L'IA scrive quello che ti aspetti?
 VOCE: Generativa non vuol dire creativa.
 VOCE: Vuol dire probabile.
-ANIMAZIONE: Il titolo entra riga per riga, grande, al centro dell'area: «Generativa / non vuol dire / creativa».
-ANIMAZIONE: «Creativa» viene barrata e sotto compare il sottotitolo, con «probabile» in accento.
+ANIMAZIONE: Il titolo «Generativa / non vuol dire / creativa» è già intero al primo fotogramma, grande, al centro dell'area (funziona anche senza audio), con un movimento entro 0,5 s; nessuna uscita.
+ANIMAZIONE: Su «creativa» la barra accento, appena detta la parola.
+ANIMAZIONE: Sotto entra il sottotitolo, con «probabile» in accento.
 RIQUADRO: no
 
 ## Scena 2 [spiegazione]
@@ -45,7 +47,7 @@ VOCE: Il testo non lo cerca: lo scrive lei.
 VOCE: Fluente, sì.
 VOCE: ==Originale==, no.
 ANIMAZIONE: Da «capitolo» partono tre rami di spessore diverso (esempio), con all'attacco solo la prima parola, le candidate della scena 3: «e» sul ramo spesso, «ma» e «della» sui sottili; la frase corre lungo il ramo di «e», che si accende, e il resto si scrive un cartellino alla volta mentre corre: «se ne apre uno nuovo».
-ANIMAZIONE: I rami spariscono e la frase torna un biglietto intero; sopra compare una lente (icona «search») che viene subito barrata, e al suo posto l'etichetta «scritto da lei».
+ANIMAZIONE: I rami spariscono e la frase torna un biglietto intero; sopra compare l'icona «database» («non pesca da un archivio di testi», revisione S6) che viene subito barrata, e al suo posto l'etichetta «scritto da lei».
 ANIMAZIONE: Sotto il biglietto compare l'etichetta «fluente».
 ANIMAZIONE: Accanto compare l'etichetta «originale», in accento, che viene subito barrata.
 TESTO: scritto da lei
@@ -61,99 +63,147 @@ TESTO: sii originale
 TESTO: dettaglio vero
 
 ## Scena 6 [spiegazione]
-VOCE: Ora scrive: la fotocopiatrice ha chiesto di te.
-VOCE: Non è diventata creativa: sceglie ancora tra le prime.
-VOCE: Ma la parte nuova ==l'hai messa tu==, prima.
-ANIMAZIONE: «la» vola nel biglietto e il biglietto nuovo si scrive a cartellini: «Caro Marco, la fotocopiatrice ha chiesto di te. Le ho detto che da lunedì sei libero. Lei no.»
-ANIMAZIONE: Su «fotocopiatrice» ricompare per un attimo la colonna delle candidate (esempio), con la prima accesa: stessa scelta di sempre, fra le prime.
-ANIMAZIONE: Una graffa accento abbraccia la riga della fotocopiatrice nella carta «richiesta», con l'etichetta «l'hai messa tu»; una freccia va da quella riga al biglietto nuovo.
+VOCE: Ora scrive: caro Marco, la fotocopiatrice ha chiesto di te.
+VOCE: Le ho detto che da lunedì sei libero.
+VOCE: ==Lei no==.
+VOCE: Non è diventata creativa: la parte nuova l'hai messa tu.
+ANIMAZIONE: La richiesta esce; «la», in testa alla colonna della scena 5, vola nel biglietto nuovo, a tutta larghezza, che si scrive a cartellini insieme alla voce; la colonna esce.
+ANIMAZIONE: Seconda riga del biglietto, in sincrono con la voce.
+ANIMAZIONE: GRANDE: «LEI NO.» a tutto schermo in accento per ~1 s; poi il biglietto intero con «Lei no.» acceso.
+ANIMAZIONE: Il biglietto scende; torna la carta «richiesta» con la riga della fotocopiatrice, la graffa «l'hai messa tu» e la freccia a «fotocopiatrice».
 TESTO: l'hai messa tu
 
 ## Scena 7 [chiusura]
-MESSAGGIO: L'originalità non si chiede: si prepara. ==Cambia quello che viene prima==.
-CTA: Salva per il prossimo «sii originale»
-VOCE: L'originalità non si chiede: si prepara.
-VOCE: Dalle un dettaglio che sai solo tu.
-VOCE: Vietale le parole ovvie.
-VOCE: Chiedine cinque, poi falle scartare le più scontate.
-ANIMAZIONE: Il messaggio entra in alto, riga per riga; sotto, vuota, la carta «richiesta».
-ANIMAZIONE: Nella carta entra la prima voce: «un dettaglio che sai solo tu».
-ANIMAZIONE: Seconda voce: «vietate: capitolo, meritato, avventura».
-ANIMAZIONE: Terza voce: «cinque proposte, via le più scontate»; in fondo la CTA a pillola.
-TESTO: un dettaglio vero
-TESTO: parole vietate
-TESTO: scarta le scontate
+MESSAGGIO: L'IA non ha mai conosciuto Marco. ==Tu sì==.
+CTA: Mandalo a chi firma i biglietti in ufficio
+VOCE: L'IA non ha mai conosciuto Marco.
+VOCE: Tu sì.
+VOCE: Scrivi nella richiesta quello che sai solo tu.
+VOCE: E salutami la fotocopiatrice.
+ANIMAZIONE: Esce tutto; a sinistra l'icona «bot», a destra l'icona «user» con «Marco»; fra le due una linea tratteggiata interrotta.
+ANIMAZIONE: GRANDE: «TU SÌ» a tutto schermo in accento per ~1 s; poi una linea accento va dal riquadro del presentatore a «Marco».
+ANIMAZIONE: Entra la carta «richiesta» e dentro scivola, in accento, la riga della fotocopiatrice; sopra il messaggio.
+ANIMAZIONE: Torna per un attimo il biglietto della scena 6 con «Lei no.» acceso; poi esce e restano messaggio e, in fondo, la CTA a pillola.
 
 ## Note di produzione
 <!-- Scelte di regia, b-roll da girare, dubbi. Non renderizzate. -->
+**Riscrittura del 2026-09-13, dopo l'anteprima.** Scene 1, 6 e 7 dai blocchi scelti dal presentatore in
+`docs/linguaggio-reel.md` §3: l'hook al «tu» con il fotogramma 0 pieno, il payoff letto a voce e mostrato grande,
+la chiusura B («L'IA non ha mai conosciuto Marco. Tu sì.»). Le scene 2-5 sono invariate. Reel stimato 57 s:
+la chiusura è scesa a 20 parole per stare nei controlli di linguaggio (MESSAGGIO ≤ 12 parole, VOCE della chiusura
+≤ 25).
+
 **Per il revisore tecnico**
-- Nessun numero reale. Le barre delle candidate (scene 3, 5, 6) e lo spessore dei rami (scena 4) sono esempi: la
-  `Classifica` scrive da sola «esempio: numeri inventati»; i rami della scena 4 portano la stessa nota. Le candidate
-  («e», «ma», «della»; «oggi», «ti», «la») e le tre continuazioni sono esempi dichiarati, non un output reale.
-- «Una tra le prime» (scena 3), «di solito vince la strada più battuta» (scena 4), «sceglie ancora tra le prime»
-  (scena 6, era «tra le più probabili»: stesso senso, riprende la scena 3): mai «sempre la più probabile», perché il
-  modello campiona (temperatura).
-- Parole e non token: semplificazione accettata dall'idea.
+- Da ripassare: scena 1 (prima frase e brief), scene 6 e 7 (tutte le righe). Le altre sono già approvate.
+- **Scena 6, «sceglie ancora tra le prime» non c'è più** (S7; esce anche la colonna delle candidate su
+  «fotocopiatrice», punto 22). Il reel regge il claim «il meccanismo non cambia» in tre punti, senza ridirlo nella 6:
+  - scena 3, «Ne prende una tra le prime», con la classifica (punto 9, S1);
+  - scena 5, le **stesse** tre candidate si riordinano: stesso modo di scegliere, cambia la classifica (punto 18);
+  - scena 6, primo beat: «la», in testa alla colonna della scena 5, vola nel biglietto. È la scelta della scena 3
+    fatta di nuovo, vista e non detta; poi a voce «Non è diventata creativa».
+
+  Serve comunque una passata: a voce resta solo «non è diventata creativa», e senza il perché chi guarda può capire
+  che con il dettaglio il modello sceglie in un altro modo. Se non basta, una strada che non tocca la voce: nel primo
+  beat la colonna resta un attimo con «la» acceso prima che voli nel biglietto (l'animazione del vecchio punto 22,
+  spostata sulla prima frase).
+- Scena 6, il biglietto nuovo ora si legge **tutto** a voce («Le ho detto che da lunedì sei libero. Lei no.»): pesa
+  di più il punto 19, perché la battuta è scritta da noi e il reel la attribuisce al modello. Se l'output vero
+  (`chat-fotocopiatrice.mov`, sotto) non la contiene, o si cambia il biglietto con quello che esce, o in caption si
+  dichiara che è un esempio e con quale modello.
+- Scena 6, «la parte nuova l'hai messa tu»: senza il «prima» finale, è lo stesso claim del punto 21 (l'ingrediente è
+  tuo, la combinazione la fa il modello).
+- Scena 7, «L'IA non ha mai conosciuto Marco.»: vero per un collega privato. Di lui il modello sa solo quello che
+  trova nella richiesta, o nella memoria della chat, che però è di nuovo qualcosa che gli hai scritto tu.
+- Scena 7, «Scrivi nella richiesta quello che sai solo tu.»: la mossa del punto 25 detta come gesto. È la mossa
+  concreta del reel e sta solo nella VOCE: il MESSAGGIO a schermo è la battuta («L'IA non ha mai conosciuto Marco.
+  Tu sì.»), che la riprende senza ripeterla.
+- Scena 7: dalla voce escono «Vietale le parole ovvie» e «Chiedine cinque…» (punti 26-27, S8) e lo slogan
+  «L'originalità non si chiede: si prepara» (punto 24). Mosse e limiti vanno in caption (sotto); la terza frase della
+  VOCE è la forma concreta di «cambia quello che viene prima» (il messaggio centrale del frontmatter).
+- Hook, «L'IA scrive quello che ti aspetti?»: una domanda, non un'affermazione. Presuppone il fenomeno del punto 4
+  (risposte simili sulle richieste aperte, Jiang et al., 2025).
+- Nessun numero reale. Le barre delle candidate (scene 3 e 5) e lo spessore dei rami (scena 4) sono esempi: la
+  `Classifica` scrive da sola «esempio: numeri inventati» e i rami portano la stessa nota. Le candidate («e», «ma»,
+  «della»; «oggi», «ti», «la») e le continuazioni sono esempi dichiarati, non un output reale.
+- «Una tra le prime» (scena 3), «di solito vince la strada più battuta» (scena 4): mai «sempre la più probabile»,
+  perché il modello campiona (temperatura). Parole e non token: semplificazione accettata dall'idea.
 - «Se l'hai già finito in testa, era probabile» (scena 2): indizio forte di alta probabilità, non una misura (punto
   (e) dell'idea). La voce dice «probabile», non «la più probabile».
-- Scena 4, riscritta dopo la revisione (punto 14): «Il testo non lo cerca: lo scrive lei» rende «generativa» come
-  **processo** (produce, non recupera: punto (c) dell'idea) e non dice niente sull'output, che può anche coincidere
-  con testi esistenti (McCoy et al., 2023). La lente barrata sta per «non lo cerca». «Nuovo» non compare più nella
-  scena 4: resta solo nella scena 6 («la parte nuova l'hai messa tu»), in un senso solo.
-- «Fluente, sì. Originale, no.» (scena 4): il ribaltamento potenziale/limite del messaggio centrale in due frasi.
-  «Originale» riprende il «biglietto originale» chiesto nella scena 2. «Fluente» è il lato buono della strada battuta
-  (punto 32 della revisione), che prima non compariva mai.
-- «Sii originale» sposta poco, non zero: la voce dice «serve a poco» e le barre si muovono appena (scena 5).
-- Vincolo e scarto (punto (d) dell'idea) funzionano perché entrano nel contesto, non perché il modello ricordi le
-  alternative scartate: per questo tutte le aggiunte entrano **nella carta «richiesta»** (scene 5 e 7) e la scena 6
-  collega con una freccia la riga aggiunta al biglietto nuovo. «Chiedine cinque, poi falle scartare le più scontate»:
-  le cinque proposte sono scritte, quindi stanno nel contesto quando arriva la richiesta di scartare.
-- Il biglietto nuovo della scena 6 è quello dell'idea, scritto da noi: se lo si genera davvero per lo screen
-  recording (sotto), dichiarare il modello nella caption.
+- Scena 4 (invariata): «Il testo non lo cerca: lo scrive lei» rende «generativa» come **processo** (punto (c)
+  dell'idea, S2); «Fluente, sì. Originale, no.» è il ribaltamento potenziale/limite (S3-S4).
+- Vincolo e scarto (punto (d) dell'idea) funzionano perché entrano nel contesto: per questo ogni aggiunta entra
+  **nella carta «richiesta»** (scene 5 e 7) e la scena 6 collega con una freccia la riga aggiunta al biglietto nuovo.
 
 **Per l'animatore: il filo visivo**
 - Tre oggetti per tutto il reel: la carta «richiesta» (è «quello che viene prima»: in alto e piccola nelle scene 3-4,
-  al centro nelle scene 5 e 7), il biglietto (frase a cartellini, poi carta), la colonna delle candidate (`Classifica`,
-  tre voci). Nessun disegno nuovo dopo la scena 4.
-- Scena 2: il cursore che lampeggia non c'è in libreria (basta un rettangolo sottile); se complica, basta la pausa
-  dopo «capitolo». Il resto del biglietto deve arrivare dopo l'inizio della terza frase, non prima: chi guarda lo
-  finisce da solo.
-- Scena 4: non c'è un componente «bivio»; tre frecce di spessore diverso con le etichette (lo fa già la scena 4 di
-  `contenuti/animazioni/esempio-reel.py`). All'attacco di ogni ramo **solo la prima parola** (e / ma / della), non
-  la continuazione intera: il resto si scrive a cartellini mentre la frase corre sul ramo di «e». Un menu di frasi
-  pronte suggerirebbe il recupero da un archivio, cioè il contrario della seconda frase (revisione, punto 13). Per
-  la lente barrata: `Icona` «search» + `Barrato`.
-- Scena 7: le tre voci della lista entrano **dentro** la carta «richiesta» (non una lista a parte): è il punto del
-  reel. Se non ci stanno con il messaggio, il messaggio resta in alto e la carta sotto, a righe corte.
+  al centro nella 5, fuori nella 6 fino all'ultimo beat, di nuovo nella 7 con la riga della fotocopiatrice), il
+  biglietto (cartellini, poi carta; nella 6 a tutta larghezza, e torna per un attimo nella 7 con «Lei no.» acceso), la
+  colonna delle candidate (`Classifica`, scene 3 e 5; nella 6 solo «la» che vola dalla testa). L'unico disegno nuovo
+  dopo la scena 4 sono le icone «bot» e «user» della chiusura (già in `assets/icone/`): è il cambio di composizione
+  dell'ultima scena.
+- **Cambi grandi** (`GRANDE:` nel brief): «LEI NO.» (scena 6) e «TU SÌ» (scena 7), con il componente per la parola a
+  tutto schermo in arrivo in libreria (1-3 parole per ~1 s). Sono due scene di fila con lo stesso tipo di cambio:
+  stesso stile (è la firma delle battute), composizioni diverse attorno (biglietto nella 6, icone nella 7).
+- **Riquadro grande del presentatore** («volto grande», principio 7 di `docs/linguaggio-reel.md`): non c'è ancora,
+  quindi nessun brief lo chiede. Quando ci sarà, i candidati sono la domanda dell'hook (oggi `RIQUADRO: no`), il mezzo
+  sorriso su «Lei no.» (scena 6) e «Tu sì.» con la battuta finale (scena 7).
+- **Zoom di camera** (in arrivo): proposte per le scene 2-5, fuori dal brief, da vedere con il presentatore. Nella 2
+  sul cursore che lampeggia dopo «capitolo» (il momento della prova), nella 5 sulla barra di «la» che sale in testa.
+  Oggi le scene 3 e 4 hanno la stessa composizione e la stessa scala (critica in §3 del documento).
+- Scena 1: il primo fotogramma è già la copertina (titolo intero, non più riga per riga), con un movimento entro
+  0,5 s. «Creativa» ora si dice nella seconda frase: la barra cade lì, appena detta la parola.
+- Scena 2: il cursore che lampeggia è un rettangolo sottile; il resto del biglietto arriva dopo l'inizio della terza
+  frase, non prima: chi guarda lo finisce da solo.
+- Scena 4: all'attacco di ogni ramo **solo la prima parola** (e / ma / della); il resto si scrive a cartellini lungo
+  il ramo di «e» (revisione, punto 13). Resta il `database` barrato già animato (revisione S6), non la lente del
+  brief.
+- Scena 7: la chiusura è stimata ~8 s (il documento consiglia ≤ 6-7 s): beat asciutti, e l'ultimo fotogramma
+  pulito, con solo messaggio e CTA dopo che il biglietto è uscito.
 
 **Per il presentatore**
+- Scena 1: «L'IA scrive quello che ti aspetti?» è una domanda vera a una persona, non un titolo letto: il tono sale.
+  Il riquadro per ora è spento, ma dilla come a camera. Poi le due frasi del titolo, secche.
 - Scena 2: dopo «oggi si chiude un capitolo» fermati un secondo buono prima di «Se l'hai già finito in testa»: la
   battuta la fa chi guarda, finendo la frase da solo. Tono complice.
 - Scena 4: mezza pausa dopo «lo scrive lei»; poi «Fluente, sì. Originale, no.» come una coppia, secche, la seconda
   un filo più lenta.
-- Scena 6: la prima frase è la lettura del biglietto nuovo, con un mezzo sorriso; «l'hai messa tu, prima» guardando in
-  camera.
+- Scena 6: le prime due frasi sono la lettura del biglietto, come lo leggeresti ad alta voce in ufficio. Una pausa
+  breve, poi **«Lei no.»** secco, con il mezzo sorriso, e un attimo di silenzio mentre la scritta riempie lo schermo.
+  «La parte nuova l'hai messa tu» a camera.
+- Scena 7: «L'IA non ha mai conosciuto Marco.» guardando la grafica. **Pausa** (mezzo secondo buono) prima di
+  **«Tu sì.»**, a camera, piano. La terza frase a camera, come un consiglio a un collega, non da slide.
+  **«E salutami la fotocopiatrice.»** con il mezzo sorriso; poi fermati: il reel finisce sulla battuta, niente saluti.
+- Frasi a camera: la domanda dell'hook, «la parte nuova l'hai messa tu» (6), «Tu sì.» e le due frasi dopo (7). Sulle
+  altre guarda la grafica che stai mostrando.
 
 **Screen recording da girare (non ancora in `contenuti/media/generativa-non-creativa/`)**
 - `chat-banale.mov`: la richiesta vera («due righe originali per la pensione di Marco, lo firma tutto l'ufficio») e il
   biglietto banale che esce. Potrebbe sostituire l'animazione della scena 2 (scena `[schermo]`, `RIQUADRO:
   alto-destra`), ma si perde la pausa su «capitolo»: meglio come alternativa per la variante LinkedIn.
-- `chat-fotocopiatrice.mov`: la richiesta con la fotocopiatrice e le parole vietate, e il biglietto nuovo. Candidato
-  per la scena 6.
+- `chat-fotocopiatrice.mov`: la richiesta con la fotocopiatrice e il biglietto nuovo. Candidato per la scena 6, e ora
+  anche la prova che la battuta letta a voce («Lei no.») esce davvero (punto 19).
 
 **Per il pacchetto social**
-- **Obbligatorio** (revisione, punto 31): il criterio che non entra nella voce, «se la risposta la finisci ancora in
+- **Obbligatorio**: le tre mosse, uscite dalla voce della chiusura, con i loro limiti:
+  1. un dettaglio vero che sai solo tu, nella richiesta (è anche l'unica mossa detta a voce);
+  2. le parole vietate («senza capitolo, meritato, avventura»): il modello scivola sul sinonimo, «nuova fase» (punto
+     26);
+  3. cinque proposte, poi falle scartare le più scontate: possono essere varianti dello stesso luogo comune (punto 27).
+- **Obbligatorio** (revisione, punto 31): il criterio, che non entra nella voce, «se la risposta la finisci ancora in
   testa, il contesto che le hai dato era ancora quello di tutti». È anche la difesa contro i divieti aggirati.
+- Lo slogan della vecchia chiusura può aprire la caption: «L'originalità non si chiede: si prepara. Cambia quello che
+  viene prima.»
 - Il lato buono della strada battuta (punto 32): fluente, corretto, pronto da firmare; per una mail formale, un
   riassunto o un'istruzione il probabile è quello che vuoi.
 - La strada battuta non viene solo dai testi (punto 10): l'addestramento con il giudizio delle persone (RLHF)
   concentra ancora di più le risposte su quelle tipiche, perché le persone premiano il familiare (Kirk et al., 2024;
   Zhang et al., 2025).
-- I limiti delle mosse (punti 26-27): vietate le parole, il modello scivola sul sinonimo («nuova fase»); le cinque
-  proposte possono essere varianti dello stesso luogo comune. Per la variante LinkedIn: chiedere le cinque con quanto
-  sono probabili e tenere le meno probabili (Verbalized Sampling, Zhang et al., 2025).
+- Per la variante LinkedIn: chiedere le cinque con quanto sono probabili e tenere le meno probabili (Verbalized
+  Sampling, Zhang et al., 2025).
 - «Creativa» barrata nell'hook (punto 3): il reel dice «non vuol dire», non «non è»; fonte utile, Doshi & Hauser
   (Science Advances, 2024): storie più creative una per una, più simili tra loro nel complesso.
+- I due biglietti (scene 2 e 6): se generati davvero, dichiarare il modello nella caption; altrimenti dichiararli come
+  esempio.
 
 ## Revisione tecnica
 Revisione del 2026-09-13. Claim esaminati: 32 (VOCE, TITOLO/SOTTOTITOLO, TESTO, MESSAGGIO/CTA, ANIMAZIONE, file idea).
@@ -403,35 +453,184 @@ Fonti aggiunte (S6):
 
 **APPROVATO TECNICAMENTE** (2026-09-13)
 
+**Terza passata (2026-09-13)**
+Solo le righe cambiate dopo l'anteprima: scena 1 (prima VOCE e brief), scene 6 e 7 (tutte le righe), più le mosse
+spostate in caption. Le scene 2-5 non le ho riaperte. Esito: 11 ✅ · 6 ⚠️ · 0 ❌. VOCE nei limiti: hook 14 parole,
+scena 6 30, chiusura 20; MESSAGGIO 8.
+
+T1. ✅ Scena 1, VOCE «L'IA scrive quello che ti aspetti?». È una domanda, ma presuppone il fenomeno del punto 4, che è
+    documentato: Jiang et al. (NeurIPS 2025) misurano ripetizione dentro lo stesso modello e somiglianza tra modelli
+    diversi su 26.000 richieste aperte, con più di 70 modelli. La risposta che il reel dà («di solito», scena 4) ha la
+    taratura giusta: vale per le richieste aperte, non per ogni risposta. «Quello che ti aspetti» sta per «probabile»
+    con la stessa equivalenza del punto 5 (indizio, non misura). Si legge anche come «quello che speri»: nessuna delle
+    due letture insegna qualcosa di sbagliato.
+T2. ✅ Scena 1, ANIMAZIONE titolo intero al fotogramma 0, barra su «creativa» appena detta, sottotitolo con
+    «probabile». Nessun claim nuovo: la barra cade ancora sulla parola dentro «non vuol dire». Resta la nota del punto
+    3 (Doshi & Hauser in caption).
+T3. ⚠️ Scena 6, VOCE «Ora scrive: caro Marco, la fotocopiatrice ha chiesto di te. / Le ho detto che da lunedì sei
+    libero. / ==Lei no==.» + GRANDE «LEI NO.» (e il ritorno del biglietto nella 7). È il punto 19, che ora pesa di
+    più: il reel attribuisce al modello tutto il biglietto e mostra la battuta a tutto schermo. Il testo l'abbiamo
+    scritto noi, ed è improbabile che un modello lo scriva parola per parola; e anche un output vero è solo uno dei
+    tanti possibili. Condizione **obbligatoria prima della registrazione** (non blocca l'animazione): generare il
+    biglietto con la richiesta intera della scena 5 (biglietto originale, ufficio, «Sii originale.», fotocopiatrice)
+    su 2-3 modelli (`chat-fotocopiatrice.mov`). Poi:
+    - esce questo biglietto, o uno dello stesso livello con la fotocopiatrice in apertura: si usa il testo uscito
+      davvero e si dichiara il modello in caption. Se il testo cambia, cambiano VOCE e GRANDE della 6 e il ritorno
+      nella 7, e basta una passata solo su quelle righe;
+    - si vuole tenere il testo nostro: «Ora **può** scrivere: caro Marco, …» (31 parole in scena) e in caption
+      «biglietto di esempio». «Può» dice una possibilità ed è onesto anche con il campionamento;
+    - esce il luogo comune con la fotocopiatrice appesa in coda: il reel promette più di quello che la mossa dà. La
+      riga dei divieti entra nella carta della scena 5 (punto 19) e si rigenera.
+T4. ⚠️ Scena 6, VOCE «Non è diventata creativa» senza più «sceglie ancora tra le prime» (punti 20 e S7). Basta, a
+    una condizione sull'animazione. «Non è diventata» nega che nel modello sia cambiato qualcosa, e «l'hai messa tu»
+    mette la causa nella richiesta: chi guarda non ha appigli per immaginare una «modalità creativa». Si perde il
+    come: che il modo di scegliere è lo stesso e cambia solo la classifica ora si vede ma non si dice (le stesse tre
+    candidate riordinate nella 5; nella 6 «la» parte dalla testa della colonna). Perché regga, «la» deve partire
+    visibilmente dalla testa della colonna accesa (la 6 parte dall'ultimo fotogramma della 5, quindi c'è già) e la
+    colonna deve uscire **dopo** che «la» è arrivato nel biglietto, non insieme. La variante delle note, con la colonna
+    trattenuta più a lungo, non serve.
+T5. ⚠️ Scena 6, VOCE «la parte nuova l'hai messa tu» (punto 21, senza «prima»). Stessa semplificazione: l'ingrediente
+    è tuo, la combinazione la fa il modello (la fotocopiatrice che «chiede di te», «Lei no.»). Pesa un filo di più ora
+    che «Lei no.» riempie lo schermo subito prima: chi guarda ha appena visto la parte più spiritosa, e la frase la
+    toglie al modello. Resta accettabile, perché qui «nuova» vuol dire «fuori dalla strada battuta», e fuori da lì il
+    testo l'ha portato il dettaglio. Per la variante LinkedIn: «l'ingrediente è tuo, la ricetta è sua».
+T6. ✅ Scena 6, ANIMAZIONE beat 0, «la» vola dalla testa della colonna della 5 nel biglietto nuovo. Il claim visivo è
+    giusto: è la scelta della scena 3 rifatta sulla classifica cambiata. Una nota: la richiesta esce proprio mentre il
+    modello scrive, cioè il contesto sparisce nel momento in cui viene usato. Se lo spazio lo permette, tenere in alto
+    il titolo compatto come nelle scene 3-4. Altrimenti va bene così, perché il beat 3 ricollega richiesta e biglietto
+    con la freccia.
+T7. ✅ Scena 6, ANIMAZIONE beat 1 (seconda riga in sincrono) e beat 3 (graffa «l'hai messa tu», freccia a
+    «fotocopiatrice»). Il beat 1 non afferma nulla; il beat 3 è il punto 23, invariato.
+T8. ⚠️ Scena 7, VOCE e MESSAGGIO «L'IA non ha mai conosciuto Marco.» Vero nel senso che conta: un collega privato non
+    è nei dati di addestramento, e nessun modello conosce una persona. Si perde un fatto: gli assistenti di oggi
+    possono avere letto **di** Marco.
+    - Memoria: ChatGPT la ha anche per gli utenti gratuiti, Claude per tutti dal marzo 2026.
+    - Connettori: Gemini legge Gmail, Foto e Drive (Personal Intelligence, gennaio 2026). In ufficio Copilot di
+      Microsoft 365 risponde a partire da mail, chat di Teams e documenti a cui hai accesso, compresi i messaggi di
+      Marco.
+
+    La nota di produzione («la memoria… è di nuovo qualcosa che gli hai scritto tu») vale per la memoria, non per i
+    connettori: le mail di Marco le ha scritte Marco. Il modello mentale però regge. Quello che il modello sa di Marco
+    è comunque testo che entra nel contesto, come la richiesta, non conoscenza della persona. E la mossa della frase
+    dopo diventa ancora più precisa: «quello che sai solo tu» è quello che non sta scritto da nessuna parte dove l'IA
+    può leggere. Nessuna modifica alla voce. Facoltativo, in caption o nella variante LinkedIn: «Anche quando legge le
+    tue mail, di Marco ha solo quello che qualcuno ha scritto.»
+T9. ✅ Scena 7, VOCE, MESSAGGIO e GRANDE «Tu sì.» Contrappone la conoscenza vissuta al testo; nessun claim oltre T8.
+T10. ✅ Scena 7, VOCE «Scrivi nella richiesta quello che sai solo tu.» La mossa concreta arriva ed è corretta:
+    un'informazione che il modello non può avere, messa nel contesto, cambia la distribuzione di ogni parola dopo
+    (punto (d) dell'idea; la guida di Anthropic chiede contesto e specificità). Si applica oggi con qualunque chat.
+    - «Nella richiesta» è la parola giusta: conta il contesto, non che il modello «si ricordi».
+    - «Solo tu» va inteso rispetto all'IA (la fotocopiatrice la conosce tutto l'ufficio): va bene.
+    - Dei tre modi del punto 2 di «Cosa impara il lettore» la voce ne porta uno, quello con meno riserve (divieti e
+      cinque proposte hanno i limiti dei punti 26-27): la scelta è giusta.
+    - La mossa sta solo nella VOCE, e per la regola basta. Senza audio la porta l'immagine della riga della
+      fotocopiatrice che entra nella carta (beat 2): i sottotitoli sono consigliati, ma non è un punto tecnico.
+
+    Il suo limite (un dettaglio da solo può finire appeso al luogo comune) è in T3 e T17.
+T11. ✅ Scena 7, VOCE «E salutami la fotocopiatrice.» È una battuta, senza claim.
+T12. ✅ Scena 7, CTA «Mandalo a chi firma i biglietti in ufficio». Nessun claim, coerente con la richiesta della scena
+    2; toglie l'ambiguità della CTA precedente.
+T13. ⚠️ Scena 7, ANIMAZIONE beat 0: icona «bot», icona «user» con «Marco», tra le due una linea tratteggiata
+    interrotta. È un'icona isolata che afferma (lezione della prima sessione): la linea spezzata dice «tra l'IA e Marco
+    non c'è niente». Sui pesi del modello è giusto. Con memoria e connettori (T8) però i collegamenti esistono, e
+    passano tutti dal contesto. Nel beat 2, poi, la carta «richiesta» entra «sopra il messaggio», staccata dalla
+    linea: l'unica cosa che collega davvero l'IA a Marco è disegnata altrove. Proposta all'animatore, senza toccare
+    voce e beat: la carta con la riga della fotocopiatrice entra **nel buco** della linea tratteggiata, oppure la
+    linea accento del beat 1 prosegue da «Marco» alla carta e dalla carta al «bot». Così l'immagine dice «l'IA arriva a
+    Marco solo attraverso quello che scrivi», che resta vero anche con memoria e connettori. L'icona «bot» (testa di
+    robot, Lucide) per «l'IA» è la convenzione dei chatbot: va bene.
+T14. ✅ Scena 7, ANIMAZIONE beat 1-2: GRANDE «TU SÌ», linea accento dal riquadro del presentatore a «Marco», la riga
+    della fotocopiatrice che scivola in accento **dentro** la carta «richiesta». È il modello mentale del punto 29
+    ridotto a una riga: quello che aggiungi entra nel contesto.
+T15. ✅ Scena 7, ANIMAZIONE beat 3: torna il biglietto della 6 con «Lei no.» acceso, poi restano messaggio e CTA. Il
+    claim visivo («ecco cosa esce quando scrivi quello che sai») è corretto se lo è T3: questo biglietto segue la
+    stessa condizione.
+T16. ✅ Caption, le mosse uscite dalla voce. Nel pacchetto social ci sono tutte, con i loro limiti:
+    - parole vietate, con il limite del sinonimo successivo (punto 26);
+    - cinque proposte, che possono essere varianti dello stesso luogo comune (punto 27);
+    - il criterio del punto 31 (obbligatorio) e lo slogan.
+
+    Sono corrette, e ora servono più di prima, perché la voce porta uno solo dei tre modi. Va aggiunta, per T3, la
+    dichiarazione sul biglietto della 6 (il modello usato, oppure «esempio»).
+T17. ⚠️ Potenziale e limite (regola 8). Il potenziale ora è forte: il biglietto spiritoso è letto a voce e a tutto
+    schermo, e la mossa è nella voce. Il limite del meccanismo resta intatto: «Originale, no» nella 4, «serve a poco»
+    nella 5. Il limite **della mossa** invece sta solo in caption: un dettaglio può non bastare, e se la risposta la
+    finisci ancora in testa bisogna aggiungerne. Intanto il reel mostra solo il caso migliore. Non chiedo di cambiare
+    la voce (la chiusura C lo diceva, ma non è stata scelta): il criterio in caption resta obbligatorio, e la verifica
+    di T3 dice se il caso migliore è anche quello tipico.
+
+Effetti sulle passate precedenti:
+- superati: i punti 20 e S7 da T4; il 22 (la colonna su «fotocopiatrice», tolta) da T6; i punti 24-29 e S8 dalla
+  nuova chiusura (24 e 26-27 in caption, T16; 25 → T10; 28 → T12; 29 → T14);
+- ancora ⚠️: il 19, con una condizione più stretta (T3), e il 21 (T5); il 3 è invariato (T2);
+- aggiornati: il 31 ora vuol dire mossa nella VOCE con un modo su tre, gli altri due e il criterio in caption
+  (obbligatori); il 32 resta ✅ («Fluente, sì» è nella voce), con la nota di T17.
+
+Nessun claim già approvato è peggiorato. ⚠️ aperti: 3, 4, 7, 10, 19 (= T3), 21 (= T5) e 31 della prima passata, più
+T4, T8, T13 e T17. S6 è chiuso nell'animazione (`database` al posto della lente), ma la riga ANIMAZIONE della scena 4
+dice ancora «lente (icona «search»)»: va allineata, perché l'animatore rilegge il brief.
+
+Prima della registrazione: T3 (obbligatoria), il biglietto della scena 2 (punto 4), la caption (T16, punti 31-32).
+Per l'animatore: T4 (la colonna esce dopo che «la» è arrivato), T13 (la carta nel buco della linea), T6 facoltativo.
+
+Fonti aggiunte (T1, T8):
+- Jiang et al., *Artificial Hivemind* (NeurIPS 2025, Datasets and Benchmarks):
+  https://proceedings.neurips.cc/paper_files/paper/2025/hash/754d5a526a5ee5a47220664a0eb92751-Abstract-Datasets_and_Benchmarks_Track.html
+- OpenAI, *Memory and new controls for ChatGPT*: https://openai.com/index/memory-and-new-controls-for-chatgpt/ · memoria
+  per gli utenti gratuiti: https://www.neowin.net/news/chatgpt-memory-upgrade-extends-to-free-users/
+- Claude, memoria per tutti gli utenti (marzo 2026):
+  https://dataconomy.com/2026/03/04/anthropic-makes-claude-memory-feature-free-for-all-users/
+- Google, *Personal Intelligence: Connecting Gemini to Google apps*:
+  https://blog.google/innovation-and-ai/products/gemini-app/personal-intelligence/
+- Microsoft, *What information does Copilot use to answer my prompt?*:
+  https://support.microsoft.com/en-us/topic/what-information-does-copilot-use-to-answer-my-prompt-934f537d-ff7d-4059-9fec-a751e4651307
+
+**APPROVATO TECNICAMENTE** (2026-09-13, terza passata)
+
 ## Note di animazione
-File `contenuti/animazioni/generativa-non-creativa.py`. Anteprima `monta --prova --anteprima` (2026-09-13): reel
-**54,5 s**, 0 errori, 0 avvisi di tempo, 0 controlli, dopo 3 giri di `anima`. Tempi dalla voce sintetica (esatti);
-Manim ~14 s per tutte le scene in anteprima. Durate: 4,0 · 9,5 · 7,2 · 9,4 · 6,6 · 9,2 · 10,1 s, 6 dissolvenze da 0,25 s.
+File `contenuti/animazioni/generativa-non-creativa.py`. **Seconda animazione** (2026-09-13, dopo la riscrittura di
+scene 1, 6 e 7): anteprima `monta --prova --anteprima`, reel **55,6 s**, 0 errori, 0 avvisi di tempo, 0 controlli,
+`diagnostica` vuota, dopo 3 giri di `anima` (tutte le scene in bassa qualità due volte, la 7 in alta). Tempi dalla voce
+sintetica (esatti); Manim ~14 s per tutte le scene in anteprima. Durate: 6,1 · 9,5 · 7,2 · 9,4 · 6,6 · 10,4 · 7,8 s,
+6 dissolvenze da 0,25 s. Fotogrammi fitti (4 al secondo) di tutte le scene montate: nessun testo sparisce, lampeggia o
+finisce coperto.
 
-**Filo visivo**
-- Carta «richiesta» (bordo secondario): intera nella 2; **compatta, solo il titolo**, in alto nelle 3-4 (con la carta
-  intera la colonna delle candidate non ci sta: 323 + 272 + 379 px su 976 di area); di nuovo intera e più lunga nella
-  5; ridotta alla sola riga del dettaglio nella 6; vuota e poi riempita nella 7.
-- Biglietto: cartellini su 4 righe fisse, con «e se ne apre uno nuovo.» su una riga sua (così il riquadro «probabile» la
-  incornicia intera). Sta dentro la carta «biglietto» (bordo terziario) quando è intero (2, 4 dal beat 1, 6); nelle 3
-  e 4 (beat 0) ci sono solo i cartellini, perché carta + classifica non ci stanno: «il biglietto si svuota» = la carta
-  esce. Il biglietto nuovo della 6 ha la stessa carta e la stessa altezza (4 righe).
-- Candidate: `Classifica` con «esempio: numeri inventati» (3, 5, 6); intestazione «dopo «…»» in attenuato.
-- Ogni scena parte dall'ultimo fotogramma della precedente (ricostruito con le stesse funzioni): la dissolvenza non si
-  vede e gli oggetti non saltano. Accento: uno per beat.
+**Filo visivo** (invariato nella sostanza: è lo standard che è piaciuto)
+- Carta «richiesta» (bordo secondario): intera nella 2; **compatta, solo il titolo**, in alto nelle 3-4 e mentre il
+  biglietto nuovo si scrive nella 6 (revisione T6: il contesto resta mentre il modello scrive); di nuovo intera e più
+  lunga nella 5; con la sola riga del dettaglio alla fine della 6; nella 7 **stretta (440 px)**, nel buco della linea
+  fra l'IA e Marco.
+- Biglietto: cartellini su 4 righe fisse, dentro la carta «biglietto» (bordo terziario) quando è intero; il biglietto
+  nuovo della 6 **cresce con la voce** (2 righe, poi 4) e torna nella 7, identico, con «Lei no.» acceso.
+- Candidate: `Classifica` con «esempio: numeri inventati» (3 e 5); nella 6 «la» parte dalla testa della colonna.
+- Ogni scena parte dall'ultimo fotogramma della precedente, ora anche **1→2** (la 2 si apre con il titolo dell'hook,
+  che esce mentre entra la richiesta). Verificato sui primi fotogrammi di 2, 6 e 7. Accento: uno nuovo per beat.
 
-**Scena 1** (beat 0,0 / 2,24 s). «GENERATIVA» c'è già al primo fotogramma; «NON VUOL DIRE» a 0,45 s, «CREATIVA» a
-1,0 s. *Cambiato*: la barra su «creativa» entra alla fine del beat 0 (1,7 s), appena detta la parola, non nel beat 1:
-la negazione cade sulla parola e il beat 1 ha un solo accento. Beat 1: «VUOL DIRE / PROBABILE», «probabile» in
-accento; la copertina (70 %) è completa.
+**Cambi grandi e composizioni.** Scena per scena: 1 titolo grande · 2 due carte, poi **zoom 2×** sul cursore · 3
+pillola + classifica · 4 rami, poi biglietto ed etichette · 5 carta + classifica · 6 biglietto che cresce, poi
+**«LEI NO.» a tutto schermo** · 7 icone e carta stretta, poi **«TU SÌ» a tutto schermo**. Due scene di fila non hanno
+mai la stessa composizione. Il riquadro del presentatore che cresce non c'è ancora e non è simulato.
+- **Zoom della scena 2 (sì)**: è il momento della prova, e il vuoto dopo «capitolo» diventa l'unica cosa sullo schermo.
+  A 1,6× la richiesta restava a metà in alto, a 2× esce quasi tutta.
+- **Zoom della scena 5 (no)**: provato a 1,5×. La carta larga 900 px sopra le barre resta tagliata in alto e a destra
+  («Marco ha passato una vi…», «dopo «Car…») a qualunque ingrandimento, e il riordino delle barre si legge già a tela
+  intera. In più la 6, che segue subito, si apre con un punch: meglio una scena calma prima.
+- Gli zoom stanno dentro un solo beat (entra e torna prima della fine): a fine beat i controlli misurano lo schermo, e
+  con la camera vicina il testo tagliato fuori dall'inquadratura risulterebbe «testo-fuori».
 
-**Scena 2** (0 / 2,68 / 6,46 s). Beat 0: la carta «richiesta». Beat 1: la carta «biglietto» vuota; dopo «Comincia
-così:» un cartellino per parola, lento, sincrono con la voce, fino a «capitolo»; poi un cursore accento che lampeggia
-(rettangolo sottile). Beat 2: il cursore lampeggia ancora per ~0,5 s **dopo** l'inizio di «Se l'hai già finito in
-testa», poi arriva il resto, lento (10 cartellini in ~1,2 s); su «era probabile» il riquadro accento sulla riga «e se ne
-apre uno nuovo.» con l'etichetta «probabile» appesa al suo angolo in alto a destra (sotto il biglietto non ci stava:
-974 px su 976). Nel beat 0 (2,6 s) la metà bassa dell'area è vuota: lasciata così per non spostare la richiesta mentre
-la si legge.
+**Scena 1** (beat 0 / 2,16 / 4,39 s). *Rifatta.* Il titolo «GENERATIVA / NON VUOL DIRE / CREATIVA» è intero al primo
+fotogramma, 40 px più in basso; le tre righe salgono al loro posto, sfalsate, in 0,5 s (il movimento entro 0,5 s).
+Il gruppo titolo + sottotitolo è centrato nell'area dell'hook, e la riga «PROBABILE» resta a sinistra del cerchio del
+presentatore: così l'ultimo fotogramma può essere il primo della 2. Beat 1: la barra su «creativa» a ~3,9 s, appena
+detta la parola (fine della frase). Beat 2: «VUOL DIRE / PROBABILE», «probabile» in accento. Durante la domanda
+(beat 0) il titolo è fermo dopo 0,5 s: la domanda è a voce e il titolo si legge in quei 2 s.
+
+**Scena 2** (0 / 2,68 / 6,46 s). *Cambiati l'inizio e il beat 2.* Beat 0: il titolo dell'hook esce verso l'alto mentre
+entra la carta «richiesta» (0,5 s): niente più primo fotogramma vuoto. Beat 1 invariato: la carta «biglietto» vuota,
+un cartellino per parola fino a «capitolo», poi il cursore accento che lampeggia (da ~5,6 s). Beat 2: **la camera si
+avvicina (2×, 0,45 s) a «un capitolo» e al cursore**, che lampeggia ancora; a ~7,0 s (22 % del beat, prima era il 15 %)
+il cursore sparisce e il resto arriva lento **mentre la camera torna** alla tela intera (1,2 s); su «era probabile» il
+riquadro accento con l'etichetta «probabile». Il vuoto (cursore senza cartellini nuovi) dura ~1,4 s.
 
 **Scena 3** (0 / 2,20 / 5,37 s). Beat 0: la richiesta si compatta in alto, il biglietto esce, la frase si ricompone
 veloce (7 cartellini in ~1 s). Beat 1: «dopo «capitolo»» e la colonna e / ma / della. Beat 2: una graffa (colore testo)
@@ -455,28 +654,57 @@ ordine. Beat 1: entra la riga della fotocopiatrice; su «Marco litigava con la f
 «la» si accende. I TESTO «sii originale» e «dettaglio vero» sono le righe della carta: nessuna etichetta a parte, e
 l'intestazione sta a destra delle barre (carta 534 + classifica 379 px su 976: non c'era altro posto).
 
-**Scena 6** (0 / 3,04 / 6,45 s). Beat 0: la richiesta si riduce alla riga del dettaglio; entra la carta del biglietto
-nuovo, «la» vola dalla classifica al suo posto e il resto si scrive a cartellini (14 in ~1,4 s: finisce all'80 % del
-beat, perché la voce legge solo la prima frase e il resto va letto). Beat 1: la richiesta esce e **al suo posto**, per
-un attimo, la colonna «dopo «la»»: fotocopiatrice / tua / nostra, con «fotocopiatrice» accesa insieme al suo
-cartellino nel biglietto. *Cambiato*: la colonna prende il posto della richiesta invece di comparire sul biglietto
-(richiesta 259 + classifica 379 + biglietto 514 px non ci stanno insieme). *Aggiunte*: le candidate «tua» e «nostra»
-(esempio, il brief non le dava). Beat 2: esce la colonna, torna la richiesta, una graffa accento appena sotto la carta
-abbraccia la riga del dettaglio con «l'hai messa tu» e una freccia accento va a «fotocopiatrice» nel biglietto.
+**Scena 6** (0 / 4,00 / 6,05 / 6,79 s). *Rifatta.*
+- Beat 0 («Ora scrive: caro Marco, la fotocopiatrice ha chiesto di te.»): la richiesta si compatta nella pillola in
+  alto (0,4 s) e resta come contesto (T6). A ~0,6 s entra il biglietto nuovo a tutta larghezza, alto due righe, poi
+  «Caro», «Marco,». A ~1,4 s, su «la», il cartellino «la» si accende **sulla testa della colonna** (sopra l'etichetta
+  «la» già accesa della scena 5) e vola al suo posto nel biglietto (0,45 s). **Solo quando è arrivato** la colonna
+  esce, insieme all'ingresso di «fotocopiatrice» (revisione T4: l'animazione regge «sceglie ancora tra le prime»).
+  Poi «ha chiesto di te.» con la voce; il beat finisce al 78 %, perché il biglietto si scrive insieme alla voce.
+- Beat 1: il biglietto cresce a quattro righe (0,3 s), «la» torna al bordo attenuato, e «Le ho detto che da lunedì sei
+  libero.» si scrive un cartellino per parola con la voce (1,27 s).
+- Beat 2, **GRANDE**: «LEI NO.» a tutto schermo in accento (`punch`). Con la voce di prova la frase dura 0,74 s,
+  quindi la battuta resta ~0,73 s e non ~1 s come chiede il brief: la tenuta è tagliata per finire all'inizio della
+  frase dopo. Con la clip vera (pausa e mezzo sorriso) durerà di più, da sola. «Lei» e «no.» entrano nel biglietto,
+  accesi, durante il taglio: al ritorno il biglietto è intero con «Lei no.» acceso.
+- Beat 3: un attimo fermo (0,3 s), poi il biglietto scende (246 px) mentre la pillola torna carta con la riga del
+  dettaglio. Su «l'hai messa tu» (52 % del beat) la graffa accento sulla riga, poi la freccia accento a
+  «fotocopiatrice».
+- *Cambiato*: «la richiesta esce» del brief è diventato «si compatta in alto» (T6 facoltativo, lo spazio c'era
+  perché il biglietto cresce 2 → 4 righe e la colonna esce prima che serva il posto). Tolte le candidate «dopo «la»»
+  della prima animazione.
 
-**Scena 7** (0 / 2,75 / 4,80 / 6,47 s). Beat 0: esce tutto, la richiesta si svuota e scende sotto il messaggio, che
-entra riga per riga. *Cambiato*: il messaggio è in minuscolo (4 righe invece di 5 in maiuscolo), altrimenti messaggio,
-carta e CTA non ci stavano. Beat 1-3: una voce per beat **dentro** la carta, prese dalle righe ANIMAZIONE («un
-dettaglio che sai solo tu», «vietate: capitolo, meritato, avventura», «cinque proposte, via le più scontate»), in corpo
-«token» (44 px) per stare su una riga ciascuna; i TESTO («un dettaglio vero», «parole vietate», «scarta le scontate»)
-non compaiono alla lettera. Beat 3: anche la CTA a pillola.
+**Scena 7** (0 / 2,14 / 2,79 / 5,50 s). *Rifatta.*
+- Beat 0 («L'IA non ha mai conosciuto Marco.»): esce tutto (0,3 s). In alto il messaggio, righe «L'IA non ha mai /
+  conosciuto Marco.», con la voce; a sinistra l'icona `bot` con «IA», a destra `user` con «Marco». Fra le due una linea
+  tratteggiata con un buco di 170 px al centro, che parte dalle icone verso il buco.
+- Beat 1, **GRANDE**: «TU SÌ» a tutto schermo (~0,6 s: la frase dura 0,65 s con la voce di prova, stesso taglio della
+  6). Al ritorno il messaggio ha la terza riga «Tu sì.» in accento.
+- Beat 2: la linea accento va dal riquadro del presentatore a «Marco» (0,35 s). Su «nella richiesta» entra la carta
+  «richiesta» vuota **nel buco della linea**, che la copre in parte (la linea sta sotto). Su «quello che sai solo tu»
+  la carta cresce e ci scivola dentro, da Marco (da destra), la riga della fotocopiatrice in accento. Revisione T13:
+  la carta chiude il buco, e l'IA arriva a Marco solo attraverso quello che scrivi.
+- Beat 3 («E salutami la fotocopiatrice.»): il diagramma esce e torna il biglietto della 6, identico e nello stesso
+  posto, con «Lei no.» acceso. A metà beat il biglietto esce, il messaggio scende e con la CTA a pillola si centra
+  nell'area: l'ultimo fotogramma (~0,7 s) ha solo messaggio e CTA.
+- *Cambiati*:
+  - il messaggio entra con la voce nei beat 0-1, non nel beat 2 («sopra il messaggio»). Nel beat 2 lo si leggerebbe
+    mentre la voce dice un'altra frase (principio 6); così invece la frase citabile è detta e scritta insieme
+    (principio 9), e «Tu sì.» arriva con il ritorno dal punch;
+  - la linea dal presentatore a Marco entra all'inizio del beat 2 e non dopo il punch: il beat 1 dura 0,65 s e il punch
+    lo occupa tutto;
+  - aggiunta l'etichetta «IA» sotto il bot;
+  - la carta è stretta (440 px, riga in corpo «token», 4 righe) per stare fra le icone;
+  - il messaggio è in minuscolo con «Tu sì.» su una riga sua: in maiuscolo le righe sarebbero 4 invece di 3.
+- La chiusura dura 7,8 s con la voce di prova, oltre i 6-7 s consigliati: dipende dalla voce, non dalle animazioni
+  (l'ultima animazione finisce a ~7,1 s).
 
-**Correzione dopo la revisione del coordinatore** (giro 4): nelle scene 5 e 7 il titolo «richiesta» spariva mentre la
-carta cresceva e durante le animazioni successive (`cl.aggiorna`); ora le animazioni composte sui pezzi della carta
-passano `group=<riquadro>`. Verificato su fotogrammi fitti (4 al secondo) di tutte le scene: nessun testo sparisce.
-
-**Da ricontrollare con le clip vere**: gli inizi delle frasi saranno stimati a parole, quindi la pausa dopo «capitolo»
-(scena 2) si spalma sul beat 1 e il cursore lampeggerà più o meno a lungo; rivedere con l'allineamento ASR (fase 5).
+**Da ricontrollare con le clip vere.** Gli inizi delle frasi saranno stimati a parole, e ci sono tre effetti:
+- scena 2: la pausa dopo «capitolo» si spalma sul beat 1 e il cursore lampeggerà più o meno a lungo;
+- scene 6 e 7: le battute «Lei no.» e «Tu sì.» (2 parole) avranno un beat corto e il punch resterà breve, finché
+  l'allineamento ASR (fase 5) non darà le pause vere;
+- scena 1: la copertina (fotogramma al 70 % dell'hook, 4,30 s) cade proprio quando entra il sottotitolo (4,29 s) e
+  mostra il titolo barrato senza «vuol dire probabile». Vedi il rapporto.
 
 ## Pacchetto social
 **Caption Reel:**

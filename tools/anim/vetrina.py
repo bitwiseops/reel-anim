@@ -14,7 +14,7 @@ from pathlib import Path
 from manim import DOWN, AnimationGroup, FadeIn, LaggedStart, VGroup
 
 from .base import ScenaReel
-from .componenti import Caption, Codice, ContatoreScorre, Icona, Lista, testo
+from .componenti import Caption, Classifica, Codice, ContatoreScorre, Icona, Lista, testo
 from .config import RADICE, carica
 from .diagrammi import Ciclo, Confronto, Corrispondenza, Flusso, Graffa, Tabella
 from .misure import px
@@ -121,8 +121,30 @@ class VetrinaContatore(ScenaReel):
         c.ferma()
 
 
+class VetrinaPunch(ScenaReel):
+    def costruisci(self):
+        lista = Lista(["un dettaglio vero", "un vincolo"], larghezza_px=560)
+        self.area.contenuto.metti(lista, "centro", "sinistra", buff_px=20)
+        self.play(lista.entra_una_alla_volta(), run_time=0.8)
+        self.beat(1)
+        self.punch("tu sì")                                 # taglio alla battuta e ritorno alla scena
+        self.beat(2)
+        self.play(lista.voci[0].animate.set_color(self.cfg.palette.accento), run_time=0.3)
+
+
+class VetrinaZoom(ScenaReel):
+    def costruisci(self):
+        cl = Classifica([("oggi", 0.48), ("ti", 0.22), ("la", 0.08)], larghezza_px=620)
+        self.area.contenuto.metti(cl, "alto", "sinistra", buff_px=20)
+        self.play(cl.entra(), run_time=0.8)
+        self.beat(1)
+        self.play(self.zoom_su(cl.barre[2], 1.3), run_time=0.6)   # il cambio grande senza disegni nuovi
+        self.beat(2)
+        self.play(self.torna(), run_time=0.5)
+
+
 SCENE = [VetrinaFlusso, VetrinaCiclo, VetrinaConfronto, VetrinaCorrispondenza, VetrinaGraffa, VetrinaTabella, VetrinaCodice,
-         VetrinaIcone, VetrinaContatore]
+         VetrinaIcone, VetrinaContatore, VetrinaPunch, VetrinaZoom]
 
 
 def main(argv: list[str] | None = None) -> int:

@@ -4,11 +4,12 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass
 
-from manim import DOWN, LEFT, RIGHT, UP, Rectangle, Scene, VGroup
+import numpy as np
+from manim import DOWN, LEFT, ORIGIN, RIGHT, UP, MovingCamera, MovingCameraScene, Rectangle, ScreenRectangle, VGroup
 from manim import config as config_manim
 
 from .config import Config, carica, registra_font
-from .controlli import Violazione, esegui_controlli
+from .controlli import Violazione, contenuto_visibile, esegui_controlli
 from .misure import px
 
 ANTICIPO_S = 0.1   # il beat parte 3 fotogrammi prima della frase: l'occhio deve arrivare con la voce, non dopo
@@ -111,14 +112,25 @@ def aree(cfg: Config, riquadro: str | None = None) -> Aree:
     return Aree(contenuto, area_riq, Area(sx0, sy0, sx1, sy1))
 
 
-class ScenaReel(Scene):
+class CameraReel(MovingCamera):
+    """MovingCamera con la cornice nelle proporzioni della tela del reel (quella predefinita di Manim è 16:9 e
+    deformerebbe la tela verticale)."""
+
+    def __init__(self, **kw):
+        cfg = carica()
+        cornice = ScreenRectangle(aspect_ratio=cfg.frame_width / cfg.frame_height, height=cfg.frame_height)
+        cornice.set_stroke(width=0)
+        super().__init__(frame=cornice, **kw)
+
+
+class ScenaReel(MovingCameraScene):
     """Una scena del reel. `durata_s` è la durata della clip del presentatore: la scena dura esattamente tanto.
 
     Sottoclassi: implementa `costruisci()` usando `self.area`, `self.cfg`, `self.beat(i)` / `self.fino_a(f)`.
     `beat(i)` aspetta l'inizio della frase i della VOCE: `scena["inizi_frasi_s"]` (esatti con la voce sintetica di
     prova) oppure una stima proporzionale alle parole. Se una scena arriva tardi a un beat o sfora la durata, il
     problema finisce in `self.avvisi` (e nel report). `chiudi()` tiene l'ultimo fotogramma fino a `durata_s` ed è
-    automatico.
+    automatico. Cambi grandi: `self.punch("tu sì")` (parola a tutto schermo) e `self.zoom_su(mob)` / `self.torna()`.
     """
 
     def __init__(self, durata_s: float = 6.0, scena: dict | None = None, debug: bool = False, **kw):
@@ -132,13 +144,14 @@ class ScenaReel(Scene):
         self.controlli: list[Violazione] = []
         self._visti: set[tuple[str, str]] = set()
         self._escludi: set[int] = set()   # guide di debug: fuori dai controlli
+        self._inizio_visto = False
         voce = list(self.scena.get("voce") or [])
         inizi = self.scena.get("inizi_frasi_s")
         if inizi and len(inizi) == len(voce):
             self.inizi_frasi = [float(x) for x in inizi]
         else:
             self.inizi_frasi = inizi_per_parole(voce, 0.0, self.durata_s - CODA_S)
-        super().__init__(**kw)
+        super().__init__(camera_class=CameraReel, **kw)
 
     # --- tempo ---------------------------------------------------------------------------------------
     @property
@@ -191,6 +204,52 @@ class ScenaReel(Scene):
         fine = self.inizi_frasi[i + 1] if i + 1 < len(self.inizi_frasi) else self.durata_s
         return max(0.0, fine - self.inizi_frasi[i])
 
+    # --- cambi grandi: camera e parola a tutto schermo -------------------------------------------------
+    @property
+    def zoom(self) -> float:
+        """Ingrandimento attuale della camera (1 = tela intera)."""
+        return self.cfg.frame_width / self.camera.frame.width
+
+    def inquadratura(self, mob, fattore: float) -> tuple[float, np.ndarray]:
+        """Larghezza e centro della camera che ingrandisce mob `fattore` volte e lo porta al centro dell'area contenuto
+        (non della tela: con il riquadro in basso il centro della tela sta sopra il presentatore). Per partire già
+        ingranditi: `l, c = self.inquadratura(mob, 1.5); self.camera.frame.set(width=l).move_to(c)`."""
+        return self.cfg.frame_width / fattore, mob.get_center() - self.area.contenuto.centro / fattore
+
+    def zoom_su(self, mob, fattore: float = 1.5):
+        """Animazione da passare a self.play: la camera si avvicina a mob, ingrandita `fattore` volte, e lo porta al
+        centro dell'area contenuto, senza disegni nuovi. Il riquadro del presentatore resta fermo sullo schermo: i
+        controlli misurano quello che si vede (i testi del tutto fuori campo non contano)."""
+        larghezza, centro = self.inquadratura(mob, fattore)
+        return self.camera.frame.animate.set(width=larghezza).move_to(centro)
+
+    def torna(self):
+        """Animazione da passare a self.play: la camera torna alla tela intera."""
+        return self.camera.frame.animate.set(width=self.cfg.frame_width).move_to(ORIGIN)
+
+    def punch(self, s: str, tenuta_s: float = 0.9, colore: str | None = None, entrata_s: float = 0.15) -> None:
+        """Il cambio grande della battuta: taglio secco a 1-3 parole a tutto schermo (componenti.Punch), tenute
+        `tenuta_s` (ma mai oltre l'inizio del beat dopo: le battute corte durano meno), poi taglio indietro alla scena
+        com'era, camera compresa. Ciò che si aggiunge o cambia subito prima compare solo al ritorno, con il taglio."""
+        from .componenti import Punch
+        cornice = self.camera.frame
+        larghezza, centro = cornice.width, cornice.get_center().copy()
+        sotto = list(self.mobjects)
+        self.remove(*sotto)
+        cornice.set(width=self.cfg.frame_width).move_to(ORIGIN)
+        p = Punch(s, self.area.contenuto, colore=colore)
+        entrata = self.arrotonda(entrata_s)
+        prossimi = [x - self.ANTICIPO_S for x in self.inizi_frasi if x - self.ANTICIPO_S > self.t + 1e-6]
+        if prossimi:
+            tenuta_s = max(0.3, min(tenuta_s, prossimi[0] - self.t - entrata))
+        self.play(p.entra(), run_time=entrata)
+        self.verifica(f"punch «{s}»")
+        self.wait(tenuta_s)
+        self.remove(p)
+        cornice.set(width=larghezza).move_to(centro)
+        self.add(*sotto)
+
+    # --- controlli -----------------------------------------------------------------------------------
     def verifica(self, momento: str) -> None:
         """Controlli automatici sullo stato attuale (tools/anim/controlli.py). Li chiamano beat() e chiudi(): a mano
         solo per un istante particolare. Una violazione già vista in un beat precedente non si ripete."""
@@ -199,6 +258,24 @@ class ScenaReel(Scene):
             if chiave not in self._visti:
                 self._visti.add(chiave)
                 self.controlli.append(v)
+
+    def controlla_primo_fotogramma(self) -> None:
+        """Il primo fotogramma dell'hook è quello che vede chi scorre: non può essere vuoto (docs/linguaggio-reel.md
+        §1). Lo chiamano da sole la prima play e la prima attesa."""
+        if self._inizio_visto:
+            return
+        self._inizio_visto = True
+        if self.scena.get("tipo") == "hook" and not contenuto_visibile(self, self._escludi):
+            self.controlli.append(Violazione("fotogramma-vuoto", "inizio", "il primo fotogramma dell'hook è vuoto: metti "
+                                             "in scena il titolo con self.add prima della prima animazione"))
+
+    def play(self, *args, **kwargs) -> None:
+        self.controlla_primo_fotogramma()
+        super().play(*args, **kwargs)
+
+    def wait(self, *args, **kwargs) -> None:
+        self.controlla_primo_fotogramma()
+        super().wait(*args, **kwargs)
 
     def chiudi(self) -> None:
         self.verifica("fine scena")
@@ -229,4 +306,5 @@ class ScenaReel(Scene):
         return g
 
 
-__all__ = ["Area", "Aree", "ScenaReel", "aree", "area_px", "inizi_per_parole", "ANTICIPO_S", "CODA_S", "DOWN", "UP", "LEFT", "RIGHT"]
+__all__ = ["Area", "Aree", "CameraReel", "ScenaReel", "aree", "area_px", "inizi_per_parole", "ANTICIPO_S", "CODA_S",
+           "DOWN", "UP", "LEFT", "RIGHT"]

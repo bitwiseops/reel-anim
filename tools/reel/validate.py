@@ -3,7 +3,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from .model import STATI, Diagnostica, Reel, avviso, conta_emoji, conta_parole, errore, evidenziate
+import re
+
+from .model import STATI, Diagnostica, Reel, avviso, conta_emoji, conta_parole, errore, evidenziate, testo_piano
 from .stima import durata_stimata_s
 
 LIMITI = {
@@ -12,9 +14,11 @@ LIMITI = {
     "scene_tipiche": (6, 8),
     "parole_voce_max": 35,        # per scena (≈ 12 s a 2,8 parole/s)
     "parole_voce_hook_max": 15,
+    "parole_voce_chiusura_max": 25,   # la chiusura è un payoff, non un riassunto (docs/linguaggio-reel.md §8)
     "beat_max": 4,                # righe VOCE per scena
     "parole_titolo_max": 10,
     "parole_messaggio_max": 25,
+    "parole_messaggio_consigliate": 12,   # una frase grande a schermo; il resto in caption
     "testo_max": 4,
     "parole_testo_max": 4,
     "evidenzia_max": 1,           # ==evidenzia== per scena
@@ -72,9 +76,18 @@ def check(r: Reel) -> list[Diagnostica]:
                 a(f"TITOLO lungo ({conta_parole(s.titolo)} parole, max {L['parole_titolo_max']}): deve reggere da solo")
             if s.parole_voce > L["parole_voce_hook_max"]:
                 a(f"VOCE dell'hook di {s.parole_voce} parole (max {L['parole_voce_hook_max']}): l'hook si gioca in 3-5 s")
+            if s.voce and not parla_a_chi_guarda(s.voce):
+                a("l'hook non parla a chi guarda: nessun «tu» e nessuna domanda nella VOCE (docs/linguaggio-reel.md §1)")
         elif s.tipo == "chiusura":
-            if s.messaggio and conta_parole(s.messaggio) > L["parole_messaggio_max"]:
-                a(f"MESSAGGIO lungo ({conta_parole(s.messaggio)} parole, max {L['parole_messaggio_max']})")
+            n_msg = conta_parole(s.messaggio or "")
+            if n_msg > L["parole_messaggio_max"]:
+                a(f"MESSAGGIO lungo ({n_msg} parole, max {L['parole_messaggio_max']})")
+            elif n_msg > L["parole_messaggio_consigliate"]:
+                a(f"MESSAGGIO di {n_msg} parole: a schermo ne reggono {L['parole_messaggio_consigliate']} "
+                  "(una frase grande; il resto in caption)")
+            if s.parole_voce > L["parole_voce_chiusura_max"]:
+                a(f"VOCE della chiusura di {s.parole_voce} parole (max {L['parole_voce_chiusura_max']}): "
+                  "la chiusura è un payoff, non un riassunto")
             if not s.cta:
                 a("chiusura senza CTA")
         if s.parole_voce > L["parole_voce_max"]:
@@ -115,6 +128,17 @@ def check(r: Reel) -> list[Diagnostica]:
     elif totale < L["reel_min_s"]:
         d.append(avviso(f"reel stimato {totale:.0f} s, sotto i {L['reel_min_s']} s"))
     return d
+
+
+_RE_TU = re.compile(r"\b(tu|ti|te|tuo|tua|tuoi|tue|voi|vi|vostro|vostra|hai|sei|sai|vuoi|puoi|fai|devi|pensi|scrivi|"
+                    r"chiedi|guarda|prova|immagina|finisci)\b|\bt'", re.IGNORECASE)
+
+
+def parla_a_chi_guarda(frasi: list[str]) -> bool:
+    """Una domanda o un «tu» (pronomi e verbi alla seconda persona più comuni): l'hook è una promessa a chi guarda,
+    non un titolo (docs/linguaggio-reel.md §1). Euristica: un imperativo senza pronome può sfuggire."""
+    s = testo_piano(" ".join(frasi))
+    return "?" in s or bool(_RE_TU.search(s))
 
 
 def ha_errori(diagnostiche: list[Diagnostica]) -> bool:

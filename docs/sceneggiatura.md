@@ -67,7 +67,9 @@ Limiti (fonte unica: `tools/reel/validate.py::LIMITI`; oltre il limite è un avv
 | scene | 6-8 (minimo 5, massimo 9) |
 | parole di `VOCE:` per scena | ≤ 35 (hook ≤ 15) |
 | righe `VOCE:` per scena | ≤ 4 |
-| `TITOLO:` / `MESSAGGIO:` | ≤ 10 / ≤ 25 parole |
+| `TITOLO:` / `MESSAGGIO:` | ≤ 10 / ≤ 25 parole (MESSAGGIO consigliato ≤ 12: una frase grande, il resto in caption) |
+| VOCE dell'hook | un «tu» o una domanda: l'hook è una promessa a chi guarda (`docs/linguaggio-reel.md` §1) |
+| VOCE della chiusura | ≤ 25 parole: un payoff, non un riassunto |
 | `TESTO:` | ≤ 4 per scena, ≤ 4 parole ciascuno |
 | `==evidenzia==` / emoji | 1 per scena |
 | una scena | 2,5-14 s stimati |

@@ -113,8 +113,12 @@ def cmd_anima(args) -> int:
     if ha_errori(diag):
         diag.append(errore("errori di validazione: nessun render"))
     else:
+        import contextlib
+        # con --json stdout è solo il JSON: gli avvisi che Manim o Pango stampano durante il render vanno su stderr
+        uscita = contextlib.redirect_stdout(sys.stderr) if args.json else contextlib.nullcontext()
         try:
-            info = anima(r, diag, out, args.qualita or "l", args.scena, args.debug)
+            with uscita:
+                info = anima(r, diag, out, args.qualita or "l", args.scena, args.debug)
         except AnimazioneMancante as e:
             diag.append(errore(str(e)))
     ok = not ha_errori(diag)

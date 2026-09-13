@@ -30,6 +30,14 @@ Lezioni dalle sessioni:
   esiste identico in migliaia di copie) e sulla metafora visiva (una lente isolata = «l'IA non cerca sul web»).
   Controlla sempre gli aggettivi sul caso concreto mostrato e le icone isolate; nella seconda passata guarda solo le
   righe cambiate e dillo esplicitamente.
+- 2026-09-13, terza passata (stesso reel):
+  - Quando un claim esce dalla voce, cerca dove lo regge ancora l'animazione e chiedi che resti a schermo il tempo
+    necessario (la colonna esce **dopo** che la parola è arrivata, non insieme).
+  - Ogni «l'IA non sa / non cerca / non conosce» va provato contro i prodotti di oggi: ricerca web, memoria,
+    connettori a mail e documenti, Copilot in ufficio. L'immagine giusta per questi casi è «passa dal contesto», non
+    «nessun collegamento».
+  - Un output scritto da noi pesa di più quanto più è in vista (letto a voce, a tutto schermo). O esce davvero da un
+    modello, o la voce dice «può scrivere» e la caption lo dichiara esempio.
 
 Scrivi le tue note SOLO nella sezione `## Revisione tecnica` del file (con Edit; sostituisci il commento segnaposto).
 Non riscrivere mai VOCE, ANIMAZIONE o altre righe delle scene: annota e proponi.

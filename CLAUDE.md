@@ -14,9 +14,9 @@ Piano completo: `~/.claude/plans/dobbiamo-revisionare-il-modello-lovely-piglet.m
 - `config.toml` — identità e misure (video 1080×1920 @30, safe area, riquadro, schermo, palette, font, voce di prova)
 - `tools/anim/` — libreria Manim: `config` (TOML + font Pango + opzioni `tempconfig`), `misure` (px ↔ unità,
   minimi di leggibilità, `FATTORE_FONT_SIZE` misurato con `calibra.py`), `base` (`ScenaReel` con `durata_s`,
-  `beat(i)` sugli inizi delle frasi, `durata_beat`, `arrotonda`, `fino_a`, `chiudi`, aree contenuto/riquadro/schermo, `debug` con guide), `componenti` (Titolo,
+  `beat(i)` sugli inizi delle frasi, `durata_beat`, `arrotonda`, `fino_a`, `chiudi`, aree contenuto/riquadro/schermo, `debug` con guide; cambi grandi `punch(s)` e `zoom_su(mob)`/`torna()`), `componenti` (Titolo,
   Caption, Etichetta, Barrato, Freccia, Carta, Barra, Classifica, Token, Frase, Lista, Contatore, Evidenzia,
-  CorniceSchermo, Piede, Messaggio, Icona, ContatoreScorre, Codice), `diagrammi` (Nodo, Flusso, Ciclo, Confronto,
+  CorniceSchermo, Piede, Messaggio, Punch, Icona, ContatoreScorre, Codice), `diagrammi` (Nodo, Flusso, Ciclo, Confronto,
   Corrispondenza, Graffa, Tabella), `controlli` (controlli automatici a fine beat), `vetrina` (una scena di prova per
   componente: `uv run python -m tools.anim.vetrina`), `prova` (scena di prova della fase 0)
 - `tools/reel/` — grammatica e montaggio: `model`, `parser`, `validate` (`LIMITI`, fonte unica), `stima`, `gobbo`,

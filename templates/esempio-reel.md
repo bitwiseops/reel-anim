@@ -22,10 +22,12 @@ Il b-roll della scena 6 è un'immagine versionata in contenuti/media/esempio-ree
 ## Scena 1 [hook]
 TITOLO: Generativa non vuol dire creativa
 SOTTOTITOLO: Vuol dire ==probabile==
+VOCE: L'IA scrive quello che ti aspetti?
 VOCE: Generativa non vuol dire creativa.
 VOCE: Vuol dire probabile.
-ANIMAZIONE: Il titolo entra riga per riga.
-ANIMAZIONE: «Creativa» viene barrata e sotto compare «probabile» in accento.
+ANIMAZIONE: Il titolo è già in scena al primo fotogramma (è quello che vede chi scorre) e sale appena.
+ANIMAZIONE: «Creativa» viene barrata appena detta.
+ANIMAZIONE: Sotto compare «probabile» in accento.
 RIQUADRO: no
 
 ## Scena 2 [spiegazione]

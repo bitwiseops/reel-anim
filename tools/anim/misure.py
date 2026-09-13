@@ -17,7 +17,8 @@ def unita(u: float) -> float:
 
 
 # Altezza delle MAIUSCOLE in px (misurata con calibra.py) per ogni ruolo tipografico. Nulla sotto MINIMO_PX.
-CORPO_PX = {"titolo": 104, "messaggio": 84, "punto": 92, "caption": 48, "etichetta": 40, "token": 44, "voce": 40, "piede": 36}
+CORPO_PX = {"punch": 240, "titolo": 104, "messaggio": 84, "punto": 92, "caption": 48, "etichetta": 40, "token": 44,
+            "voce": 40, "piede": 36}   # punch: il massimo, Punch lo riduce finché la battuta sta nell'area
 MINIMO_PX = 36
 
 # Fattore font_size (Manim/Pango) → altezza in px del testo "Hg" a piena risoluzione; lo scrive calibra.py.

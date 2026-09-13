@@ -3,10 +3,12 @@
 Claude Code non vede il video: questi controlli trovano da soli i difetti che nei fotogrammi sfuggono (o costano un
 giro in più): testo troppo piccolo o fuori dalla safe area, testo coperto da una forma disegnata sopra, testi
 sovrapposti, elementi sul riquadro del presentatore, colori fuori palette e gradienti. Ogni violazione dice cosa,
-quando (quale beat) e dove (px della tela, origine in alto a sinistra).
+quando (quale beat) e dove (px dello schermo, origine in alto a sinistra). Misurano quello che si vede: se la camera
+è ingrandita o spostata (ScenaReel.zoom_su), posizioni e corpi del testo sono quelli sullo schermo.
 """
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 
 import numpy as np
@@ -27,7 +29,7 @@ Rett = tuple[float, float, float, float]   # x0, y0, x1, y1 in unità Manim
 @dataclass(frozen=True)
 class Violazione:
     controllo: str   # testo-piccolo | testo-fuori | riquadro | testo-coperto | testi-sovrapposti | colore | gradiente
-    momento: str     # «fine beat 1», «fine scena»
+    momento: str     # «fine beat 1», «fine scena»               | fotogramma-vuoto (hook)
     messaggio: str
     bbox_px: tuple[int, int, int, int] | None = None
 
@@ -41,7 +43,7 @@ class _Testo:
     nome: str
     glifi: list[VMobject]
     hg_px: float
-    rett: Rett
+    rett: Rett   # sullo schermo
 
 
 def _rett(m: Mobject) -> Rett:
@@ -67,6 +69,18 @@ def _px(r: Rett, cfg) -> tuple[int, int, int, int]:
             round((r[2] + fw / 2) * PX_PER_UNITA), round((fh / 2 - r[1]) * PX_PER_UNITA))
 
 
+def _vista(scena) -> tuple[Callable[[Rett], Rett], float]:
+    """Da coordinate della scena a coordinate dello schermo (come se la camera fosse a tela intera) e ingrandimento."""
+    cornice = getattr(getattr(scena.renderer, "camera", None), "frame", None)
+    if cornice is None:
+        return (lambda r: r), 1.0
+    z = scena.cfg.frame_width / cornice.width
+    cx, cy = float(cornice.get_center()[0]), float(cornice.get_center()[1])
+    if abs(z - 1) < 1e-9 and abs(cx) < 1e-9 and abs(cy) < 1e-9:
+        return (lambda r: r), 1.0
+    return (lambda r: ((r[0] - cx) * z, (r[1] - cy) * z, (r[2] - cx) * z, (r[3] - cy) * z)), z
+
+
 def _riempita(m: Mobject) -> bool:
     return isinstance(m, VMobject) and m.has_points() and m.get_fill_opacity() > 0.02
 
@@ -84,7 +98,16 @@ def _breve(s: str, n: int = 28) -> str:
     return s if len(s) <= n else s[: n - 1] + "…"
 
 
-def _testi(famiglia: list[Mobject]) -> list[_Testo]:
+def _famiglia(scena, escludi: set[int]) -> list[Mobject]:
+    return [m for m in extract_mobject_family_members(scena.mobjects, use_z_index=True) if id(m) not in escludi]
+
+
+def contenuto_visibile(scena, escludi: set[int] | None = None) -> bool:
+    """C'è qualcosa di visibile in scena adesso? (per il primo fotogramma dell'hook)"""
+    return any(m.has_points() and _visibile(m) for m in _famiglia(scena, escludi or set()))
+
+
+def _testi(famiglia: list[Mobject], vista: Callable[[Rett], Rett], z: float) -> list[_Testo]:
     """Ogni testo visibile: le Riga della libreria (altezza dal puntello «Hg») e i Text/MarkupText usati a mano."""
     out: list[_Testo] = []
     visti: set[int] = set()
@@ -94,17 +117,17 @@ def _testi(famiglia: list[Mobject]) -> list[_Testo]:
             glifi = [g for g in m.glifi.family_members_with_points() if _visibile(g)]
             if glifi:
                 hg = m.puntello.height * PX_PER_UNITA if m.allineata else float(m.glifi.font_size) * FATTORE_FONT_SIZE
-                out.append(_Testo(m.piano, glifi, hg, _unione([_rett(g) for g in glifi])))
+                out.append(_Testo(m.piano, glifi, hg * z, vista(_unione([_rett(g) for g in glifi]))))
     for m in famiglia:
         if isinstance(m, (Text, MarkupText)) and id(m) not in visti:
             glifi = [g for g in m.family_members_with_points() if _visibile(g)]
             if glifi:
-                out.append(_Testo(str(getattr(m, "original_text", "testo")), glifi, float(m.font_size) * FATTORE_FONT_SIZE,
-                                  _unione([_rett(g) for g in glifi])))
+                out.append(_Testo(str(getattr(m, "original_text", "testo")), glifi, float(m.font_size) * FATTORE_FONT_SIZE * z,
+                                  vista(_unione([_rett(g) for g in glifi]))))
     return out
 
 
-def _tocca_riquadro(r: Rett, m: Mobject, riq, forma: str) -> bool:
+def _tocca_riquadro(r: Rett, m: Mobject, riq, forma: str, z: float = 1.0) -> bool:
     tol = TOLLERANZA_PX / PX_PER_UNITA
     if forma != "cerchio":
         return _inter(r, (riq.x0 + tol, riq.y0 + tol, riq.x1 - tol, riq.y1 - tol)) > 0
@@ -114,7 +137,7 @@ def _tocca_riquadro(r: Rett, m: Mobject, riq, forma: str) -> bool:
     if dx * dx + dy * dy >= raggio * raggio:
         return False
     if not _riempita(m):   # solo contorno: conta se il cerchio incontra il bordo, non se sta tutto dentro la forma
-        w = m.get_stroke_width() * 0.01 + tol
+        w = m.get_stroke_width() * 0.01 * z + tol
         dentro = (r[0] + w <= cx - raggio and cx + raggio <= r[2] - w and r[1] + w <= cy - raggio and cy + raggio <= r[3] - w)
         return not dentro
     return True
@@ -122,12 +145,14 @@ def _tocca_riquadro(r: Rett, m: Mobject, riq, forma: str) -> bool:
 
 def esegui_controlli(scena, momento: str, escludi: set[int] | None = None) -> list[Violazione]:
     """Controlla ciò che la scena ha in questo istante (ordine di disegno compreso). `escludi`: id da ignorare (guide)."""
-    escludi = escludi or set()
     cfg = scena.cfg
-    famiglia = [m for m in extract_mobject_family_members(scena.mobjects, use_z_index=True) if id(m) not in escludi]
+    vista, z = _vista(scena)
+    famiglia = _famiglia(scena, escludi or set())
     foglie = [m for m in famiglia if m.has_points() and _visibile(m)]
     ordine = {id(m): k for k, m in enumerate(foglie)}
-    testi = _testi(famiglia)
+    rett = {id(m): vista(_rett(m)) for m in foglie}
+    schermo = (-cfg.frame_width / 2, -cfg.frame_height / 2, cfg.frame_width / 2, cfg.frame_height / 2)
+    testi = [t for t in _testi(famiglia, vista, z) if _inter(t.rett, schermo) > 0]   # del tutto fuori campo: non si vede
     testo_di = {id(g): t for t in testi for g in t.glifi}
     v: list[Violazione] = []
 
@@ -149,7 +174,7 @@ def esegui_controlli(scena, momento: str, escludi: set[int] | None = None) -> li
     riq = scena.area.riquadro
     if riq is not None:
         forma = str(cfg.dati["riquadro"].get("forma", "cerchio"))
-        colpiti = [(m, r) for m in foglie if _tocca_riquadro(r := _rett(m), m, riq, forma)]
+        colpiti = [(m, rett[id(m)]) for m in foglie if _tocca_riquadro(rett[id(m)], m, riq, forma, z)]
         if colpiti:
             nomi: list[str] = []
             for m, _ in colpiti:
@@ -166,7 +191,7 @@ def esegui_controlli(scena, momento: str, escludi: set[int] | None = None) -> li
         area_t = _area(t.rett)
         ultimo = max(ordine.get(id(g), -1) for g in t.glifi)
         for m in piene:
-            if area_t > 0 and ordine[id(m)] > ultimo and _inter(t.rett, _rett(m)) / area_t > COPERTURA_MIN:
+            if area_t > 0 and ordine[id(m)] > ultimo and _inter(t.rett, rett[id(m)]) / area_t > COPERTURA_MIN:
                 v.append(Violazione("testo-coperto", momento, f"«{_breve(t.nome)}» coperto da un {type(m).__name__} disegnato "
                                     "sopra (ordine di impilamento: group=self, ordine dentro play, set_z_index)", _px(t.rett, cfg)))
                 break

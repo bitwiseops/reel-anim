@@ -24,7 +24,9 @@ def filmstrip_scena(video: Path, durata_s: float, dest: Path, quanti: int = 6) -
     return filmstrip(video, tempi_campione(durata_s, quanti), dest, 300)
 
 
-def cover(video_hook: Path, durata_s: float, out: Path, cfg: Config | None = None, frazione: float = 0.7) -> tuple[Path, Path]:
+def cover(video_hook: Path, durata_s: float, out: Path, cfg: Config | None = None, frazione: float = 0.97) -> tuple[Path, Path]:
+    """Copertina: l'ultimo fotogramma dell'hook, quando titolo e sottotitolo sono tutti in scena (al 70 % cadeva
+    sull'ingresso del sottotitolo)."""
     cfg = cfg or carica()
     intera = estrai_fotogramma(video_hook, durata_s * frazione, out / "copertina.png")
     ritagliata = out / "copertina-4x5.png"

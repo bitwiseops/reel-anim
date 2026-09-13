@@ -83,3 +83,59 @@ def test_i_controlli_girano_dentro_il_render(tmp_path):
 
     res = renderizza(Sbagliata, 1.0, {"voce": ["a"]}, tmp_path, "sbagliata", "l")
     assert any(c.startswith("testo-piccolo (fine scena)") for c in res.controlli)
+
+
+def test_la_camera_ha_le_proporzioni_della_tela_e_i_controlli_misurano_lo_schermo():
+    s = _scena()
+    assert abs(s.camera.frame.width - s.cfg.frame_width) < 1e-9 and abs(s.camera.frame.height - s.cfg.frame_height) < 1e-9
+    t = blocco("piccolo", "caption").scale(0.6)   # 29 px a tela intera
+    s.area.contenuto.metti(t, "centro", "centro")
+    s.add(t)
+    assert "testo-piccolo" in _tipi(s)
+    s.camera.frame.set(width=s.cfg.frame_width / 1.5).move_to(t)   # ingrandito 1,5 volte: 43 px sullo schermo
+    assert "testo-piccolo" not in _tipi(s) and abs(s.zoom - 1.5) < 1e-9
+    s.camera.frame.set(width=s.cfg.frame_width / 3).move_to(t.get_center() + RIGHT * s.cfg.frame_width / 6)   # t tagliato dal bordo
+    assert "testo-fuori" in _tipi(s)
+
+
+def test_zoom_al_centro_dell_area_e_testi_fuori_campo_ignorati():
+    s = _scena("si")
+    t = blocco("dettaglio", "caption")
+    s.area.contenuto.metti(t, "alto", "sinistra")
+    larghezza, centro = s.inquadratura(t, 2)
+    s.camera.frame.set(width=larghezza).move_to(centro)
+    sullo_schermo = (t.get_center() - s.camera.frame.get_center()) * s.zoom
+    assert abs(sullo_schermo[0] - s.area.contenuto.centro[0]) < 1e-6 and abs(sullo_schermo[1] - s.area.contenuto.centro[1]) < 1e-6
+    fuori_campo = blocco("fuori campo", "caption").move_to([s.cfg.frame_width * 2, 0, 0])
+    s.add(t, fuori_campo)
+    assert esegui_controlli(s, "prova") == []
+
+
+def test_primo_fotogramma_vuoto_nell_hook():
+    vuoto = ScenaReel(4.0, {"voce": ["a"], "riquadro": "no", "tipo": "hook"})
+    vuoto.controlla_primo_fotogramma()
+    assert [v.controllo for v in vuoto.controlli] == ["fotogramma-vuoto"]
+    pieno = ScenaReel(4.0, {"voce": ["a"], "riquadro": "no", "tipo": "hook"})
+    pieno.add(blocco("titolo", "caption"))
+    pieno.controlla_primo_fotogramma()
+    spiegazione = ScenaReel(4.0, {"voce": ["a"], "riquadro": "si", "tipo": "spiegazione"})
+    spiegazione.controlla_primo_fotogramma()
+    assert pieno.controlli == [] and spiegazione.controlli == []
+
+
+@pytest.mark.slow
+def test_punch_e_zoom_tagliano_e_rimettono_la_scena(tmp_path):
+    from tools.reel.manim_render import renderizza
+
+    class ConPunch(ScenaReel):
+        def costruisci(self):
+            t = blocco("prima della battuta", "caption")
+            self.area.contenuto.metti(t, "alto", "sinistra")
+            self.add(t)
+            self.play(self.zoom_su(t, 1.4), run_time=0.3)
+            self.punch("tu sì", tenuta_s=0.4)
+            assert t in self.mobjects and abs(self.zoom - 1.4) < 1e-6   # la scena torna com'era, camera compresa
+            self.play(self.torna(), run_time=0.3)
+
+    res = renderizza(ConPunch, 2.0, {"voce": ["a"], "riquadro": "si"}, tmp_path, "punch", "l")
+    assert res.controlli == [] and res.avvisi == []

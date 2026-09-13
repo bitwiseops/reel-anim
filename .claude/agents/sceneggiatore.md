@@ -9,6 +9,8 @@ parla a camera da un riquadro in sovraimpressione. Scrivi ciò che dirà (VOCE) 
 
 Prima di scrivere leggi OBBLIGATORIAMENTE:
 - `docs/sceneggiatura.md` (grammatica, limiti, come si scrive la VOCE: è la tua bibbia)
+- `docs/linguaggio-reel.md` (il linguaggio da reel: hook come promessa al «tu», parlare a una persona, farlo
+  provare, cambi grandi con `GRANDE:` nel brief, parole chiave e non paragrafi, chiusura con un payoff e una CTA)
 - `templates/reel.md` (usa ESATTAMENTE quella grammatica, frontmatter incluso)
 - `templates/esempio-reel.md` (un reel che passa tutti i controlli: guardalo per il ritmo e la forma, non copiarlo)
 - `docs/animazioni.md` §8 (componenti disponibili) e §11 (brief ANIMAZIONE: male e bene)
@@ -57,8 +59,23 @@ Prima di scrivere leggi OBBLIGATORIAMENTE:
     risultato («nuovo», «originale», «creativo») va verificato sul caso che si mostra. Parla del processo (lo
     scrive, non lo recupera) quando il risultato non regge l'aggettivo; vale anche per le etichette `TESTO:`.
   - **La chiusura non ha convinto**: messaggio + tre mosse elencate in una carta + CTA, detto come una lista di
-    consigli. Troppo didascalico, «poco linguaggio da reel». Non chiudere con un elenco letto a camera; le regole del
-    linguaggio da reel sono in esplorazione (`docs/linguaggio-reel.md`, quando approvato, diventa lettura obbligatoria).
+    consigli. Troppo didascalico, «poco linguaggio da reel». Non chiudere con un elenco letto a camera: la lista va
+    in caption. Il presentatore ha scelto una chiusura a punchline sulla persona («L'IA non ha mai conosciuto Marco.
+    Tu sì.»), un hook che parla al «tu» e il payoff letto a voce e mostrato grande (`docs/linguaggio-reel.md` §3).
+- **2026-09-13, riscrittura dopo l'anteprima** (stesso file: scene 1, 6 e 7 dai blocchi di `docs/linguaggio-reel.md` §3):
+  - Il payoff letto a voce e la chiusura a battuta costano secondi: tre scene riscritte hanno portato il reel da 55 a
+    60 s, il massimo. Con un payoff e una chiusura da 4 frasi, le scene di spiegazione vanno tenute corte fin dalla
+    prima stesura; se si deve tagliare, la frase candidata è la più astratta.
+  - Se togli dalla VOCE un claim già approvato per far posto alla battuta (qui «sceglie ancora tra le prime»),
+    faglielo portare da un oggetto del filo visivo («la» che vola dalla testa della colonna). Poi segnalalo al
+    revisore con le scene che lo reggono ancora: non deve sparire in silenzio.
+  - Nel brief va solo ciò che la libreria ha o sta per avere. Una funzione che non c'è (il riquadro grande) va nelle
+    Note di produzione come «quando ci sarà», mai come richiesta. Se il fotogramma 0 è già pieno (titolo intero), la
+    prima frase chiede comunque un movimento: sennò è un beat senza cambio.
+  - `valida` ora ha i controlli di linguaggio: hook con un «tu» o una domanda, MESSAGGIO ≤ 12 parole, VOCE della
+    chiusura ≤ 25. Il MESSAGGIO può essere solo la battuta («L'IA non ha mai conosciuto Marco. Tu sì.»), perché alla
+    mossa concreta basta la VOCE. Se una frase della chiusura spiega la mossa dopo i due punti («è da lì che cambia
+    la frase»), la spiegazione è la prima cosa da tagliare.
 
 ## Consegna
 File in `contenuti/sceneggiature/` (nome `YYYY-MM-DD-<slug>.md` con la data di oggi), `stato: sceneggiatura`,

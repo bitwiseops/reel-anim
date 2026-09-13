@@ -12,7 +12,7 @@ VOCE_20 = "VOCE: " + " ".join(["parola"] * 20)
 
 def _base(n_spiegazioni: int = 4) -> list[str]:
     """Un reel valido: hook, n spiegazioni da ~7,9 s, chiusura."""
-    scene = ["## Scena 1 [hook]\nTITOLO: Un titolo\nVOCE: una frase breve per aprire"]
+    scene = ["## Scena 1 [hook]\nTITOLO: Un titolo\nVOCE: ti apro con una frase breve"]
     scene += [f"## Scena {k + 2} [spiegazione]\n{VOCE_20}\nANIMAZIONE: qualcosa" for k in range(n_spiegazioni)]
     scene.append(f"## Scena {n_spiegazioni + 2} [chiusura]\nMESSAGGIO: Il messaggio\nCTA: salva\nVOCE: chiudiamo qui\nANIMAZIONE: fine")
     return scene
@@ -54,6 +54,18 @@ def test_frontmatter_e_durata_del_reel():
     assert not ha_errori(lungo) and "reel stimato" in _msg(lungo) and "10 scene" in _msg(lungo)
     troppo = _check(_base(12))
     assert ha_errori(troppo) and "oltre 90 s" in _msg(troppo)
+
+
+def test_controlli_di_linguaggio():
+    scene = _base()
+    scene[0] = "## Scena 1 [hook]\nTITOLO: T\nVOCE: Generativa non vuol dire creativa."
+    scene[-1] = ("## Scena 6 [chiusura]\nMESSAGGIO: " + " ".join(["parola"] * 13) + "\nCTA: salva\nVOCE: " +
+                 " ".join(["x"] * 26) + "\nANIMAZIONE: fine")
+    m = _msg(_check(scene))
+    assert "l'hook non parla a chi guarda" in m and "MESSAGGIO di 13 parole" in m and "VOCE della chiusura di 26 parole" in m
+    for voce in ("L'IA scrive quello che ti aspetti?", "Hai mai scritto «sii originale»", "Finisci tu questa frase"):
+        scene[0] = f"## Scena 1 [hook]\nTITOLO: T\nVOCE: {voce}"
+        assert "l'hook non parla" not in _msg(_check(scene)), voce
 
 
 def test_schermo_mancante_e_riquadro_sopra_il_broll():

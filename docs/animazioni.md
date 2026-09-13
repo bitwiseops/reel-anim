@@ -80,6 +80,10 @@ segnalata non si ripete nei beat dopo. **Zero violazioni prima di consegnare.**
 | `testo-coperto` | un testo sotto una forma piena disegnata dopo | ordine dentro `play`, `group=self`, `set_z_index` |
 | `testi-sovrapposti` | due testi uno sull'altro | `arrange`/`next_to` con `buff`; azzera il beat precedente |
 | `colore`, `gradiente` | colori fuori palette (spesso il bianco o il rosso di default di Manim), riempimenti a più colori | `self.cfg.palette` |
+| `fotogramma-vuoto` | hook con il primo fotogramma vuoto (è quello che vede chi scorre) | `self.add(titolo)` prima della prima animazione, poi un movimento entro 0,5 s |
+
+Con la camera ingrandita (`zoom_su`) i controlli misurano quello che si vede sullo schermo: corpo del testo moltiplicato
+per lo zoom, safe area e riquadro fermi.
 
 Prima del render, un controllo statico del file segnala con il numero di riga i costrutti vietati: LaTeX
 (`MathTex`, `Tex`, `BraceLabel`, `DecimalNumber` senza `mob_class=Text`, `BarChart`…), `to_edge`/`to_corner`,
@@ -136,6 +140,20 @@ Una scena dura esattamente quanto la clip del presentatore (o la voce di prova).
 | `self.attendi_fino(s)` | aspetta l'istante `s` |
 | `self.arrotonda(s)` | `run_time` arrotondato per difetto a fotogrammi interi |
 | `self.t` | il tempo corrente della scena |
+| `self.punch(s, tenuta_s=0.9)` | **il cambio grande della battuta**: taglio secco a 1-3 parole a tutto schermo (`Punch`), tenute `tenuta_s`, poi taglio indietro alla scena com'era (camera compresa); occupa ~0,15 s + `tenuta_s` del beat |
+| `self.zoom_su(mob, fattore=1.5)` / `self.torna()` | animazioni da passare a `self.play`: la camera si avvicina a `mob` / torna alla tela intera; `self.zoom` è l'ingrandimento attuale |
+
+**Un cambio grande per scena** (`GRANDE:` nel brief, `docs/linguaggio-reel.md` §5): la parola a tutto schermo o lo
+zoom. Lo zoom resta finché non chiami `torna()`; il riquadro del presentatore resta fermo sullo schermo e i controlli
+misurano quello che si vede (un testo ingrandito vicino al riquadro lo tocca; i testi del tutto fuori campo non
+contano, quelli tagliati dal bordo sì). `zoom_su` porta l'oggetto al centro dell'area contenuto. Per far partire una
+scena già ingrandita (continuità con la precedente) imposta la camera senza animazione:
+`l, c = self.inquadratura(mob, 1.5); self.camera.frame.set(width=l).move_to(c)`.
+- **Zoom sul dettaglio isolato** (una riga e un cursore), non su una composizione a tutta larghezza: lì taglia
+  sempre del testo ai bordi, e un parola tagliata a metà si legge come un errore.
+- **`punch` finisce da solo prima del beat dopo**: con la voce di prova «Lei no.» dura 0,7 s, e la tenuta si
+  accorcia (mai sotto 0,3 s). Ciò che aggiungi o cambi **subito prima** di `punch` compare solo al ritorno, con il
+  taglio: è il modo di far coincidere il cambio con la battuta («Lei no.» acceso nel biglietto).
 
 Gli inizi delle frasi (`inizi_frasi_s`) sono **esatti** nell'anteprima con voce sintetica (una frase alla volta,
 pausa `pausa_frasi_s`); con le clip registrate, per ora, sono **stimati in proporzione alle parole**
@@ -174,7 +192,8 @@ Regole:
 - **Allineamento a sinistra** per il testo che si legge; centrato solo per un titolo isolato.
 - **Se non ci sta**, riduci il contenuto (meno parole, meno voci); scalare il gruppo intero è l'ultima risorsa e
   poi va ricontrollato il corpo minimo di 36 px.
-- **Hook**: niente riquadro, l'area contenuto è più alta; il titolo è anche la copertina (fotogramma al 70 %).
+- **Hook**: niente riquadro, l'area contenuto è più alta; il titolo è anche la copertina (l'ultimo fotogramma dell'hook: deve essere completo) e il primo
+  fotogramma non è mai vuoto (controllo `fotogramma-vuoto`).
 - **Scene `schermo`**: il b-roll sta in `self.area.schermo` (lo mette sotto il montaggio); disegna la
   `CorniceSchermo(self.area.schermo)` e le etichette sopra o accanto. Per indicare un punto dell'immagine usa
   `area_px(self.cfg, x0, y0, x1, y1)` in pixel della tela (l'immagine è posata in `[schermo] x, y` del config).
@@ -248,6 +267,7 @@ Import da `tools.anim.componenti`. Tutti sono `VGroup` posizionabili; i metodi r
 | `Evidenzia(mob, buff=px(12))` | riquadro accento attorno a qualcosa (con `Create`) | — |
 | `CorniceSchermo(area)` | bordo del b-roll | `entra()` |
 | `Piede(area)` | handle del canale (vuoto se non configurato: controlla `len()`) | — |
+| `Punch(s, area)` | la battuta a tutto schermo (1-3 parole, maiuscolo, accento, il corpo più grande che sta nell'area): di solito con `self.punch(s)` (§4) | `entra()` |
 
 Note: `Evidenzia(buff=...)` è in **unità**, non in px: scrivi `buff=px(12)`. `Classifica.scegli(i)` e
 `aggiorna()` usano l'indice originale della voce, anche dopo un riordino. `Frase.aggiungi(token, da=...)` fa

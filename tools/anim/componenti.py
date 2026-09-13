@@ -19,7 +19,7 @@ import numpy as np
 from manim import (BOLD, DOWN, LEFT, ORIGIN, RIGHT, UL, UP, AnimationGroup, Arrow, Create, FadeIn, FadeOut,
                    FadeTransform, GrowArrow, GrowFromEdge, Indicate, LaggedStart, Line, MarkupText, Mobject, Rectangle,
                    RoundedRectangle, SurroundingRectangle, Text, Transform, VGroup, VMobject)
-from manim import Code, SVGMobject, ValueTracker, linear
+from manim import Code, SVGMobject, ValueTracker, linear, rush_from
 from manim.constants import CapStyleType, LineJointType
 
 from .config import RADICE, Config, carica
@@ -543,6 +543,26 @@ class Messaggio(Titolo):
         return LaggedStart(*anims, lag_ratio=0.6, group=self, **kw)
 
 
+class Punch(VGroup):
+    """La battuta a tutto schermo (il cambio grande, docs/linguaggio-reel.md §5): 1-3 parole in maiuscolo e grassetto,
+    nel corpo più grande che sta nell'area (fino a CORPO_PX["punch"]), centrate. Di solito non si usa da sola:
+    ScenaReel.punch() toglie la scena per il tempo della battuta e la rimette con un taglio."""
+
+    def __init__(self, s: str, area, colore: str | None = None, maiuscolo: bool = True, **kw):
+        super().__init__(**kw)
+        self.testo = testo(s.upper() if maiuscolo else s, "punch", colore=colore or _cfg().palette.accento, peso=BOLD,
+                           allinea="center", interlinea=0.1)
+        larga, alta = area.larghezza * 0.94, area.altezza * 0.8
+        if self.testo.width > larga:
+            self.testo.scale_to_fit_width(larga)
+        if self.testo.height > alta:
+            self.testo.scale_to_fit_height(alta)
+        self.add(self.testo.move_to(area.centro))
+
+    def entra(self, **kw):
+        """Entrata secca: da un po' più grande, veloce all'inizio (l'uscita è un taglio)."""
+        return FadeIn(self, scale=1.25, rate_func=rush_from, **kw)
+
 
 # --- icone, contatore che scorre, codice ----------------------------------------------------------------
 
@@ -668,5 +688,5 @@ class Codice(VGroup):
 
 __all__ = ["testo", "markup", "piano", "avvolgi", "tratto", "Riga", "Blocco", "Titolo", "Caption", "Etichetta", "Barrato",
            "Freccia", "Carta", "Barra", "Classifica", "Token", "Frase", "Lista", "Contatore", "Evidenzia", "CorniceSchermo",
-           "Piede", "Messaggio", "Icona", "ContatoreScorre", "Codice", "FadeIn", "FadeOut", "FadeTransform", "Indicate", "LaggedStart", "AnimationGroup",
+           "Piede", "Messaggio", "Punch", "Icona", "ContatoreScorre", "Codice", "FadeIn", "FadeOut", "FadeTransform", "Indicate", "LaggedStart", "AnimationGroup",
            "Transform", "Create"]

@@ -13,18 +13,21 @@ from tools.anim.misure import px
 
 
 class Scena01(ScenaReel):
-    """Hook: il titolo entra, «creativa» viene barrata, compare «probabile»."""
+    """Hook: il titolo è già in scena al primo fotogramma, «creativa» viene barrata appena detta, compare «probabile»."""
 
     def costruisci(self):
         a = self.area.contenuto
         titolo = Titolo(self.scena["titolo"])
         sotto = Titolo(self.scena["sottotitolo"])
         a.metti(VGroup(titolo, sotto).arrange(DOWN, aligned_edge=LEFT, buff=px(90)), "centro", "sinistra")
-        self.play(titolo.per_righe(), run_time=1.0)
-        self.fino_a(0.3)
-        parola = titolo.parola("creativa")
-        self.play(Barrato(parola).entra(), parola.animate.set_opacity(0.45), run_time=0.4)
+        titolo.shift(DOWN * px(30))
+        self.add(titolo)                                  # la copertina di chi scorre: mai un primo fotogramma vuoto
+        self.play(titolo.animate.shift(UP * px(30)), run_time=0.5)
         self.beat(1)
+        parola = titolo.parola("creativa")
+        self.attendi_fino(self.inizi_frasi[2] - self.ANTICIPO_S - 0.45)
+        self.play(Barrato(parola).entra(), parola.animate.set_opacity(0.45), run_time=0.4)
+        self.beat(2)
         self.play(sotto.per_righe(lag=0.3), run_time=0.6)
 
 
