@@ -19,8 +19,8 @@ Verifica sempre con:  uv run reel valida <questo file>   (stampa la durata stima
   ## Scena N [tipo, durata=Ns, transizione=taglio|dissolvenza]   N consecutivo da 1; il primo flag è il tipo
   Tipi: hook (Scena 1, obbligatoria) | spiegazione (default) | schermo (b-roll / screen recording) | chiusura (ultima, obbligatoria)
 
-  VOCE: frase             ripetibile: ogni riga è una frase detta a camera dal presentatore (= un beat dell'animazione)
-  ANIMAZIONE: prosa       ripetibile: cosa si vede; una riga sola, oppure una per frase della VOCE (beat i ↔ frase i)
+  VOCE: parlato           ripetibile: ogni riga è un pezzo di parlato detto a camera (= un beat dell'animazione), non per forza una frase chiusa
+  ANIMAZIONE: prosa       ripetibile: cosa si vede; una riga sola, oppure una per riga della VOCE (beat i ↔ riga i)
   TESTO: etichetta        ripetibile (max 4, ≤ 4 parole): parole chiave che compaiono a schermo
   TITOLO: / SOTTOTITOLO:  solo hook (titolo ≤ 10 parole: regge da solo)
   MESSAGGIO: / CTA:       solo chiusura (messaggio ≤ 25 parole, CTA una riga)
@@ -28,8 +28,10 @@ Verifica sempre con:  uv run reel valida <questo file>   (stampa la durata stima
   RIQUADRO: no|si|posizione   riquadro del presentatore (default: no nell'hook, si altrove); posizioni: basso-destra basso-sinistra alto-destra alto-sinistra
 
 Inline: ==evidenzia== (una per scena: la parola che conta, in colore accento), **grassetto**.
-Limiti: 6-8 scene (min 5, max 9); VOCE ≤ 35 parole per scena (hook ≤ 15), max 4 righe VOCE per scena;
-  ogni scena 2,5-14 s stimati; reel 30-60 s. La VOCE è parlato: frasi corte, una cosa per frase.
+Limiti: 6-8 scene (min 5, max 9); VOCE ≤ 50 parole per scena (hook ≤ 20, chiusura ≤ 18), max 5 righe VOCE per scena;
+  ogni scena 2,5-19 s stimati; reel 30-90 s. La VOCE è parlato vero: prima si scrive il monologo come lo si direbbe
+  (verbi, connettivi, io/tu), poi lo si spezza in righe; niente titoli in fila, niente «X, sì. Y, no.», niente due
+  punti come snodo (docs/sceneggiatura.md §5).
 Le durate reali le decidono le clip registrate (contenuti/media/<slug>/scena-NN.mov): uv run reel registra <file>
 Ogni beat dell'animazione parte con la sua frase VOCE: istanti esatti nell'anteprima con voce sintetica (una frase
   alla volta) e con le clip di `reel registra`; stimati in proporzione alle parole con clip esterne.

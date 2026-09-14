@@ -3,7 +3,7 @@ from pathlib import Path
 from tools.reel.model import Scena
 from tools.reel.parser import parse, parse_testo
 from tools.reel.stima import durata_stimata_s
-from tools.reel.validate import LIMITI, check, ha_errori
+from tools.reel.validate import LIMITI, check, frasi_di, ha_errori
 
 RADICE = Path(__file__).resolve().parents[1]
 FM = "---\ntitolo: T\nslug: prova-validate\nformato: reel\nmessaggio_centrale: M\n---\n\n"
@@ -38,22 +38,45 @@ def test_limiti_di_voce_testo_beat_ed_evidenzia():
     scene[0] = "## Scena 1 [hook]\nTITOLO: T\nVOCE: " + " ".join(["y"] * (LIMITI["parole_voce_hook_max"] + 1))
     scene[1] = ("## Scena 2 [spiegazione]\nVOCE: " + " ".join(["x"] * (LIMITI["parole_voce_max"] + 1)) +
                 "\nANIMAZIONE: a\nTESTO: uno due tre quattro cinque")
-    scene[2] = "## Scena 3 [spiegazione]\n" + "\n".join(f"VOCE: frase ==numero== {k}" for k in range(5)) + "\nANIMAZIONE: 1\nANIMAZIONE: 2"
+    nb = LIMITI["beat_max"] + 1
+    scene[2] = "## Scena 3 [spiegazione]\n" + "\n".join(f"VOCE: frase ==numero== {k} detta" for k in range(nb)) + "\nANIMAZIONE: 1\nANIMAZIONE: 2"
     d = _check(scene)
     m = _msg(d)
     assert not ha_errori(d)
-    for atteso in ("VOCE dell'hook di 16 parole", "VOCE di 36 parole", "TESTO «uno due tre quattro", "5 righe VOCE (max 4)",
-                   "2 righe ANIMAZIONE per 5 righe VOCE", "5 ==evidenzia== nella scena"):
+    for atteso in (f"VOCE dell'hook di {LIMITI['parole_voce_hook_max'] + 1} parole", f"VOCE di {LIMITI['parole_voce_max'] + 1} parole",
+                   "TESTO «uno due tre quattro", f"{nb} righe VOCE (max {LIMITI['beat_max']})",
+                   f"2 righe ANIMAZIONE per {nb} righe VOCE", f"{nb} ==evidenzia== nella scena"):
         assert atteso in m
 
 
 def test_frontmatter_e_durata_del_reel():
     m = _msg(_check(_base(), fm="---\ntitolo: T\nformato: carosello\nmessaggio_centrale: M\n---\n\n"))
     assert "'slug' mancante" in m and "'formato: reel' obbligatorio" in m
-    lungo = _check(_base(8))
-    assert not ha_errori(lungo) and "reel stimato" in _msg(lungo) and "10 scene" in _msg(lungo)
-    troppo = _check(_base(12))
-    assert ha_errori(troppo) and "oltre 90 s" in _msg(troppo)
+    lungo = _check(_base(12))       # 14 scene × ~7,9 s ≈ 105 s: avviso, non errore
+    assert not ha_errori(lungo) and "reel stimato" in _msg(lungo) and "14 scene" in _msg(lungo)
+    troppo = _check(_base(16))
+    assert ha_errori(troppo) and f"oltre {LIMITI['reel_errore_s']} s" in _msg(troppo)
+
+
+def test_controlli_di_lingua_parlata():
+    scene = _base()
+    scene[1] = ("## Scena 2 [spiegazione]\nVOCE: A ogni bivio, di solito, vince la strada più battuta.\n"
+                "VOCE: Il testo non lo cerca: lo scrive lei.\nVOCE: Fluente, sì.\nVOCE: ==Originale==, no.\nANIMAZIONE: a")
+    scene[2] = "## Scena 3 [spiegazione]\nVOCE: Comincia così: caro Marco, da domani la sveglia…\nVOCE: Vuol dire probabile.\nANIMAZIONE: a"
+    m = _msg(_check(scene))
+    assert "«Fluente, sì.» «Originale, no.»: frasi da titolo in fila" in m
+    assert "«Fluente, sì.»: schema «X, sì. Y, no.»" in m and "«Originale, no.»: schema" in m
+    assert "«Il testo non lo cerca: lo scrive lei.»: due punti come snodo" in m and "Comincia così" not in m.split("due punti")[0][-60:]
+    assert "3 frasi da titolo nel reel" in m and "«Vuol dire probabile.»" in m
+    # parlato: nessun avviso di lingua
+    scene[1] = ("## Scena 2 [spiegazione]\nVOCE: Quindi a ogni bivio, quasi sempre, prende la strada più battuta.\n"
+                "VOCE: E non è che il testo lo va a cercare da qualche parte, lo scrive lei, una parola dopo l'altra.\n"
+                "VOCE: Viene fuori fluente, certo. Ma originale no, non può esserlo.\nANIMAZIONE: a")
+    scene[2] = "## Scena 3 [spiegazione]\nVOCE: Comincia così: «caro Marco, da domani la sveglia…»\nVOCE: Se l'hai già finito in testa, vuol dire che era probabile.\nANIMAZIONE: a"
+    scene[-1] = "## Scena 6 [chiusura]\nMESSAGGIO: M\nCTA: salva\nVOCE: L'IA non ha mai conosciuto Marco.\nVOCE: Tu sì.\nVOCE: Per dispetto.\nANIMAZIONE: fine"
+    m = _msg(_check(scene))
+    assert "da titolo" not in m and "schema" not in m and "due punti" not in m, m
+    assert frasi_di(["Uno. Due? Tre… quattro", "cinque!"]) == ["Uno.", "Due?", "Tre…", "quattro cinque!"]   # le righe sono un flusso
 
 
 def test_controlli_di_linguaggio():

@@ -28,6 +28,10 @@ Se l'idea è già `sceneggiata`, non rifare nulla: indica la sceneggiatura colle
   passo: lo sceneggiatore o il presentatore correggono, poi si rilancia). Altrimenti prosegui.
 - `rivisto` (o dopo la revisione): lancia `animatore`.
 - `animato`: non rilanciare nulla, ristampa il report qui sotto.
+- `rivisto` o `animato` **con una richiesta di riscrittura** (il presentatore vuole cambiare VOCE, scene o brief):
+  rilancia lo `sceneggiatore` sullo stesso file con la richiesta; lo stato torna a `sceneggiatura` e si riparte
+  dalla revisione. Avverti che l'animatore dovrà riallineare i `beat(i)` alle righe VOCE nuove e che le clip già
+  registrate (`contenuti/media/<slug>/scena-NN.*`) non valgono più: si rifà `monta --prova` e poi `reel registra`.
 Report di FERMATA 3 (anteprima): percorso di `reel-9x16.mp4` e di `contact-sheet.png`, durata del reel e durate per
 scena (da `report.json`), avvisi residui, ⚠️ aperte della revisione, rapporto dell'animatore (difetti della
 libreria, cose che non ci stavano). Prossimo passo per il presentatore: guardare l'anteprima e annotare leggibilità,

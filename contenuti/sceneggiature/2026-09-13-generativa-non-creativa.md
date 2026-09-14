@@ -2,7 +2,7 @@
 titolo: Generativa non vuol dire creativa
 slug: generativa-non-creativa
 data_creazione: 2026-09-13
-stato: animato
+stato: sceneggiatura
 formato: reel
 tipo: pillola
 pilastro: come funziona
@@ -16,36 +16,36 @@ idea: contenuti/idee/2026-09-10-llm-perche-generativa.md
 TITOLO: Generativa non vuol dire creativa
 SOTTOTITOLO: Vuol dire ==probabile==
 VOCE: L'IA scrive quello che ti aspetti?
-VOCE: Generativa non vuol dire creativa.
-VOCE: Vuol dire probabile.
+VOCE: Perché guarda, generativa non vuol dire creativa.
+VOCE: Vuol dire che va sul probabile.
 ANIMAZIONE: Il titolo «Generativa / non vuol dire / creativa» è già intero al primo fotogramma, grande, al centro dell'area (funziona anche senza audio), con un movimento entro 0,5 s; nessuna uscita.
 ANIMAZIONE: Su «creativa» la barra accento, appena detta la parola.
 ANIMAZIONE: Sotto entra il sottotitolo, con «probabile» in accento.
 RIQUADRO: no
 
 ## Scena 2 [spiegazione]
-VOCE: Chiedi all'IA un biglietto per Marco.
-VOCE: Comincia così: caro Marco, da domani la sveglia…
-VOCE: Se l'hai già finito in testa, era ==probabile==.
+VOCE: Allora, chiedi all'IA un biglietto per Marco, che va in pensione.
+VOCE: E lei comincia così: caro Marco, da domani la sveglia…
+VOCE: Se l'hai già finito in testa tu, era ==probabile==.
 ANIMAZIONE: In alto entra una carta «richiesta» con la riga «Un biglietto per la pensione di Marco. Lo firma tutto l'ufficio.»
 ANIMAZIONE: Sotto, una carta «biglietto» si scrive lenta, un cartellino alla volta, fino a «sveglia»; poi si ferma, con un cursore che lampeggia subito dopo «sveglia».
 ANIMAZIONE: Solo ora arriva il resto, lento: «la decidi tu,» dove lampeggiava il cursore, poi «e il caffè potrai berlo sul divano.»; un riquadro accento incornicia «la decidi tu,», con l'etichetta «probabile».
 TESTO: probabile
 
 ## Scena 3 [spiegazione]
-VOCE: Perché scrive una parola per volta.
-VOCE: Per ognuna, mette in classifica quelle possibili.
-VOCE: Ne prende una tra le ==prime==.
+VOCE: Perché lei scrive così, una parola per volta.
+VOCE: E per ognuna si fa la classifica di quelle che potrebbero venire dopo.
+VOCE: Poi ne prende una, tra le ==prime==.
 ANIMAZIONE: La carta «richiesta» resta in alto, piccola; il biglietto si svuota e la frase si ricompone veloce, un cartellino alla volta: «Caro», «Marco,», «da», «domani», «la», «sveglia».
 ANIMAZIONE: Dopo «sveglia» la frase si ferma e sotto compare la colonna delle candidate con le barre (esempio): «la», «non», «è».
 ANIMAZIONE: «la» si accende in accento e vola in coda alla frase; le altre due sbiadiscono.
 TESTO: una tra le prime
 
 ## Scena 4 [spiegazione]
-VOCE: A ogni bivio, di solito, vince la strada più battuta.
-VOCE: Il testo non lo cerca: lo scrive lei.
-VOCE: Fluente, sì.
-VOCE: ==Originale==, no.
+VOCE: Quindi a ogni bivio, quasi sempre, prende la strada più battuta.
+VOCE: E non è che il testo lo va a cercare da qualche parte. Lo scrive lei, una parola dopo l'altra.
+VOCE: E viene fuori fluente, certo.
+VOCE: Ma ==originale== no, non può esserlo.
 ANIMAZIONE: Da «sveglia» partono tre rami di spessore diverso (esempio), con all'attacco solo la prima parola, le candidate della scena 3: «la» sul ramo spesso, «non» ed «è» sui sottili; la frase corre lungo il ramo di «la», che si accende, e il resto si scrive un cartellino alla volta mentre corre: «decidi tu,».
 ANIMAZIONE: I rami spariscono e la frase torna un biglietto intero; sopra compare l'icona «database» («non pesca da un archivio di testi», revisione S6) che viene subito barrata, e al suo posto l'etichetta «scritto da lei».
 ANIMAZIONE: Sotto il biglietto compare l'etichetta «fluente».
@@ -55,9 +55,9 @@ TESTO: fluente
 TESTO: originale
 
 ## Scena 5 [spiegazione]
-VOCE: Aggiungere «sii originale» cambia la forma.
-VOCE: Dentro, la sveglia resta.
-VOCE: Serve un ==dettaglio vero==: Marco litigava con la fotocopiatrice.
+VOCE: E se le scrivi «sii originale»? Cambia la forma, ti fa il bugiardino.
+VOCE: Ma dentro ci trovi ancora la sveglia, e il caffè.
+VOCE: Quello che serve è un ==dettaglio vero==. Per esempio, Marco ha passato una vita a litigare con la fotocopiatrice.
 ANIMAZIONE: La carta «richiesta» torna al centro e ci entra la riga «Sii originale.»; accanto entra una carta «biglietto» piccola con un estratto vero (Opus 5, `C-opus-1`): il titolo «PENSIONE®», poi «Principio attivo: tempo libero al 100%.» / «Eccipienti: sveglia spenta, caffè bevuto seduto.». Si legge prima il titolo: la forma è cambiata (nessuna etichetta «nuova» o «originale»: revisione X5).
 ANIMAZIONE: Nel bugiardino si accendono «sveglia» e «caffè», gli stessi della scena 2.
 ANIMAZIONE: Il bugiardino esce; sotto la carta entra la colonna delle candidate dopo «Caro Marco,» (esempio): «da», «oggi», «sono», con «da» in testa; ~0,4 s dopo nella carta entra la riga «Marco ha passato una vita a litigare con la fotocopiatrice.» e le barre si riordinano: in testa ora c'è «sono», in accento.
@@ -65,10 +65,10 @@ TESTO: sii originale
 TESTO: dettaglio vero
 
 ## Scena 6 [spiegazione]
-VOCE: Ora scrive: caro Marco, sono io. Quella in fondo al corridoio.
+VOCE: E adesso senti cosa scrive: caro Marco, sono io. Quella in fondo al corridoio.
 VOCE: Da quando esci da quella porta prometto di funzionare alla perfezione.
 VOCE: ==Per dispetto==.
-VOCE: Non è diventata creativa: la parte nuova l'hai messa tu.
+VOCE: Ma non è che sia diventata creativa. La parte nuova ce l'hai messa tu.
 ANIMAZIONE: La richiesta si compatta in alto; «sono», in testa alla colonna della scena 5, vola nel biglietto nuovo, a tutta larghezza, che si scrive a cartellini insieme alla voce; la colonna esce solo dopo che «sono» è arrivato.
 ANIMAZIONE: Il biglietto cresce e la seconda frase si scrive in sincrono con la voce.
 ANIMAZIONE: GRANDE: «PER DISPETTO.» a tutto schermo in accento per ~1 s; poi il biglietto intero con «Per dispetto.» acceso.
@@ -80,7 +80,7 @@ MESSAGGIO: L'IA non ha mai conosciuto Marco. ==Tu sì==.
 CTA: Mandalo a chi scrive i biglietti in ufficio
 VOCE: L'IA non ha mai conosciuto Marco.
 VOCE: Tu sì.
-VOCE: Scrivilo nella richiesta.
+VOCE: Quindi scrivilo tu, nella richiesta.
 VOCE: E salutami la fotocopiatrice.
 ANIMAZIONE: Esce tutto; a sinistra l'icona «bot», a destra l'icona «user» con «Marco»; fra le due una linea tratteggiata interrotta.
 ANIMAZIONE: GRANDE: «TU SÌ» a tutto schermo in accento per ~1 s; poi una linea accento va dal riquadro del presentatore a «Marco».
@@ -89,6 +89,25 @@ ANIMAZIONE: Il diagramma esce con calma mentre il messaggio scende al centro del
 
 ## Note di produzione
 <!-- Scelte di regia, b-roll da girare, dubbi. Non renderizzate. -->
+**2026-09-15: VOCE riscritta in parlato** (`docs/sceneggiatura.md` §5, «prima il monologo, poi i beat»), su richiesta
+del presentatore dopo la registrazione con `reel registra`: le righe erano titoli in fila e suonavano recitate.
+Cambia solo la forma delle righe `VOCE:`; struttura in 7 scene, brief, TESTO, TITOLO, MESSAGGIO e CTA sono invariati,
+e i testi dei biglietti (con i ritocchi del presentatore) restano parola per parola. Da 145 a 219 parole, reel
+stimato da 57 a 84 s; `valida` a zero avvisi. Lo stato torna a `sceneggiatura`: si riparte dalla revisione.
+- **Per il revisore** (solo forma, ma da ripassare): scena 4, «quasi sempre» al posto di «di solito» (è la frase
+  d'esempio scritta dal presentatore; non dice «sempre», il campionamento del punto 12 regge); scena 5, «ti fa il
+  bugiardino» descrive l'estratto `C-opus-1` già a schermo; scena 6, «ce l'hai messa tu» al posto di «l'hai messa tu»
+  (stesso claim T5/punto 21); scena 7, «Quindi scrivilo tu, nella richiesta.» al posto di «Scrivilo nella richiesta.»
+  (punto 25, «lo» resta quello che sai di Marco). «Per dispetto.» è l'unica frase da titolo fuori dalla chiusura.
+- **Per l'animatore**: il numero di righe VOCE per scena non cambia (3 · 3 · 3 · 4 · 3 · 4 · 4), quindi i `beat(i)`
+  restano gli stessi; cambiano le parole per beat e quindi i tempi: le scene 4, 5 e 6 passano a ~15-16 s stimati
+  (scena 4 da 22 a 42 parole, 5 da 19 a 42, 6 da 34 a 41) e gli ingressi vanno riallineati sugli `inizi_frasi_s`
+  nuovi. Nella 6 la prima riga ora ha un attacco («E adesso senti cosa scrive:») prima del biglietto: «sono» vola e il
+  biglietto comincia a scriversi su «caro Marco», non all'inizio del beat. Nella 5 la riga della fotocopiatrice entra
+  su «Per esempio», dopo «dettaglio vero».
+- **Per il presentatore**: le clip registrate il 2026-09-15 in `contenuti/media/generativa-non-creativa/` sono sul
+  testo vecchio e vanno rifatte dopo l'animazione nuova. Le note di tono qui sotto sono aggiornate alle frasi nuove.
+
 **Riscrittura del 2026-09-13, dopo l'anteprima.** Scene 1, 6 e 7 dai blocchi scelti dal presentatore in
 `docs/linguaggio-reel.md` §3: l'hook al «tu» con il fotogramma 0 pieno, il payoff letto a voce e mostrato grande,
 la chiusura B («L'IA non ha mai conosciuto Marco. Tu sì.»). Le scene 2-5 sono invariate. Reel stimato 57 s:
@@ -292,24 +311,29 @@ finali rallentano (sotto, «Per l'animatore»).
 
 **Per il presentatore**
 - Scena 1: «L'IA scrive quello che ti aspetti?» è una domanda vera a una persona, non un titolo letto: il tono sale.
-  Il riquadro per ora è spento, ma dilla come a camera. Poi le due frasi del titolo, secche.
+  Il riquadro per ora è spento, ma dilla come a camera. Poi «Perché guarda, generativa non vuol dire creativa» come
+  la risposta a un collega, non come il titolo, che è già a schermo; «va sul probabile» con un mezzo gesto.
 - Scena 2: «caro Marco, da domani la sveglia…» e lasci la frase sospesa: la voce resta su, non chiude, come se
-  stessi per continuare. Poi fermati un secondo buono prima di «Se l'hai già finito in testa»: la battuta la fa chi
-  guarda, finendo la frase da solo. Tono complice.
-- Scena 4: mezza pausa dopo «lo scrive lei»; poi «Fluente, sì. Originale, no.» come una coppia, secche, la seconda
-  un filo più lenta.
-- Scena 6: le prime due frasi sono la lettura del biglietto, come lo leggeresti ad alta voce in ufficio; a scriverlo
-  è la fotocopiatrice. Dopo «sono io.» una mezza pausa: «Quella in fondo al corridoio.» è il momento in cui chi guarda
+  stessi per continuare. Poi fermati un secondo buono prima di «Se l'hai già finito in testa tu»: la battuta la fa
+  chi guarda, finendo la frase da solo. Tono complice, con l'accento su «tu».
+- Scena 4: «E non è che il testo lo va a cercare da qualche parte» con una mezza scrollata, poi «lo scrive lei, una
+  parola dopo l'altra» scandito; mezza pausa; «E viene fuori fluente, certo» concessivo, «ma originale no, non può
+  esserlo» un filo più lento, è il punto della scena.
+- Scena 5: «E se le scrivi «sii originale»?» è una domanda vera a chi guarda, a camera; «Per esempio, Marco ha passato
+  una vita a litigare con la fotocopiatrice» guardando la riga che entra nella carta.
+- Scena 6: «E adesso senti cosa scrive» è l'attacco, a camera; poi il biglietto lo leggi come lo leggeresti ad alta
+  voce in ufficio; a scriverlo è la fotocopiatrice. Dopo «sono io.» una mezza pausa: «Quella in fondo al corridoio.» è il momento in cui chi guarda
   capisce chi scrive. La seconda frase, seria, come una promessa solenne. Una pausa breve, poi **«Per dispetto.»**
   secco, un tono più giù, senza ridere: la battuta la fa la frase. Il mezzo sorriso arriva dopo, nell'attimo di
-  silenzio mentre la scritta riempie lo schermo. «La parte nuova l'hai messa tu» a camera.
+  silenzio mentre la scritta riempie lo schermo. «Ma non è che sia diventata creativa. La parte nuova ce l'hai messa
+  tu» a camera, tono di chi rimette le cose a posto.
 - Scena 7: «L'IA non ha mai conosciuto Marco.» guardando la grafica. **Pausa** (mezzo secondo buono) prima di
-  **«Tu sì.»**, a camera, piano. «Scrivilo nella richiesta.» a camera, come un consiglio a un collega, non da
-  slide: «lo» è quello che sai di Marco.
+  **«Tu sì.»**, a camera, piano. «Quindi scrivilo tu, nella richiesta.» a camera, come un consiglio a un collega,
+  non da slide: «lo» è quello che sai di Marco.
   **«E salutami la fotocopiatrice.»** con il mezzo sorriso (il biglietto della 6 l'ha scritto lei); poi fermati: il
   reel finisce sulla battuta, niente saluti.
-- Frasi a camera: la domanda dell'hook, «la parte nuova l'hai messa tu» (6), «Tu sì.» e le due frasi dopo (7). Sulle
-  altre guarda la grafica che stai mostrando.
+- Frasi a camera: la domanda dell'hook, «Se l'hai già finito in testa tu» (2), la domanda della 5, «la parte nuova ce
+  l'hai messa tu» (6), «Tu sì.» e le due frasi dopo (7). Sulle altre guarda la grafica che stai mostrando.
 
 **Screen recording da girare (non ancora in `contenuti/media/generativa-non-creativa/`)**
 - Le uscite del 2026-09-14 vengono dalla CLI (`claude -p`, system prompt neutro «Sei un assistente utile.», nessuno

@@ -60,8 +60,15 @@ voce, testo e immagine insieme, dal primo fotogramma.
   0,5 s.
 
 ### 2. Parla a una persona
-Tu e io, domande, gesti che chi guarda ha già fatto. Frasi di 4-10 parole e la parola chiave ripetuta (nel primo
-reel «probabile» torna tre volte: bene).
+Tu e io, domande, gesti che chi guarda ha già fatto. Frasi **come le dici** (6-18 parole, con il verbo e i
+connettivi) e la parola chiave ripetuta (nel primo reel «probabile» torna tre volte: bene). I titoli restano a schermo:
+detti a camera suonano recitati. **Lezione del 2026-09-15**: il presentatore, registrando, ha trovato la VOCE del
+primo reel «molto poco umana»; frasi di 4-10 parole a slogan («Vuol dire probabile.», «Fluente, sì. Originale, no.»)
+erano proprio il difetto. Il metodo nuovo («prima il monologo, poi i beat») è in `docs/sceneggiatura.md` §5.
+
+| Scritto (da titolo) | Parlato |
+|---|---|
+| «A ogni bivio, di solito, vince la strada più battuta. Il testo non lo cerca: lo scrive lei. Fluente, sì. Originale, no.» | «Quindi a ogni bivio, quasi sempre, prende la strada più battuta. E non è che il testo lo va a cercare da qualche parte: lo scrive lei, una parola dopo l'altra. Viene fuori fluente, certo. Ma originale no, non può esserlo.» |
 
 | Frontale | Da reel |
 |---|---|
@@ -148,7 +155,7 @@ Un reel si manda quando fa pensare a una persona precisa («è Marco!»), fa rid
 |---|---|---|---|
 | 1 | **Presentatore dinamico** | `RIQUADRO:` per beat, con due valori nuovi: `grande` (~600 px) e `pieno` (clip a tutto schermo, grafica sopra); il riquadro si scala e si sposta fra i beat. Hook e chiusura con il volto | `compositing` (overlay con scala e posizione per intervallo), `validate`, `ScenaReel.area` per beat |
 | 2 | **Parola punch** ✅ | fatto il 2026-09-13: `Punch(s, area)` e `ScenaReel.punch(s, tenuta_s)`, taglio secco alla battuta e ritorno alla scena com'era. La riga `PUNCH:` non c'è: la battuta si scrive nel brief con `GRANDE:` | `componenti`, `base` |
-| 3 | **Controlli di linguaggio** ✅ | fatto il 2026-09-13: primo fotogramma dell'hook vuoto (controllo `fotogramma-vuoto`), hook senza «tu» o domanda, MESSAGGIO > 12 parole, VOCE della chiusura > 18 parole (avvisi di `valida`; era 25 fino al 2026-09-14). Gli imperativi non si contano: senza un'analisi della lingua l'euristica sbaglierebbe | `validate`, `controlli` |
+| 3 | **Controlli di linguaggio** ✅ | fatto il 2026-09-13: primo fotogramma dell'hook vuoto (controllo `fotogramma-vuoto`), hook senza «tu» o domanda, MESSAGGIO > 12 parole, VOCE della chiusura > 18 parole (avvisi di `valida`; era 25 fino al 2026-09-14). Dal 2026-09-15 anche la lingua parlata: frasi da titolo in fila (≤ 4 parole senza «tu» né «io»; più di una nel reel fuori dalla chiusura), schema «X, sì. Y, no.», due punti come snodo. Sono euristiche (gli imperativi si riconoscono da una lista di verbi) | `validate`, `controlli` |
 | 4 | **Zoom di camera** ✅ | fatto il 2026-09-13: `self.zoom_su(mob, fattore)` / `self.torna()` / `self.zoom`; i controlli misurano quello che si vede sullo schermo | `base` (MovingCamera) |
 | 5 | **Punch-in sul presentatore** | zoom 1,0 → 1,15 della clip durante una frase marcata (es. `VOCE!:`) | `compositing` (crop + scale) |
 | 6 | **Sottotitoli sincronizzati** | opzionali (`--sottotitoli`), 2-4 parole alla volta, la parola `==…==` in accento; tempi dalla voce di prova, poi dall'ASR (fase 5) | `compositing` o livello Manim |
@@ -164,7 +171,7 @@ Un reel si manda quando fa pensare a una persona precisa («è Marco!»), fa rid
 | 1 hook (4,0 s) | contraddizione forte; il titolo regge da solo e fa un'ottima copertina; la barra cade sulla parola appena detta | nessun «tu» e nessuna posta in gioco per chi guarda: è una definizione, non una promessa. Al fotogramma 0 c'è la sola parola «GENERATIVA» su schermo vuoto (titolo completo a 1,0 s); niente volto per 4 s; nessun loop aperto su «e allora come si fa?» |
 | 2 (9,5 s) | la scena migliore: «Chiedi all'IA» al tu, la prova sul corpo di chi guarda (finisce la frase), il cursore regge la pausa, «Se l'hai già finito in testa, era probabile» è una battuta | fotogramma 0 vuoto e metà area vuota per 2,6 s; la richiesta è una carta di tre righe da leggere mentre la voce dice altro; la prova meriterebbe di stare più vicino all'inizio |
 | 3 (7,2 s) | classifica chiara; «Ne prende una tra le prime» è corta e onesta | tre frasi di meccanismo in fila, in terza persona («Perché scrive una parola per volta.» è frontale); stessa composizione e stessa scala della 2 |
-| 4 (9,4 s) | «Fluente, sì. / Originale, no.» è una coppia secca, da battuta | quattro idee in quattro frasi; «Il testo non lo cerca: lo scrive lei», con il database barrato, è la frase più astratta del reel; la battuta sta in due pillole da 40 px, quando meritava la parola a tutto schermo e il volto |
+| 4 (9,4 s) | «Fluente, sì. / Originale, no.» è una coppia secca, da battuta (ritirata il 2026-09-15: detta a camera suona scritta) | quattro idee in quattro frasi; «Il testo non lo cerca: lo scrive lei», con il database barrato, è la frase più astratta del reel; la battuta sta in due pillole da 40 px, quando meritava la parola a tutto schermo e il volto |
 | 5 (6,6 s) | il ribaltamento su un errore che fanno tutti: è materiale da hook | detto in modo frontale (manca «Hai scritto…?»); le barre che «si muovono appena» su un telefono non si vedono; arriva e se ne va in fretta |
 | 6 (9,2 s) | il payoff: fa ridere, è la frase da mandare, «l'hai messa tu» è al tu | la voce legge solo la prima frase del biglietto; la battuta («Le ho detto che da lunedì sei libero. Lei no.») resta in cartellini da 44 px da leggere, mentre a schermo passa ancora la colonna delle candidate (spiegazione dopo il payoff) |
 | 7 chiusura (10,1 s) | il messaggio è corretto e la mossa c'è | la scena più lunga dove la retention è più bassa; è un riassunto in lista, tre imperativi con tono da slide; messaggio di 12 parole + carta di tre righe + CTA fanno tutto testo, e tutto piccolo; ripete la 5-6 come istruzioni; chiude con la frase più tecnica («Chiedine cinque…»); nessun ritorno all'hook; la CTA «Salva per il prossimo «sii originale»» è ambigua; «Vietale le parole ovvie» porta i limiti del punto 26 della revisione. Le tre mosse sono perfette per la caption |

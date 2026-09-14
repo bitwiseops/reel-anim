@@ -40,8 +40,8 @@ le giunzioni.
 
 | Riga | Quante | Cosa |
 |---|---|---|
-| `VOCE:` | fino a 4 per scena | una frase detta a camera: **una frase = un beat** dell'animazione |
-| `ANIMAZIONE:` | una, oppure una per frase `VOCE:` | il brief per l'animatore (sezione 6) |
+| `VOCE:` | fino a 5 per scena | un pezzo di parlato detto a camera (una o due proposizioni): **una riga = un beat** dell'animazione |
+| `ANIMAZIONE:` | una, oppure una per riga `VOCE:` | il brief per l'animatore (sezione 6) |
 | `TESTO:` | fino a 4, ≤ 4 parole | parole chiave che compaiono a schermo |
 | `TITOLO:` / `SOTTOTITOLO:` | una | solo nell'hook: il titolo regge da solo (≤ 10 parole) |
 | `MESSAGGIO:` / `CTA:` | una | solo nella chiusura (messaggio ≤ 25 parole, CTA una riga) |
@@ -57,31 +57,50 @@ intendevi `VOCE:`»).
 - La durata vera di ogni scena la decide la **clip registrata**. Finché non c'è: stima = parole ÷ 2,8 + 0,8 s
   (minimo 2,5 s; hook senza voce 3,5 s). Nell'anteprima `--prova` la voce sintetica, una frase alla volta con 0,3 s
   di pausa.
-- Ogni frase `VOCE:` è un beat: l'animazione di quel beat parte quando comincia la frase. Due cambi a schermo → due
-  frasi; una frase lunga con tre cambi dentro non si può animare bene.
+- Ogni riga `VOCE:` è un beat: l'animazione di quel beat parte quando comincia la riga. Due cambi a schermo → due
+  righe; una riga lunga con tre cambi dentro non si può animare bene. La riga non deve essere una frase chiusa: può
+  essere una proposizione («e non è che il testo lo va a cercare,»), purché sia un pezzo di parlato che si dice tutto
+  d'un fiato.
 
 Limiti (fonte unica: `tools/reel/validate.py::LIMITI`; oltre il limite è un avviso, salvo dove scritto):
 
 | Cosa | Limite |
 |---|---|
 | scene | 6-8 (minimo 5, massimo 9) |
-| parole di `VOCE:` per scena | ≤ 35 (hook ≤ 15) |
-| righe `VOCE:` per scena | ≤ 4 |
+| parole di `VOCE:` per scena | ≤ 50 (hook ≤ 20) |
+| righe `VOCE:` per scena | ≤ 5 |
 | `TITOLO:` / `MESSAGGIO:` | ≤ 10 / ≤ 25 parole (MESSAGGIO consigliato ≤ 12: una frase grande, il resto in caption) |
 | VOCE dell'hook | un «tu» o una domanda: l'hook è una promessa a chi guarda (`docs/linguaggio-reel.md` §1) |
 | VOCE della chiusura | ≤ 18 parole (~6-7 s): un payoff, non un riassunto |
+| lingua parlata | niente frasi da titolo in fila (≤ 4 parole, senza «tu» né «io»), al massimo una nel reel fuori dalla chiusura; niente «X, sì. Y, no.»; niente due punti come snodo (valgono solo per citare: «scrive: …») |
 | `TESTO:` | ≤ 4 per scena, ≤ 4 parole ciascuno |
 | `==evidenzia==` / emoji | 1 per scena |
-| una scena | 2,5-14 s stimati |
-| il reel | 30-60 s stimati (oltre 90 s è un errore) |
+| una scena | 2,5-19 s stimati |
+| il reel | 30-90 s stimati (oltre 120 s è un errore) |
 | `SCHERMO:` | il file deve esistere (errore); il riquadro non deve coprire la cornice (avviso) |
 
-## 5. Come si scrive la VOCE
+## 5. Come si scrive la VOCE: prima il monologo, poi i beat
 
-- È **parlato**: frasi corte, una cosa per frase, soggetto e verbo. Si legge ad alta voce prima di consegnare.
-- **Una frase per cambio a schermo.** 2-3 frasi per scena bastano; se ne servono di più, sono due scene.
-- **Hook**: la tesi in meno di 15 parole, detta come un titolo, in 3-5 secondi. Il `TITOLO:` a schermo può essere
-  diverso dalla voce, ma dice la stessa cosa.
+Il presentatore, registrando il primo reel (2026-09-15), ha trovato la VOCE «molto poco umana»: letta a camera era una
+fila di titoli («Vuol dire probabile.», «Fluente, sì. Originale, no.», «Il testo non lo cerca: lo scrive lei.»). Scritti
+funzionano, detti suonano recitati: nessuno parla per aforismi. Da allora:
+
+1. **Prima si scrive il parlato intero della scena**, come lo si direbbe a un collega: con «io» e «tu», i connettivi
+   («quindi», «cioè», «guarda», «e non è che…»), il verbo in ogni frase, qualche ripresa. Frasi di 6-18 parole.
+2. **Poi lo si spezza in righe `VOCE:`** nei punti in cui cambia lo schermo: una riga = un beat = un pezzo di parlato
+   (una o due proposizioni), non per forza una frase chiusa. 2-5 righe per scena.
+3. **La prova**: lo diresti così al bar? Se una riga si può leggere solo come un titolo, riscrivila con un verbo.
+   Una frase da titolo nel reel è ammessa, ed è la battuta finale.
+4. `valida` avvisa sulle frasi da titolo in fila, sullo schema «X, sì. Y, no.» e sui due punti usati come snodo; lo
+   sceneggiatore li porta a zero. La verifica vera è il presentatore che la legge in `reel registra`.
+
+Esempio (scena 4 del primo reel). Scritto: «A ogni bivio, di solito, vince la strada più battuta. Il testo non lo
+cerca: lo scrive lei. Fluente, sì. Originale, no.» Parlato: «Quindi a ogni bivio, quasi sempre, prende la strada più
+battuta. E non è che il testo lo va a cercare da qualche parte: lo scrive lei, una parola dopo l'altra. Viene fuori
+fluente, certo. Ma originale no, non può esserlo.» Stesso contenuto, stessi quattro beat, il doppio delle parole.
+
+- **Hook**: una domanda o una promessa a chi guarda in ≤ 20 parole, in 4-6 secondi; non un titolo detto a voce. Il
+  `TITOLO:` a schermo resta la tesi in forma di titolo.
 - **Numeri**: solo veri, con la fonte nelle note di produzione; quelli illustrativi si dichiarano come esempi anche a
   schermo (la `Classifica` lo scrive da sola).
 - **Testi attribuiti a un modello** («Comincia così: …», «Ora scrive: …»): solo uscite vere, generate **prima** di
@@ -91,8 +110,8 @@ Limiti (fonte unica: `tools/reel/validate.py::LIMITI`; oltre il limite è un avv
   usciti in 16 prove, e si sono rifatte le scene 2-7. **Le revisioni del presentatore hanno l'ultima parola**, anche
   su questi testi: un suo ritocco si applica così com'è e la caption lo dichiara («tagliate e ritoccate da noi»).
 - **Chiusura**: il messaggio centrale in parole semplici e una sola azione nella `CTA:`.
-- Il presentatore leggerà la voce dal gobbo così com'è: niente abbreviazioni, sigle da sciogliere, parole da
-  pronunciare in modo ambiguo.
+- Il presentatore leggerà la voce dal karaoke di `reel registra` così com'è: niente abbreviazioni, sigle da
+  sciogliere, parole da pronunciare in modo ambiguo.
 
 ## 6. Il brief ANIMAZIONE
 

@@ -12,7 +12,7 @@ def test_gobbo_dell_esempio():
     assert g.startswith("GOBBO · Generativa non vuol dire creativa")
     assert "── Scena 1 [hook]" in g and "scena-07.mov" in g and "da registrare" in g
     assert "(a schermo: Generativa non vuol dire creativa)" in g
-    assert "   1. L'IA scrive quello che ti aspetti?" in g and "   3. Vuol dire probabile." in g
+    assert "   1. L'IA scrive quello che ti aspetti?" in g and "   3. Vuol dire che sceglie il probabile." in g
     assert "==" not in g and "**" not in g   # il presentatore legge testo piano
 
 

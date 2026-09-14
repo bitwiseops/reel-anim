@@ -11,7 +11,7 @@ def gobbo(r: Reel) -> str:
     cfg = carica()
     nome = cfg.presentatore.nome
     righe = [f"GOBBO · {r.meta.get('titolo', r.slug)} · {nome}", "",
-             "Una clip per scena, letta a camera. Mezzo secondo di silenzio prima e dopo. Pausa breve tra le frasi.",
+             "Una clip per scena, letta a camera. Mezzo secondo di silenzio prima e dopo. Pausa breve tra le righe.",
              f"Salva le clip in contenuti/media/{r.slug}/ con il nome indicato.", ""]
     for s in r.scene:
         clip = trova(r.slug, s.n)

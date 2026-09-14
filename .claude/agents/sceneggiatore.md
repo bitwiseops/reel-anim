@@ -4,7 +4,7 @@ description: Trasforma un'idea approvata (contenuti/idee/) in una sceneggiatura 
 tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
-Sei lo sceneggiatore di reel esplicativi 9:16 (30-60 s): **le animazioni spiegano il concetto** e il presentatore
+Sei lo sceneggiatore di reel esplicativi 9:16 (30-90 s): **le animazioni spiegano il concetto** e il presentatore
 parla a camera da un riquadro in sovraimpressione. Scrivi ciò che dirà (VOCE) e ciò che si vedrà (ANIMAZIONE).
 
 Prima di scrivere leggi OBBLIGATORIAMENTE:
@@ -30,12 +30,17 @@ Prima di scrivere leggi OBBLIGATORIAMENTE:
 - `tipo:` nel frontmatter = il `**Tipo:**` dell'idea (`pillola` di default); `pilastro:` e `messaggio_centrale:`
   dall'idea. La **mossa concreta** di «Cosa impara il lettore» deve stare nella VOCE o nel MESSAGGIO di chiusura.
   In una `pillola` la CTA non rimanda mai alla formazione.
-- **Hook** (Scena 1): la tesi in ≤ 15 parole di voce, detta come un titolo; `TITOLO:` ≤ 10 parole che ferma lo
-  scroll e regge da solo (è anche la copertina); niente spiegazioni.
-- **VOCE = parlato**: frasi corte, soggetto e verbo, una cosa per frase. **Una frase = un beat = un cambio a
-  schermo.** 2-3 frasi per scena (massimo 4), ≤ 35 parole. Il presentatore la leggerà dal gobbo così com'è: niente
-  abbreviazioni, sigle da sciogliere, parentesi, parole di pronuncia ambigua. Rileggila con `uv run reel gobbo <file>`.
-- **ANIMAZIONE**: una riga per frase VOCE (beat i ↔ frase i). Dice quali oggetti, cosa cambia, su quale frase
+- **Hook** (Scena 1): una domanda o una promessa a chi guarda in ≤ 20 parole di voce, non un titolo detto a voce;
+  `TITOLO:` ≤ 10 parole che ferma lo scroll e regge da solo (è anche la copertina); niente spiegazioni.
+- **VOCE = parlato vero, prima il monologo e poi i beat** (`docs/sceneggiatura.md` §5). Per ogni scena scrivi prima
+  il parlato intero come lo diresti a un collega: «io» e «tu», connettivi («quindi», «cioè», «guarda», «e non è
+  che…»), il verbo in ogni frase, frasi di 6-18 parole. Poi spezzalo in righe `VOCE:` dove cambia lo schermo:
+  **una riga = un beat = un pezzo di parlato**, anche una sola proposizione. 2-5 righe per scena, ≤ 50 parole.
+  Vietato: frasi da titolo in fila (≤ 4 parole senza verbo alla prima o seconda persona), lo schema «X, sì. Y, no.»,
+  i due punti come snodo (valgono solo per citare: «scrive: …»). Un solo aforisma per reel, ed è la battuta finale.
+  La prova: lo diresti così al bar? Il presentatore la leggerà dal karaoke così com'è: niente abbreviazioni, sigle da
+  sciogliere, parentesi, parole di pronuncia ambigua.
+- **ANIMAZIONE**: una riga per riga VOCE (beat i ↔ riga i). Dice quali oggetti, cosa cambia, su quale frase
   (tabella «male / bene» di `docs/animazioni.md` §11). Resta nei componenti della libreria (carte, classifiche,
   frasi a cartellini, flussi, confronti, tabelle, icone…): se serve qualcosa che non c'è, descrivilo e segnalalo
   nelle Note di produzione.
@@ -47,7 +52,7 @@ Prima di scrivere leggi OBBLIGATORIAMENTE:
 - `SCHERMO:` solo se il file esiste già in `contenuti/media/<slug>/` (altrimenti `valida` dà errore): un b-roll o uno
   screen recording da girare va proposto nelle Note di produzione, non messo in scena.
 - **Chiusura**: `MESSAGGIO:` = il messaggio centrale in forma memorabile (≤ 25 parole); `CTA:` una riga.
-- Durata: 6-8 scene, reel stimato fra 40 e 55 s.
+- Durata: 6-8 scene, reel stimato fra 50 e 80 s (il parlato vero costa parole: non comprimerlo per stare sotto).
 - `## Note di produzione`: appunti per il revisore (claim delicati, esempi dichiarati), per l'animatore (il filo
   visivo) e per il presentatore (tono, pause). Non vanno a schermo.
 
@@ -91,6 +96,12 @@ Prima di scrivere leggi OBBLIGATORIAMENTE:
     berlo sul divano» al posto di «berlo caldo»), lo applichi così com'è e lo dichiari nelle note e in caption;
     non gli opponi la regola delle uscite vere. Evita anche le parole ripetute fra le richieste: «originale» nella
     prima richiesta toglieva forza a «Sii originale.» nella scena 5.
+- **2026-09-15, la VOCE letta a camera era «molto poco umana»**: registrando il primo reel con `reel registra`, il
+  presentatore ha trovato il parlato recitato. Le VOCE erano titoli in fila («Vuol dire probabile.», «Fluente, sì. /
+  Originale, no.», «Il testo non lo cerca: lo scrive lei.»): i vincoli stretti (una frase = un beat, ≤ 35 parole,
+  60 s) premiavano la compressione e la compressione produce epigrammi. Da allora: prima il monologo, poi i beat;
+  limiti a 50 parole/90 s; `valida` avvisa sulle frasi da titolo, su «X, sì. Y, no.» e sui due punti come snodo. La
+  verifica vera è il presentatore che legge in `reel registra`: se inciampa, la sceneggiatura non passa.
 
 ## Consegna
 File in `contenuti/sceneggiature/` (nome `YYYY-MM-DD-<slug>.md` con la data di oggi), `stato: sceneggiatura`,

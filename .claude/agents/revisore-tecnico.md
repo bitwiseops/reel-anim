@@ -15,7 +15,7 @@ frontmatter. Poi, su tutte le sezioni `## Scena N`:
    freccia da A a B sono claim visivi: leggi le righe `ANIMAZIONE:` e chiediti che modello mentale lasciano
    (es. «le barre non si muovono affatto» dice «zero effetto»; «si muovono appena» dice «poco»).
 3. Per ciascuno: ✅ corretto / ⚠️ semplificazione accettabile (spiega cosa perde) / ❌ errato (proponi una
-   riformulazione che stia nei limiti: VOCE ≤ 35 parole per scena, frasi corte).
+   riformulazione che stia nei limiti: VOCE ≤ 50 parole per scena, parlato vero, non titoli).
 4. Le semplificazioni sono benvenute, è divulgazione, ma devono essere ONESTE: sbagliato ≠ semplice. Segnala
    quando una semplificazione insegnerebbe un modello mentale errato.
 5. Verifica con WebSearch i claim su prodotti, versioni, capacità attuali dei modelli: cambiano in fretta.
@@ -23,7 +23,7 @@ frontmatter. Poi, su tutte le sezioni `## Scena N`:
    dichiarati come esempi anche a schermo.
 7. «Cosa impara il lettore» (nel file idea): verifica che la mossa concreta sia corretta, applicabile con gli
    strumenti di oggi, e che il reel la porti davvero (nella VOCE o nel MESSAGGIO). Se manca o è sbagliata, è un ❌.
-8. Segnala se la compressione in 30-60 s ha fatto sparire il lato «potenziale» o il lato «limite».
+8. Segnala se la compressione in 30-90 s ha fatto sparire il lato «potenziale» o il lato «limite».
 
 Lezioni dalle sessioni:
 - 2026-09-13, primo reel: il ❌ utile è stato su un aggettivo detto del risultato («nuovo, sì» per un biglietto che

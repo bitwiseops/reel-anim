@@ -23,35 +23,35 @@ Il b-roll della scena 6 è un'immagine versionata in contenuti/media/esempio-ree
 TITOLO: Generativa non vuol dire creativa
 SOTTOTITOLO: Vuol dire ==probabile==
 VOCE: L'IA scrive quello che ti aspetti?
-VOCE: Generativa non vuol dire creativa.
-VOCE: Vuol dire probabile.
+VOCE: Guarda che generativa non vuol dire creativa.
+VOCE: Vuol dire che sceglie il probabile.
 ANIMAZIONE: Il titolo è già in scena al primo fotogramma (è quello che vede chi scorre) e sale appena.
 ANIMAZIONE: «Creativa» viene barrata appena detta.
 ANIMAZIONE: Sotto compare «probabile» in accento.
 RIQUADRO: no
 
 ## Scena 2 [spiegazione]
-VOCE: Quando l'IA scrive, sceglie una parola alla volta.
-VOCE: A ogni passo mette in fila le parole possibili.
-VOCE: E prende una delle più ==probabili==.
+VOCE: Quando l'IA scrive, va avanti una parola alla volta.
+VOCE: A ogni passo si mette in fila le parole che potrebbero venire dopo.
+VOCE: E ne prende una tra le più ==probabili==.
 ANIMAZIONE: In alto la frase del biglietto si compone un cartellino alla volta: «Caro», «Marco,», «oggi».
 ANIMAZIONE: Sotto compare la colonna delle candidate con le barre (esempio): «si», «è», «ti».
 ANIMAZIONE: La prima si accende e vola in coda alla frase.
 TESTO: una parola alla volta
 
 ## Scena 3 [spiegazione]
-VOCE: Poi rifà la scelta, parola dopo parola.
-VOCE: E il biglietto per Marco esce così.
-VOCE: Se l'hai finito in testa prima di lei, era il più probabile.
+VOCE: Poi rifà la stessa scelta, parola dopo parola.
+VOCE: E il biglietto per Marco viene fuori così.
+VOCE: Se l'hai finito in testa prima di lei, era semplicemente il più probabile.
 ANIMAZIONE: La frase continua da sola, veloce, e un contatore conta le scelte.
 ANIMAZIONE: Arriva la frase intera: «oggi si chiude un capitolo e se ne apre uno nuovo».
 ANIMAZIONE: Un riquadro accento la incornicia, con l'etichetta «la più probabile».
 TESTO: la più probabile
 
 ## Scena 4 [spiegazione]
-VOCE: A ogni bivio prende la strada più battuta.
-VOCE: Il testo è nuovo: nessuno l'ha scritto così.
-VOCE: Ma ==raro==, no.
+VOCE: A ogni bivio prende quasi sempre la strada più battuta.
+VOCE: Quindi il testo è nuovo, nel senso che nessuno l'ha scritto così.
+VOCE: Ma ==raro== no, non lo è.
 ANIMAZIONE: Da «si chiude un capitolo» partono tre rami (esempio): «e se ne apre uno nuovo» spesso, «ma non un'amicizia» e «della nostra storia» sottili; il ramo spesso si accende.
 ANIMAZIONE: In basso compare l'etichetta «nuovo».
 ANIMAZIONE: Accanto, «raro» viene barrato.
@@ -59,9 +59,9 @@ TESTO: nuovo
 TESTO: raro
 
 ## Scena 5 [spiegazione]
-VOCE: Chiederle di essere originale non cambia quasi niente.
-VOCE: Un dettaglio vero invece sì: Marco litigava con la fotocopiatrice.
-VOCE: Adesso la più probabile è un'altra frase.
+VOCE: Se le chiedi di essere originale, cambia poco o niente.
+VOCE: Se invece le dai un dettaglio vero, tipo Marco che litigava con la fotocopiatrice, cambia tutto.
+VOCE: E adesso la frase più probabile è un'altra.
 ANIMAZIONE: Una carta «contesto» con la richiesta del biglietto e, sotto, le candidate con le barre (esempio); entra la riga «Sii originale.» e le barre si muovono appena.
 ANIMAZIONE: Entra la riga sulla fotocopiatrice e le barre si riordinano.
 ANIMAZIONE: In testa ora c'è «la fotocopiatrice», in accento.
@@ -70,7 +70,7 @@ TESTO: contesto
 ## Scena 6 [schermo]
 SCHERMO: chat-fotocopiatrice.png
 VOCE: Ecco il biglietto che scrive adesso.
-VOCE: La parte nuova non l'ha inventata lei: l'hai messa tu, prima.
+VOCE: Però la parte nuova non l'ha inventata lei, l'hai messa tu, prima.
 ANIMAZIONE: Nella cornice la chat con la richiesta e il nuovo biglietto; sopra, l'etichetta «contesto nuovo».
 ANIMAZIONE: Un riquadro accento sulla richiesta con il dettaglio vero; l'etichetta diventa «l'hai messa tu».
 TESTO: contesto nuovo

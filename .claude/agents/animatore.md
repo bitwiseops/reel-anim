@@ -94,6 +94,11 @@ Prima di scrivere codice leggi OBBLIGATORIAMENTE:
     aggiungere ciò che deve comparire al ritorno.
   - Non misurare testi al livello del modulo (costanti calcolate con `testo()`): il font non è ancora registrato,
     Manim scrive un avviso su stdout e `anima --json` non è più JSON. Usa una funzione.
+- **2026-09-15, la VOCE diventa parlato**: il presentatore, registrando, ha trovato la VOCE «poco umana» (titoli in
+  fila). Da ora una riga VOCE è un pezzo di parlato, anche di 15-18 parole, non una frase-titolo: i beat durano di
+  più (meno pressione sui passaggi) e possono cambiare di numero. Se lo sceneggiatore riscrive una VOCE già
+  animata, confronta `len(voce)` scena per scena con gli indici di `beat(i)` (l'ultimo è `n − 1`, sennò
+  `IndexError`) e riallinea gli ingressi; le clip registrate con l'altra VOCE non valgono più.
 
 ## Confini
 - Non modificare `tools/` né la libreria: se un componente manca, ha un difetto o un parametro scomodo, arrangiati
