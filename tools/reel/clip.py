@@ -1,6 +1,8 @@
-"""Clip del presentatore: una per scena in contenuti/media/<slug>/scena-NN.(mov|mp4|webm|m4v)."""
+"""Clip del presentatore: una per scena in contenuti/media/<slug>/scena-NN.(mov|mp4|webm|m4v).
+Accanto a una clip tagliata da `reel registra` c'è scena-NN.json con gli inizi delle frasi seguiti nella presa."""
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 from .ffmpeg import ffprobe
@@ -27,8 +29,24 @@ def trova(slug: str, n: int) -> Path | None:
     return None
 
 
+def sidecar(clip: Path) -> Path:
+    return clip.with_suffix(".json")
+
+
+def tempi_presa(clip: Path) -> list[float] | None:
+    """Gli inizi delle frasi salvati da `reel registra` accanto alla clip (relativi all'inizio della clip), se ci sono."""
+    p = sidecar(clip)
+    if not p.exists():
+        return None
+    try:
+        inizi = json.loads(p.read_text(encoding="utf-8")).get("inizi_frasi_s")
+    except (json.JSONDecodeError, AttributeError):
+        return None
+    return [float(x) for x in inizi] if isinstance(inizi, list) else None
+
+
 def stato(slug: str, scene_n: list[int]) -> list[dict]:
-    """Per ogni scena: file trovato, durata e probe."""
+    """Per ogni scena: file trovato, durata, probe e da dove vengono i tempi delle frasi (presa | stimati)."""
     out = []
     for n in scene_n:
         p = trova(slug, n)
@@ -37,5 +55,6 @@ def stato(slug: str, scene_n: list[int]) -> list[dict]:
             pr = ffprobe(p)
             info["durata_s"] = pr.get("durata_s")
             info["ffprobe"] = pr
+            info["tempi"] = "presa" if tempi_presa(p) is not None else "stimati"
         out.append(info)
     return out

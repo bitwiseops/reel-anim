@@ -162,8 +162,9 @@ scena già ingrandita (continuità con la precedente) imposta la camera senza an
   leggibile (≥ 1 s prima di uscire) meno di mezzo secondo.
 
 Gli inizi delle frasi (`inizi_frasi_s`) sono **esatti** nell'anteprima con voce sintetica (una frase alla volta,
-pausa `pausa_frasi_s`); con le clip registrate, per ora, sono **stimati in proporzione alle parole**
-(`origine_tempi`: `voce-sintetica`, `parole-clip`, `parole-stima`, `senza-voce`).
+pausa `pausa_frasi_s`) e **restano esatti con le clip di `reel registra`** (il presentatore segue quei tempi in
+presa unica e la clip li porta con sé in `scena-NN.json`); con clip esterne sono **stimati in proporzione alle
+parole** (`origine_tempi`: `voce-sintetica`, `presa`, `parole-clip`, `parole-stima`, `senza-voce`).
 
 Regole:
 - **Dentro il beat.** Somma i `run_time` di un beat e confrontala con `durata_beat(i)`: ingresso nel primo

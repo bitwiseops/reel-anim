@@ -45,6 +45,7 @@ Le revisioni del presentatore hanno l'ultima parola. Prossimo passo: pianificare
 
 ## Comandi
 `uv run reel setup` · `valida <file>` · `gobbo <file> [--scrivi]` · `clip <file>` · `voce <file>` ·
+`registra <file> [--da-scena N] [--dispositivi] [--video N --audio N] [--spezza presa-NN]` ·
 `anima <file> [--scena N] [--qualita l|m|h] [--debug] [--json]` · `monta <file> [--prova] [--anteprima] [--scena N]` ·
 `uv run pytest -q` (i test `slow` usano Manim e ffmpeg). `--prova` = voce sintetica + avatar segnaposto: anteprima
 completa senza il presentatore, **non pubblicabile**.
@@ -56,7 +57,8 @@ beat), `ANIMAZIONE:` (brief per l'animatore), `TESTO:`, `TITOLO:/SOTTOTITOLO:` (
 Limiti in `tools/reel/validate.py::LIMITI`: 6-8 scene (5-9), VOCE ≤ 35 parole/scena (hook ≤ 15, chiusura ≤ 18), scena 2,5-14 s,
 reel 30-60 s. La durata reale di ogni scena la decide la clip registrata; senza clip vale la stima (2,8 parole/s).
 I beat partono sugli inizi delle frasi VOCE: esatti con la voce di prova (una frase alla volta, `pausa_frasi_s`),
-stimati a parole con le clip (ASR in fase 5). `anima` usa gli stessi tempi di `monta --prova`; `report.json` ha per
+esatti anche con le clip di `reel registra` (sidecar `scena-NN.json`, `origine_tempi: presa`), stimati a parole con
+clip esterne. `anima` usa gli stessi tempi di `monta --prova`; `report.json` ha per
 scena `inizi_frasi_s`, `origine_tempi`, `avvisi_tempi` (beat in ritardo, scena che sfora: da portare a zero).
 
 ## Convenzioni
@@ -82,16 +84,23 @@ social → approvazione → pubblica (container REELS). Idee: `**Stato:** idea �
 `stato: sceneggiatura → rivisto → animato → …`. Mai spostare file tra cartelle: lo fa il presentatore. Fase 3:
 cruscotto, db delle decisioni, ideatore, social-strategist.
 
-## Registrazione guidata (fase 5, da fare prima della registrazione vera)
-`uv run reel registra <file>`: **app desktop nativa in Python** (Tkinter + ffmpeg avfoundation) in cui il
-presentatore vede se stesso e il testo da recitare, registra con un tasto e la clip si salva da sola in
-`contenuti/media/<slug>/scena-NN.*` (evento `clip` nel db, ffprobe con durata vs stima). Decisione aperta: (A) una
-clip per scena con gobbo, oppure (B) una presa unica con l'anteprima del reel e il testo sincronizzato sui beat, poi
-spezzata per scene dai tempi noti. Dettagli e pro/contro nel piano.
+## Registrazione guidata (fase 5, fatta il 2026-09-14; decisione: B con «riprendi da questa scena»)
+`uv run reel registra <file>` (`docs/registrazione.md` §6): app Tkinter con tre pannelli (webcam con il cerchio, il
+reel `--prova` con il volto live nel riquadro, testo karaoke sui tempi della voce di prova; inquadratura spostabile e
+zoomabile prima della presa, salvata in `inquadratura.json` e applicata come ritaglio al taglio). **Presa unica** da
+una scena a scelta con pre-roll e conto alla rovescia; un ffmpeg avfoundation scrive il video `_prese/presa-NN.mov`
+(h264 videotoolbox) e la pipe di anteprima, così l'indice del fotogramma letto dà l'istante nella presa; **l'audio lo
+registra Python con PortAudio (`sounddevice`) in `presa-NN.wav`**, perché avfoundation perde il 10-15 % dei pacchetti
+audio (verificato il 2026-09-14). A fine presa le scene coperte per intero diventano `scena-NN.mov` + `scena-NN.json`
+(inizi delle frasi, che `monta` usa: `origine_tempi: presa`, niente ASR). Moduli: `tools/reel/registra.py` (logica
+pura, `Timeline`, `karaoke`, comandi, `Presa`, `spezza`, inquadratura), `cattura.py` (processi + thread + `Microfono`,
+testabile con lavfi), `registra_app.py` (Tk, importato solo dal comando; menu per fotocamera e microfono, scelta
+salvata per nome in `contenuti/media/dispositivi.json`). Config `[registrazione]`. L'evento `clip` nel
+db arriva con la fase 3 (oggi il registro è `_prese/prese.json`).
 
 ## Prossimi passi della libreria
 - Fatto (2026-09-13): esplorazione della community (fonti in `docs/animazioni.md` §13, nessun plugin da installare);
   componenti per diagrammi, icone, codice, contatore che scorre; controlli automatici a fine beat, controllo statico
   del file, `anima --json`.
-- Da fare: allineamento ASR delle frasi per le clip vere (fase 5); controlli sui pixel dei fotogrammi chiave
+- Da fare: ASR solo se servirà per clip esterne (con `registra` i tempi sono già esatti); controlli sui pixel dei fotogrammi chiave
   (b-roll e immagini, che i controlli sugli ingombri non vedono).

@@ -58,3 +58,14 @@ pausa_frasi_s = 0.3       # silenzio tra le frasi: una frase alla volta, così g
 [transizioni]
 tipo = "dissolvenza"      # taglio | dissolvenza
 durata_s = 0.25
+
+[registrazione]           # `uv run reel registra`: presa unica sull'anteprima --prova (i default sono in tools/reel/registra.py)
+video = 0                 # fotocamera avfoundation: indice o parte del nome (`uv run reel registra --dispositivi`)
+# audio = "MacBook"       # microfono PortAudio (indice o parte del nome); assente = il microfono predefinito di sistema
+risoluzione = "1920x1080" # l'inquadratura scelta nell'app finisce in un quadrato di 360 px: mai sotto 360 px
+fps = 30
+preroll_s = 2.0           # il reel parte questi secondi prima della scena scelta
+conto_alla_rovescia_s = 3
+latenza_s = 0.10          # ritardo fra la fotocamera e il fotogramma letto; se la voce risulta spostata di una costante, ritoccalo e rifai --spezza
+codec = "h264_videotoolbox"
+bitrate = "8M"

@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shutil
 import sys
 import time
 import traceback
@@ -21,10 +22,9 @@ from .manim_render import (AnimazioneMancante, carica_modulo, classe_scena, file
 from .model import Diagnostica, Reel, Scena, avviso, errore
 from .stima import CODA_S as CODA_STIMA_S
 from .stima import durata_stimata_s
-from .voce import VoceNonDisponibile, sintetizza_frasi
+from .voce import CODA_VOCE_S, VoceNonDisponibile, sintetizza_frasi
 
 RADICE = Path(__file__).resolve().parents[2]
-CODA_VOCE_S = 0.5
 
 
 def out_dir(r: Reel, out: str | None) -> Path:
@@ -61,17 +61,22 @@ class TempiScena:
     origine: str                      # della durata: clip | voce-sintetica | attributo | stima
     audio: Path | None = None         # voce sintetica (m4a), se c'è
     inizi_frasi_s: list[float] = field(default_factory=list)
-    origine_tempi: str = "senza-voce"  # degli inizi delle frasi: voce-sintetica | parole-clip | parole-stima | senza-voce
+    origine_tempi: str = "senza-voce"  # degli inizi delle frasi: voce-sintetica | presa | parole-clip | parole-stima | senza-voce
 
 
-def tempi_scena(r: Reel, s: Scena, voce: bool = False, out: Path | None = None, cfg: Config | None = None) -> TempiScena:
-    """Durata della scena e istante d'inizio di ogni frase della VOCE. In ordine: clip registrata (durata vera, frasi
-    stimate a parole tra i silenzi chiesti dal gobbo) → scena senza voce con durata= → voce sintetica frase per frase
-    (inizi esatti; solo con voce=True) → stima a parole."""
-    c = clipmod.trova(r.slug, s.n)
+def tempi_scena(r: Reel, s: Scena, voce: bool = False, out: Path | None = None, cfg: Config | None = None,
+                ignora_clip: bool = False) -> TempiScena:
+    """Durata della scena e istante d'inizio di ogni frase della VOCE. In ordine: clip registrata (durata vera; frasi
+    esatte dal sidecar di `reel registra`, altrimenti stimate a parole tra i silenzi chiesti dal gobbo; saltata con
+    ignora_clip, cioè `monta --prova`) → scena senza voce con durata= → voce sintetica frase per frase (inizi esatti;
+    solo con voce=True) → stima a parole."""
+    c = None if ignora_clip else clipmod.trova(r.slug, s.n)
     if c:
         d = float(ffprobe(c).get("durata_s") or 0)
         if d > 0:
+            presa = clipmod.tempi_presa(c)
+            if presa is not None and len(presa) == len(s.voce):
+                return TempiScena(round(d, 3), "clip", None, presa, "presa" if s.voce else "senza-voce")
             da = min(clipmod.SILENZIO_S, d * 0.1)
             a = max(da, d - clipmod.SILENZIO_S)
             return TempiScena(round(d, 3), "clip", None, inizi_per_parole(s.voce, da, a), "parole-clip" if s.voce else "senza-voce")
@@ -172,13 +177,16 @@ def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None 
         if solo and s.n != solo:
             continue
         try:
-            t = tempi_scena(r, s, prova, out, cfg)
+            t = tempi_scena(r, s, prova, out, cfg, ignora_clip=prova)   # --prova: sempre voce sintetica e avatar, anche con le clip
         except VoceNonDisponibile as e:
             diag.append(errore(str(e), s.riga, s.n))
             return _chiudi(r, diag, out, elementi, clip_info, None, tempi, prova, args)
         if t.origine == "stima" and not prova:
             diag.append(errore(f"clip mancante: registra {clipmod.nome_atteso(s.n)} in contenuti/media/{r.slug}/ oppure usa --prova", s.riga, s.n))
             continue
+        if t.origine_tempi == "parole-clip" and (presa := clipmod.tempi_presa(clipmod.trova(r.slug, s.n))) is not None:
+            diag.append(avviso(f"tempi della presa ignorati: {len(presa)} frasi nel sidecar, {len(s.voce)} nella sceneggiatura: "
+                               "registra di nuovo la scena", s.riga, s.n))
         usa_prova = usa_prova or t.origine in ("voce-sintetica", "stima")
         try:
             cls = classe_scena(mod, s.n)
@@ -270,6 +278,11 @@ def _chiudi(r: Reel, diag, out: Path, elementi, clip_info, reel_info, tempi, pro
         "tempi_s": tempi, "ordine_upload": ["reel-9x16.mp4"] if reel_info else [],
     }
     (out / "report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    if prova and reel_info and not any(d.livello == "errore" for d in diag):
+        # copia stabile per `reel registra`: il montaggio con le clip vere sovrascrive report.json e reel-9x16.mp4
+        shutil.copyfile(out / reel_info["file"], out / "reel-prova.mp4")
+        (out / "report-prova.json").write_text(json.dumps({**report, "reel": {**reel_info, "file": "reel-prova.mp4"}},
+                                                          ensure_ascii=False, indent=2), encoding="utf-8")
     for d in diag:
         if d.livello == "errore":
             print(d, file=sys.stderr)

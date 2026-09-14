@@ -40,7 +40,7 @@ def ffprobe(path: Path) -> dict:
     _, probe = trova_ffmpeg()
     try:
         out = subprocess.run([probe, "-v", "error", "-show_entries",
-                              "stream=index,codec_type,codec_name,width,height,pix_fmt,sample_rate,channels:stream_side_data=rotation:format=duration",
+                              "stream=index,codec_type,codec_name,width,height,pix_fmt,sample_rate,channels,start_time,nb_frames:stream_side_data=rotation:format=duration",
                               "-of", "json", str(path)], capture_output=True, text=True, check=True).stdout
     except (subprocess.CalledProcessError, FileNotFoundError) as e:
         return {"errore": str(e)}
@@ -58,7 +58,10 @@ def ffprobe(path: Path) -> dict:
             "rotazione": rot, "audio": audio.get("codec_name") if audio else None,
             "audio_hz": int(audio["sample_rate"]) if audio and audio.get("sample_rate") else None,
             "audio_canali": int(audio["channels"]) if audio and audio.get("channels") else None,
-            "durata_s": round(float(j.get("format", {}).get("duration", 0) or 0), 2)}
+            "durata_s": round(float(j.get("format", {}).get("duration", 0) or 0), 2),
+            # il muxer mov può far partire il video dopo lo 0 se il primo pacchetto audio lo precede: serve a `registra`
+            "inizio_video_s": float(video.get("start_time") or 0),
+            "fotogrammi": int(video["nb_frames"]) if str(video.get("nb_frames", "")).isdigit() else None}
 
 
 def _font(size: int):

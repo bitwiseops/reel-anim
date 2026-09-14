@@ -31,6 +31,7 @@ Se l'idea è già `sceneggiata`, non rifare nulla: indica la sceneggiatura colle
 Report di FERMATA 3 (anteprima): percorso di `reel-9x16.mp4` e di `contact-sheet.png`, durata del reel e durate per
 scena (da `report.json`), avvisi residui, ⚠️ aperte della revisione, rapporto dell'animatore (difetti della
 libreria, cose che non ci stavano). Prossimo passo per il presentatore: guardare l'anteprima e annotare leggibilità,
-tempi e beat; poi la registrazione delle clip (`uv run reel gobbo <file>`).
+tempi e beat; poi la registrazione in presa unica sull'anteprima (`uv run reel registra <file>`) e il montaggio con
+le clip vere (`uv run reel monta <file> --anteprima`).
 
 Se l'argomento non rientra in nessun caso (file inesistente, stato imprevisto), dillo.

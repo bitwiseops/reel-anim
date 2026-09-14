@@ -8,6 +8,7 @@ dependencies = [
     "pillow>=11",
     "pyyaml>=6",
     "requests>=2.32",
+    "sounddevice>=0.5",
 ]
 
 [project.scripts]
@@ -28,3 +29,4 @@ packages = ["tools"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 markers = ["slow: test lenti con Manim e ffmpeg"]
+filterwarnings = ["ignore::DeprecationWarning:sounddevice"]   # rumore interno di sounddevice con numpy 2

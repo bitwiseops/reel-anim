@@ -68,10 +68,9 @@ def cmd_gobbo(args) -> int:
     return 0
 
 
-def cmd_clip(args) -> int:
+def _tabella_clip(r: Reel, poi: str = "") -> int:
     from . import clip
     from .stima import durata_stimata_s
-    r, _ = _carica(Path(args.file))
     st = clip.stato(r.slug, [s.n for s in r.scene])
     mancanti = 0
     for s, c in zip(r.scene, st):
@@ -80,12 +79,77 @@ def cmd_clip(args) -> int:
             d = c.get("durata_s") or 0
             delta = (d - target) / target * 100 if target else 0
             nota = "  ← durata molto diversa dalla stima" if abs(delta) > 30 else ""
-            print(f"scena {s.n}: ✔ {c['file']}  {d:.1f}s (stima {target:.0f}s, {delta:+.0f} %){nota}")
+            beat = " · beat dalla presa" if c.get("tempi") == "presa" else " · beat stimati"
+            print(f"scena {s.n}: ✔ {c['file']}  {d:.1f}s (stima {target:.0f}s, {delta:+.0f} %){beat}{nota}")
         else:
             mancanti += 1
             print(f"scena {s.n}: ✘ manca {c['atteso']}  (target ~{target:.0f}s)")
-    print(f"-> {len(st) - mancanti}/{len(st)} clip presenti in contenuti/media/{r.slug}/")
+    print(f"-> {len(st) - mancanti}/{len(st)} clip presenti in contenuti/media/{r.slug}/{poi if not mancanti else ''}")
     return 1 if mancanti else 0
+
+
+def cmd_clip(args) -> int:
+    r, _ = _carica(Path(args.file))
+    return _tabella_clip(r)
+
+
+def cmd_registra(args) -> int:
+    from ..anim.config import carica
+    from . import clip
+    from .ffmpeg import FfmpegMancante, trova_ffmpeg
+    from .registra import (ReportNonPronto, carica_timeline, elenca_dispositivi, indice_dispositivo, opzioni,
+                           presa_dal_registro, spezza)
+    try:
+        trova_ffmpeg()
+    except FfmpegMancante as e:
+        print(f"-> {e}", file=sys.stderr)
+        return 1
+    if args.dispositivi:
+        video, audio = elenca_dispositivi()
+        print("video:\n" + "\n".join(f"  [{i}] {n}" for i, n in video) + "\naudio:\n" + "\n".join(f"  [{i}] {n}" for i, n in audio))
+        print("-> scegli con --video N --audio N, o in config.local.toml [registrazione] video/audio (indice o parte del nome); "
+              "senza audio si usa il microfono predefinito di sistema")
+        return 0
+    if not args.file:
+        print("-> serve la sceneggiatura: uv run reel registra <file>", file=sys.stderr)
+        return 2
+    r, diag = _carica(Path(args.file))
+    _stampa(diag)
+    if ha_errori(diag):
+        print("-> errori di validazione: niente registrazione", file=sys.stderr)
+        return 1
+    cfg = carica()
+    opz = opzioni(cfg, args.video, args.audio)
+    liste = dict(zip(("video", "audio"), elenca_dispositivi()))
+    for k in ("video", "audio"):
+        if opz[k] is None:
+            continue
+        try:
+            opz[k] = indice_dispositivo(opz[k], liste[k])
+        except ValueError as e:
+            if k == "video" or str(opz[k]).isdigit():
+                print(f"-> {e}", file=sys.stderr)
+                return 1
+            print(f"-> {e}: uso il microfono predefinito", file=sys.stderr)   # il mic scelto l'altra volta non è collegato
+            opz[k] = None
+    out = Path(args.out) if args.out else RADICE / "contenuti" / "render" / r.slug   # come monta.out_dir, senza importare Manim
+    try:
+        tl, avvisi = carica_timeline(r, out, cfg)
+    except ReportNonPronto as e:
+        print(f"-> {e}: prima esegui `uv run reel monta {args.file} --prova --anteprima`", file=sys.stderr)
+        return 1
+    _stampa(avvisi)
+    cartella = clip.cartella(r.slug)
+    cartella.mkdir(parents=True, exist_ok=True)
+    poi = f"; poi: uv run reel monta {args.file} --anteprima"
+    if args.spezza:
+        p = presa_dal_registro(cartella, args.spezza)
+        fatte = spezza(tl, p, cartella, opz, lambda i, n, s: print(f"taglio la scena {s.n} ({i + 1}/{n})…"))
+        print(f"{p.nome}: {len(fatte)} scene tagliate")
+        return _tabella_clip(r, poi)
+    from .registra_app import AppRegistra
+    AppRegistra(r, tl, opz, cfg, cartella, out, [str(d) for d in avvisi], da_scena=args.da_scena, dispositivi=liste).esegui()
+    return _tabella_clip(r, poi)
 
 
 def cmd_voce(args) -> int:
@@ -223,6 +287,13 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--scena", type=int, default=None); p.add_argument("--qualita", choices="lmh", default=None)
     p.add_argument("--anteprima", action="store_true", help="qualità ridotta, più veloce (solo per guardare)")
     p.set_defaults(fn=cmd_monta)
+    p = sub.add_parser("registra", help="registra il presentatore in presa unica sull'anteprima --prova e taglia le clip per scena")
+    p.add_argument("file", nargs="?"); p.add_argument("--out", help="cartella dell'anteprima (default contenuti/render/<slug>/)")
+    p.add_argument("--video", help="dispositivo video avfoundation: indice o parte del nome"); p.add_argument("--audio", help="dispositivo audio")
+    p.add_argument("--dispositivi", action="store_true", help="elenca fotocamere e microfoni ed esci")
+    p.add_argument("--da-scena", type=int, default=None, help="scena di partenza (default: la prima senza clip)")
+    p.add_argument("--spezza", metavar="PRESA", help="ritaglia le scene da una presa già registrata (es. presa-02), senza aprire la finestra")
+    p.set_defaults(fn=cmd_registra)
     p = sub.add_parser("setup", help="controlla ffmpeg/manim/font, genera avatar segnaposto e maschere"); p.add_argument("--forza", action="store_true")
     p.set_defaults(fn=cmd_setup)
 

@@ -18,6 +18,7 @@ from .ffmpeg import ffprobe, trova_ffmpeg
 from .model import testo_piano
 
 FREQUENZA = 48000
+CODA_VOCE_S = 0.5   # silenzio che il montaggio lascia dopo l'ultima frase di una scena con voce sintetica
 
 
 class VoceNonDisponibile(RuntimeError):
