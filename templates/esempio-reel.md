@@ -80,8 +80,8 @@ RIQUADRO: alto-destra
 ## Scena 7 [chiusura]
 MESSAGGIO: Non chiederle di essere originale: ==cambia quello che viene prima==.
 CTA: Salva per il prossimo biglietto
-VOCE: Quindi non chiederle di essere originale.
-VOCE: Dalle un dettaglio vero, un vincolo, qualcosa da scartare.
+VOCE: Non chiederle di essere originale.
+VOCE: Dalle un dettaglio vero, un vincolo, uno scarto.
 VOCE: Cambia quello che viene prima.
 ANIMAZIONE: Il messaggio entra in alto.
 ANIMAZIONE: Sotto, tre voci una alla volta: «un dettaglio vero», «un vincolo», «scarta le prime idee».

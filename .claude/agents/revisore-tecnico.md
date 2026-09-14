@@ -38,6 +38,15 @@ Lezioni dalle sessioni:
     «nessun collegamento».
   - Un output scritto da noi pesa di più quanto più è in vista (letto a voce, a tutto schermo). O esce davvero da un
     modello, o la voce dice «può scrivere» e la caption lo dichiara esempio.
+- 2026-09-14, i biglietti generati (stesso reel): la condizione di T3 era giusta. Su 16 uscite vere (Opus 5 e Sonnet 5)
+  nessuna conteneva i nostri due biglietti, e una ha mostrato proprio il caso temuto: il luogo comune con il
+  dettaglio attaccato («oggi si chiude un capitolo epico: quello della tua… guerra con la fotocopiatrice»). Quando il
+  reel attribuisce un testo a un modello, chiedi le uscite vere (file in `contenuti/media/<slug>/`) e controlla che
+  ogni parola venga da **una sola** uscita, con i tagli dichiarati; conta anche quante uscite ripetono lo stesso
+  attacco, perché è la prova del «probabile».
+- 2026-09-14, sera: le revisioni del presentatore hanno l'ultima parola, anche sui testi del modello. Un suo ritocco
+  («il caffè potrai berlo sul divano» invece di «berlo caldo») non è un ❌: controlli solo che sia dichiarato in caption
+  («tagliate e ritoccate da noi») e che non cambi un claim.
 
 Scrivi le tue note SOLO nella sezione `## Revisione tecnica` del file (con Edit; sostituisci il commento segnaposto).
 Non riscrivere mai VOCE, ANIMAZIONE o altre righe delle scene: annota e proponi.

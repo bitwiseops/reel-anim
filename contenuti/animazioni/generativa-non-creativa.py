@@ -5,13 +5,16 @@ Il filo visivo: tre oggetti per tutto il reel, sempre con lo stesso aspetto.
   titolo) in alto nelle scene 3-4 e 6, di nuovo intera e più lunga nella 5, con la sola riga del dettaglio alla fine
   della 6; nella 7 entra, stretta, nel buco della linea fra l'IA e Marco.
 - Il biglietto: cartellini su righe fisse; dentro la carta «biglietto» (bordo terziario) quando è intero (scene 2,
-  4 dal beat 1, 6), cartellini senza carta mentre si guarda come si scrive (scene 3-4). Il biglietto nuovo della 6
-  cresce con la voce (2 righe, poi 4) e torna per un attimo nella 7 con «Lei no.» acceso.
-- La colonna delle candidate: `Classifica` con la nota «esempio: numeri inventati» (scene 3 e 5; nella 6 «la»
+  4 dal beat 1, 6), cartellini senza carta mentre si guarda come si scrive (scene 3-4). I due biglietti sono uscite
+  vere di Claude Opus 5 (tagli nelle note di produzione). Il biglietto nuovo della 6 cresce con la voce (2 righe, poi
+  5); dal 2026-09-14 non torna più nella 7.
+- La colonna delle candidate: `Classifica` con la nota «esempio: numeri inventati» (scene 3 e 5; nella 6 «sono»
   parte dalla sua testa).
 
-Cambi grandi: la battuta a tutto schermo (`punch`) nella 6 («LEI NO.») e nella 7 («TU SÌ»); lo zoom di camera
-nella 2 (sul cursore, il momento della prova), dentro un solo beat.
+Cambi grandi: la battuta a tutto schermo (`punch`) nella 6 («PER DISPETTO.») e nella 7 («TU SÌ»), dopo
+`oltre_inizio` (difetto di `punch` nella libreria). Lo zoom di camera nella 2 (sul cursore) è stato tolto dopo
+l'anteprima del 2026-09-13: a 2× tagliava le parole della richiesta ai bordi. Chiusura calma (2026-09-14): un solo
+passaggio per frase, con i movimenti sfalsati dentro la stessa play (`dopo`, `finestre`).
 
 Ogni scena parte dall'ultimo fotogramma della precedente, ricostruito con le stesse funzioni di impaginazione
 (`disposizione_NN`, `stato_finale_NN`): la dissolvenza fra le scene non si vede e gli oggetti non saltano.
@@ -26,8 +29,9 @@ from __future__ import annotations
 import re
 
 import numpy as np
-from manim import (BOLD, DOWN, DR, LEFT, RIGHT, UL, UP, AnimationGroup, Create, CubicBezier, DashedLine, FadeIn, FadeOut,
-                   LaggedStart, Line, Rectangle, RoundedRectangle, Transform, VGroup)
+from manim import (BOLD, DOWN, DR, LEFT, RIGHT, UL, UP, Create, CubicBezier, DashedLine, FadeIn, FadeOut, LaggedStart,
+                   Line, ManimColor, MoveToTarget, Rectangle, RoundedRectangle, Transform, UpdateFromAlphaFunc, VGroup,
+                   interpolate_color, linear, smooth, squish_rate_func)
 
 from tools.anim.base import ScenaReel, aree
 from tools.anim.componenti import (Barrato, Carta, Classifica, Etichetta, Evidenzia, Freccia, Icona, Messaggio, Titolo,
@@ -40,24 +44,35 @@ CFG = carica()
 P = CFG.palette
 
 # --- testi che ritornano fra le scene (dalla sceneggiatura: scene 1, 2, 5 e 6) ---------------------------------
-RICHIESTA = "Un biglietto originale per la pensione di Marco. Lo firma tutto l'ufficio."
+RICHIESTA = "Un biglietto per la pensione di Marco. Lo firma tutto l'ufficio."
 SII = "Sii originale."
 DETTAGLIO = "Marco ha passato una vita a litigare con la fotocopiatrice."
-# righe fisse: «e se ne apre uno nuovo.» ha una riga sua (il riquadro «probabile» la incornicia intera)
-BIGLIETTO = [["Caro", "Marco,", "oggi", "si", "chiude"], ["un", "capitolo"],
-             ["e", "se", "ne", "apre", "uno", "nuovo."], ["Goditi", "il", "meritato", "riposo!"]]
-BIGLIETTO_NUOVO = [["Caro", "Marco,", "la", "fotocopiatrice"], ["ha", "chiesto", "di", "te."],
-                   ["Le", "ho", "detto", "che", "da", "lunedì"], ["sei", "libero.", "Lei", "no."]]
-LEI_NO = (16, 17)   # indici di «Lei» e «no.» fra i cartellini del biglietto nuovo
+# il biglietto banale (uscita vera di Claude Opus 5, tagli nelle note di produzione, «berlo sul divano» è un ritocco del
+# presentatore), su righe fisse: la voce si ferma dopo «sveglia», a metà della seconda riga, e «la decidi tu,» arriva lì
+# (il riquadro «probabile» incornicia quei tre)
+BIGLIETTO = [["Caro", "Marco,", "da", "domani"], ["la", "sveglia", "la", "decidi", "tu,"],
+             ["e", "il", "caffè", "potrai"], ["berlo", "sul", "divano."]]
+N_SVEGLIA = 6          # cartellini fino a «sveglia» compreso
+DOPO_SVEGLIA = (1, 2)  # riga e posto del secondo «la» (la parola scelta nelle scene 3-4)
+# il biglietto nuovo (uscita vera di Claude Opus 5, `B-opus-1`: attacco e P.S., tagli nelle note), 5 righe fisse: beat
+# 0 le prime due, beat 1 fino a «perfezione.», beat 2 «Per dispetto.» (acceso, poi di nuovo normale: revisione V12)
+BIGLIETTO_NUOVO = [["Caro", "Marco,", "sono", "io."], ["Quella", "in", "fondo", "al", "corridoio."],
+                   ["Da", "quando", "esci", "da", "quella"], ["porta", "prometto", "di", "funzionare"],
+                   ["alla", "perfezione.", "Per", "dispetto."]]
+SONO, IO = 2, 3            # indici fra i cartellini del biglietto nuovo
+PER_DISPETTO = (20, 21)
+# il bugiardino della 5: estratto vero di Claude Opus 5 (`C-opus-1`, richiesta con «Sii originale.»; tagli nelle note)
+BUGIARDINO = ("PENSIONE®", "Principio attivo: tempo libero al 100%.",
+              "Eccipienti: sveglia spenta, caffè bevuto seduto.")
+LUCI_5 = ("sveglia", "caffè")   # le parole del biglietto della scena 2 che restano dentro la forma nuova
 # TESTO/TITOLO delle scene precedenti, per ricostruirne l'ultimo fotogramma (nella scena stessa si usa self.scena)
 TITOLO_1, SOTTO_1 = "Generativa non vuol dire creativa", "Vuol dire ==probabile=="
 TESTO_2, TESTO_3, TESTO_4, TESTO_6 = "probabile", "una tra le prime", ["scritto da lei", "fluente", "originale"], "l'hai messa tu"
 
 # --- candidate (esempi dichiarati dalla Classifica) ------------------------------------------------------------
-CANDIDATE_3 = [("e", 0.46), ("ma", 0.22), ("della", 0.12)]          # dopo «capitolo»
-CANDIDATE_5 = [("oggi", 0.48), ("ti", 0.22), ("la", 0.08)]          # dopo «Caro Marco,»
-DOPO_SII = [0.45, 0.25, 0.10]                                       # «Sii originale.»: si muovono appena
-DOPO_DETTAGLIO = [0.12, 0.09, 0.58]                                 # la fotocopiatrice: «la» in testa
+CANDIDATE_3 = [("la", 0.46), ("non", 0.22), ("è", 0.12)]           # dopo «sveglia» (parole vere, numeri no)
+CANDIDATE_5 = [("da", 0.48), ("oggi", 0.22), ("sono", 0.08)]       # dopo «Caro Marco,» (parole vere, numeri no)
+DOPO_DETTAGLIO = [0.12, 0.09, 0.58]                                 # la fotocopiatrice: «sono» in testa
 
 # --- misure (px) -------------------------------------------------------------------------------------------------
 X0 = 60            # bordo sinistro dell'area contenuto
@@ -88,13 +103,6 @@ def dentro(*mobs, **kw) -> list:
     return [FadeIn(m, **kw) for m in mobs]
 
 
-def cresce(box, nuovo_box, riga):
-    """La carta si allunga e la riga nuova entra quando c'è posto (come Carta.aggiungi_riga, ma a pezzi).
-    group=box: senza, Manim accoda alla scena un Group (box, riga) e il riquadro pieno, ora «in movimento», viene
-    disegnato sopra il titolo fermo (durante questa play e in ogni play dopo che anima qualcosa che sta prima)."""
-    return LaggedStart(Transform(box, nuovo_box), FadeIn(riga, shift=UP * 0.15), lag_ratio=0.35, group=box)
-
-
 def citazione(s: str) -> str:
     """Il primo testo fra «» di una riga ANIMAZIONE."""
     m = re.search(r"«(.+?)»", s)
@@ -113,29 +121,23 @@ def grande(scena: dict) -> str:
 
 
 def acceso(t: Token) -> Token:
-    """Un cartellino acceso: bordo e parola in accento (è «Lei no.» nelle scene 6 e 7)."""
+    """Un cartellino acceso: bordo e parola in accento («Per dispetto.» al ritorno dal punch, «io.» alla fine della 6)."""
     t.box.set_stroke(P.accento, width=tratto(5))
     t.testo.set_color(P.accento)
     return t
 
 
 class Scena(ScenaReel):
-    """ScenaReel con due aiuti locali per i cambi grandi (vedi il rapporto: sono candidati per la libreria)."""
+    """ScenaReel con un aiuto locale per i cambi grandi (`punch` accorcia da solo la tenuta, ma vedi oltre_inizio)."""
 
-    def punch_fino(self, s: str, k: int, tenuta_max: float = 0.9) -> None:
-        """self.punch(s) con la tenuta tagliata per finire all'inizio del beat k: con la voce di prova «Lei no.» e
-        «Tu sì.» durano 0,7 s, meno dell'entrata + tenuta predefinite (1,05 s), e il beat dopo partirebbe tardi."""
-        entrata = self.arrotonda(0.15)
-        fine = self.inizi_frasi[k] - self.ANTICIPO_S
-        tenuta = self.arrotonda(max(0.3, min(tenuta_max, fine - self.t - entrata)))
-        self.punch(s, tenuta_s=tenuta, entrata_s=entrata)
-
-    def zoom_area(self, mob, fattore: float):
-        """Come self.zoom_su, ma porta mob al centro dell'area contenuto e non al centro della tela: con il riquadro in
-        basso l'area è più alta del centro della tela (708 contro 960 px) e con zoom_su l'oggetto ingrandito scende
-        verso il riquadro."""
-        centro = mob.get_center() - self.area.contenuto.centro / fattore
-        return self.camera.frame.animate.set(width=self.cfg.frame_width / fattore).move_to(centro)
+    def oltre_inizio(self, i: int) -> None:
+        """Da chiamare dopo beat(i) e prima di un punch (e prima di aggiungere ciò che deve comparire al ritorno).
+        Difetto della libreria (da segnalare, tools/ non si tocca): beat(i) si ferma fino a un fotogramma prima del suo
+        obiettivo (attese arrotondate per difetto), e allora punch prende l'inizio del beat in corso per «il beat dopo»
+        e porta la tenuta al minimo di 0,3 s (nella 7 «TU SÌ» durava 0,33 s su 0,65, poi 0,3 s di scena ferma). Un
+        fotogramma di attesa lo evita."""
+        if self.t < self.inizi_frasi[i] - self.ANTICIPO_S + 1e-6:
+            self.wait(self._fotogramma)
 
 
 def riquadro(larghezza_px: float, altezza: float, colore: str) -> RoundedRectangle:
@@ -264,21 +266,31 @@ def disposizione_02(area) -> tuple[Scheda, Biglietto]:
 
 
 def extra_02(b: Biglietto, s: str):
-    """Il riquadro accento sulla riga «e se ne apre uno nuovo.» e l'etichetta appesa al suo angolo in alto a destra."""
-    cornice = Evidenzia(VGroup(*b.righe[2]), buff=px(12))
-    tag = Etichetta(s).next_to(cornice, UP, buff=0).align_to(cornice, RIGHT)
+    """Il riquadro accento su «la decidi tu,» (metà della seconda riga) e l'etichetta appesa sotto il suo angolo destro.
+    Sopra c'è la prima riga del biglietto: l'etichetta sta nella fascia della terza riga, a destra di «potrai»."""
+    r, k = DOPO_SVEGLIA
+    cornice = Evidenzia(VGroup(*b.righe[r][k:]), buff=px(12))
+    tag = Etichetta(s).next_to(cornice, DOWN, buff=0)
+    sinistra = max(b.righe[r + 1][-1].get_right()[0] + px(GAP), cornice.get_right()[0] - tag.width)
+    tag.set_x(sinistra + tag.width / 2)
     return cornice, tag
 
 
 def disposizione_03():
-    """Scene 3-4: pillola in alto, cartellini senza carta, intestazione e candidate sotto."""
+    """Scene 3-4: pillola in alto, cartellini senza carta, intestazione e candidate sotto la riga di «sveglia»."""
     pil = pillola()
     bs = Biglietto(BIGLIETTO).allinea_righe(ALTO + pil.altezza_px + 40)
-    testa = testo("dopo «capitolo»", "etichetta", colore=P.attenuato)
+    testa = testo("dopo «sveglia»", "etichetta", colore=P.attenuato)
     cl = Classifica(CANDIDATE_3, larghezza_px=460)
-    fondo_c = y_px(bs.righe[2][0].get_bottom()[1])
+    fondo_c = y_px(bs.righe[DOPO_SVEGLIA[0]][0].get_bottom()[1])
     VGroup(testa, cl).arrange(DOWN, aligned_edge=LEFT, buff=px(28)).move_to(punto(X0, fondo_c + 50), aligned_edge=UL)
     return pil, bs, testa, cl
+
+
+def posto_scelta(bs: Biglietto) -> Token:
+    """Il posto del secondo «la» nel biglietto: dove vola la candidata scelta (scena 3) e da dove riparte (scena 4)."""
+    r, k = DOPO_SVEGLIA
+    return bs.righe[r][k]
 
 
 def graffa_03(cl: Classifica, s: str) -> Graffa:
@@ -321,8 +333,7 @@ def candidate_05(finale: bool = False):
     return cl, testa
 
 
-ZOOM_2 = 2.0   # scena 2: la camera su «capitolo» e il cursore (a 1,6 la richiesta restava a metà in alto)
-Y_BIGLIETTO_6 = 640                                # cima del biglietto nuovo alla fine della 6 (e nella 7)
+Y_BIGLIETTO_6 = 575    # cima del biglietto nuovo alla fine della 6 (e all'inizio della 7): 5 righe, 612 px, fondo a 1187
 
 
 def y_scrive_06() -> float:
@@ -331,28 +342,31 @@ def y_scrive_06() -> float:
     return ALTO + pillola().altezza_px + 40
 
 
-def biglietto_06(y: float, righe: int = 4) -> Biglietto:
-    """Il biglietto nuovo con le prime `righe` righe; con tutte e 4, «Lei no.» acceso."""
-    b = Biglietto(BIGLIETTO_NUOVO[:righe], y_px=y)
-    if righe == 4:
-        for i in LEI_NO:
-            acceso(b.token()[i])
-    return b
+def biglietto_06(y: float, righe: int = 5) -> Biglietto:
+    """Il biglietto nuovo con le prime `righe` righe, cartellini normali (gli accenti li decide la scena)."""
+    return Biglietto(BIGLIETTO_NUOVO[:righe], y_px=y)
 
 
-def extra_06(r: Scheda, bersaglio: Token, s: str):
-    """Graffa accento sotto la riga del dettaglio (appena fuori dalla carta) e freccia verso «fotocopiatrice»."""
+def extra_06(r: Scheda, bersaglio, s: str):
+    """Graffa accento sotto la riga del dettaglio e freccia dalla parola «fotocopiatrice» a «sono io.» (nota del
+    presentatore: la parola del dettaglio punta la risposta). La graffa sta nel margine basso della carta e l'etichetta
+    appena sotto il bordo: tutta fuori dalla carta finirebbe a 591 px, e il biglietto di 5 righe (612 px) deve partire
+    da 575 per stare nell'area. La freccia parte da sotto la graffa, in corrispondenza della parola."""
     g = Graffa(r.righe[0], s, direzione=DOWN, colore=P.accento)
-    g.shift(DOWN * (g.graffa.get_top()[1] - r.box.get_bottom()[1] + px(10)))
-    f = Freccia(g.etichetta.get_right() + RIGHT * px(16), bersaglio.get_top() + UP * px(4), colore=P.accento)
+    g.shift(DOWN * (g.graffa.get_top()[1] - r.righe[0].get_bottom()[1] + px(4)))
+    parola = r.righe[0].parola("fotocopiatrice")
+    inizio = np.array([parola.get_center()[0], g.graffa.get_bottom()[1] - px(6), 0])
+    f = Freccia(inizio, bersaglio.get_top() + UP * px(4), colore=P.accento)
     return g, f
 
 
 def stato_finale_06(s: str):
-    """Ultimo fotogramma della 6: la richiesta con la riga del dettaglio, graffa e freccia, il biglietto sotto."""
+    """Ultimo fotogramma della 6: la richiesta con la riga del dettaglio, graffa e freccia, il biglietto sotto con «sono
+    io.» acceso e «Per dispetto.» normale (revisione V12: l'accento è sulla freccia e su «sono io.», non sulla battuta)."""
     r6 = Scheda([DETTAGLIO])
     b6 = biglietto_06(Y_BIGLIETTO_6)
-    g, f = extra_06(r6, b6.token()[3], s)
+    sono_io = VGroup(acceso(b6.token()[SONO]), acceso(b6.token()[IO]))
+    g, f = extra_06(r6, sono_io, s)
     return r6, b6, g, f
 
 
@@ -409,8 +423,8 @@ class Scena01(Scena):
 
 
 class Scena02(Scena):
-    """La richiesta di un biglietto originale; il biglietto si scrive fino a «capitolo», pausa col cursore (la camera
-    si avvicina: il momento della prova), poi il resto mentre la camera torna (probabile)."""
+    """La richiesta di un biglietto originale; il biglietto si scrive fino a «sveglia», pausa col cursore (il momento
+    della prova), poi «la decidi tu,» dove lampeggiava il cursore, il resto, e il riquadro «probabile»."""
 
     def costruisci(self):
         titolo, sotto = disposizione_01(TITOLO_1, SOTTO_1)   # ultimo fotogramma dell'hook
@@ -419,43 +433,43 @@ class Scena02(Scena):
         self.add(titolo, barra, sotto)
         r, b = disposizione_02(self.area.contenuto)
         tok = b.token()
-        primi, resto = tok[:7], tok[7:]                   # fino a «capitolo» / «e se ne apre…»
+        n = N_SVEGLIA
+        primi, attesa, resto = tok[:n], tok[n:n + 3], tok[n + 3:]   # fino a «sveglia» / «la decidi tu,» / «e il caffè…»
         self.play(*fuori(titolo, barra, sotto, shift=UP * 0.3), *dentro(*r.pezzi(), shift=UP * 0.2), run_time=0.5)
 
         self.beat(1)
         t1, d1 = self.t, self.durata_beat(1)
         self.play(*dentro(b.box, b.titolo, shift=UP * 0.2), run_time=0.4)
-        self.attendi_fino(t1 + 0.25 * d1)                 # «Comincia così:», poi un cartellino per parola, lento
+        self.attendi_fino(t1 + 0.27 * d1)                 # «Comincia così:», poi un cartellino per parola, lento
         self.play(LaggedStart(*[FadeIn(t, shift=UP * 0.15) for t in primi], lag_ratio=1.0),
-                  run_time=self.arrotonda(0.55 * d1))
-        cursore = cursore_dopo(primi[-1])
+                  run_time=self.arrotonda(0.6 * d1))
+        cursore = cursore_dopo(primi[-1])                 # a metà della seconda riga, subito dopo «sveglia»
         cursore.add_updater(lampeggio())
         self.add(cursore)
 
         self.beat(2)
         t2, d2 = self.t, self.durata_beat(2)
-        # il cambio grande: la camera si avvicina a «capitolo» e al cursore che lampeggia ancora (chi guarda la
-        # finisce da solo); poi torna indietro mentre arriva il resto. Tutto dentro il beat: i controlli di fine
-        # beat vedono la tela intera (con lo zoom la richiesta esce dallo schermo e sarebbe «testo-fuori»).
-        self.play(self.zoom_area(VGroup(primi[-1], cursore), ZOOM_2), run_time=0.45)
+        # il cursore lampeggia ancora per un attimo: chi guarda la finisce da solo; poi arriva il resto, lento. Niente
+        # zoom (anteprima del 2026-09-13): a 2× la riga della richiesta restava tagliata ai bordi.
         self.attendi_fino(t2 + 0.22 * d2)
         cursore.clear_updaters()
         self.remove(cursore)
-        self.play(self.torna(), LaggedStart(*[FadeIn(t, shift=UP * 0.15) for t in resto], lag_ratio=0.6),
-                  run_time=self.arrotonda(0.4 * d2))
+        self.play(LaggedStart(*[FadeIn(t, shift=UP * 0.15) for t in attesa], lag_ratio=0.6), run_time=self.arrotonda(0.5))
+        self.play(LaggedStart(*[FadeIn(t, shift=UP * 0.15) for t in resto], lag_ratio=0.5), run_time=self.arrotonda(0.7))
         cornice, tag = extra_02(b, self.scena["testo"][0])
         self.play(Create(cornice), FadeIn(tag, scale=0.85), run_time=0.45)
 
 
 class Scena03(Scena):
-    """Una parola per volta: la frase si ricompone, le candidate dopo «capitolo», «e» (una tra le prime) va in coda."""
+    """Una parola per volta: la frase si ricompone fino a «sveglia», le candidate la / non / è, «la» (una tra le prime)
+    va in coda."""
 
     def costruisci(self):
         r, b = disposizione_02(self.area.contenuto)       # ultimo fotogramma della scena 2
         cornice, tag = extra_02(b, TESTO_2)
         self.add(*r.pezzi(), b.box, b.titolo, *b.token(), cornice, tag)
         pil, bs, testa, cl = disposizione_03()
-        primi = bs.token()[:7]
+        primi = bs.token()[:N_SVEGLIA]
         d0 = self.durata_beat(0)
         self.play(Transform(r.box, pil.box), Transform(r.titolo, pil.titolo), FadeOut(r.righe[0]),
                   *fuori(b.box, b.titolo, *b.token(), cornice, tag, shift=DOWN * 0.2), run_time=0.4)
@@ -468,31 +482,32 @@ class Scena03(Scena):
         self.beat(2)
         g = graffa_03(cl, self.scena["testo"][0])
         self.play(g.entra(), cl.scegli(0), run_time=0.4)
-        e = cl.token(0, colore=P.accento)
-        self.play(e.animate.move_to(bs.righe[2][0]), run_time=0.5)
+        la = cl.token(0, colore=P.accento)
+        self.play(la.animate.move_to(posto_scelta(bs)), run_time=0.5)
 
 
 class Scena04(Scena):
-    """Il bivio dopo «capitolo»: la frase corre sul ramo spesso di «e»; torna un biglietto intero, scritto da lei (non
-    pescato da un archivio); fluente sì, originale no."""
+    """Il bivio dopo «sveglia»: la frase corre sul ramo spesso di «la» e scrive «decidi tu,»; torna un biglietto intero,
+    scritto da lei (non pescato da un archivio); fluente sì, originale no."""
 
     def costruisci(self):
         pil, bs, testa, cl = disposizione_03()            # ultimo fotogramma della scena 3
         scelta(cl, 0)
         g = graffa_03(cl, TESTO_3)
-        e = Token("e", colore=P.accento).move_to(bs.righe[2][0])
-        primi = bs.token()[:7]
-        self.add(*pil.pezzi(), *primi, testa, cl, g, e)
+        la = Token("la", colore=P.accento).move_to(posto_scelta(bs))
+        primi = bs.token()[:N_SVEGLIA]
+        self.add(*pil.pezzi(), *primi, testa, cl, g, la)
 
-        # beat 0: tre rami da «capitolo», con la sola prima parola all'attacco
-        cap = bs.righe[1][1]
-        y_figli = y_px(cap.get_bottom()[1]) + 250
-        fila = VGroup(*[Token(p) for p in BIGLIETTO[2]]).arrange(RIGHT, buff=px(GAP))
-        fila.move_to(punto(X0 + PAD, y_figli), aligned_edge=UL)   # «e se ne apre uno nuovo.» sul ramo di «e»
+        # beat 0: tre rami da «sveglia», con la sola prima parola all'attacco (le candidate della scena 3)
+        r, k = DOPO_SVEGLIA
+        sv = bs.righe[r][k - 1]
+        y_figli = y_px(sv.get_bottom()[1]) + 250
+        fila = VGroup(*[Token(p) for p in BIGLIETTO[r][k:]]).arrange(RIGHT, buff=px(GAP))
+        fila.move_to(punto(X0 + PAD, y_figli), aligned_edge=UL)   # «la decidi tu,» sul ramo di «la»
         cont = list(fila[1:])
-        ma = Token("ma").move_to([punto(520, 0)[0], fila.get_center()[1], 0])
-        della = Token("della").move_to([punto(800, 0)[0], fila.get_center()[1], 0])
-        origine = cap.get_bottom() + DOWN * px(8)
+        non = Token("non").move_to([punto(560, 0)[0], fila.get_center()[1], 0])
+        e = Token("è").move_to([punto(820, 0)[0], fila.get_center()[1], 0])
+        origine = sv.get_bottom() + DOWN * px(8)
 
         def ramo(figlio, spessore):
             fine = figlio.get_top() + UP * px(8)
@@ -500,25 +515,25 @@ class Scena04(Scena):
             return CubicBezier(origine, origine + DOWN * h * 0.5, fine + UP * h * 0.5, fine,
                                stroke_color=P.attenuato, stroke_width=tratto(spessore))
 
-        rami = [ramo(fila[0], 16), ramo(ma, 6), ramo(della, 3)]
+        rami = [ramo(fila[0], 16), ramo(non, 6), ramo(e, 3)]
         nota = testo("esempio: numeri inventati", "piede", colore=P.attenuato)
         nota.next_to(fila, DOWN, buff=px(40)).align_to(fila, LEFT)
         d0 = self.durata_beat(0)
         self.play(*fuori(testa, cl, g), run_time=0.25)   # prima esce la classifica, poi crescono i rami
-        self.play(e.animate.move_to(fila[0]), *[Create(x) for x in rami], *dentro(ma, della, nota), run_time=0.6)
+        self.play(la.animate.move_to(fila[0]), *[Create(x) for x in rami], *dentro(non, e, nota), run_time=0.6)
         self.attendi_fino(0.26 * d0)
         acceso = rami[0].copy().set_stroke(P.accento)     # la frase prende la strada più battuta
         self.play(Create(acceso), rami[1].animate.set_stroke(opacity=0.3), rami[2].animate.set_stroke(opacity=0.3),
                   run_time=0.35)
-        self.play(*fuori(ma, della, rami[1], rami[2]), run_time=0.2)
+        self.play(*fuori(non, e, rami[1], rami[2]), run_time=0.2)
         self.play(LaggedStart(*[FadeIn(t, shift=RIGHT * 0.15) for t in cont], lag_ratio=0.8),
-                  run_time=self.arrotonda(min(1.0, 0.25 * d0)))
+                  run_time=self.arrotonda(min(0.7, 0.2 * d0)))
 
         # beat 1: i rami spariscono, torna il biglietto intero; il database barrato diventa «scritto da lei»
         self.beat(1)
         t1, d1 = self.t, self.durata_beat(1)
         b4 = carta_04(pil)
-        vecchi = primi + [e] + cont
+        vecchi = primi + [la] + cont
         nuovi = b4.token()
         self.play(*fuori(acceso, rami[0], nota), *[Transform(v, n) for v, n in zip(vecchi, nuovi)],
                   *dentro(b4.box, b4.titolo, *nuovi[len(vecchi):]), run_time=0.5)
@@ -541,95 +556,230 @@ class Scena04(Scena):
         self.play(barra_orig.entra(), run_time=0.3)
 
 
+class Bugiardino:
+    """La carta «biglietto» piccola della 5, a pezzi (bordo terziario, come il biglietto): l'estratto vero di Opus 5 con
+    il titolo «PENSIONE®» grande, che si legge per primo, e due righe. Nessuna etichetta «nuova» né «originale»
+    (revisione X5: due bugiardini su cinque hanno lo stesso titolo e righe identiche)."""
+
+    def __init__(self, y_px: float, larghezza_px: float = 760, x_px: float = X0):
+        nome, *righe = BUGIARDINO
+        self.titolo = testo("biglietto", "etichetta", colore=P.terziario, peso=BOLD)
+        self.nome = testo(nome, "messaggio", peso=BOLD)
+        self.righe = [testo(r, "caption", larghezza_px=larghezza_px - 2 * PAD) for r in righe]
+        corpo = VGroup(self.titolo, self.nome, *self.righe).arrange(DOWN, buff=px(24), aligned_edge=LEFT)
+        self.box = riquadro(larghezza_px, corpo.height + 2 * px(PAD), P.terziario).move_to(punto(x_px, y_px),
+                                                                                           aligned_edge=UL)
+        corpo.move_to(self.box.get_corner(UL) + np.array([px(PAD), -px(PAD), 0]), aligned_edge=UL)
+
+    def pezzi(self) -> list:
+        return [self.box, self.titolo, self.nome, *self.righe]
+
+
 class Scena05(Scena):
-    """La richiesta torna intera: «Sii originale.» sposta appena le barre, il dettaglio vero le riordina («la» in
-    testa)."""
+    """«Sii originale.» cambia la forma (il bugiardino «PENSIONE®», estratto vero di Opus 5), ma dentro la sveglia
+    resta; il dettaglio vero riordina le candidate dopo «Caro Marco,»: «sono» in testa."""
 
     def costruisci(self):
         pil = pillola()                                   # ultimo fotogramma della scena 4
         b4 = carta_04(pil)
         lei, fl, orig, barra_orig = etichette_04(pil, b4, TESTO_4)
-        self.add(*pil.pezzi(), b4.box, b4.titolo, *b4.token(), lei, fl, orig, barra_orig)
-        r1, r2, r3 = carte_05()
-        cl, testa = candidate_05()
+        vecchi = [b4.box, b4.titolo, *b4.token(), lei, fl, orig, barra_orig]
+        self.add(*pil.pezzi(), *vecchi)
+        _, r2, r3 = carte_05()
+        bug = Bugiardino(ALTO + r2.altezza_px + 40)
+        cl, testa = candidate_05()                        # già al posto finale: non si sposta quando la carta cresce
+        su = UP * 0.15
 
-        self.play(*fuori(b4.box, b4.titolo, *b4.token(), lei, fl, orig, barra_orig), run_time=0.3)
-        self.play(cresce(pil.box, r1.box, r1.righe[0]), cl.entra(), FadeIn(testa), run_time=0.6)
-        self.play(cresce(pil.box, r2.box, r2.righe[1]), run_time=0.4)
-        self.play(cl.aggiorna(DOPO_SII, riordina=False), run_time=0.4)
+        # beat 0 («Aggiungere «sii originale» cambia la forma.»): esce la 4 e la richiesta torna intera con «Sii
+        # originale.» (0,9 s); poi, accanto (sotto: l'asse del 9:16), il bugiardino, prima il titolo (0,9 s)
+        self.play(*fuori(*vecchi, shift=DOWN * 0.2, rate_func=dopo(0, 0.4)),
+                  Transform(pil.box, r2.box, rate_func=dopo(0.15, 0.7)),
+                  FadeIn(r2.righe[0], shift=su, rate_func=dopo(0.35, 0.8)),
+                  FadeIn(r2.righe[1], shift=su, rate_func=dopo(0.6, 1.0)), run_time=0.9)
+        self.play(FadeIn(bug.box, shift=UP * 0.2, rate_func=dopo(0, 0.35)),
+                  FadeIn(bug.titolo, shift=UP * 0.2, rate_func=dopo(0, 0.35)),
+                  FadeIn(bug.nome, scale=1.1, rate_func=dopo(0.15, 0.5)),
+                  FadeIn(bug.righe[0], shift=su, rate_func=dopo(0.45, 0.75)),
+                  FadeIn(bug.righe[1], shift=su, rate_func=dopo(0.65, 1.0)), run_time=0.9)
 
+        # beat 1 («Dentro, la sveglia resta.»): nel bugiardino si accendono «sveglia» e «caffè», come nella scena 2
         self.beat(1)
         t1, d1 = self.t, self.durata_beat(1)
-        self.play(cresce(pil.box, r3.box, r3.righe[2]), run_time=0.5)
-        self.attendi_fino(t1 + 0.28 * d1)                 # «…Marco litigava con la fotocopiatrice»
+        luci = [bug.righe[1].parola(p) for p in LUCI_5]
+        self.attendi_fino(t1 + 0.35 * d1)                 # «…la sveglia»
+        self.play(*[p.animate.set_color(P.accento) for p in luci], run_time=0.4)
+
+        # beat 2 («Serve un dettaglio vero: Marco litigava con la fotocopiatrice.»): esce il bugiardino, entra la colonna
+        # con «da» in testa; ~0,4 s dopo la riga del dettaglio (revisione X7), poi il riordino e «sono» in accento
+        self.beat(2)
+        self.play(*fuori(*bug.pezzi(), shift=DOWN * 0.2, rate_func=dopo(0, 0.45)),
+                  cl.entra(rate_func=dopo(0.3, 1.0)), FadeIn(testa, rate_func=dopo(0.3, 0.8)), run_time=0.8)
+        self.wait(0.4)                                    # «da» in testa, fermo, prima del dettaglio
+        self.play(Transform(pil.box, r3.box, rate_func=dopo(0, 0.6)),
+                  FadeIn(r3.righe[2], shift=su, rate_func=dopo(0.3, 1.0)), run_time=0.6)
         self.play(cl.aggiorna(DOPO_DETTAGLIO), run_time=0.9)
         self.play(cl.scegli(2), run_time=0.4)
-        # niente zoom qui (proposta delle note di produzione, provata): la carta larga 900 px sopra le barre resta
-        # tagliata in alto e a destra a ogni ingrandimento, e il riordino si legge già a tela intera
+        # niente zoom (provato nel primo reel): la carta larga 900 px sopra le barre resta tagliata ai bordi
+
+
+def _tra(a: float, x0: float, x1: float) -> float:
+    """Dove sta a fra x0 e x1, da 0 a 1."""
+    return min(1.0, max(0.0, (a - x0) / (x1 - x0)))
+
+
+def finestre(n: int, a: float = 0.0, b: float = 1.0, durata: float = 1.6) -> list:
+    """Le curve di n cartellini che entrano uno dopo l'altro fra le frazioni a e b della play (ognuno dura `durata`
+    passi): la scrittura a cartellini dentro un solo passaggio, senza LaggedStart."""
+    w = (b - a) / (n - 1 + durata)
+    return [dopo(a + k * w, a + k * w + durata * w) for k in range(n)]
+
+
+def vola(t: Token, dove, comparsa=(0.0, 0.2), moto=(0.35, 1.0)) -> UpdateFromAlphaFunc:
+    """Il cartellino si accende dove sta (dissolvenza, finestra `comparsa`) e poi vola in `dove` (finestra `moto`), in
+    una sola animazione: FadeIn e .animate sullo stesso oggetto nella stessa play non si sommano (vale l'ultima)."""
+    da, a_ = t.get_center().copy(), np.array(dove, dtype=float)
+    # l'opacità solo su riquadro e glifi: set_opacity sul cartellino intero accenderebbe anche il puntello invisibile
+    # delle righe (una Line bianca larga zero), e il controllo «colore» la vede
+    t.box.set_opacity(0)
+    t.testo.glifi.set_opacity(0)
+
+    def f(m, a):
+        o = _tra(a, *comparsa)
+        m.box.set_opacity(o)
+        m.testo.glifi.set_opacity(o)
+        m.move_to(da + (a_ - da) * smooth(_tra(a, *moto)))
+
+    return UpdateFromAlphaFunc(t, f, rate_func=linear)
+
+
+def scende_e_si_accende(t: Token, spostamento, moto=(0.0, 0.4), luce=(0.75, 1.0)) -> UpdateFromAlphaFunc:
+    """Il cartellino si sposta con il biglietto (finestra `moto`) e poi si accende come acceso() (finestra `luce`), in
+    una sola animazione (MoveToTarget farebbe le due cose insieme)."""
+    da = t.get_center().copy()
+    bordo, parola, acc = ManimColor(P.attenuato), ManimColor(P.testo), ManimColor(P.accento)
+
+    def f(m, a):
+        m.move_to(da + spostamento * smooth(_tra(a, *moto)))
+        s = smooth(_tra(a, *luce))
+        m.box.set_stroke(interpolate_color(bordo, acc, s), width=tratto(3 + 2 * s))
+        m.testo.set_color(interpolate_color(parola, acc, s))
+
+    return UpdateFromAlphaFunc(t, f, rate_func=linear)
 
 
 class Scena06(Scena):
-    """«la» parte dalla testa della colonna e vola nel biglietto nuovo, che si scrive e cresce con la voce; «LEI NO.» a
-    tutto schermo; il biglietto scende, la richiesta torna con la riga del dettaglio: «l'hai messa tu»."""
+    """«sono» parte dalla testa della colonna e vola nel biglietto nuovo, che si scrive e cresce con la voce; «PER
+    DISPETTO.» a tutto schermo; il biglietto scende, la richiesta torna con la riga del dettaglio, «Per dispetto.» torna
+    normale e l'accento passa alla graffa «l'hai messa tu», alla freccia e a «io.» (revisione V12)."""
 
     def costruisci(self):
         r3 = carte_05()[-1]                               # ultimo fotogramma della scena 5
         cl, testa = candidate_05(finale=True)
         self.add(*r3.pezzi(), testa, cl)
         pil = pillola()
-        corto = biglietto_06(y_scrive_06(), righe=2)         # il biglietto mentre si scrive la prima frase
-        b6 = biglietto_06(y_scrive_06())                     # intero (le posizioni dei cartellini sono le stesse)
+        y0 = y_scrive_06()
+        corto = biglietto_06(y0, righe=2)                 # il biglietto mentre si scrive la prima frase
+        b6 = biglietto_06(y0)                             # intero (i cartellini stanno negli stessi posti)
         tok = b6.token()
         box = corto.box
+        su = UP * 0.15
 
-        # beat 0: la richiesta si compatta in alto (resta il contesto); il biglietto si scrive con la voce; «la» parte
-        # dalla testa della colonna e solo quando è arrivato la colonna esce (revisione T4)
+        # beat 0 («Ora scrive: caro Marco, sono io. Quella in fondo al corridoio.»): tre passaggi, come chiedono le note
+        # di produzione (la pillola con l'ingresso del biglietto; «sono» che vola; la colonna che esce dopo, T4); la
+        # scrittura a cartellini sta dentro i passaggi, con la voce
         t0, d0 = self.t, self.durata_beat(0)
-        self.play(Transform(r3.box, pil.box), *fuori(*r3.righe), run_time=0.4)
-        self.attendi_fino(t0 + 0.15 * d0)                 # «Ora scrive:»
-        self.play(*dentro(box, b6.titolo, shift=UP * 0.2), run_time=0.35)
-        self.play(LaggedStart(*[FadeIn(t, shift=UP * 0.15) for t in tok[:2]], lag_ratio=0.6), run_time=0.4)
-        la = Token("la", colore=P.accento).move_to(cl.barre[0].etichetta, aligned_edge=LEFT).set_z_index(1)
-        self.attendi_fino(t0 + 0.34 * d0)                 # «la»
-        self.play(FadeIn(la, scale=1.2), run_time=0.2)
-        self.play(la.animate.move_to(tok[2]), run_time=0.45)
-        self.play(*fuori(cl, testa, shift=DOWN * 0.2), FadeIn(tok[3], shift=UP * 0.15), run_time=0.35)
-        self.play(LaggedStart(*[FadeIn(t, shift=UP * 0.15) for t in tok[4:8]], lag_ratio=0.6),
-                  run_time=self.arrotonda(0.7))
+        # passaggio 1 (0,7 s, «Ora scrive:»): la richiesta si compatta nella pillola e resta come contesto (T6); entra il
+        # biglietto, alto due righe
+        self.play(Transform(r3.box, pil.box, rate_func=dopo(0, 0.6)), *fuori(*r3.righe, rate_func=dopo(0, 0.4)),
+                  FadeIn(box, shift=UP * 0.2, rate_func=dopo(0.3, 1.0)),
+                  FadeIn(b6.titolo, shift=UP * 0.2, rate_func=dopo(0.3, 1.0)), run_time=0.7)
+        # passaggio 2 (1,3 s, «caro Marco, sono»): «Caro», «Marco,»; «sono» si accende sulla testa della colonna (sopra
+        # l'etichetta già accesa della scena 5) e vola al suo posto
+        sono = Token("sono", colore=P.accento).move_to(cl.barre[0].etichetta, aligned_edge=LEFT).set_z_index(1)
+        self.attendi_fino(t0 + 0.2 * d0)                  # «caro»
+        self.play(FadeIn(tok[0], shift=su, rate_func=dopo(0, 0.3)), FadeIn(tok[1], shift=su, rate_func=dopo(0.2, 0.5)),
+                  vola(sono, tok[SONO].get_center(), comparsa=(0.3, 0.5), moto=(0.55, 1.0)), run_time=1.3)
+        # passaggio 3 (1,5 s, «io. Quella in fondo al corridoio.»): solo ora, con «sono» arrivato, la colonna esce
+        # (revisione T4); «io.» e la seconda riga si scrivono con la voce
+        riga2 = tok[IO + 1:IO + 6]
+        self.play(*fuori(cl, testa, shift=DOWN * 0.2, rate_func=dopo(0, 0.4)),
+                  FadeIn(tok[IO], shift=su, rate_func=dopo(0, 0.25)),
+                  *[FadeIn(t, shift=su, rate_func=r) for t, r in zip(riga2, finestre(len(riga2), 0.25, 0.9))],
+                  run_time=1.5)
 
-        # beat 1: il biglietto cresce di due righe e si scrive con la voce
+        # beat 1, un passaggio: il biglietto cresce a cinque righe e la seconda frase si scrive con la voce, fino a
+        # «perfezione.»; «sono» torna al bordo normale (un accento per beat)
         self.beat(1)
         d1 = self.durata_beat(1)
-        self.play(Transform(box, b6.box), la.box.animate.set_stroke(P.attenuato, width=tratto(3)), run_time=0.3)
-        self.play(LaggedStart(*[FadeIn(t, shift=UP * 0.15) for t in tok[8:16]], lag_ratio=0.5),
-                  run_time=self.arrotonda(min(1.3, 0.62 * d1)))
+        nuove = tok[IO + 6:PER_DISPETTO[0]]
+        self.play(Transform(box, b6.box, rate_func=dopo(0, 0.15)),
+                  sono.box.animate(rate_func=dopo(0, 0.15)).set_stroke(P.attenuato, width=tratto(3)),
+                  sono.testo.animate(rate_func=dopo(0, 0.15)).set_color(P.testo),
+                  *[FadeIn(t, shift=su, rate_func=r) for t, r in zip(nuove, finestre(len(nuove), 0.05, 1.0, durata=1.5))],
+                  run_time=self.arrotonda(min(3.6, 0.9 * d1)))
 
-        # beat 2: il cambio grande; al ritorno il biglietto è intero, con «Lei no.» acceso
+        # beat 2, il cambio grande; al ritorno il biglietto è intero, con «Per dispetto.» acceso (entra durante il
+        # taglio). oltre_inizio prima di aggiungerlo: così il punch tiene ~1 s e non 0,3 (difetto della libreria)
         self.beat(2)
-        self.add(*[tok[i] for i in LEI_NO])               # entrano durante il taglio: al ritorno ci sono già
-        self.punch_fino(grande(self.scena), 3)
+        self.oltre_inizio(2)
+        for i in PER_DISPETTO:
+            acceso(tok[i])
+        self.add(*[tok[i] for i in PER_DISPETTO])
+        self.punch(grande(self.scena))
 
-        # beat 3: il biglietto scende; la richiesta torna con la riga del dettaglio; graffa e freccia
+        # beat 3, un passaggio (2,4 s): il biglietto scende e «Per dispetto.» torna normale mentre la richiesta torna con
+        # la riga del dettaglio; poi la graffa «l'hai messa tu» e la freccia dalla parola «fotocopiatrice», e «sono io.»
+        # si accende quando la freccia arriva (nota del presentatore; V12: la battuta non resta accesa accanto a «l'hai
+        # messa tu»)
         self.beat(3)
-        t3, d3 = self.t, self.durata_beat(3)
-        self.attendi_fino(t3 + 0.3)                       # un attimo per vedere «Lei no.» nel biglietto
+        t3 = self.t
         r6 = Scheda([DETTAGLIO])
-        giu = DOWN * px(Y_BIGLIETTO_6 - y_scrive_06())
-        pezzi_b = [box, b6.titolo, tok[0], tok[1], la, *tok[3:]]
-        self.play(cresce(r3.box, r6.box, r6.righe[0]), *[m.animate.shift(giu) for m in pezzi_b], run_time=0.6)
-        g, f = extra_06(r6, tok[3], self.scena["testo"][0])
-        self.attendi_fino(t3 + 0.52 * d3)                 # «…l'hai messa tu»
-        self.play(g.entra(), run_time=0.45)
-        self.play(f.entra(), run_time=0.4)
+        fine = biglietto_06(Y_BIGLIETTO_6)
+        g, f = extra_06(r6, VGroup(fine.token()[SONO], fine.token()[IO]), self.scena["testo"][0])
+        giu = DOWN * px(Y_BIGLIETTO_6 - y0)
+        battuta = [tok[i] for i in PER_DISPETTO]
+        for t in battuta:
+            t.generate_target()
+            t.target.shift(giu)
+            t.target.box.set_stroke(P.attenuato, width=tratto(3))
+            t.target.testo.set_color(P.testo)
+        altri = [box, b6.titolo] + [t for k, t in enumerate(tok) if k not in (SONO, IO, *PER_DISPETTO)]
+        self.attendi_fino(t3 + 0.35)                      # un attimo per vedere il biglietto intero con la battuta accesa
+        self.play(*[m.animate(rate_func=dopo(0, 0.4)).shift(giu) for m in altri],
+                  *[MoveToTarget(t, rate_func=dopo(0, 0.4)) for t in battuta],
+                  scende_e_si_accende(sono, giu, luce=(0.84, 1.0)), scende_e_si_accende(tok[IO], giu, luce=(0.84, 1.0)),
+                  Transform(r3.box, r6.box, rate_func=dopo(0.05, 0.4)),
+                  FadeIn(r6.righe[0], shift=su, rate_func=dopo(0.2, 0.45)),
+                  g.entra(rate_func=dopo(0.45, 0.68)), f.entra(rate_func=dopo(0.62, 0.88)), run_time=2.4)
+
+
+def pezzi_finale_06() -> list:
+    """I pezzi dell'ultimo fotogramma della 6, uno per uno (la 7 li fa uscire tutti, qualunque cosa ci sia)."""
+    pezzi = []
+    for x in stato_finale_06(TESTO_6):
+        if isinstance(x, Scheda):
+            pezzi += x.pezzi()
+        elif isinstance(x, Biglietto):
+            pezzi += [x.box, x.titolo, *x.token()]
+        else:
+            pezzi.append(x)
+    return pezzi
+
+
+def dopo(a: float, b: float = 1.0):
+    """Curva smooth compressa nella frazione [a, b] della play: più movimenti in un solo passaggio, sfalsati, senza
+    LaggedStart (che accoderebbe un gruppo nuovo in cima alla scena)."""
+    return squish_rate_func(smooth, a, b)
 
 
 class Scena07(Scena):
-    """Chiusura: l'IA e Marco con la linea interrotta; «TU SÌ»; la richiesta entra nel buco della linea e ci scivola la
-    riga della fotocopiatrice; torna il biglietto con «Lei no.»; restano messaggio e CTA."""
+    """Chiusura, un passaggio per frase: l'IA e Marco con la linea interrotta e il messaggio; «TU SÌ»; la richiesta
+    entra nel buco della linea con la riga della fotocopiatrice; il diagramma esce con calma e restano messaggio e
+    CTA (il biglietto non torna più: nota del presentatore del 2026-09-14)."""
 
     def costruisci(self):
-        r6, b6, g, f = stato_finale_06(TESTO_6)           # ultimo fotogramma della scena 6
-        self.add(*r6.pezzi(), b6.box, b6.titolo, *b6.token(), g, f)
+        vecchi = pezzi_finale_06()                        # ultimo fotogramma della scena 6
+        self.add(*vecchi)
 
         a = self.area.contenuto
         msg = Messaggio(self.scena["messaggio"].replace(". ", ".\n", 1), maiuscolo=False)   # «Tu sì.» su una riga sua
@@ -638,49 +788,53 @@ class Scena07(Scena):
         fondo_msg = y_px(msg.get_bottom()[1])
         y_c = (fondo_msg + 40 + y_px(a.y0)) / 2           # centro del diagramma nello spazio sotto il messaggio
         bot, ia, user, marco, seg_sx, seg_dx, cx, w_carta = diagramma_07(a, y_c)
-        vuota = carta_07(cx, y_c, w_carta)
         piena = carta_07(cx, y_c, w_carta, [DETTAGLIO])
         riga = piena.righe[0].set_color(P.accento)
 
-        # beat 0: esce tutto; il messaggio si scrive con la voce; l'IA e Marco, fra loro la linea interrotta
-        t0, d0 = self.t, self.durata_beat(0)
-        self.play(*fuori(*r6.pezzi(), b6.box, b6.titolo, *b6.token(), g, f, shift=DOWN * 0.2), run_time=0.3)
-        self.play(LaggedStart(*[FadeIn(r, shift=UP * 0.2) for r in righe[:2]], lag_ratio=0.3), bot.entra(), FadeIn(ia),
-                  run_time=0.5)
-        self.play(user.entra(), FadeIn(marco), Create(seg_sx), Create(seg_dx), run_time=0.45)
+        # Chiusura calma (nota del presentatore del 2026-09-14): un solo passaggio per frase, ognuno ≥ 0,6 s; i movimenti
+        # di un passaggio sono sfalsati dentro la stessa play con dopo(a, b), non con play in fila.
 
-        # beat 1: il cambio grande; al ritorno il messaggio ha anche «Tu sì.»
+        # beat 0, un passaggio (1,0 s): esce tutto; entrano il messaggio, l'IA e Marco, fra loro la linea interrotta
+        self.play(*fuori(*vecchi, shift=DOWN * 0.2, rate_func=dopo(0, 0.45)),
+                  FadeIn(righe[0], shift=UP * 0.2, rate_func=dopo(0.3, 0.75)),
+                  FadeIn(righe[1], shift=UP * 0.2, rate_func=dopo(0.42, 0.87)),
+                  # le icone in dissolvenza: Create a progresso 0 disegna un punto per tratto (estremità tonde), e con la
+                  # curva sfalsata i punti resterebbero a schermo per un terzo del passaggio
+                  FadeIn(bot, scale=0.9, rate_func=dopo(0.35, 0.9)), FadeIn(ia, rate_func=dopo(0.45, 0.9)),
+                  FadeIn(user, scale=0.9, rate_func=dopo(0.45, 1.0)), FadeIn(marco, rate_func=dopo(0.55, 1.0)),
+                  Create(seg_sx, rate_func=dopo(0.5, 1.0)), Create(seg_dx, rate_func=dopo(0.5, 1.0)), run_time=1.0)
+
+        # beat 1, il cambio grande; al ritorno il messaggio ha anche «Tu sì.»
         self.beat(1)
+        self.oltre_inizio(1)                              # prima di aggiungere «Tu sì.», che compare solo al ritorno
         self.add(righe[2])
-        self.punch_fino(grande(self.scena), 2)
+        self.punch(grande(self.scena))                    # la tenuta si accorcia da sola fino al beat dopo
 
-        # beat 2: una linea accento dal presentatore a Marco; la richiesta entra nel buco della linea e ci scivola,
-        # da Marco, la riga della fotocopiatrice: l'IA arriva a Marco solo da quello che scrivi (revisione T13)
+        # beat 2, un passaggio (0,8 s): una linea accento dal presentatore a Marco; la richiesta entra nel buco della
+        # linea e ci scivola, da Marco, la riga della fotocopiatrice: l'IA arriva a Marco solo da quello che scrivi
+        # (revisione T13). Agganciato all'inizio del beat, non alle parole: la frase è di tre parole («Scrivilo nella
+        # richiesta.») e la riga, che scioglie il «lo», deve restare intera ≥ 1 s prima che il diagramma esca (U4).
         self.beat(2)
-        t2, d2 = self.t, self.durata_beat(2)
         riq = self.area.riquadro
         fine = marco.get_bottom() + DOWN * px(14)
         verso = (fine - riq.centro) / np.linalg.norm(fine - riq.centro)
         inizio = riq.centro + verso * (riq.larghezza / 2 + px(18))
         linea = Line(inizio, fine, stroke_color=P.accento, stroke_width=tratto(6))
-        self.play(Create(linea), run_time=0.35)
-        self.attendi_fino(t2 + 0.2 * d2)                  # «nella richiesta»
-        self.play(FadeIn(vuota.box, scale=0.9), FadeIn(vuota.titolo), run_time=0.3)
-        self.attendi_fino(t2 + 0.38 * d2)                 # «quello che sai solo tu»
-        self.play(LaggedStart(AnimationGroup(Transform(vuota.box, piena.box), Transform(vuota.titolo, piena.titolo)),
-                              FadeIn(riga, shift=LEFT * 0.4), lag_ratio=0.35, group=vuota.box), run_time=0.55)
+        self.play(Create(linea, rate_func=dopo(0, 0.5)), FadeIn(piena.box, scale=0.9, rate_func=dopo(0.1, 0.55)),
+                  FadeIn(piena.titolo, rate_func=dopo(0.15, 0.6)), FadeIn(riga, shift=LEFT * 0.4, rate_func=dopo(0.4, 1.0)),
+                  run_time=0.8)
+        riga_intera = self.t
 
-        # beat 3: torna per un attimo il biglietto con «Lei no.» acceso; poi restano messaggio e CTA, centrati
+        # beat 3, un passaggio (1,0 s): il diagramma esce con calma mentre il messaggio scende al centro e sotto entra
+        # la CTA; poi l'ultimo fotogramma pulito (solo messaggio e CTA) fino alla fine
         self.beat(3)
-        t3, d3 = self.t, self.durata_beat(3)
-        bb = biglietto_06(Y_BIGLIETTO_6)
-        diagramma = [bot, ia, user, marco, seg_sx, seg_dx, linea, vuota.box, vuota.titolo, riga]
-        self.play(*fuori(*diagramma, shift=DOWN * 0.2), *dentro(bb.box, bb.titolo, *bb.token(), shift=UP * 0.2),
-                  run_time=0.4)
+        t3 = self.t
+        diagramma = [bot, ia, user, marco, seg_sx, seg_dx, linea, piena.box, piena.titolo, riga]
         cta = Etichetta(self.scena["cta"])
         h = msg.height + px(50) + cta.height
         dy = (a.centro[1] + h / 2) - msg.get_top()[1]     # sposta il messaggio: messaggio + CTA centrati nell'area
         cta.move_to(punto(X0, 0), aligned_edge=LEFT).set_y(msg.get_bottom()[1] + dy - px(50) - cta.height / 2)
-        self.attendi_fino(t3 + 0.5 * d3)                  # «…la fotocopiatrice»
-        self.play(*fuori(bb.box, bb.titolo, *bb.token(), shift=DOWN * 0.2), *[r.animate.shift(UP * dy) for r in righe],
-                  FadeIn(cta, shift=UP * 0.2), run_time=0.5)
+        self.attendi_fino(max(t3 + 0.1, riga_intera + 1.05))   # U4: la riga intera ≥ 1 s, anche con un beat 2 corto
+        self.play(*fuori(*diagramma, shift=DOWN * 0.2, rate_func=dopo(0, 0.6)),
+                  *[r.animate(rate_func=dopo(0.1, 0.9)).shift(UP * dy) for r in righe],
+                  FadeIn(cta, shift=UP * 0.2, rate_func=dopo(0.4, 1.0)), run_time=1.0)

@@ -139,3 +139,29 @@ def test_punch_e_zoom_tagliano_e_rimettono_la_scena(tmp_path):
 
     res = renderizza(ConPunch, 2.0, {"voce": ["a"], "riquadro": "si"}, tmp_path, "punch", "l")
     assert res.controlli == [] and res.avvisi == []
+
+
+@pytest.mark.slow
+def test_punch_subito_dopo_beat_non_accorcia_la_battuta(tmp_path):
+    """beat(i) può fermarsi fino a un fotogramma prima dell'inizio della frase i (le attese sotto un fotogramma si
+    saltano): punch non deve prendere quell'inizio per il beat dopo e ridurre la tenuta al minimo (0,3 s)."""
+    from tools.reel.manim_render import renderizza
+    tenute = {}
+
+    class PunchDopoBeat(ScenaReel):
+        def costruisci(self):
+            self.wait(1.0 - self.ANTICIPO_S - 0.4 * self._fotogramma)   # un soffio prima dell'obiettivo di beat(1)
+            self.beat(1)
+            t0 = self.t
+            self.punch("tu sì", tenuta_s=0.9)
+            tenute["libera"] = self.t - t0
+            self.beat(2)
+            t0 = self.t
+            self.punch("lei no", tenuta_s=0.9)     # il beat 3 arriva prima: la tenuta si accorcia ancora
+            tenute["limitata"] = self.t - t0
+
+    scena = {"voce": ["a", "b", "c", "d"], "inizi_frasi_s": [0.0, 1.0, 2.6, 3.2], "riquadro": "si"}
+    res = renderizza(PunchDopoBeat, 4.0, scena, tmp_path, "punch-beat", "l")
+    assert res.avvisi == []
+    assert tenute["libera"] > 0.9       # entrata + 0,9 s pieni (col difetto: entrata + 0,3 s)
+    assert tenute["limitata"] < 0.75    # entrata + ~0,47 s: finisce prima del beat 3

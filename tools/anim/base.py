@@ -239,7 +239,10 @@ class ScenaReel(MovingCameraScene):
         cornice.set(width=self.cfg.frame_width).move_to(ORIGIN)
         p = Punch(s, self.area.contenuto, colore=colore)
         entrata = self.arrotonda(entrata_s)
-        prossimi = [x - self.ANTICIPO_S for x in self.inizi_frasi if x - self.ANTICIPO_S > self.t + 1e-6]
+        # l'inizio del beat in corso non conta: beat(i) può fermarsi fino a un fotogramma prima del suo obiettivo
+        # (attendi_fino salta le attese sotto un fotogramma), e quell'inizio non è «il beat dopo»
+        soglia = self.t + self._fotogramma + 1e-6
+        prossimi = [x - self.ANTICIPO_S for x in self.inizi_frasi if x - self.ANTICIPO_S > soglia]
         if prossimi:
             tenuta_s = max(0.3, min(tenuta_s, prossimi[0] - self.t - entrata))
         self.play(p.entra(), run_time=entrata)

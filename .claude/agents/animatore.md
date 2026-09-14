@@ -63,10 +63,35 @@ Prima di scrivere codice leggi OBBLIGATORIAMENTE:
     ritorno («Lei no.» acceso nel biglietto, «Tu sì.» nel messaggio). È il modo di far coincidere il taglio con la
     battuta.
   - Lo zoom va dentro un solo beat (entra e `torna()` prima del beat dopo): a fine beat i controlli misurano lo schermo
-    e il contesto tagliato dall'inquadratura è «testo-fuori». `zoom_su` porta l'oggetto al centro della tela, non
-    dell'area: con il riquadro in basso usa un aiuto che lo porti al centro dell'area (`Scena.zoom_area`).
+    e il contesto tagliato dall'inquadratura è «testo-fuori».
   - Uno zoom su una composizione a tutta larghezza (carta di 900 px sopra) taglia sempre testo ai bordi: prova e
     scarta se il taglio si legge come un errore; funziona sul dettaglio isolato (una riga e un cursore).
+- **2026-09-14, note sulla seconda anteprima del primo reel**:
+  - Il presentatore ha fatto **togliere lo zoom 2× della scena 2**, anche se era sul dettaglio isolato: la riga della
+    richiesta, sopra, restava in campo a metà («pensione di Marco. Lo fir…»). Regola: a zoom pieno ogni testo
+    nell'inquadratura è intero o del tutto fuori campo. Controllalo sul fotogramma a zoom pieno (i controlli guardano
+    solo la fine del beat, quando lo zoom è già tornato); se non ci riesci, niente zoom: il cambio grande della scena
+    può essere un altro (`punch`) o mancare.
+  - La chiusura durava 7,8 s per colpa della voce, non delle animazioni: segnalarlo nel rapporto è stato giusto. La
+    si accorcia togliendo parole (lo decide il presentatore), non comprimendo i beat.
+  - Quando la voce si accorcia, l'animazione porta quello che la voce non dice più: con «Scrivilo nella richiesta.» è
+    la riga della fotocopiatrice nella carta a dire cosa è «lo». Il revisore ha chiesto che resti intera ≥ 1 s prima
+    di uscire (U4). Nei beat di 2-3 parole aggancia le animazioni **all'inizio del beat**, non a percentuali (0,2 ·
+    0,38 del beat): con le clip vere quei beat, stimati a parole, si accorciano ancora e le percentuali mangiano il
+    tempo di lettura. Misura la tenuta sui fotogrammi a 10 al secondo.
+  - Il presentatore ha trovato **troppo veloci i passaggi finali** della chiusura: sette in 6,8 s, quattro sotto 0,5
+    s, gli ultimi tre (diagramma → biglietto → messaggio e CTA) in 1,8 s. Nella chiusura al massimo un passaggio per
+    frase, ognuno ≥ 0,6 s, ultimo fotogramma pulito ~1 s (manuale §4). Se il tempo non basta, togli un passaggio (qui
+    il ritorno del biglietto, un richiamo), non accorciarli tutti; conta i passaggi per secondo prima di consegnare.
+  - Due trappole trovate rifacendo la chiusura (manuale §10): `Icona.entra()` con una curva sfalsata disegna le icone
+    a puntini a progresso zero (usa una dissolvenza); `punch` subito dopo `beat(i)` poteva accorciare la battuta a
+    0,33 s (corretto in `base.py` lo stesso giorno, con un test: l'aiuto `oltre_inizio(i)` non serve più). Guarda
+    comunque la tenuta del punch sui fotogrammi fitti.
+  - Per più movimenti in un passaggio calmo, curve sfalsate dentro **una sola** `play` (`squish_rate_func`, o gli
+    aiuti `dopo`/`finestre` del primo reel) invece di tante `play` in fila: il passaggio si legge come uno. Per un
+    oggetto che si accende e si sposta nella stessa `play`, una sola animazione che fa tutte e due le cose (due
+    `.animate` sullo stesso oggetto non si sommano, manuale §10). L'attesa prima di un punch va fatta **prima** di
+    aggiungere ciò che deve comparire al ritorno.
   - Non misurare testi al livello del modulo (costanti calcolate con `testo()`): il font non è ancora registrato,
     Manim scrive un avviso su stdout e `anima --json` non è più JSON. Usa una funzione.
 

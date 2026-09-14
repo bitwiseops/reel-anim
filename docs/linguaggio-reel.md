@@ -128,7 +128,7 @@ Se l'ultima frase si aggancia alla prima, il replay sembra continuo, e i replay 
 | «in sintesi…» | un richiamo all'hook o alla battuta |
 | «seguimi per altri video» | una CTA con uno scopo legato al reel |
 
-- **Sceneggiatore**: VOCE di 2-3 frasi, ≤ 25 parole, con la più forte per ultima; la lista completa va in caption.
+- **Sceneggiatore**: VOCE di 2-3 frasi, ≤ 18 parole (~6-7 s), con la più forte per ultima; la lista completa va in caption.
 - **Animatore**: la chiusura dura ≤ 6-7 s e l'ultimo fotogramma è pulito; per il loop, prepara il primo dell'hook.
 - **CTA, una per reel**:
   - **invia** («mandalo a chi scrive i biglietti in ufficio»): gli invii sono il segnale più forte con chi non ci
@@ -148,7 +148,7 @@ Un reel si manda quando fa pensare a una persona precisa («è Marco!»), fa rid
 |---|---|---|---|
 | 1 | **Presentatore dinamico** | `RIQUADRO:` per beat, con due valori nuovi: `grande` (~600 px) e `pieno` (clip a tutto schermo, grafica sopra); il riquadro si scala e si sposta fra i beat. Hook e chiusura con il volto | `compositing` (overlay con scala e posizione per intervallo), `validate`, `ScenaReel.area` per beat |
 | 2 | **Parola punch** ✅ | fatto il 2026-09-13: `Punch(s, area)` e `ScenaReel.punch(s, tenuta_s)`, taglio secco alla battuta e ritorno alla scena com'era. La riga `PUNCH:` non c'è: la battuta si scrive nel brief con `GRANDE:` | `componenti`, `base` |
-| 3 | **Controlli di linguaggio** ✅ | fatto il 2026-09-13: primo fotogramma dell'hook vuoto (controllo `fotogramma-vuoto`), hook senza «tu» o domanda, MESSAGGIO > 12 parole, VOCE della chiusura > 25 parole (avvisi di `valida`). Gli imperativi non si contano: senza un'analisi della lingua l'euristica sbaglierebbe | `validate`, `controlli` |
+| 3 | **Controlli di linguaggio** ✅ | fatto il 2026-09-13: primo fotogramma dell'hook vuoto (controllo `fotogramma-vuoto`), hook senza «tu» o domanda, MESSAGGIO > 12 parole, VOCE della chiusura > 18 parole (avvisi di `valida`; era 25 fino al 2026-09-14). Gli imperativi non si contano: senza un'analisi della lingua l'euristica sbaglierebbe | `validate`, `controlli` |
 | 4 | **Zoom di camera** ✅ | fatto il 2026-09-13: `self.zoom_su(mob, fattore)` / `self.torna()` / `self.zoom`; i controlli misurano quello che si vede sullo schermo | `base` (MovingCamera) |
 | 5 | **Punch-in sul presentatore** | zoom 1,0 → 1,15 della clip durante una frase marcata (es. `VOCE!:`) | `compositing` (crop + scale) |
 | 6 | **Sottotitoli sincronizzati** | opzionali (`--sottotitoli`), 2-4 parole alla volta, la parola `==…==` in accento; tempi dalla voce di prova, poi dall'ASR (fase 5) | `compositing` o livello Manim |

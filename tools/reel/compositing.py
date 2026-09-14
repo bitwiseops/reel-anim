@@ -132,7 +132,9 @@ def comando_scena(src: Sorgenti, dest: Path, cfg: Config | None = None, anteprim
         cmd += ["-c:v", "libx264", "-preset", "ultrafast", "-crf", "28"]
     else:
         cmd += ["-c:v", "libx264", "-preset", "medium", "-crf", "18", "-profile:v", "high"]
-    cmd += ["-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "128k", "-ar", "48000", "-movflags", "+faststart", str(dest)]
+    # audio sempre stereo: la voce sintetica e molte clip sono mono, e alcuni lettori non riproducono l'audio mono
+    cmd += ["-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "128k", "-ar", "48000", "-ac", "2", "-movflags", "+faststart",
+            str(dest)]
     return cmd
 
 
@@ -167,7 +169,8 @@ def comando_concat(scene: list[tuple[Path, float]], dest: Path, transizione: str
         mappa = ["-map", "[v]", "-map", "[a]"]
     cmd = [ff, "-y", "-loglevel", "error", *inputs, "-filter_complex", ";".join(filtri), *mappa, "-r", str(cfg.fps)]
     cmd += ["-c:v", "libx264", "-preset", "ultrafast" if anteprima else "medium", "-crf", "28" if anteprima else "18",
-            "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "128k", "-ar", "48000", "-movflags", "+faststart", str(dest)]
+            "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "128k", "-ar", "48000", "-ac", "2", "-movflags", "+faststart",
+            str(dest)]
     return cmd
 
 

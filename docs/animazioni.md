@@ -150,10 +150,16 @@ contano, quelli tagliati dal bordo sì). `zoom_su` porta l'oggetto al centro del
 scena già ingrandita (continuità con la precedente) imposta la camera senza animazione:
 `l, c = self.inquadratura(mob, 1.5); self.camera.frame.set(width=l).move_to(c)`.
 - **Zoom sul dettaglio isolato** (una riga e un cursore), non su una composizione a tutta larghezza: lì taglia
-  sempre del testo ai bordi, e un parola tagliata a metà si legge come un errore.
+  sempre del testo ai bordi, e una parola tagliata a metà si legge come un errore. A zoom pieno **ogni testo
+  nell'inquadratura è intero o del tutto fuori campo**: guardalo sul fotogramma a zoom pieno, perché i controlli
+  misurano la fine del beat, quando lo zoom è già tornato. Nel primo reel lo zoom 2× sul cursore della scena 2 è stato
+  tolto per una sola riga tagliata sopra («pensione di Marco. Lo fir…»).
 - **`punch` finisce da solo prima del beat dopo**: con la voce di prova «Lei no.» dura 0,7 s, e la tenuta si
   accorcia (mai sotto 0,3 s). Ciò che aggiungi o cambi **subito prima** di `punch` compare solo al ritorno, con il
   taglio: è il modo di far coincidere il cambio con la battuta («Lei no.» acceso nel biglietto).
+- **Beat di 2-3 parole**: aggancia le animazioni all'inizio del beat, non a percentuali della sua durata. Con le clip
+  vere questi beat, stimati a parole, si accorciano ancora, e un aggancio al 40 % lascia al testo che deve restare
+  leggibile (≥ 1 s prima di uscire) meno di mezzo secondo.
 
 Gli inizi delle frasi (`inizi_frasi_s`) sono **esatti** nell'anteprima con voce sintetica (una frase alla volta,
 pausa `pausa_frasi_s`); con le clip registrate, per ora, sono **stimati in proporzione alle parole**
@@ -167,6 +173,10 @@ Regole:
   dell'anteprima, 0,21 s diventano 0,27 s). Nei cicli usa `self.arrotonda(...)` oppure un'unica `play`.
 - **`run_time` di un gruppo** (`AnimationGroup`, `LaggedStart`) è la durata totale, non quella di ogni pezzo.
 - **Ritmo veloce-veloce-LENTO**: i beat di preparazione sono rapidi, il punto chiave ha più tempo.
+- **Chiusura calma**: al massimo un passaggio per frase della VOCE, ognuno di almeno 0,6 s, e l'ultimo fotogramma
+  pulito di ~1 s. Nel primo reel la chiusura, accorciata a 6,8 s, aveva sette passaggi, quattro sotto il mezzo
+  secondo, e al presentatore sono sembrati troppo veloci. Se il tempo non basta si toglie un passaggio (un richiamo),
+  non si accorciano tutti. Le uscite rapide di pulizia (0,3 s) vanno bene nelle scene di spiegazione.
 - **Azzera e ricostruisci**: all'inizio del beat esce ciò che non serve più (0,3-0,5 s), poi entra il nuovo.
   L'ultimo beat non sgombera mai: il suo fotogramma resta fino alla fine (e fa da chiusura).
   ```python
@@ -351,6 +361,17 @@ restare nello stesso posto della lista (è così che `Classifica.aggiorna` fa sc
 - **Senza LaTeX e utilizzabili**: `Code` (Pygments + Pango; i colori solo da uno stile Pygments), `Table` e
   `MobjectTable` (Pango), `SVGMobject`.
 - **Icone SVG**: lo spessore del contorno non scala con `.scale()`, va fissato con `set_stroke(width=tratto(...))`.
+- **`Icona.entra()` con una curva sfalsata** (`squish_rate_func`, `LaggedStart`): a progresso zero ogni tratto con le
+  estremità tonde si disegna come un puntino, e le icone compaiono «a puntini» prima di entrare. Falle entrare in
+  dissolvenza, oppure aggiungile solo quando la loro animazione parte.
+- **Opacità di un cartellino intero**: ogni riga di `testo()` ha un puntello invisibile (una `Line` larga zero che
+  tiene costante l'altezza). Cambiando l'opacità o il colore del `Token` intero cambia anche il puntello, e il
+  controllo lo segnala come «colore fuori palette». Tocca solo il riquadro (`t.box`) e i glifi (`t.testo`).
+- **`punch` subito dopo `beat(i)`** (corretto in `base.py` il 2026-09-14, test
+  `test_punch_subito_dopo_beat_non_accorcia_la_battuta`): se `beat(i)` si fermava una frazione di fotogramma prima
+  dell'inizio della frase, `punch` prendeva il beat in corso per quello dopo e portava la tenuta al minimo (0,3 s).
+  Ora un inizio entro un fotogramma da adesso non conta. L'aiuto `oltre_inizio(i)` del primo reel non serve più.
+  Guarda comunque la tenuta del punch sui fotogrammi fitti.
 - **Immagini** (`ImageMobject`): non sono vettoriali, vanno in un `Group` (non `VGroup`) ed entrano solo con
   dissolvenze o scala.
 - **`MoveAlongPath` su una copia di una freccia** segue anche la punta: usa un arco senza punta fra gli stessi

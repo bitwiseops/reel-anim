@@ -25,6 +25,7 @@ def test_scena_senza_riquadro_con_voce_sintetica_in_anteprima():
     f = _filtri(cmd)
     assert "scale=1080:1920" in f and "alphamerge" not in f and "aresample=48000,apad[a]" in f
     assert cmd[cmd.index("-t") + 1] == "4.000" and "ultrafast" in cmd
+    assert cmd[cmd.index("-ac") + 1] == "2"   # stereo anche con la voce mono
 
 
 def test_scena_con_avatar_nel_riquadro():
@@ -54,4 +55,6 @@ def test_concat_con_dissolvenza_e_con_taglio():
     assert "offset=3.750" in f and "offset=11.500" in f and f.count("acrossfade") == 2
     assert durata_concat(pezzi, "dissolvenza", 0.25) == 17.5
     assert "concat=n=3:v=1:a=1" in _filtri(comando_concat(pezzi, Path("/tmp/reel.mp4"), "taglio"))
+    cmd = comando_concat(pezzi, Path("/tmp/reel.mp4"), "dissolvenza", 0.25)
+    assert cmd[cmd.index("-ac") + 1] == "2"
     assert durata_concat(pezzi, "taglio", 0.25) == 18.0

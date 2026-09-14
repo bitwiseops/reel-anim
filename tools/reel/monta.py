@@ -39,6 +39,8 @@ def _verifica_probe(probe: dict, cfg: Config, durata: float, diag: list[Diagnost
         diag.append(errore(f"video reel: atteso {cfg.larghezza}x{cfg.altezza} h264 yuv420p, trovato {probe}"))
     if probe.get("audio") != "aac":
         diag.append(errore(f"video reel: audio atteso aac, trovato {probe.get('audio')}"))
+    if probe.get("audio_canali") not in (None, 2):   # in mono alcuni lettori non fanno sentire la voce
+        diag.append(errore(f"video reel: audio atteso stereo, trovato {probe.get('audio_canali')} canali"))
     if abs((probe.get("durata_s") or 0) - durata) > 0.35:
         diag.append(errore(f"video reel: durata {probe.get('durata_s')} s, attesa {durata:.2f} s"))
 

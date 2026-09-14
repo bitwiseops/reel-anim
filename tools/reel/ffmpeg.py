@@ -57,6 +57,7 @@ def ffprobe(path: Path) -> dict:
     return {"larghezza": w, "altezza": h, "codec": video.get("codec_name"), "pix_fmt": video.get("pix_fmt"),
             "rotazione": rot, "audio": audio.get("codec_name") if audio else None,
             "audio_hz": int(audio["sample_rate"]) if audio and audio.get("sample_rate") else None,
+            "audio_canali": int(audio["channels"]) if audio and audio.get("channels") else None,
             "durata_s": round(float(j.get("format", {}).get("duration", 0) or 0), 2)}
 
 

@@ -69,7 +69,7 @@ Limiti (fonte unica: `tools/reel/validate.py::LIMITI`; oltre il limite è un avv
 | righe `VOCE:` per scena | ≤ 4 |
 | `TITOLO:` / `MESSAGGIO:` | ≤ 10 / ≤ 25 parole (MESSAGGIO consigliato ≤ 12: una frase grande, il resto in caption) |
 | VOCE dell'hook | un «tu» o una domanda: l'hook è una promessa a chi guarda (`docs/linguaggio-reel.md` §1) |
-| VOCE della chiusura | ≤ 25 parole: un payoff, non un riassunto |
+| VOCE della chiusura | ≤ 18 parole (~6-7 s): un payoff, non un riassunto |
 | `TESTO:` | ≤ 4 per scena, ≤ 4 parole ciascuno |
 | `==evidenzia==` / emoji | 1 per scena |
 | una scena | 2,5-14 s stimati |
@@ -84,6 +84,12 @@ Limiti (fonte unica: `tools/reel/validate.py::LIMITI`; oltre il limite è un avv
   diverso dalla voce, ma dice la stessa cosa.
 - **Numeri**: solo veri, con la fonte nelle note di produzione; quelli illustrativi si dichiarano come esempi anche a
   schermo (la `Classifica` lo scrive da sola).
+- **Testi attribuiti a un modello** («Comincia così: …», «Ora scrive: …»): solo uscite vere, generate **prima** di
+  scrivere la scena (3-5 uscite per richiesta, salvate in `contenuti/media/<slug>/`). Ogni parola viene da una sola
+  uscita; i tagli si dichiarano nelle note di produzione e la caption dice modello e data. Il luogo comune da
+  mostrare è quello che torna in quasi tutte le uscite. Nel primo reel i due biglietti scritti da noi non sono mai
+  usciti in 16 prove, e si sono rifatte le scene 2-7. **Le revisioni del presentatore hanno l'ultima parola**, anche
+  su questi testi: un suo ritocco si applica così com'è e la caption lo dichiara («tagliate e ritoccate da noi»).
 - **Chiusura**: il messaggio centrale in parole semplici e una sola azione nella `CTA:`.
 - Il presentatore leggerà la voce dal gobbo così com'è: niente abbreviazioni, sigle da sciogliere, parole da
   pronunciare in modo ambiguo.

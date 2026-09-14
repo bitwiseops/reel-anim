@@ -39,7 +39,9 @@ Piano completo: `~/.claude/plans/dobbiamo-revisionare-il-modello-lovely-piglet.m
 ## Stato
 Fasi 0 e 1 chiuse (2026-09-13, in `main`). Fase 2 in corso (branch `fase-2-primo-reel`): primo reel vero
 «Generativa non vuol dire creativa» (`contenuti/idee/2026-09-10-llm-perche-generativa.md`, slug
-`generativa-non-creativa`) portato dagli agenti fino a `animato`; fermata: il presentatore guarda l'anteprima.
+`generativa-non-creativa`) portato dagli agenti fino a `animato` (2026-09-14: biglietti generati davvero con Claude
+Opus 5, in `contenuti/media/<slug>/biglietti-claude-*.md`, con i ritocchi del presentatore; anteprima 58,5 s, stereo).
+Le revisioni del presentatore hanno l'ultima parola. Prossimo passo: pianificare la registrazione (fase 5, sotto).
 
 ## Comandi
 `uv run reel setup` · `valida <file>` · `gobbo <file> [--scrivi]` · `clip <file>` · `voce <file>` ·
@@ -51,7 +53,7 @@ completa senza il presentatore, **non pubblicabile**.
 `## Scena N [hook|spiegazione|schermo|chiusura, durata=Ns, transizione=…]` con righe `VOCE:` (una frase = un
 beat), `ANIMAZIONE:` (brief per l'animatore), `TESTO:`, `TITOLO:/SOTTOTITOLO:` (hook), `MESSAGGIO:/CTA:`
 (chiusura), `SCHERMO: file`, `RIQUADRO: no|si|posizione`; inline `==evidenzia==`, `**grassetto**`.
-Limiti in `tools/reel/validate.py::LIMITI`: 6-8 scene (5-9), VOCE ≤ 35 parole/scena (hook ≤ 15), scena 2,5-14 s,
+Limiti in `tools/reel/validate.py::LIMITI`: 6-8 scene (5-9), VOCE ≤ 35 parole/scena (hook ≤ 15, chiusura ≤ 18), scena 2,5-14 s,
 reel 30-60 s. La durata reale di ogni scena la decide la clip registrata; senza clip vale la stima (2,8 parole/s).
 I beat partono sugli inizi delle frasi VOCE: esatti con la voce di prova (una frase alla volta, `pausa_frasi_s`),
 stimati a parole con le clip (ASR in fase 5). `anima` usa gli stessi tempi di `monta --prova`; `report.json` ha per

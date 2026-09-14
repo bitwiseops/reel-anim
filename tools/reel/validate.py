@@ -14,7 +14,7 @@ LIMITI = {
     "scene_tipiche": (6, 8),
     "parole_voce_max": 35,        # per scena (≈ 12 s a 2,8 parole/s)
     "parole_voce_hook_max": 15,
-    "parole_voce_chiusura_max": 25,   # la chiusura è un payoff, non un riassunto (docs/linguaggio-reel.md §8)
+    "parole_voce_chiusura_max": 18,   # la chiusura è un payoff, non un riassunto (docs/linguaggio-reel.md §8)
     "beat_max": 4,                # righe VOCE per scena
     "parole_titolo_max": 10,
     "parole_messaggio_max": 25,

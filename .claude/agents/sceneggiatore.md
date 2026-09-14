@@ -73,9 +73,24 @@ Prima di scrivere leggi OBBLIGATORIAMENTE:
     Note di produzione come «quando ci sarà», mai come richiesta. Se il fotogramma 0 è già pieno (titolo intero), la
     prima frase chiede comunque un movimento: sennò è un beat senza cambio.
   - `valida` ora ha i controlli di linguaggio: hook con un «tu» o una domanda, MESSAGGIO ≤ 12 parole, VOCE della
-    chiusura ≤ 25. Il MESSAGGIO può essere solo la battuta («L'IA non ha mai conosciuto Marco. Tu sì.»), perché alla
+    chiusura ≤ 18 (era 25 fino al 2026-09-14). Il MESSAGGIO può essere solo la battuta («L'IA non ha mai conosciuto Marco. Tu sì.»), perché alla
     mossa concreta basta la VOCE. Se una frase della chiusura spiega la mossa dopo i due punti («è da lì che cambia
     la frase»), la spiegazione è la prima cosa da tagliare.
+- **2026-09-14, dopo la seconda anteprima**: la chiusura di 20 parole in 4 frasi durava 7,8 s con la voce di prova,
+  oltre i 6-7 s consigliati, e il presentatore l'ha fatta accorciare. Da allora `valida` avvisa sopra le 18
+  parole (prima 25): una chiusura a battuta sta in **~15 parole**. Per tagliare, la mossa generale diventa un pronome che
+  riprende la battuta («Tu sì. / Scrivilo nella richiesta.» al posto di «Scrivi nella richiesta quello che sai solo
+  tu.»): la generalizzazione la portano l'immagine e la caption. La battuta finale non si taglia.
+- **2026-09-14, i biglietti generati davvero**: i due biglietti del primo reel li avevamo scritti noi, e su 16 uscite
+  vere (Opus 5 e Sonnet 5) nessuna conteneva «oggi si chiude un capitolo» né «Lei no.». Il presentatore ha preferito i
+  testi veri, anche a costo di rifare le scene 2-7. Da ora ogni testo che la VOCE attribuisce a un modello («Comincia
+  così: …», «Ora scrive: …») viene da un'uscita vera, **generata prima di scrivere la scena**: più uscite per
+  richiesta (3-5), si sceglie fra quelle, con i tagli dichiarati nelle Note di produzione. Il luogo comune giusto è
+  quello che torna in quasi tutte le uscite (la sveglia: 6 su 6), non quello che ci aspettiamo noi.
+  - Le revisioni del presentatore hanno comunque l'ultima parola: se ritocca un testo del modello («il caffè potrai
+    berlo sul divano» al posto di «berlo caldo»), lo applichi così com'è e lo dichiari nelle note e in caption;
+    non gli opponi la regola delle uscite vere. Evita anche le parole ripetute fra le richieste: «originale» nella
+    prima richiesta toglieva forza a «Sii originale.» nella scena 5.
 
 ## Consegna
 File in `contenuti/sceneggiature/` (nome `YYYY-MM-DD-<slug>.md` con la data di oggi), `stato: sceneggiatura`,
