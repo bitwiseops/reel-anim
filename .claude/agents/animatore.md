@@ -41,7 +41,7 @@ Prima di scrivere codice leggi OBBLIGATORIAMENTE:
    Porta il frontmatter a `stato: animato`.
 
 ## Lezioni dalle sessioni
-- **2026-09-13, primo reel** (`contenuti/animazioni/generativa-non-creativa.py`, da usare come esempio):
+- **2026-09-13, primo reel** (`contenuti/archivio/generativa-non-creativa/animazioni.py`: archiviato, da leggere come esempio, non da lanciare):
   - Al presentatore è piaciuto molto il flusso: pochi oggetti che ritornano e ogni scena che parte dall'ultimo
     fotogramma della precedente (manuale §5, «Filo visivo e continuità»). È lo standard.
   - Un titolo di carta spariva per mezzo secondo durante le animazioni (riquadro pieno disegnato sopra i testi fermi,

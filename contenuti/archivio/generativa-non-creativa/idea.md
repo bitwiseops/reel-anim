@@ -2,9 +2,9 @@
 
 **Data:** 2026-09-10
 **Tipo:** pillola
-**Bozza:** contenuti/bozze/2026-09-10-llm-perche-generativa.md
+**Bozza:** contenuti/archivio/generativa-non-creativa/bozza.md
 **Stato:** sceneggiata
-**Sceneggiatura:** contenuti/sceneggiature/2026-09-13-generativa-non-creativa.md
+**Sceneggiatura:** contenuti/archivio/generativa-non-creativa/sceneggiatura.md
 **Candidato primo carosello:** sì, candidabile (scena autonoma in ufficio, un solo modello per tutta la chat, nessun cambio di iride, nessun prerequisito: il biglietto banale lo riconosce chiunque). Nella serie «Cos'è davvero un LLM» è la puntata «cosa fa quando scrive», gemella di «L'IA sa tutto. Ma non sa di saperlo» (cosa fa quando risponde a un fatto): le due si sostengono a vicenda ma ognuna regge da sola.
 
 ## Concetto AI illustrato

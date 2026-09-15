@@ -57,7 +57,7 @@ Prima di scrivere leggi OBBLIGATORIAMENTE:
   visivo) e per il presentatore (tono, pause). Non vanno a schermo.
 
 ## Lezioni dalle sessioni
-- **2026-09-13, primo reel** (`contenuti/sceneggiature/2026-09-13-generativa-non-creativa.md`):
+- **2026-09-13, primo reel** (archiviato in `contenuti/archivio/generativa-non-creativa/sceneggiatura.md`):
   - Il **filo visivo** proposto nelle Note di produzione (carta «richiesta», biglietto, colonna delle candidate) ha
     funzionato: il presentatore ha apprezzato molto il flusso delle animazioni. Proponilo sempre.
   - Il revisore ha bocciato «Il testo lo produce lei: nuovo, sì» detto del biglietto banale: un aggettivo sul

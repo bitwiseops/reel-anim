@@ -7,7 +7,7 @@ formato: reel
 tipo: pillola
 pilastro: come funziona
 messaggio_centrale: L'IA generativa scrive una parola alla volta scegliendo tra le più probabili, per questo è fluente e per questo è banale; l'originalità non si chiede, si prepara cambiando quello che viene prima.
-idea: contenuti/idee/2026-09-10-llm-perche-generativa.md
+idea: contenuti/archivio/generativa-non-creativa/idea.md
 ---
 
 # Generativa non vuol dire creativa

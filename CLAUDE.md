@@ -37,11 +37,11 @@ Piano completo: `~/.claude/plans/dobbiamo-revisionare-il-modello-lovely-piglet.m
   `stato: animato`; non tocca `tools/`) · `.claude/commands/pipeline.md` — `/pipeline <file>`: una tappa, poi fermata
 
 ## Stato
-Fasi 0 e 1 chiuse (2026-09-13, in `main`). Fase 2 in corso (branch `fase-2-primo-reel`): primo reel vero
-«Generativa non vuol dire creativa» (`contenuti/idee/2026-09-10-llm-perche-generativa.md`, slug
-`generativa-non-creativa`) portato dagli agenti fino a `animato` (2026-09-14: biglietti generati davvero con Claude
-Opus 5, in `contenuti/media/<slug>/biglietti-claude-*.md`, con i ritocchi del presentatore; anteprima 58,5 s, stereo).
-Le revisioni del presentatore hanno l'ultima parola. Prossimo passo: pianificare la registrazione (fase 5, sotto).
+Fasi 0 e 1 chiuse (2026-09-13, in `main`). Fase 2 in corso (branch `fase-2-primo-reel`): il primo reel vero
+«Generativa non vuol dire creativa» (slug `generativa-non-creativa`) ha fatto da banco di prova per libreria, agenti e
+`reel registra`; **il 2026-09-15 i contenuti sono stati azzerati** e i suoi testi archiviati in
+`contenuti/archivio/generativa-non-creativa/` (clip, prese e render cancellati). Le revisioni del presentatore hanno
+l'ultima parola.
 
 ## Comandi
 `uv run reel setup` · `valida <file>` · `gobbo <file> [--scrivi]` · `clip <file>` · `voce <file>` ·

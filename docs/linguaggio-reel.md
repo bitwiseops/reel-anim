@@ -163,7 +163,7 @@ Un reel si manda quando fa pensare a una persona precisa («è Marco!»), fa rid
 | 8 | **Transizioni per giunzione** | rispettare `transizione=`: taglio di default, dissolvenza solo per uno stacco di tempo | `monta`, `compositing` |
 | 9 | Minori | componente `Cursore`; icona Lucide `printer` | `componenti`, `assets/icone` |
 
-## 3. Applicazione al primo reel (`generativa-non-creativa`)
+## 3. Applicazione al primo reel (`generativa-non-creativa`, archiviato in `contenuti/archivio/generativa-non-creativa/`)
 
 ### Critica scena per scena
 | Scena | Già da reel | Non ancora |

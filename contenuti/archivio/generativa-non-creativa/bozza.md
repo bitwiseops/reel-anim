@@ -17,4 +17,4 @@ probabile (vincoli, esempi insoliti, chiederle di scartare la prima idea).
 ## Per approfondire (da verificare dal revisore tecnico)
 Lezione 1 del corso (slide 16, probability distribution e sampling); il tokenizer di OpenAI online per vedere le scelte.
 
-**Idea:** contenuti/idee/2026-09-10-llm-perche-generativa.md
+**Idea:** contenuti/archivio/generativa-non-creativa/idea.md

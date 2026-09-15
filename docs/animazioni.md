@@ -216,8 +216,9 @@ Regole:
   ritornano per tutto il reel con lo stesso aspetto, e **ogni scena che parte dall'ultimo fotogramma della
   precedente**, ricostruito con funzioni di impaginazione condivise nel file (`disposizione_NN()`,
   `stato_finale_NN()`): la dissolvenza fra le scene non si vede e gli oggetti non saltano. Esempio:
-  `contenuti/animazioni/generativa-non-creativa.py`. Per compattare o far crescere una carta, tienila a pezzi
-  (riquadro, titolo, righe) con il riquadro sotto (`set_z_index(-1)`) e passa da uno stato all'altro con `Transform`.
+  `contenuti/archivio/generativa-non-creativa/animazioni.py` (archiviato: si legge, non gira). Per compattare o far
+  crescere una carta, tienila a pezzi (riquadro, titolo, righe) con il riquadro sotto (`set_z_index(-1)`) e passa da
+  uno stato all'altro con `Transform`.
 
 ## 6. Testo
 
