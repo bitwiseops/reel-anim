@@ -12,6 +12,7 @@ Piano completo: `~/.claude/plans/dobbiamo-revisionare-il-modello-lovely-piglet.m
 
 ## Struttura
 - `config.toml` — identità e misure (video 1080×1920 @30, safe area, riquadro, schermo, palette, font, voce di prova)
+  e `[stile]` (corpus di reelkit e guida del parlato)
 - `tools/anim/` — libreria Manim: `config` (TOML + font Pango + opzioni `tempconfig`), `misure` (px ↔ unità,
   minimi di leggibilità, `FATTORE_FONT_SIZE` misurato con `calibra.py`), `base` (`ScenaReel` con `durata_s`,
   `beat(i)` sugli inizi delle frasi, `durata_beat`, `arrotonda`, `fino_a`, `chiudi`, aree contenuto/riquadro/schermo, `debug` con guide; cambi grandi `punch(s)` e `zoom_su(mob)`/`torna()`), `componenti` (Titolo,
@@ -21,38 +22,48 @@ Piano completo: `~/.claude/plans/dobbiamo-revisionare-il-modello-lovely-piglet.m
   componente: `uv run python -m tools.anim.vetrina`), `prova` (scena di prova della fase 0)
 - `tools/reel/` — grammatica e montaggio: `model`, `parser`, `validate` (`LIMITI`, fonte unica), `stima`, `gobbo`,
   `clip`, `voce` (`say`), `manim_render`, `compositing` (filtergraph ffmpeg: b-roll, riquadro con maschera, audio,
-  concat con xfade), `fotogrammi`, `contact_sheet`, `monta`, `__main__` (CLI `uv run reel`)
-- `contenuti/` — `bozze/ idee/ sceneggiature/ in-produzione/ pubblicati/ db/`, `animazioni/<slug>.py` (una classe
+  concat con xfade), `fotogrammi`, `contact_sheet`, `monta`, `stile` (guida del parlato rispetto al corpus),
+  `__main__` (CLI `uv run reel`)
+- `contenuti/` — `spunti/` (link, righe o tema: il punto di partenza, `stato: spunto → ideato`), `idee/`,
+  `sceneggiature/`, `bozze/ in-produzione/ pubblicati/ db/`, `archivio/<slug>/` (reel chiusi o abbandonati: si
+  leggono, non girano), `animazioni/<slug>.py` (una classe
   `ScenaNN(ScenaReel)` per scena), `media/<slug>/scena-NN.mov` (clip del presentatore, gitignored),
   `render/<slug>/` (output, gitignored)
 - `templates/reel.md` — grammatica della sceneggiatura (blocco-commento) · `templates/esempio-reel.md` — esempio
   completo (7 scene, tutti i tipi e tutti i componenti) con `contenuti/animazioni/esempio-reel.py` e il b-roll versionato
   in `contenuti/media/esempio-reel/`: `uv run reel monta templates/esempio-reel.md --prova --anteprima` (~20 s)
 - `docs/` — `sceneggiatura.md` (grammatica, limiti, come si scrive la VOCE), `animazioni.md` (manuale
-  dell'animatore: regole, tempi, componenti, controlli, trappole, fonti), `registrazione.md` (clip del presentatore)
+  dell'animatore: regole, tempi, componenti, controlli, trappole, fonti), `registrazione.md` (clip del presentatore),
+  `linguaggio-reel.md` (hook, payoff, CTA), `stile-parlato.md` (come parla il presentatore: la scrive lo `stilista`)
 - `assets/fonts/` (Inter Variable, JetBrains Mono) · `assets/presentatore/avatar.png` (segnaposto da `reel setup`) ·
   `assets/icone/` (SVG Lucide, licenza ISC)
-- `.claude/agents/` — `sceneggiatore` (idea → sceneggiatura, `reel valida`), `revisore-tecnico` (claim anche nelle
-  animazioni, `stato: rivisto`), `animatore` (`.py` + `anima --json` + fotogrammi + `monta --prova --anteprima`,
-  `stato: animato`; non tocca `tools/`) · `.claude/commands/pipeline.md` — `/pipeline <file>`: una tappa, poi fermata
+- `.claude/agents/` — `ideatore` (spunto → idea, anche da un link con WebFetch), `stilista` (corpus di reelkit →
+  `docs/stile-parlato.md`), `sceneggiatore` (idea → sceneggiatura, `reel valida`), `revisore-tecnico` (claim anche
+  nelle animazioni e contro la fonte, `stato: rivisto`), `animatore` (`.py` + `anima --json` + fotogrammi +
+  `monta --prova --anteprima`, `stato: animato`; non tocca `tools/`) · `.claude/commands/pipeline.md` —
+  `/pipeline <file> [--tutto]`: fino alla prossima fermata, o con `--tutto` fino all'anteprima da registrare ·
+  `.claude/workflows/reel.js` — la stessa corsa come Workflow deterministico (`args` = percorso di partenza)
 
 ## Stato
 Fasi 0 e 1 chiuse (2026-09-13, in `main`). Fase 2 in corso (branch `fase-2-primo-reel`): il primo reel vero
 «Generativa non vuol dire creativa» (slug `generativa-non-creativa`) ha fatto da banco di prova per libreria, agenti e
 `reel registra`; **il 2026-09-15 i contenuti sono stati azzerati** e i suoi testi archiviati in
-`contenuti/archivio/generativa-non-creativa/` (clip, prese e render cancellati). Le revisioni del presentatore hanno
-l'ultima parola.
+`contenuti/archivio/generativa-non-creativa/` (clip, prese e render cancellati). Nuovi: `ideatore` e spunti,
+`stilista` e `reel stile` (il corpus di `~/Projects/reelkit` è ancora vuoto: guida provvisoria), `/pipeline --tutto`
+e il workflow `reel`. Le revisioni del presentatore hanno l'ultima parola. **Prossimo passo**: il presentatore scrive
+il primo spunto e si lancia `/pipeline contenuti/spunti/<file> --tutto` in una sessione nuova (gli agenti creati in
+una sessione non sono disponibili in quella stessa).
 
 ## Comandi
-`uv run reel setup` · `valida <file>` · `gobbo <file> [--scrivi]` · `clip <file>` · `voce <file>` ·
+`uv run reel setup` · `stile` · `valida <file>` · `gobbo <file> [--scrivi]` · `clip <file>` · `voce <file>` ·
 `registra <file> [--da-scena N] [--dispositivi] [--video N --audio N] [--spezza presa-NN]` ·
 `anima <file> [--scena N] [--qualita l|m|h] [--debug] [--json]` · `monta <file> [--prova] [--anteprima] [--scena N]` ·
 `uv run pytest -q` (i test `slow` usano Manim e ffmpeg). `--prova` = voce sintetica + avatar segnaposto: anteprima
 completa senza il presentatore, **non pubblicabile**.
 
 ## Grammatica (vedi templates/reel.md)
-`## Scena N [hook|spiegazione|schermo|chiusura, durata=Ns, transizione=…]` con righe `VOCE:` (una frase = un
-beat), `ANIMAZIONE:` (brief per l'animatore), `TESTO:`, `TITOLO:/SOTTOTITOLO:` (hook), `MESSAGGIO:/CTA:`
+`## Scena N [hook|spiegazione|schermo|chiusura, durata=Ns, transizione=…]` con righe `VOCE:` (una riga =
+un beat = un pezzo di parlato), `ANIMAZIONE:` (brief per l'animatore), `TESTO:`, `TITOLO:/SOTTOTITOLO:` (hook), `MESSAGGIO:/CTA:`
 (chiusura), `SCHERMO: file`, `RIQUADRO: no|si|posizione`; inline `==evidenzia==`, `**grassetto**`.
 Limiti in `tools/reel/validate.py::LIMITI`: 6-8 scene (5-9), VOCE ≤ 50 parole/scena (hook ≤ 20, chiusura ≤ 18), scena 2,5-19 s,
 reel 30-90 s (dal 2026-09-15: la VOCE è parlato vero, «prima il monologo, poi i beat», `docs/sceneggiatura.md` §5;
@@ -79,12 +90,14 @@ scena `inizi_frasi_s`, `origine_tempi`, `avvisi_tempi` (beat in ritardo, scena c
   presentatore sui reel), va nella sezione «Lezioni dalle sessioni» dell'agente giusto in `.claude/agents/`, con la
   data; se riguarda la libreria anche in `docs/animazioni.md` o `docs/sceneggiatura.md`.
 
-## Pipeline (bozza funzionale in fase 2; completa in fase 3)
-idea → sceneggiatura (**fermata 2**) → revisione tecnica (con ❌ ci si ferma) → animazione (animatore: `.py` +
-anteprima `--prova`) → **fermata 3: il presentatore guarda l'anteprima** → registrazione (gobbo, clip) → montaggio →
-social → approvazione → pubblica (container REELS). Idee: `**Stato:** idea → sceneggiata`; sceneggiature:
-`stato: sceneggiatura → rivisto → animato → …`. Mai spostare file tra cartelle: lo fa il presentatore. Fase 3:
-cruscotto, db delle decisioni, ideatore, social-strategist.
+## Pipeline (`.claude/commands/pipeline.md`; completa in fase 3)
+spunto → idea (ideatore, **fermata 1**) → sceneggiatura (**fermata 2**) → revisione tecnica (con ❌ ci si ferma) →
+animazione (animatore: `.py` + anteprima `--prova`) → **fermata 3: il presentatore guarda l'anteprima** →
+registrazione (`reel registra`) → montaggio → social → approvazione → pubblica (container REELS). Con `--tutto` (o
+il workflow `reel`) si salta dalla partenza alla fermata 3, fermandosi solo su ❌, errori o agenti bloccati. Spunti:
+`stato: spunto → ideato`; idee: `**Stato:** idea → sceneggiata`; sceneggiature: `stato: sceneggiatura → rivisto →
+animato → …`. Mai spostare file tra cartelle: lo fa il presentatore. Fase 3: cruscotto, db delle decisioni,
+social-strategist.
 
 ## Registrazione guidata (fase 5, fatta il 2026-09-14; decisione: B con «riprendi da questa scena»)
 `uv run reel registra <file>` (`docs/registrazione.md` §6): app Tkinter con tre pannelli (webcam con il cerchio, il

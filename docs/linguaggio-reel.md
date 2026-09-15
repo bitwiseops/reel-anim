@@ -111,7 +111,7 @@ stessa scala), l'occhio si abitua. È una regola di mestiere, non un numero misu
 Instagram non raccomanda i reel fatti per lo più di testo, e la ridondanza peggiora l'apprendimento. Una frase lunga
 (una richiesta, un biglietto) si mostra ma **non** si fa leggere mentre la voce dice altro: o la voce la legge, o
 resta come oggetto e se ne accende una parola.
-- **Sceneggiatore**: TESTO di 1-3 parole; MESSAGGIO di chiusura ≤ 12 parole (25 è il massimo tecnico).
+- **Sceneggiatore**: TESTO di 1-3 parole (4 è il massimo tecnico); MESSAGGIO di chiusura ≤ 12 parole (25 è il massimo tecnico).
 - **Animatore**: la frase che conta va nel corpo `punto` (92 px), non in tre righe da 44 px; ≤ 8 parole nuove da
   leggere per beat.
 - **Sottotitoli**: decisione aperta. A favore: accessibilità e visione senza audio. Contro: ridondanza, e area tolta
@@ -187,6 +187,10 @@ Un reel si manda quando fa pensare a una persona precisa («è Marco!»), fa rid
 Tutte portano la mossa concreta (un dettaglio che sai solo tu, messo nella richiesta), non dicono mai «sempre la più
 probabile» e trattano «sii originale» come insufficiente, non come inutile. Passano `reel valida` senza avvisi (A 25
 parole ~10 s, B 27 parole ~10 s, C 32 parole ~12 s).
+
+> **Nota del 2026-09-15**: queste chiusure furono scritte quando il limite della VOCE di chiusura era 25 parole; dal
+> 2026-09-14 è 18 (`docs/sceneggiatura.md` §4) e oggi darebbero un avviso. Nel reel la B è stata accorciata a 15
+> parole. Valgono come esempi di struttura, non di lunghezza.
 
 **A. Payoff che torna all'hook (loop).** L'ultima frase si aggancia alla prima dell'hook attuale, «Generativa non
 vuol dire creativa»: funziona solo con l'hook così com'è.

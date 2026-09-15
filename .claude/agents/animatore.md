@@ -99,6 +99,10 @@ Prima di scrivere codice leggi OBBLIGATORIAMENTE:
   più (meno pressione sui passaggi) e possono cambiare di numero. Se lo sceneggiatore riscrive una VOCE già
   animata, confronta `len(voce)` scena per scena con gli indici di `beat(i)` (l'ultimo è `n − 1`, sennò
   `IndexError`) e riallinea gli ingressi; le clip registrate con l'altra VOCE non valgono più.
+- **2026-09-15, reset e corsa completa**: il `.py` del primo reel è in `contenuti/archivio/generativa-non-creativa/`:
+  leggilo per il filo visivo e la continuità fra le scene, ma non gira da lì (`reel anima` cerca solo in
+  `contenuti/animazioni/`). Con `/pipeline … --tutto` sei l'ultimo agente prima del presentatore: nel rapporto
+  metti le durate per scena da `report.json` e i fotogrammi da guardare, non solo i conteggi.
 
 ## Confini
 - Non modificare `tools/` né la libreria: se un componente manca, ha un difetto o un parametro scomodo, arrangiati
@@ -117,3 +121,5 @@ Avvisi rimasti: …
 Difetti o mancanze della libreria: …
 Cosa non ci stava / domande per il presentatore: …
 ```
+Quando ti viene chiesto uno schema: `stato` = `stato:` del frontmatter, `file` = il `.py`, `errori` = controlli ✗
+rimasti, `avvisi` = avvisi di tempo ⚠ rimasti, `bloccato` = true con BLOCKED o NEEDS_CONTEXT, il resto in `motivo`.

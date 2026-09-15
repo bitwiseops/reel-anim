@@ -23,7 +23,7 @@ Verifica sempre con:  uv run reel valida <questo file>   (stampa la durata stima
   ANIMAZIONE: prosa       ripetibile: cosa si vede; una riga sola, oppure una per riga della VOCE (beat i ↔ riga i)
   TESTO: etichetta        ripetibile (max 4, ≤ 4 parole): parole chiave che compaiono a schermo
   TITOLO: / SOTTOTITOLO:  solo hook (titolo ≤ 10 parole: regge da solo)
-  MESSAGGIO: / CTA:       solo chiusura (messaggio ≤ 25 parole, CTA una riga)
+  MESSAGGIO: / CTA:       solo chiusura (messaggio ≤ 12 parole consigliate, 25 al massimo; CTA una riga)
   SCHERMO: file.mp4       scena schermo (o spiegazione): file in contenuti/media/<slug>/ mostrato nella cornice
   RIQUADRO: no|si|posizione   riquadro del presentatore (default: no nell'hook, si altrove); posizioni: basso-destra basso-sinistra alto-destra alto-sinistra
 

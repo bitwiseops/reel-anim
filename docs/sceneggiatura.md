@@ -6,7 +6,8 @@ animazioni e il montaggio. La grammatica da copiare è in `templates/reel.md`; u
 
 ## 1. Il file
 
-Sta in `contenuti/sceneggiature/`; il nome del file è libero, conta lo `slug`. Il frontmatter:
+Sta in `contenuti/sceneggiature/`, con nome `AAAA-MM-GG-<slug>.md` (la data della prima stesura); per il codice
+conta solo lo `slug`. Il frontmatter:
 
 | Campo | Obbligatorio | Cosa |
 |---|---|---|
@@ -44,7 +45,7 @@ le giunzioni.
 | `ANIMAZIONE:` | una, oppure una per riga `VOCE:` | il brief per l'animatore (sezione 6) |
 | `TESTO:` | fino a 4, ≤ 4 parole | parole chiave che compaiono a schermo |
 | `TITOLO:` / `SOTTOTITOLO:` | una | solo nell'hook: il titolo regge da solo (≤ 10 parole) |
-| `MESSAGGIO:` / `CTA:` | una | solo nella chiusura (messaggio ≤ 25 parole, CTA una riga) |
+| `MESSAGGIO:` / `CTA:` | una | solo nella chiusura (messaggio ≤ 12 parole consigliate, 25 al massimo; CTA una riga) |
 | `SCHERMO:` | una | un file in `contenuti/media/<slug>/` mostrato nella cornice (b-roll, screen recording, immagine) |
 | `RIQUADRO:` | una | `no`, `si`, `basso-destra`, `basso-sinistra`, `alto-destra`, `alto-sinistra` |
 
@@ -90,7 +91,7 @@ funzionano, detti suonano recitati: nessuno parla per aforismi. Da allora:
 2. **Poi lo si spezza in righe `VOCE:`** nei punti in cui cambia lo schermo: una riga = un beat = un pezzo di parlato
    (una o due proposizioni), non per forza una frase chiusa. 2-5 righe per scena.
 3. **La prova**: lo diresti così al bar? Se una riga si può leggere solo come un titolo, riscrivila con un verbo.
-   Una frase da titolo nel reel è ammessa, ed è la battuta finale.
+   Punta a un solo aforisma, la battuta finale: nella chiusura è libera, fuori `valida` ne tollera uno.
 4. `valida` avvisa sulle frasi da titolo in fila, sullo schema «X, sì. Y, no.» e sui due punti usati come snodo; lo
    sceneggiatore li porta a zero. La verifica vera è il presentatore che la legge in `reel registra`.
 
@@ -99,8 +100,8 @@ cerca: lo scrive lei. Fluente, sì. Originale, no.» Parlato: «Quindi a ogni bi
 battuta. E non è che il testo lo va a cercare da qualche parte: lo scrive lei, una parola dopo l'altra. Viene fuori
 fluente, certo. Ma originale no, non può esserlo.» Stesso contenuto, stessi quattro beat, il doppio delle parole.
 
-- **Hook**: una domanda o una promessa a chi guarda in ≤ 20 parole, in 4-6 secondi; non un titolo detto a voce. Il
-  `TITOLO:` a schermo resta la tesi in forma di titolo.
+- **Hook**: una domanda o una promessa a chi guarda in ≤ 20 parole, in 4-8 secondi (20 parole ≈ 8 s); non un titolo
+  detto a voce. Il `TITOLO:` a schermo resta la tesi in forma di titolo.
 - **Numeri**: solo veri, con la fonte nelle note di produzione; quelli illustrativi si dichiarano come esempi anche a
   schermo (la `Classifica` lo scrive da sola).
 - **Testi attribuiti a un modello** («Comincia così: …», «Ora scrive: …»): solo uscite vere, generate **prima** di

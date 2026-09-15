@@ -41,10 +41,12 @@ Prima di scrivere leggi OBBLIGATORIAMENTE:
   che…»), il verbo in ogni frase, frasi di 6-18 parole. Poi spezzalo in righe `VOCE:` dove cambia lo schermo:
   **una riga = un beat = un pezzo di parlato**, anche una sola proposizione. 2-5 righe per scena, ≤ 50 parole.
   Vietato: frasi da titolo in fila (≤ 4 parole senza verbo alla prima o seconda persona), lo schema «X, sì. Y, no.»,
-  i due punti come snodo (valgono solo per citare: «scrive: …»). Un solo aforisma per reel, ed è la battuta finale.
+  i due punti come snodo (valgono solo per citare: «scrive: …»). Punta a un solo aforisma, la battuta finale
+  (`valida` ne tollera uno fuori dalla chiusura).
   La prova: lo diresti così al bar? Il presentatore la leggerà dal karaoke così com'è: niente abbreviazioni, sigle da
   sciogliere, parentesi, parole di pronuncia ambigua.
-- **ANIMAZIONE**: una riga per riga VOCE (beat i ↔ riga i). Dice quali oggetti, cosa cambia, su quale frase
+- **ANIMAZIONE**: una sola per la scena, oppure una per riga VOCE (beat i ↔ riga i); una per riga quando i beat
+  cambiano oggetti diversi, cioè quasi sempre. Dice quali oggetti, cosa cambia, su quale frase
   (tabella «male / bene» di `docs/animazioni.md` §11). Resta nei componenti della libreria (carte, classifiche,
   frasi a cartellini, flussi, confronti, tabelle, icone…): se serve qualcosa che non c'è, descrivilo e segnalalo
   nelle Note di produzione.
@@ -55,8 +57,10 @@ Prima di scrivere leggi OBBLIGATORIAMENTE:
 - `TESTO:` solo le parole chiave che devono restare a schermo (≤ 4 parole ciascuna); `==evidenzia==` una per scena.
 - `SCHERMO:` solo se il file esiste già in `contenuti/media/<slug>/` (altrimenti `valida` dà errore): un b-roll o uno
   screen recording da girare va proposto nelle Note di produzione, non messo in scena.
-- **Chiusura**: `MESSAGGIO:` = il messaggio centrale in forma memorabile (≤ 25 parole); `CTA:` una riga.
-- Durata: 6-8 scene, reel stimato fra 50 e 80 s (il parlato vero costa parole: non comprimerlo per stare sotto).
+- **Chiusura**: `MESSAGGIO:` = il messaggio centrale in forma memorabile (≤ 12 parole consigliate, 25 al
+  massimo: una frase grande, il resto in caption); `CTA:` una riga.
+- Durata: 6-8 scene, reel stimato fra 30 e 90 s, di solito 50-75 (il parlato vero costa parole: non
+  comprimerlo per stare sotto).
 - `## Note di produzione`: appunti per il revisore (claim delicati, esempi dichiarati), per l'animatore (il filo
   visivo) e per il presentatore (tono, pause). Non vanno a schermo.
 
@@ -87,7 +91,7 @@ Prima di scrivere leggi OBBLIGATORIAMENTE:
     la frase»), la spiegazione è la prima cosa da tagliare.
 - **2026-09-14, dopo la seconda anteprima**: la chiusura di 20 parole in 4 frasi durava 7,8 s con la voce di prova,
   oltre i 6-7 s consigliati, e il presentatore l'ha fatta accorciare. Da allora `valida` avvisa sopra le 18
-  parole (prima 25): una chiusura a battuta sta in **~15 parole**. Per tagliare, la mossa generale diventa un pronome che
+  parole (prima 25): una chiusura a battuta sta in **~15 parole** (18 è il massimo di `valida`). Per tagliare, la mossa generale diventa un pronome che
   riprende la battuta («Tu sì. / Scrivilo nella richiesta.» al posto di «Scrivi nella richiesta quello che sai solo
   tu.»): la generalizzazione la portano l'immagine e la caption. La battuta finale non si taglia.
 - **2026-09-14, i biglietti generati davvero**: i due biglietti del primo reel li avevamo scritti noi, e su 16 uscite
@@ -106,6 +110,12 @@ Prima di scrivere leggi OBBLIGATORIAMENTE:
   60 s) premiavano la compressione e la compressione produce epigrammi. Da allora: prima il monologo, poi i beat;
   limiti a 50 parole/90 s; `valida` avvisa sulle frasi da titolo, su «X, sì. Y, no.» e sui due punti come snodo. La
   verifica vera è il presentatore che legge in `reel registra`: se inciampa, la sceneggiatura non passa.
+- **2026-09-15, reset dei contenuti e corsa completa**: il primo reel è in `contenuti/archivio/`, le lezioni sopra
+  restano valide. Le idee ora le scrive l'`ideatore` da uno spunto (link, righe del presentatore, tema): se l'idea ha
+  una sezione `## Fonte`, i fatti del reel vengono da lì e non si aggiungono numeri che la fonte non ha. Con
+  `/pipeline … --tutto` nessuno rilegge la sceneggiatura prima del revisore: le frasi di cui sei meno sicuro vanno
+  nel rapporto, perché il presentatore le legge solo nel report finale. Prima del monologo leggi
+  `docs/stile-parlato.md` (e le trascrizioni del corpus quando ci sono).
 
 ## Consegna
 File in `contenuti/sceneggiature/` (nome `YYYY-MM-DD-<slug>.md` con la data di oggi), `stato: sceneggiatura`,
@@ -116,3 +126,7 @@ finale del comando.
 Non toccare il file idea (lo aggiorna `/pipeline`). Se il presentatore chiede modifiche, riscrivi lo stesso file:
 niente duplicati. Al termine proponi un TITOLO alternativo e segnala in una riga le frasi della VOCE di cui sei
 meno sicuro.
+
+Quando ti viene chiesto uno schema: `stato` = `stato:` del frontmatter, `file` = il percorso della sceneggiatura,
+`errori`/`avvisi` = i conteggi dell'ultimo `uv run reel valida`, e in `motivo` il titolo alternativo e le frasi
+incerte.
