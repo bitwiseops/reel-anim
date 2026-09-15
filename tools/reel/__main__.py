@@ -245,6 +245,30 @@ def cmd_setup(args) -> int:
     return 0
 
 
+def cmd_stile(args) -> int:
+    from ..anim.config import carica
+    from .stile import stato
+    s = stato(carica())
+    c = s["corpus"]
+    if c is None:
+        print("corpus: nessuno ([stile].corpus vuoto)")
+    elif not s["corpus_esiste"]:
+        print(f"corpus: {c} (assente: in reelkit, `./reelkit export` dopo aver analizzato dei reel)")
+    else:
+        print(f"corpus: {c} ({s['reel']} reel, modificato il {s['corpus_data']})")
+    g = s["guida"]
+    if not s["guida_esiste"]:
+        print(f"guida: {g} (assente)")
+    else:
+        print(f"guida: {g} (letta il {s['guida_data'] or '?'}, {s['guida_reel'] if s['guida_reel'] is not None else '?'} reel)")
+    spiega = {"manca": "lancia l'agente stilista",
+              "provvisoria": "nata dalle regole dei docs, senza reel veri: si rifà quando il corpus ha dei reel",
+              "aggiornata": "distillata da tutti i reel del corpus",
+              "da rifare": "il corpus è cambiato dopo la guida: rilancia l'agente stilista"}
+    print(f"verdetto: {s['verdetto']} ({spiega[s['verdetto']]})")
+    return 0
+
+
 def _avatar_segnaposto(dest: Path, cfg) -> None:
     """Un cerchio pieno con le iniziali del presentatore: sta nel riquadro finché non c'è la clip vera."""
     from PIL import Image, ImageDraw, ImageFont
@@ -296,6 +320,8 @@ def main(argv: list[str] | None = None) -> int:
     p.set_defaults(fn=cmd_registra)
     p = sub.add_parser("setup", help="controlla ffmpeg/manim/font, genera avatar segnaposto e maschere"); p.add_argument("--forza", action="store_true")
     p.set_defaults(fn=cmd_setup)
+    p = sub.add_parser("stile", help="corpus di reelkit e stato della guida docs/stile-parlato.md")
+    p.set_defaults(fn=cmd_stile)
 
     args = ap.parse_args(argv)
     return args.fn(args)

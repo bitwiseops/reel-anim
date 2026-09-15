@@ -9,6 +9,7 @@ def test_config_default_e_misure():
     assert cfg.frame_width == 9 and cfg.frame_height == 16 and cfg.px_per_unita == 120
     assert cfg.palette.sfondo.startswith("#") and cfg.font.famiglia
     assert all(f.exists() for f in cfg.font_file())
+    assert cfg.percorso("stile", "guida") == Path(__file__).resolve().parents[1] / "docs/stile-parlato.md"
 
 
 def test_override_locale(tmp_path):

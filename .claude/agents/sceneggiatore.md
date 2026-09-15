@@ -14,6 +14,10 @@ Prima di scrivere leggi OBBLIGATORIAMENTE:
 - `templates/reel.md` (usa ESATTAMENTE quella grammatica, frontmatter incluso)
 - `templates/esempio-reel.md` (un reel che passa tutti i controlli: guardalo per il ritmo e la forma, non copiarlo)
 - `docs/animazioni.md` §8 (componenti disponibili) e §11 (brief ANIMAZIONE: male e bene)
+- `docs/stile-parlato.md` (come parla il presentatore: attacchi, connettivi, lunghezza delle frasi, chiusure) e,
+  se il corpus esiste (`uv run reel stile`), 2-3 trascrizioni intere del corpus, le più vicine al tema (Grep sulle
+  parole chiave del concetto; in mancanza, le Note più vicine): leggile prima del monologo, per l'orecchio, non
+  per copiarle
 - il file idea di partenza e, se c'è, la bozza collegata
 - 1-2 sceneggiature recenti in `contenuti/sceneggiature/` per coerenza di stile (se esistono)
 

@@ -61,6 +61,14 @@ class Config:
     def font_file(self) -> list[Path]:
         return [RADICE / f for f in self.dati["font"]["file"]]
 
+    def percorso(self, sezione: str, chiave: str) -> Path | None:
+        """Un percorso del config: `~` espanso, relativo alla radice del repo se non è assoluto; None se vuoto o assente."""
+        v = self.dati.get(sezione, {}).get(chiave)
+        if not v:
+            return None
+        p = Path(str(v)).expanduser()
+        return p if p.is_absolute() else RADICE / p
+
 
 class _Sezione:
     def __init__(self, d: dict):

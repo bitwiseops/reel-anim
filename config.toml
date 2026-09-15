@@ -69,3 +69,7 @@ conto_alla_rovescia_s = 3
 latenza_s = 0.10          # ritardo fra la fotocamera e il fotogramma letto; se la voce risulta spostata di una costante, ritoccalo e rifai --spezza
 codec = "h264_videotoolbox"
 bitrate = "8M"
+
+[stile]                   # corpus di reel altrui trascritti (reelkit): docs/stile-parlato.md ne distilla le regole
+corpus = "~/Projects/reelkit/export.md"   # override in config.local.toml; "" = nessun corpus
+guida = "docs/stile-parlato.md"           # relativo alla radice del repo
