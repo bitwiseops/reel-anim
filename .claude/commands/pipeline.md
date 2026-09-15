@@ -1,41 +1,81 @@
 ---
-description: Porta un reel fino alla prossima fermata (idea → sceneggiatura → revisione → animazione con anteprima)
+description: Porta un reel fino alla prossima fermata, o con --tutto dallo spunto fino all'anteprima da registrare
+argument-hint: <file> [--tutto]
 ---
-Argomento: $ARGUMENTS
+Argomenti: $ARGUMENTS (il primo è il file; `--tutto` è facoltativo)
 
-Sei il coordinatore della pipeline dei reel. Esegui UNA tappa e fermati alla fermata successiva: le decisioni le
-prende il presentatore. Regole fisse: mai spostare file tra cartelle; mai saltare la revisione tecnica; mai animare
-una sceneggiatura con ❌ aperti; le modifiche chieste a una fermata si fanno rilanciando la tappa sullo stesso file
-(l'agente riscrive, niente duplicati); in ogni report finale scrivi esplicitamente «prossimo passo: …».
+Sei il coordinatore della pipeline dei reel: lanci gli agenti, controlli quello che consegnano e riferisci al
+presentatore. Le decisioni le prende lui, alle fermate.
 
-(Bozza funzionale della fase 2: il cruscotto, il db delle decisioni, l'ideatore e il social-strategist arrivano con
-la fase 3; la registrazione e il montaggio finale con le fasi 4-5.)
+## Regole fisse
+- Mai spostare file tra cartelle (lo fa il presentatore). Mai saltare la revisione tecnica. Mai animare una
+  sceneggiatura con ❌ aperti.
+- Le modifiche chieste a una fermata si fanno rilanciando l'agente sullo stesso file: l'agente riscrive, niente
+  duplicati. Le revisioni del presentatore hanno l'ultima parola.
+- Gli agenti non toccano `tools/`: un difetto della libreria va nel rapporto.
+- Ogni report finisce con «prossimo passo: …».
 
-Decidi la tappa dall'argomento:
+## Due modalità
+- **A fermate** (default). La pipeline si ferma dove serve una decisione del presentatore, non dopo ogni agente:
+  FERMATA 1 dopo l'idea, FERMATA 2 dopo la sceneggiatura, FERMATA 3 dopo l'anteprima. Revisione e animazione corrono in
+  fila, senza fermata in mezzo.
+- **`--tutto`**: nessuna fermata intermedia, dalla partenza fino all'anteprima `--prova` e al report unico. Ci si
+  ferma solo se: il revisore lascia un ❌; `uv run reel valida` ha ancora errori dopo due rilanci dello sceneggiatore;
+  un agente chiude BLOCKED o NEEDS_CONTEXT; un agente non esiste in questa sessione (gli agenti creati nella sessione
+  corrente non sono lanciabili: dillo e proponi di riaprire la sessione). In ogni caso riporta dove ti sei fermato e
+  perché.
+- La stessa corsa esiste come Workflow deterministico: `.claude/workflows/reel.js` (`args` = il percorso di partenza).
 
-**Nessun argomento** → elenca idee (`**Stato:**`) e sceneggiature (`stato:`) in `contenuti/`, con il comando per
-portare avanti ciascuna.
+## Da dove si parte
+- **Nessun argomento** → elenca spunti (`stato:` in `contenuti/spunti/`), idee (`**Stato:**` in `contenuti/idee/`) e
+  sceneggiature (`stato:` in `contenuti/sceneggiature/`), con il comando per portare avanti ciascuno. L'archivio
+  (`contenuti/archivio/`) non si elenca. Ricorda come si scrive uno spunto (`contenuti/spunti/README.md`).
+- **`contenuti/spunti/…`**: `stato: spunto` → T0. `stato: ideato` → non rifare nulla: indica l'idea (`idea:`).
+- **`contenuti/idee/…`**: `**Stato:** idea` → T1. `sceneggiata` → indica la sceneggiatura collegata.
+- **`contenuti/sceneggiature/…`**: `sceneggiatura` → T2; `rivisto` → T3; `animato` → ristampa il report (T4).
+  `rivisto` o `animato` **con una richiesta di riscrittura** (il presentatore vuole cambiare VOCE, scene o brief) →
+  T1 sullo stesso file con la richiesta; lo stato torna a `sceneggiatura`. Avverti che l'animatore dovrà riallineare i
+  `beat(i)` alle righe VOCE nuove e che le clip già registrate (`contenuti/media/<slug>/scena-NN.*`) non valgono più.
+- Altro (file inesistente, stato imprevisto): dillo e fermati.
 
-**Un file in `contenuti/idee/` con `**Stato:** idea`** → tappa «sceneggiatura»:
-1. Lancia `sceneggiatore` sull'idea (deve passare `uv run reel valida` senza errori).
-2. Con Edit aggiorna l'idea: `**Stato:** sceneggiata` e aggiungi `**Sceneggiatura:** <percorso>` sotto lo stato.
-3. Presenta: percorso, scene con tipo e durata stimata e durata del reel (dall'output di `valida`), il titolo
-   alternativo proposto, le frasi di cui lo sceneggiatore è meno sicuro. FERMATA 2: il presentatore legge il file.
-Se l'idea è già `sceneggiata`, non rifare nulla: indica la sceneggiatura collegata.
+## Le tappe
+**T0 · idea.** Lancia `ideatore` sullo spunto: scrive l'idea in `contenuti/idee/` e porta lo spunto a `stato: ideato`.
+Se chiude NEEDS_CONTEXT, riporta le sue domande e fermati (anche con `--tutto`).
+A fermate → FERMATA 1: percorso dell'idea, angolo scelto e scartati, messaggio centrale, hook candidato, fatti presi
+dalla fonte da confermare. Prossimo passo: il presentatore legge e corregge l'idea, poi `/pipeline <idea>`.
 
-**Un file in `contenuti/sceneggiature/`** → in base a `stato:`:
-- `sceneggiatura`: lancia `revisore-tecnico`. Con ❌ FERMATI e riporta claim e riformulazioni proposte (prossimo
-  passo: lo sceneggiatore o il presentatore correggono, poi si rilancia). Altrimenti prosegui.
-- `rivisto` (o dopo la revisione): lancia `animatore`.
-- `animato`: non rilanciare nulla, ristampa il report qui sotto.
-- `rivisto` o `animato` **con una richiesta di riscrittura** (il presentatore vuole cambiare VOCE, scene o brief):
-  rilancia lo `sceneggiatore` sullo stesso file con la richiesta; lo stato torna a `sceneggiatura` e si riparte
-  dalla revisione. Avverti che l'animatore dovrà riallineare i `beat(i)` alle righe VOCE nuove e che le clip già
-  registrate (`contenuti/media/<slug>/scena-NN.*`) non valgono più: si rifà `monta --prova` e poi `reel registra`.
-Report di FERMATA 3 (anteprima): percorso di `reel-9x16.mp4` e di `contact-sheet.png`, durata del reel e durate per
-scena (da `report.json`), avvisi residui, ⚠️ aperte della revisione, rapporto dell'animatore (difetti della
-libreria, cose che non ci stavano). Prossimo passo per il presentatore: guardare l'anteprima e annotare leggibilità,
-tempi e beat; poi la registrazione in presa unica sull'anteprima (`uv run reel registra <file>`) e il montaggio con
-le clip vere (`uv run reel monta <file> --anteprima`).
+**T1 · sceneggiatura.** Prima lancia `uv run reel stile`: se il verdetto è `da rifare` o `manca`, dillo nel report
+(lo `stilista` si lancia a parte, non blocca). Poi lancia `sceneggiatore` sull'idea: deve passare `uv run reel valida`
+senza errori (rilancialo con gli errori al massimo due volte). Con Edit aggiorna l'idea: `**Stato:** sceneggiata` e
+`**Sceneggiatura:** <percorso>` sotto la riga dello stato.
+A fermate → FERMATA 2: percorso, scene con tipo e durata stimata, durata del reel (dall'output di `valida`), il titolo
+alternativo, le frasi di cui lo sceneggiatore è meno sicuro. Prossimo passo: il presentatore legge la VOCE ad alta
+voce (`uv run reel gobbo <file>`), corregge, poi `/pipeline <sceneggiatura>`.
 
-Se l'argomento non rientra in nessun caso (file inesistente, stato imprevisto), dillo.
+**T2 · revisione.** Lancia `revisore-tecnico`. Con un ❌ fermati in entrambe le modalità: riporta i claim e le
+riformulazioni proposte (prossimo passo: il presentatore sceglie, lo sceneggiatore corregge, poi si rilancia).
+Altrimenti prosegui con T3.
+
+**T3 · animazione.** Lancia `animatore`: `.py`, `anima --json`, fotogrammi, `monta --prova --anteprima`,
+`stato: animato`. Prima di consegnare guarda tu `contact-sheet.png` e i fotogrammi fitti di ogni scena: un testo
+tagliato o un beat vuoto si rimanda all'animatore, non al presentatore.
+
+**T4 · anteprima e report.** Se `contenuti/render/<slug>/report.json` manca o è più vecchio della sceneggiatura,
+rilancia `uv run reel monta <file> --prova --anteprima`. Poi il report qui sotto: è la FERMATA 3, e con `--tutto` è
+il report unico.
+
+## Report della FERMATA 3 (e fine di `--tutto`)
+1. **File**: spunto, idea, sceneggiatura, `contenuti/animazioni/<slug>.py`, `contenuti/render/<slug>/reel-prova.mp4`,
+   `contact-sheet.png`, `scene/NN.png`, `fotogrammi/NN-filmstrip.png`.
+2. **La VOCE per scena**, testuale, come la leggerà nel karaoke: è quello che il presentatore deve rileggere prima di
+   registrare.
+3. **Durate**: per scena da `report.json` (con `origine_tempi`), il totale, e il confronto con la stima di `valida`.
+4. **Avvisi**: residui di `valida`, ⚠️ del revisore (una riga ciascuno), rapporto dell'animatore (difetti della
+   libreria, cose che non ci stavano), frasi di cui lo sceneggiatore è meno sicuro, stato della guida di stile.
+5. **Da confermare**: i fatti presi dalla fonte (idee da un link), i testi attribuiti a un modello.
+6. **Prossimo passo**: guardare l'anteprima e annotare leggibilità, tempi e beat; poi la registrazione in presa unica
+   sull'anteprima (`uv run reel registra <file>`) e il montaggio con le clip vere (`uv run reel monta <file>
+   --anteprima`).
+
+Prima di chiudere: le lezioni della corsa (rimandi del revisore, difetti trovati nei fotogrammi, note del presentatore)
+vanno nella sezione «Lezioni dalle sessioni» dell'agente giusto, con la data.
