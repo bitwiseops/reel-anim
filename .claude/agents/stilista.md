@@ -47,7 +47,11 @@ scelto e analizzato, e ne ricavi regole che lo sceneggiatore possa applicare all
 Scrivi solo `docs/stile-parlato.md`. Non tocchi sceneggiature, agenti, `tools/`, né il corpus.
 
 ## Lezioni dalle sessioni
-- (ancora nessuna: si riempie dalla prima guida fatta su reel veri)
+- **2026-09-15, prima guida su 14 reel**: nell'export di reelkit non ci sono righe `- Nota:` (le note stanno dentro
+  le Analisi, e riguardano spesso gli errori di Whisper). 11 reel su 14 venivano da due account: una regola «7 su 14»
+  può riflettere soprattutto loro, dillo accanto alla regola. Le contraddizioni con i limiti del repo (hook senza
+  «tu», frasi corte con il verbo contate come titoli, chiusure oltre 18 parole, reel oltre 90 s) sono andate nel
+  rapporto e non nella guida: è la strada giusta, la decisione resta al presentatore.
 
 ## Rapporto finale (sempre, in questa forma)
 ```

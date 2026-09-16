@@ -103,6 +103,20 @@ Prima di scrivere codice leggi OBBLIGATORIAMENTE:
   leggilo per il filo visivo e la continuità fra le scene, ma non gira da lì (`reel anima` cerca solo in
   `contenuti/animazioni/`). Con `/pipeline … --tutto` sei l'ultimo agente prima del presentatore: nel rapporto
   metti le durate per scena da `report.json` e i fotogrammi da guardare, non solo i conteggi.
+- **2026-09-15, `generativa-probabile`** (prima animazione in `--tutto`, 68,9 s, 0 avvisi):
+  - Guarda i fotogrammi fitti anche sui `_scene/NN.mp4` montati, non solo sui video di `anima`: `anima` non disegna il
+    cerchio del presentatore, e un gruppo che torna al ritorno di un punch può finirci sotto (scena 2). I controlli
+    a fine beat non lo vedono.
+  - `scrivi`/`play` non aspettano l'inizio calcolato di una parola: serve un `attendi_fino(inizio)`, sennò i cartellini
+    entrano fino a 1 s prima della voce.
+  - Le copie che escono da dietro una carta vanno fatte scivolare, non entrare in dissolvenza: in dissolvenza i
+    testi si vedono l'uno attraverso l'altro.
+  - Quando il revisore chiede che un oggetto «cambi vestito», il testo vecchio esce prima che entri il nuovo: a
+    schermo non si mescolano parole di due uscite del modello.
+  - Se una riga VOCE cambia parole ma non numero di righe (riformulazioni del revisore applicate dal presentatore),
+    i `beat(i)` restano validi ma gli indici delle parole in `self.tempi(i)[n]` no: «solo» è passata dalla parola 8
+    alla 9 nella scena 5. Cerca ogni `tempi(` della scena cambiata e ricontalo; il commento con la frase accanto
+    all'indice è quello che lo fa trovare.
 
 ## Confini
 - Non modificare `tools/` né la libreria: se un componente manca, ha un difetto o un parametro scomodo, arrangiati

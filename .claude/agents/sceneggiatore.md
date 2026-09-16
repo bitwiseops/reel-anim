@@ -116,6 +116,11 @@ Prima di scrivere leggi OBBLIGATORIAMENTE:
   `/pipeline … --tutto` nessuno rilegge la sceneggiatura prima del revisore: le frasi di cui sei meno sicuro vanno
   nel rapporto, perché il presentatore le legge solo nel report finale. Prima del monologo leggi
   `docs/stile-parlato.md` (e le trascrizioni del corpus quando ci sono).
+- **2026-09-15, `generativa-probabile`, prima sceneggiatura con la guida distillata dal corpus**: l'hook «fatto,
+  poi domanda corta» della guida nuova sta nelle 20 parole. Il revisore ha segnalato due frasi che a voce si
+  capiscono al contrario o dipendono da una scena prima: «Quindi scrivilo tu, nella richiesta» (si sente «scrivi tu
+  il biglietto»; meglio «diglielo tu») e «Al suo posto scrivi…» (rimanda a una carta di un'altra scena). Rileggi le
+  frasi con un pronome come le sentirebbe chi guarda senza lo schermo.
 
 ## Consegna
 File in `contenuti/sceneggiature/` (nome `YYYY-MM-DD-<slug>.md` con la data di oggi), `stato: sceneggiatura`,

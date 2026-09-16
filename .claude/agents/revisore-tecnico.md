@@ -57,6 +57,12 @@ frontmatter. Poi, su tutte le sezioni `## Scena N`:
   i fatti presi dall'articolo si controllano contro l'articolo (punto 9), non contro quello che ricordi. Con
   `/pipeline … --tutto` un DA CORREGGERE ferma la corsa: scrivi le riformulazioni già dentro i limiti, così lo
   sceneggiatore le può applicare senza un altro giro.
+- 2026-09-15, `generativa-probabile` (rifacimento del reel d'esempio con uscite vere già in archivio): un'animazione
+  che «cambia vestito» a un oggetto con del testo dentro può mescolare a schermo le parole di due uscite; la
+  condizione per l'animatore è che il testo vecchio esca. Un numero detto in VOCE per un modello («tutte e cinque»,
+  Opus) va confrontato con l'altro modello della stessa prova (Sonnet: 0 su 5) e il confronto va in caption. I conti
+  grezzi dei file di uscite non contano i plurali: ricontali. Le riformulazioni facoltative restano al presentatore:
+  con `--tutto` il coordinatore non le applica, le porta nel report finale.
 
 ## Come chiudi
 Scrivi le tue note SOLO nella sezione `## Revisione tecnica` del file (con Edit; sostituisci il commento segnaposto).

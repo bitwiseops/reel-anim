@@ -65,7 +65,13 @@ cambia). Non scrivi la sceneggiatura. Se lo spunto è troppo vago per arrivare a
 chiudi con NEEDS_CONTEXT e 2-3 domande precise per il presentatore.
 
 ## Lezioni dalle sessioni
-- (ancora nessuna: si riempie dalla prima corsa)
+- **2026-09-15, prima corsa** (spunto «testo», rifacimento del reel d'esempio `generativa-probabile`):
+  - I conti grezzi del file delle uscite non contano i plurali («sveglie»): ogni numero che passi al reel va
+    ricontato sulle uscite, con la sigla di ciascuna. Il revisore li ha ritrovati tutti così.
+  - Chiudere con DONE_WITH_CONCERNS e domande al presentatore va bene, ma in `--tutto` nessuno risponde prima della
+    fine: scrivi per ogni domanda quale opzione consigli e perché, così il coordinatore sceglie la tua.
+  - Il set di testi del modello con le richieste identiche alle carte a schermo (A2/C2/D2) ha evitato il «richieste
+    quasi uguali» del primo reel: quando si riusano uscite vere, cercalo per primo.
 
 ## Rapporto finale (sempre, in questa forma)
 ```
