@@ -105,7 +105,8 @@ fluente, certo. Ma originale no, non può esserlo.» Stesso contenuto, stessi qu
 - **Numeri**: solo veri, con la fonte nelle note di produzione; quelli illustrativi si dichiarano come esempi anche a
   schermo (la `Classifica` lo scrive da sola).
 - **Testi attribuiti a un modello** («Comincia così: …», «Ora scrive: …»): solo uscite vere, generate **prima** di
-  scrivere la scena (3-5 uscite per richiesta, salvate in `contenuti/media/<slug>/`). Ogni parola viene da una sola
+  scrivere la scena (5 per richiesta con Opus e 5 con Sonnet, salvate e siglate in
+  `contenuti/idee/uscite/<slug>-<data>.md`: la tappa T0b di `/pipeline`). Ogni parola viene da una sola
   uscita; i tagli si dichiarano nelle note di produzione e la caption dice modello e data. Il luogo comune da
   mostrare è quello che torna in quasi tutte le uscite. Nel primo reel i due biglietti scritti da noi non sono mai
   usciti in 16 prove, e si sono rifatte le scene 2-7. **Le revisioni del presentatore hanno l'ultima parola**, anche
@@ -113,6 +114,12 @@ fluente, certo. Ma originale no, non può esserlo.» Stesso contenuto, stessi qu
 - **Chiusura**: il messaggio centrale in parole semplici e una sola azione nella `CTA:`.
 - Il presentatore leggerà la voce dal karaoke di `reel registra` così com'è: niente abbreviazioni, sigle da
   sciogliere, parole da pronunciare in modo ambiguo.
+
+- **Struttura da uno schema di reelkit.** L'ideatore sceglie uno schema fra gli «Schemi riutilizzabili» di
+  `pattern.md` (chiave `pattern` in `config.toml [stile]`), fatto di tecniche che compaiono in più account, e lo
+  adatta nella `## Struttura narrativa` dell'idea; lo sceneggiatore distribuisce le fasi sulle scene e dichiara i tag
+  nelle note di produzione. Le firme di un solo account non si copiano, un elenco non si legge a camera, e lo schema
+  non scavalca i limiti né questo documento: se contraddice, vince il repo.
 
 ## 6. Il brief ANIMAZIONE
 

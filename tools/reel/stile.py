@@ -2,6 +2,7 @@
 
 È un controllo informativo, non una regola: dice se la guida che lo sceneggiatore legge è stata distillata da tutti i
 reel del corpus. La guida la scrive l'agente `stilista`; la sezione «## Corpus» ha un formato fisso che si legge qui.
+Riporta anche il file dei pattern narrativi di reelkit (pattern.md), che gli agenti leggono direttamente.
 """
 from __future__ import annotations
 
@@ -12,6 +13,7 @@ from pathlib import Path
 _RE_REEL = re.compile(r"^### \S+ · ", re.M)          # un titolo per reel nell'export di reelkit
 _RE_LETTI = re.compile(r"Reel letti:\s*(\d+)")
 _RE_DATA = re.compile(r"Letto il:\s*(\d{4}-\d{2}-\d{2})")
+_RE_PATTERN = re.compile(r"^(\d+) reel analizzati, (\d+) tag distinti", re.M)
 
 
 def conta_reel(corpus: Path | None) -> int:
@@ -27,6 +29,15 @@ def leggi_guida(guida: Path | None) -> dict:
     t = guida.read_text(encoding="utf-8")
     m, d = _RE_LETTI.search(t), _RE_DATA.search(t)
     return {"data": d.group(1) if d else None, "reel": int(m.group(1)) if m else None}
+
+
+def leggi_pattern(p: Path | None) -> dict:
+    """Reel, tag e data di modifica dalla riga «N reel analizzati, M tag distinti» di pattern.md (None se mancano)."""
+    if p is None or not p.is_file():
+        return {"esiste": False, "reel": None, "tag": None, "data": None}
+    m = _RE_PATTERN.search(p.read_text(encoding="utf-8"))
+    return {"esiste": True, "reel": int(m.group(1)) if m else None, "tag": int(m.group(2)) if m else None,
+            "data": dt.date.fromtimestamp(p.stat().st_mtime).isoformat()}
 
 
 def stato(cfg) -> dict:
@@ -45,6 +56,9 @@ def stato(cfg) -> dict:
         verdetto = "aggiornata"
     else:
         verdetto = "da rifare"
+    pattern = cfg.percorso("stile", "pattern")
+    pt = leggi_pattern(pattern)
     return {"corpus": corpus, "corpus_esiste": corpus_esiste, "corpus_data": corpus_data, "reel": reel,
             "guida": guida, "guida_esiste": guida_esiste, "guida_data": g["data"], "guida_reel": g["reel"],
-            "verdetto": verdetto}
+            "verdetto": verdetto, "pattern": pattern, "pattern_esiste": pt["esiste"], "pattern_reel": pt["reel"],
+            "pattern_tag": pt["tag"], "pattern_data": pt["data"]}

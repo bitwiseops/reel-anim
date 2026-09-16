@@ -15,10 +15,13 @@ Prima di scrivere leggi OBBLIGATORIAMENTE:
 - `templates/esempio-reel.md` (un reel che passa tutti i controlli: guardalo per il ritmo e la forma, non copiarlo)
 - `docs/animazioni.md` §8 (componenti disponibili) e §11 (brief ANIMAZIONE: male e bene)
 - `docs/stile-parlato.md` (come parla il presentatore: attacchi, connettivi, lunghezza delle frasi, chiusure) e,
-  se il corpus esiste (`uv run reel stile`), 2-3 trascrizioni intere del corpus, le più vicine al tema (Grep sulle
-  parole chiave del concetto; in mancanza, le Note più vicine): leggile prima del monologo, per l'orecchio, non
-  per copiarle
-- il file idea di partenza e, se c'è, la bozza collegata
+  se il corpus esiste (`uv run reel stile`), la trascrizione intera del reel da cui viene lo schema dell'idea
+  (`trascrizioni/<id>.txt` nella cartella di `pattern.md`) più 1-2 trascrizioni vicine al tema (Grep sulle parole
+  chiave del concetto; in mancanza, le Note più vicine): leggile prima del monologo, per l'orecchio, non per copiarle
+- il file idea di partenza (con la `## Struttura narrativa` e, se c'è, il file delle `**Uscite:**`) e, se c'è, la
+  bozza collegata
+- il file `pattern` di `config.toml [stile]` (`~/Projects/reelkit/pattern.md`), per il significato dei tag che
+  l'idea usa
 - 1-2 sceneggiature recenti in `contenuti/sceneggiature/` per coerenza di stile (se esistono)
 
 ## Il formato
@@ -29,6 +32,16 @@ Prima di scrivere leggi OBBLIGATORIAMENTE:
   frase non cambia niente a schermo, o è superflua o manca un'animazione.
 - **Un filo visivo**: pochi oggetti che ritornano da una scena all'altra (lo stesso biglietto, la stessa colonna di
   candidate), così chi guarda non deve imparare un disegno nuovo a ogni scena.
+
+## La struttura narrativa
+- L'idea porta uno schema di reelkit adattato (`## Struttura narrativa`): mappalo sulle scene, cioè quale fase dello
+  schema va in quale scena. Una fase può prendere due scene o due fasi una scena; lo schema non cambia i limiti.
+- Nelle Note di produzione scrivi, scena per scena, la fase e i tag usati (`Scena 3 — [contrasto] contrasto,
+  domanda-pivot`).
+- Se lo schema contraddice il linguaggio del repo (`docs/linguaggio-reel.md`, `docs/sceneggiatura.md`: elenchi letti
+  a camera, firme o CTA di rito, chiusura più lunga di 18 parole), vince il repo: lo dici nel rapporto.
+- I testi del modello si prendono dal file delle `**Uscite:**` con la sigla (A1, B3…); se l'idea chiede testi e il file
+  manca, chiudi BLOCKED: non si inventano.
 
 ## Regole di scrittura
 - `tipo:` nel frontmatter = il `**Tipo:**` dell'idea (`pillola` di default); `pilastro:` e `messaggio_centrale:`
@@ -126,7 +139,7 @@ Prima di scrivere leggi OBBLIGATORIAMENTE:
 File in `contenuti/sceneggiature/` (nome `YYYY-MM-DD-<slug>.md` con la data di oggi), `stato: sceneggiatura`,
 `idea:` con il percorso dell'idea, `slug` breve e senza data. Esegui `uv run reel valida <file>` e correggi finché
 non ci sono ERRORI; riduci a zero anche gli AVVISI quando è possibile senza peggiorare il testo. Riporta l'output
-finale del comando.
+finale del comando, la mappa schema → scene in una riga e le sigle delle uscite usate.
 
 Non toccare il file idea (lo aggiorna `/pipeline`). Se il presentatore chiede modifiche, riscrivi lo stesso file:
 niente duplicati. Al termine proponi un TITOLO alternativo e segnala in una riga le frasi della VOCE di cui sei

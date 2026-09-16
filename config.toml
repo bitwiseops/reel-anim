@@ -73,3 +73,4 @@ bitrate = "8M"
 [stile]                   # corpus di reel altrui trascritti (reelkit): docs/stile-parlato.md ne distilla le regole
 corpus = "~/Projects/reelkit/export.md"   # override in config.local.toml; "" = nessun corpus
 guida = "docs/stile-parlato.md"           # relativo alla radice del repo
+pattern = "~/Projects/reelkit/pattern.md" # pattern narrativi (./reelkit pattern): ideatore e sceneggiatore lo leggono così com'è

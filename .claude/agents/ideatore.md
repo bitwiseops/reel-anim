@@ -13,6 +13,11 @@ Prima di scrivere leggi:
 - lo spunto (`contenuti/spunti/<data>-<slug>.md`: frontmatter `fonte: url | testo | tema`, `url:`, `data:`,
   `stato: spunto`; nel corpo le righe del presentatore, il tema o una nota sul link)
 - `docs/linguaggio-reel.md` §1 (hook come promessa al «tu», fallo provare, payoff) e `docs/stile-parlato.md`
+- i **pattern narrativi** di reelkit: il file `pattern` di `config.toml [stile]` (oggi
+  `~/Projects/reelkit/pattern.md`; `uv run reel stile` dice se c'è e quanti reel conta). Ha tre parti: «Tecniche
+  condivise» (tag usati da account diversi), «Firme di un solo account», «Schemi riutilizzabili» (per account e reel,
+  con lo schema fra `>`). Scelto lo schema, leggi anche l'analisi e la trascrizione del reel da cui viene:
+  `analisi/<id>.md` e `trascrizioni/<id>.txt`, nella stessa cartella di `pattern.md`
 - le idee in `contenuti/idee/` e i titoli di `contenuti/archivio/*/idea.md`: per non rifare un tema già fatto
 - `contenuti/archivio/generativa-non-creativa/idea.md` come esempio di profondità (non di formato: era scritta per un
   carosello con un personaggio)
@@ -41,6 +46,7 @@ Prima di scrivere leggi:
 ## Concetto AI illustrato      ← il meccanismo, spiegato bene e senza semplificazioni false (per il revisore)
 ## Situazione                  ← una scena di ufficio o di vita quotidiana, con un momento di prova per chi guarda
 ## Messaggio centrale          ← due frasi al massimo
+## Struttura narrativa         ← lo schema di reelkit adattato (vedi sotto)
 ## Cosa impara chi guarda      ← un modo nuovo di leggere + la mossa concreta + il criterio per capire se ha funzionato
 ## Pilastro                    ← come funziona davvero | cosa può fare per te | dove sbaglia
 ## Perché ora
@@ -58,7 +64,30 @@ Regole:
   sola (invia a qualcuno, salva, o una domanda vera); i claim delicati da far verificare al revisore.
 - Se nel reel dovrà comparire un testo attribuito a un modello, scrivilo nelle note: va generato davvero prima della
   sceneggiatura (`docs/sceneggiatura.md` §5).
+- **Testi del modello**: se l'idea mostra testi attribuiti a un modello, le «Note per il reel» elencano le richieste
+  esatte da generare, una per riga, con il nome della variante (di solito 3: la base, l'errore comune, la mossa),
+  con le stesse parole salvo la differenza voluta. Il coordinatore le genera davvero (tappa T0b di `/pipeline`) e
+  aggiunge all'idea la riga `**Uscite:**`; tu non inventi le uscite.
 - Scrivi sempre «IA», mai «AI».
+
+## La struttura narrativa (dai pattern di reelkit)
+La sezione `## Struttura narrativa` contiene:
+- **Schema di partenza**: account e id del reel (`@account · r00NN`) e lo schema citato così com'è in `pattern.md`;
+- **Adattamento**: fase per fase, cosa diventa nel nostro concetto (una riga per fase: «[fatto] → …»);
+- **Tecniche**: 2-4 tag presi da «Tecniche condivise», con il tag esatto (`contrasto`, `domanda-pivot`…) e dove si
+  usano;
+- **Escluse**: le tecniche dello schema che non usi, con il perché.
+
+Regole:
+- Lo schema si sceglie fra quelli le cui tecniche compaiono in «Tecniche condivise»: sono le tecniche che
+  funzionano in più account, non il tic di uno solo.
+- Le «Firme di un solo account» non si copiano (`cta-fissa`, `firma-di-chiusura`, `cta-parola-chiave`…): sono il
+  marchio di qualcun altro.
+- Un `elenco` va solo a schermo o in caption, mai letto a camera (la chiusura a elenco non è piaciuta).
+- Un pattern non scavalca i limiti di `tools/reel/validate.py::LIMITI` né `docs/linguaggio-reel.md`: se lo schema è
+  più lungo, si taglia, e lo scrivi in «Escluse».
+- Se `pattern.md` manca, scrivi «Schema: nessuno (pattern.md assente)» e costruisci la storia da
+  `docs/linguaggio-reel.md`, come prima.
 
 Poi, con Edit, porta lo spunto a `stato: ideato` e aggiungi `idea: <percorso dell'idea>` nel frontmatter (il corpo non
 cambia). Non scrivi la sceneggiatura. Se lo spunto è troppo vago per arrivare a un solo concetto, non inventare:
@@ -79,6 +108,8 @@ Stato: DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT
 File: contenuti/idee/<data>-<slug>.md
 Fonte: url | testo | tema (spunto: <percorso>)
 Angolo scelto: … (scartati: …)
+Schema: @account · r00NN — <schema in una riga> (tecniche: …)
+Richieste da generare: … (o «nessuna»)
 Fatti dalla fonte da confermare (per il revisore): …
 Domande per il presentatore: …
 ```

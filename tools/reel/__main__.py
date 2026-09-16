@@ -261,6 +261,15 @@ def cmd_stile(args) -> int:
         print(f"guida: {g} (assente)")
     else:
         print(f"guida: {g} (letta il {s['guida_data'] or '?'}, {s['guida_reel'] if s['guida_reel'] is not None else '?'} reel)")
+    pt = s["pattern"]
+    if pt is None:
+        print("pattern: nessuno ([stile].pattern vuoto)")
+    elif not s["pattern_esiste"]:
+        print(f"pattern: {pt} (assente: in reelkit, `./reelkit pattern`)")
+    else:
+        n = "?" if s["pattern_reel"] is None else s["pattern_reel"]
+        m = "?" if s["pattern_tag"] is None else s["pattern_tag"]
+        print(f"pattern: {pt} ({n} reel, {m} tag, modificato il {s['pattern_data']})")
     spiega = {"manca": "lancia l'agente stilista",
               "provvisoria": "nata dalle regole dei docs, senza reel veri: si rifà quando il corpus ha dei reel",
               "aggiornata": "distillata da tutti i reel del corpus",

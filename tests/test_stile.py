@@ -3,7 +3,7 @@ from pathlib import Path
 
 from tools.anim.config import RADICE, carica
 from tools.reel.__main__ import main
-from tools.reel.stile import conta_reel, leggi_guida, stato
+from tools.reel.stile import conta_reel, leggi_guida, leggi_pattern, stato
 
 EXPORT = """# Reel analizzati
 
@@ -37,9 +37,9 @@ Domanda.
 """
 
 
-def _cfg(tmp_path, corpus: str, guida: str):
+def _cfg(tmp_path, corpus: str, guida: str, pattern: str = ""):
     base = tmp_path / "config.toml"
-    base.write_text(f'[stile]\ncorpus = "{corpus}"\nguida = "{guida}"\n', encoding="utf-8")
+    base.write_text(f'[stile]\ncorpus = "{corpus}"\nguida = "{guida}"\npattern = "{pattern}"\n', encoding="utf-8")
     return carica.__wrapped__(base, tmp_path / "nessun-locale.toml")   # senza cache: i test riscrivono lo stesso file
 
 
@@ -80,7 +80,22 @@ def test_verdetti(tmp_path):
     assert stato(_cfg(tmp_path, str(tmp_path / "manca.md"), str(guida)))["verdetto"] == "provvisoria"
 
 
+def test_leggi_pattern(tmp_path):
+    p = tmp_path / "pattern.md"
+    p.write_text("# Pattern ricorrenti\n\n30 reel analizzati, 118 tag distinti.\n", encoding="utf-8")
+    r = leggi_pattern(p)
+    assert r["esiste"] and r["reel"] == 30 and r["tag"] == 118 and len(r["data"]) == 10
+    assert leggi_pattern(tmp_path / "manca.md") == {"esiste": False, "reel": None, "tag": None, "data": None}
+    assert leggi_pattern(None)["esiste"] is False
+    p.write_text("# Pattern ricorrenti\n\nniente numeri qui\n", encoding="utf-8")
+    r = leggi_pattern(p)
+    assert r["esiste"] and r["reel"] is None and r["tag"] is None
+    s = stato(_cfg(tmp_path, "", "g.md", str(p)))
+    assert s["pattern"] == p and s["pattern_esiste"] and s["pattern_reel"] is None
+    assert stato(_cfg(tmp_path, "", "g.md"))["pattern"] is None
+
+
 def test_comando_stile_stampa_e_esce_zero(capsys):
     assert main(["stile"]) == 0
     out = capsys.readouterr().out
-    assert "corpus:" in out and "guida:" in out and "verdetto:" in out
+    assert "corpus:" in out and "guida:" in out and "pattern:" in out and "verdetto:" in out

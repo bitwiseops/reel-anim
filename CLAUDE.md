@@ -12,7 +12,8 @@ Piano completo: `~/.claude/plans/dobbiamo-revisionare-il-modello-lovely-piglet.m
 
 ## Struttura
 - `config.toml` — identità e misure (video 1080×1920 @30, safe area, riquadro, schermo, palette, font, voce di prova)
-  e `[stile]` (corpus di reelkit e guida del parlato)
+  e `[stile]` (corpus di reelkit, guida del parlato, `pattern` = `~/Projects/reelkit/pattern.md` con i pattern
+  narrativi che ideatore e sceneggiatore leggono direttamente)
 - `tools/anim/` — libreria Manim: `config` (TOML + font Pango + opzioni `tempconfig`), `misure` (px ↔ unità,
   minimi di leggibilità, `FATTORE_FONT_SIZE` misurato con `calibra.py`), `base` (`ScenaReel` con `durata_s`,
   `beat(i)` sugli inizi delle frasi, `durata_beat`, `arrotonda`, `fino_a`, `chiudi`, aree contenuto/riquadro/schermo, `debug` con guide; cambi grandi `punch(s)` e `zoom_su(mob)`/`torna()`), `componenti` (Titolo,
@@ -37,11 +38,13 @@ Piano completo: `~/.claude/plans/dobbiamo-revisionare-il-modello-lovely-piglet.m
   `linguaggio-reel.md` (hook, payoff, CTA), `stile-parlato.md` (come parla il presentatore: la scrive lo `stilista`)
 - `assets/fonts/` (Inter Variable, JetBrains Mono) · `assets/presentatore/avatar.png` (segnaposto da `reel setup`) ·
   `assets/icone/` (SVG Lucide, licenza ISC)
-- `.claude/agents/` — `ideatore` (spunto → idea, anche da un link con WebFetch), `stilista` (corpus di reelkit →
+- `.claude/agents/` — `ideatore` (spunto → idea, anche da un link con WebFetch; sceglie uno schema da `pattern.md`
+  e lo scrive in `## Struttura narrativa`), `stilista` (corpus di reelkit →
   `docs/stile-parlato.md`), `sceneggiatore` (idea → sceneggiatura, `reel valida`), `revisore-tecnico` (claim anche
   nelle animazioni e contro la fonte, `stato: rivisto`), `animatore` (`.py` + `anima --json` + fotogrammi +
   `monta --prova --anteprima`, `stato: animato`; non tocca `tools/`) · `.claude/commands/pipeline.md` —
-  `/pipeline <file> [--tutto]`: fino alla prossima fermata, o con `--tutto` fino all'anteprima da registrare ·
+  `/pipeline <file> [--tutto]`: fino alla prossima fermata, o con `--tutto` fino all'anteprima da registrare; la
+  tappa T0b genera le uscite vere dei testi del modello (`claude -p`, Opus e Sonnet) in `contenuti/idee/uscite/` ·
   `.claude/workflows/reel.js` — la stessa corsa come Workflow deterministico (`args` = percorso di partenza)
 
 ## Stato
@@ -49,10 +52,13 @@ Fasi 0 e 1 chiuse (2026-09-13, in `main`). Fase 2 in corso (branch `fase-2-primo
 «Generativa non vuol dire creativa» (slug `generativa-non-creativa`) ha fatto da banco di prova per libreria, agenti e
 `reel registra`; **il 2026-09-15 i contenuti sono stati azzerati** e i suoi testi archiviati in
 `contenuti/archivio/generativa-non-creativa/` (clip, prese e render cancellati). Nuovi: `ideatore` e spunti,
-`stilista` e `reel stile` (il corpus di `~/Projects/reelkit` è ancora vuoto: guida provvisoria), `/pipeline --tutto`
-e il workflow `reel`. Le revisioni del presentatore hanno l'ultima parola. **Prossimo passo**: il presentatore scrive
-il primo spunto e si lancia `/pipeline contenuti/spunti/<file> --tutto` in una sessione nuova (gli agenti creati in
-una sessione non sono disponibili in quella stessa).
+`stilista` e `reel stile` (corpus in `~/Projects/reelkit/export.md`), `/pipeline --tutto`
+e il workflow `reel`. Le revisioni del presentatore hanno l'ultima parola. Prima corsa `--tutto` il 2026-09-15
+(`generativa-probabile`, biglietto per Marco, commit 3ae4d09). Il 2026-09-16: pattern narrativi di reelkit agli
+agenti (`[stile] pattern`, `reel stile`, tappa T0b) e lo spunto riscritto con la mail di risposta a un annuncio di
+lavoro, stesso slug, render cancellato. **Prossimo passo**: quando il presentatore dice che `pattern.md` è pronto, in
+una sessione nuova: `uv run reel stile` → `stilista` (guida da rifare, corpus 30 reel) →
+`/pipeline contenuti/spunti/2026-09-15-generativa-probabile.md --tutto`.
 
 ## Comandi
 `uv run reel setup` · `stile` · `valida <file>` · `gobbo <file> [--scrivi]` · `clip <file>` · `voce <file>` ·

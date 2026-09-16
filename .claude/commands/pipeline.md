@@ -41,11 +41,22 @@ presentatore. Le decisioni le prende lui, alle fermate.
 ## Le tappe
 **T0 · idea.** Lancia `ideatore` sullo spunto: scrive l'idea in `contenuti/idee/` e porta lo spunto a `stato: ideato`.
 Se chiude NEEDS_CONTEXT, riporta le sue domande e fermati (anche con `--tutto`).
-A fermate → FERMATA 1: percorso dell'idea, angolo scelto e scartati, messaggio centrale, hook candidato, fatti presi
-dalla fonte da confermare. Prossimo passo: il presentatore legge e corregge l'idea, poi `/pipeline <idea>`.
+A fermate → FERMATA 1: percorso dell'idea, angolo scelto e scartati, schema narrativo scelto (reel di reelkit e
+tecniche), messaggio centrale, hook candidato, richieste da generare, fatti presi dalla fonte da confermare. Prossimo
+passo: il presentatore legge e corregge l'idea, poi `/pipeline <idea>`. A fermate T0b si fa all'inizio di T1.
+
+**T0b · uscite vere** (la fai tu, senza agenti). Si fa se le «Note per il reel» dell'idea elencano richieste da
+generare e l'idea non ha ancora la riga `**Uscite:**`. Per ogni richiesta, 5 uscite con Opus e 5 con Sonnet, da una
+cartella neutra (lo scratchpad, non il repo, così il modello non legge `CLAUDE.md`):
+`claude -p "<richiesta>" --model opus|sonnet --system-prompt "Sei un assistente che scrive testi su richiesta." --tools "" --no-session-persistence --output-format json`;
+dall'output prendi l'evento `type == "result"`. Salva tutto in `contenuti/idee/uscite/<slug>-<data>.md`: per ogni
+richiesta il testo esatto, poi le uscite con una sigla (A1…A10 per la prima richiesta, B1… per la seconda; 1-5 Opus,
+6-10 Sonnet) e il modello. Poi con Edit aggiungi all'idea `**Uscite:** <percorso>` sotto la riga dello stato. Se
+`claude -p` fallisce, fermati: senza uscite vere lo sceneggiatore non scrive i testi del modello.
 
 **T1 · sceneggiatura.** Prima lancia `uv run reel stile`: se il verdetto è `da rifare` o `manca`, dillo nel report
-(lo `stilista` si lancia a parte, non blocca). Poi lancia `sceneggiatore` sull'idea: deve passare `uv run reel valida`
+(lo `stilista` si lancia a parte, non blocca); riporta anche la riga `pattern:` (se manca, lo schema dell'idea non ha
+una fonte da rileggere). Poi lancia `sceneggiatore` sull'idea: deve passare `uv run reel valida`
 senza errori (rilancialo con gli errori al massimo due volte). Con Edit aggiorna l'idea: `**Stato:** sceneggiata` e
 `**Sceneggiatura:** <percorso>` sotto la riga dello stato.
 A fermate → FERMATA 2: percorso, scene con tipo e durata stimata, durata del reel (dall'output di `valida`), il titolo
@@ -72,7 +83,8 @@ il report unico.
 3. **Durate**: per scena da `report.json` (con `origine_tempi`), il totale, e il confronto con la stima di `valida`.
 4. **Avvisi**: residui di `valida`, ⚠️ del revisore (una riga ciascuno), rapporto dell'animatore (difetti della
    libreria, cose che non ci stavano), frasi di cui lo sceneggiatore è meno sicuro, stato della guida di stile.
-5. **Da confermare**: i fatti presi dalla fonte (idee da un link), i testi attribuiti a un modello.
+5. **Da confermare**: i fatti presi dalla fonte (idee da un link), i testi attribuiti a un modello (con la sigla
+   dell'uscita), lo schema narrativo e come è stato distribuito sulle scene.
 6. **Prossimo passo**: guardare l'anteprima e annotare leggibilità, tempi e beat; poi la registrazione in presa unica
    sull'anteprima (`uv run reel registra <file>`) e il montaggio con le clip vere (`uv run reel monta <file>
    --anteprima`).
