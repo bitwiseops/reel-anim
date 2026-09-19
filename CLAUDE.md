@@ -25,6 +25,9 @@ Piano completo: `~/.claude/plans/dobbiamo-revisionare-il-modello-lovely-piglet.m
   `clip`, `voce` (`say`), `manim_render`, `compositing` (filtergraph ffmpeg: b-roll, riquadro con maschera, audio,
   concat con xfade), `fotogrammi`, `contact_sheet`, `monta`, `stile` (guida del parlato rispetto al corpus),
   `__main__` (CLI `uv run reel`)
+- `broll/` — sottosistema del materiale esterno (filmati che si alternano alle animazioni): **progetto `uv`
+  a sé**, con proprio `pyproject.toml`, `uv.lock` e `.venv`, così le sue dipendenze non entrano mai in quelle
+  della radice. `uv run --project broll broll piano|stato|prova-inquadratura` (`broll/README.md`)
 - `contenuti/` — `spunti/` (link, righe o tema: il punto di partenza, `stato: spunto → ideato`), `idee/`,
   `sceneggiature/`, `bozze/ in-produzione/ pubblicati/ db/`, `archivio/<slug>/` (reel chiusi o abbandonati: si
   leggono, non girano), `animazioni/<slug>.py` (una classe
