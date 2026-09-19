@@ -109,6 +109,14 @@ chiudi con NEEDS_CONTEXT e 2-3 domande precise per il presentatore.
   Se per il problema non ti viene in mente un'immagine filmabile, il problema è ancora troppo astratto.
   Decisione del presentatore sullo stesso punto: **a schermo nell'apertura non c'è il titolo**, c'è lui nel riquadro
   sopra la clip; il titolo che proponi serve alla copertina (la griglia del profilo), quindi può restare la tesi.
+- **2026-09-19, regola del presentatore: «ogni reel è a sé stante, non c'è una storia temporale continua»** (detta
+  alla fermata 1 di `scrivere-con-ia`: l'idea riusava «Acme Arredi» e la vicenda di `generativa-probabile`, «il posto
+  l'hai avuto», come continuità). Chi guarda un reel non ha visto gli altri. La situazione di ogni idea è nuova:
+  azienda, persone e vicenda inventate da capo, nessun personaggio che prosegue, nessun «seguito di», nessun
+  richiamo a voce o a schermo a un reel precedente. Gli altri reel si leggono solo per **non ripetersi** (angoli,
+  schemi già spesi, claim già verificati): questo resta nelle note interne dell'idea, mai nella Situazione, nella
+  Struttura narrativa o nelle richieste da generare. Un concetto già spiegato altrove si ridice in una frase, come
+  se fosse la prima volta.
 ## Rapporto finale (sempre, in questa forma)
 ```
 Stato: DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT

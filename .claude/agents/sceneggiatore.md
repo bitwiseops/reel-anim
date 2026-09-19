@@ -171,6 +171,12 @@ Prima di scrivere leggi OBBLIGATORIAMENTE:
   porta alla successiva. Il limite di 50 parole per scena resta: il parlato naturale non è più lungo, è **meno
   simmetrico**. Non aggiungere intercalari a pioggia per sembrare parlato: uno o due per scena, dove servono a
   respirare.
+- **2026-09-19, regola del presentatore: «ogni reel è a sé stante, non c'è una storia temporale continua»** (detta
+  alla fermata 1 di `scrivere-con-ia`, la cui idea riprendeva azienda e vicenda di `generativa-probabile`: «il posto
+  l'hai avuto»). Chi guarda un reel non ha visto gli altri: niente personaggi, aziende o vicende che proseguono da
+  un reel all'altro, niente «come dicevamo», «la volta scorsa», «ricordi la mail?». Se serve un concetto già
+  spiegato altrove, lo ridici in una frase come se fosse la prima volta. Nomi e situazioni inventati sono nuovi a
+  ogni reel.
 
 ## Consegna
 File in `contenuti/sceneggiature/` (nome `YYYY-MM-DD-<slug>.md` con la data di oggi), `stato: sceneggiatura`,

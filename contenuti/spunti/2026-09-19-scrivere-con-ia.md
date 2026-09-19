@@ -2,7 +2,8 @@
 fonte: url
 url: https://sockpuppet.org/blog/2026/09/17/how-to-write-with-an-llm/
 data: 2026-09-19
-stato: spunto
+stato: ideato
+idea: contenuti/idee/2026-09-19-scrivere-con-ia.md
 ---
 
 «How To Write With An LLM», Thomas Ptacek, 17 settembre 2026 (~1.200 parole, tono informale). Il presentatore l'ha
