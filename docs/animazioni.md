@@ -143,7 +143,8 @@ Una scena dura esattamente quanto la clip del presentatore (o la voce di prova).
 | `self.punch(s, tenuta_s=0.9)` | **il cambio grande della battuta**: taglio secco a 1-3 parole a tutto schermo (`Punch`), tenute `tenuta_s`, poi taglio indietro alla scena com'era (camera compresa); occupa ~0,15 s + `tenuta_s` del beat |
 | `self.zoom_su(mob, fattore=1.5)` / `self.torna()` | animazioni da passare a `self.play`: la camera si avvicina a `mob` / torna alla tela intera; `self.zoom` è l'ingrandimento attuale |
 
-**Un cambio grande per scena** (`GRANDE:` nel brief, `docs/linguaggio-reel.md` §5): la parola a tutto schermo o lo
+**Un cambio grande per scena** (`GRANDE:` nel brief, `docs/linguaggio-reel.md` §5): una mossa del repertorio di
+§11bis (moltiplicazione, metamorfosi, viaggio, tipografia cinetica, contrasto di scala), la parola a tutto schermo o lo
 zoom. Lo zoom resta finché non chiami `torna()`; il riquadro del presentatore resta fermo sullo schermo e i controlli
 misurano quello che si vede (un testo ingrandito vicino al riquadro lo tocca; i testi del tutto fuori campo non
 contano, quelli tagliati dal bordo sì). `zoom_su` porta l'oggetto al centro dell'area contenuto. Per far partire una
@@ -393,6 +394,43 @@ frase `VOCE:` quando i cambi sono più d'uno.
 | «Grafica accattivante per l'hook.» | «Il titolo entra riga per riga; "creativa" viene barrata; sotto compare "probabile" in accento.» |
 | «Spiega i passaggi.» | «Tre passi in colonna, uno per frase; il passo attivo in accento, quelli fatti attenuati.» |
 | «Numeri che cambiano.» | «Il contatore sale da 4 a 13 mentre le parole si aggiungono una alla volta.» |
+| «GRANDE: effetto wow.» | «GRANDE (moltiplicazione): la mail si ritira e al suo posto cresce un muro di 40 mail grigie, sulla frase "tutti la scrivono così".» |
+
+## 11bis. Mosse wow
+
+Il presentatore vuole animazioni che stupiscano (2026-09-16). Pulite e a tempo non basta: carte e cartellini sempre
+alla stessa scala, che entrano in dissolvenza e scivolano in linea retta, si leggono come slide. Ogni scena ha **un
+momento wow**, uno solo, sulla frase che conta, scelto da questo repertorio. Tutte le mosse si fanno con Manim e con la
+libreria di oggi; gli aiuti di libreria dedicati (effetti sonori, riquadro che cresce, `moltiplica`, `Muro`) sono il
+livello 2, non ancora fatto.
+
+| Mossa | Cosa si vede | Quando | Come (Manim 0.21) |
+|---|---|---|---|
+| **moltiplicazione** | un oggetto diventa un muro di 20-60 copie | «tutti», «ogni volta», una quantità | copie ridotte a sagoma (riquadro + 3-4 linee grigie, **nessun testo leggibile**), `VGroup(...).arrange_in_grid(...)`, `LaggedStart(*[GrowFromCenter(c) for c in copie], lag_ratio=0.03)`; l'originale vola al suo posto nella griglia |
+| **metamorfosi** | un oggetto si trasforma nel successivo invece di uscire | un passaggio di causa («la mail è fatta di parole») | tieni gli oggetti a pezzi con lo stesso numero di parti; `Transform` fra le sagome, `FadeTransform` fra i testi (§9) |
+| **viaggio** | tutta la scena scorre via e da fuori arriva la nuova | un cambio di argomento dentro la scena | sposta il **mondo**, non la camera: `self.play(Group(*self.mobjects).animate.shift(-v), nuovo.animate.shift(-v))` con `nuovo` preparato a `+v` fuori campo; così `area.metti` resta valido. Un solo viaggio per scena |
+| **tipografia cinetica** | la parola chiave arriva enorme e spinge il resto | la parola `==evidenziata==` | la parola nel corpo `punto` o più (sempre dentro l'area), `GrowFromCenter` con `rate_func=rate_functions.ease_out_back`; gli altri oggetti `animate.scale(0.8).set_opacity(0.4)` nella stessa `play` |
+| **carica e rimbalzo** | l'oggetto arretra un attimo, parte, supera l'arrivo di poco e ci torna | gli ingressi importanti, non tutti | `rate_func=rate_functions.ease_out_back` (rimbalzo), `ease_in_back` (carica); per un colpo sul posto `Indicate(mob, scale_factor=1.15)` o `mob.animate(rate_func=there_and_back).scale(1.1)` |
+| **rivelazione a tratto** | una forma si disegna, una sottolineatura corre sotto la parola | il momento in cui una cosa «si vede» | `Create` con `tratto(px)`, `DrawBorderThenFill`, `ShowPassingFlash(linea.copy().set_color(accento))`, `Circumscribe(mob, color=accento)` |
+| **contrasto di scala** | un dettaglio piccolissimo in mezzo al vuoto, o un oggetto che riempie l'area | la prova («manca solo questo») | tutto il resto esce o si attenua, il dettaglio resta solo al centro (≥ 36 px); oppure `zoom_su` sul dettaglio isolato (§4) |
+| **punch** | taglio secco alla battuta a tutto schermo | la battuta (1-3 parole) | `self.punch(s)` (§4) |
+
+Regole:
+- **Uno per scena**, sulla frase che conta; due scene di fila non usano la stessa mossa. `punch` al massimo due volte
+  nel reel.
+- **Il wow non costa leggibilità**: le regole di tenuta restano (testo intero ≥ 1 s prima che esca, a zoom pieno
+  nessun testo tagliato, ≤ 8 parole nuove per beat). Le copie di un muro non hanno testo leggibile: sono sagome.
+- **Il wow dice la tesi**: la moltiplicazione va dove si dice «tutti», non dove fa scena. Se una mossa contraddice un
+  claim (copie identiche quando le uscite sono diverse), il revisore ha la precedenza: sagome simili, non duplicati.
+- **Varia le curve**: `smooth` è il default, non l'unica. Ingressi importanti con `ease_out_back`, uscite con
+  `rush_into`, cambi rapidi con `ease_out_expo`; `linear` solo per gli scorrimenti continui.
+- **Niente fermo morto**: se uno stato resta uguale più di ~2 s mentre la voce parla, dagli un micro-movimento sulla
+  parola giusta (una parola che si accende, un `Indicate`), non un'animazione in loop.
+- **Storyboard prima del codice**: per ogni scena 3-4 fotogrammi chiave (inizio, momento wow, fine) e il nome della
+  mossa, scritti nelle Note di animazione prima di scrivere la classe.
+- **Controllo wow sui fotogrammi** (dopo i controlli di §2bis): per ogni scena, nei fotogrammi fitti, c'è un cambio
+  di scala di almeno 2× o un cambio di composizione? il fotogramma a metà scena è diverso da quello finale? la scena
+  si distingue dalla precedente nel `contact-sheet.png`? Se la risposta è no, la scena non è finita.
 
 ## 12. Prestazioni
 

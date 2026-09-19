@@ -6,7 +6,7 @@ stato: animato
 formato: reel
 tipo: pillola
 pilastro: come funziona davvero
-messaggio_centrale: «Generativa» non vuol dire creativa. L'IA scrive una parola alla volta e ogni volta prende una delle più probabili, per questo il testo viene fluente e per questo è quello di tutti; per una frase che valga solo per Marco non basta chiederle di essere originale, le serve un dettaglio vero che sai solo tu.
+messaggio_centrale: «Generativa» non vuol dire creativa. L'IA scrive una parola alla volta prendendo una delle più probabili, e per questo la tua candidatura viene fluente e uguale a quella di chiunque; non chiederle di essere originale, dalle un dettaglio vero che sai solo tu.
 idea: contenuti/idee/2026-09-15-generativa-probabile.md
 ---
 
@@ -14,493 +14,559 @@ idea: contenuti/idee/2026-09-15-generativa-probabile.md
 
 ## Scena 1 [hook]
 TITOLO: Generativa non vuol dire creativa
-VOCE: Ho chiesto all'IA un biglietto per la pensione di Marco.
-VOCE: Finisci tu. Caro Marco, finalmente potrai spegnere la…
-ANIMAZIONE: Al primo fotogramma sono già in scena il titolo in alto (è la copertina), sotto la carta «richiesta» con «Un biglietto per la pensione di Marco. Lo firma tutto l'ufficio.» e il biglietto con «Caro Marco,»; entro 0,5 s il titolo si rimpicciolisce verso l'alto e la carta si accende con un bordo accento mentre la voce la dice.
-ANIMAZIONE: Il biglietto si scrive un cartellino alla volta, in sincrono con la voce: «finalmente», «potrai», «spegnere», «la»; subito dopo «la» un cursore lampeggia e resta lì fino alla fine della scena (circa 1 s di vuoto: è la prova).
+VOCE: Ti fai scrivere la candidatura dall'IA? Finisci tu la frase.
+VOCE: Allego il mio curriculum e resto a disposizione per un…
+ANIMAZIONE: Al primo fotogramma sono già in scena il titolo in alto (è la copertina), sotto la carta «richiesta» con «Scrivi la mail per candidarmi a questo annuncio.» e, agganciata sotto e attenuata, la carta «annuncio · inventato» con il testo dell'annuncio e «Acme Arredi» acceso; più giù la mail con «Oggetto: Candidatura per la posizione di addetto marketing» e «Gentile responsabile della selezione,». Entro 0,5 s il titolo si rimpicciolisce verso l'alto e la carta «richiesta» si accende con un bordo accento mentre la voce fa la domanda.
+ANIMAZIONE: Il corpo della mail scorre veloce e attenuato (righe grigie) fino in fondo; l'ultima riga si scrive un cartellino alla volta in sincrono con la voce: «Allego», «il», «mio», «curriculum», «e», «resto», «a», «disposizione», «per», «un»; subito dopo «un» un cursore lampeggia e resta lì fino alla fine della scena (circa 1 s di vuoto: è la prova).
 RIQUADRO: no
 
 ## Scena 2 [spiegazione]
-VOCE: Sveglia, vero? L'hai finita tu, proprio come lei.
-VOCE: Io gliel'ho chiesto cinque volte, e c'era in ==tutte e cinque==.
-VOCE: Si può avere una frase che valga solo per Marco? Sì, ma non basta chiederglielo.
-ANIMAZIONE: GRANDE: «SVEGLIA» a tutto schermo in accento per ~1 s, appena detta; poi la parola rientra nel biglietto al posto del cursore e la riga si completa: «finalmente potrai spegnere la sveglia senza sensi di colpa!».
-ANIMAZIONE: Il biglietto si rimpicciolisce a sinistra e a destra entrano, uno alla volta, quattro frammenti veri delle altre risposte, attenuati, con la sola «sveglia» in accento: «niente sveglie», «la sveglia spenta il lunedì mattina», «Adesso la sveglia la puoi spegnere.», «le mattine senza sveglia»; sotto, l'etichetta «5 su 5».
-ANIMAZIONE: I frammenti escono e il biglietto torna al centro; in alto a sinistra entra, piccola, l'etichetta «solo per Marco?» con il punto di domanda in accento, che resta in scena attenuata fino alla scena 6.
-TESTO: 5 su 5
-TESTO: solo per Marco?
+VOCE: Colloquio, vero? Hai fatto un po' quello che fa lei.
+VOCE: Io gliel'ho chiesta dieci volte, e c'era in ==tutte e dieci==.
+VOCE: E la tua mail finisce accanto a quelle degli altri.
+VOCE: E una mail che parla di te? Si può, ma non basta chiederlo.
+ANIMAZIONE: GRANDE: «COLLOQUIO» a tutto schermo in accento per ~1 s, appena detta; poi la parola rientra nella mail al posto del cursore e la riga si completa: «Allego il mio curriculum e resto a disposizione per un colloquio.»
+ANIMAZIONE: La mail si rimpicciolisce a sinistra e a destra entrano, uno alla volta e attenuati, quattro frammenti veri di altre risposte con la sola «colloquio» in accento: «resto a disposizione per un colloquio, anche online», «Sarei felice di approfondire la mia candidatura in un colloquio», «Resto a disposizione per un eventuale colloquio conoscitivo», «Resto a disposizione per un colloquio conoscitivo»; sotto, l'etichetta «10 su 10».
+ANIMAZIONE: I frammenti escono; dietro la mail scivolano due copie sfalsate, grigie e senza testo leggibile, come in una pila di candidature, e la mail resta davanti.
+ANIMAZIONE: Le copie escono e la mail torna al centro; in alto a sinistra entra, piccola, l'etichetta «parla di te?» con il punto di domanda in accento, che resta in scena attenuata fino alla scena 6.
+TESTO: 10 su 10
+TESTO: parla di te?
 
 ## Scena 3 [spiegazione]
-VOCE: Guarda, quando genera, scrive una parola alla volta,
-VOCE: e ogni volta ne prende una delle più ==probabili==.
-VOCE: Per questo il testo viene fluente, e per questo è il biglietto di tutti.
-ANIMAZIONE: La carta «richiesta» resta compatta in alto; il biglietto si svuota e la frase si ricompone veloce, un cartellino alla volta: «Caro», «Marco,», «finalmente», «potrai», «spegnere», «la», e il cursore si ferma dopo «la».
-ANIMAZIONE: Sotto il cursore entra la colonna delle candidate con le barre (esempio: numeri inventati): «sveglia» in testa, poi «luce» e «televisione»; GRANDE: zoom sulla colonna, «sveglia» si accende e vola nel posto del cursore, le altre due sbiadiscono, poi lo zoom torna.
-ANIMAZIONE: Sotto il biglietto intero entrano due etichette, prima «fluente» e poi «di tutti» in accento.
+VOCE: Guarda, lei scrive una parola alla volta, e ne prende una delle più ==probabili==.
+VOCE: Per questo la mail viene fluente, ma se non gliel'hai detto, non sa da quanti anni lavori,
+VOCE: non sa dove, e non sa perché vuoi proprio loro.
+ANIMAZIONE: La mail si ferma di nuovo dopo «resto a disposizione per un» con il cursore; sotto entra la colonna delle candidate con le barre (esempio: numeri inventati): «colloquio» in testa, poi «incontro» e «confronto»; GRANDE: zoom sulla colonna, «colloquio» si accende e vola nel posto del cursore, le altre due sbiadiscono, poi lo zoom torna.
+ANIMAZIONE: La colonna esce; sotto la mail entra l'etichetta «fluente». La mail scorre al corpo e nella riga «Ho [numero] anni di esperienza nel marketing,» il segnaposto «[numero]» si accende in accento con un riquadro.
+ANIMAZIONE: Si accendono, uno dopo l'altro, «maturata presso [azienda/e]» e la riga «[… cosa vi attira di Acme Arredi …]»; accanto ai tre segnaposto accesi entra l'etichetta «non gliel'hai detto».
 TESTO: fluente
-TESTO: di tutti
+TESTO: non gliel'hai detto
 
 ## Scena 4 [spiegazione]
-VOCE: E se aggiungi «sii originale»?
-VOCE: Tre volte su cinque mi ha fatto un verbale.
-VOCE: Ma dentro ci sono ancora la ==sveglia== e le riunioni che potevano essere una mail.
-ANIMAZIONE: La carta «richiesta» scende al centro e ci entra, in accento, la riga «Sii originale.»: ora la carta è la richiesta C2 parola per parola.
-ANIMAZIONE: La carta torna compatta in alto e il biglietto cambia vestito: in cima gli entra l'intestazione «VERBALE DELLA RIUNIONE STRAORDINARIA DELL'UFFICIO», e dietro scivolano due copie sfalsate con la stessa intestazione; accanto l'etichetta «3 su 5». Nessuna etichetta «nuovo» o «originale» sul verbale.
-ANIMAZIONE: Le due copie escono; nel verbale compaiono due righe vere del Punto 3, «punta la sveglia solo quando vuole lui;» e «non partecipa più alle riunioni che "potevano essere una mail".»; GRANDE: zoom su «sveglia», che si accende in accento come nella scena 2, poi si accende «una mail» e lo zoom torna.
-TESTO: 3 su 5
+VOCE: Non sbagli a fartela scrivere, ci mancherebbe.
+VOCE: Sbagli se pensi che basti «sii originale».
+VOCE: Io l'ho fatto, e una mail su due comincia con un ==divano==,
+VOCE: e due con la stessa frase.
+VOCE: Cambia il vestito, ma del tuo lavoro non le hai ancora detto niente.
+ANIMAZIONE: L'etichetta «non gliel'hai detto» esce; la carta «richiesta» scende al centro e si accende appena, senza barrature: nessun giudizio su chi l'ha usata.
+ANIMAZIONE: Nella carta entra, in accento, la riga «Sii originale.»: ora la carta è la richiesta B parola per parola. Poi torna compatta in alto.
+ANIMAZIONE: GRANDE: «DIVANO» a tutto schermo in accento per ~1 s, nello stesso stile di «COLLOQUIO»; poi il testo della prima mail esce tutto ed entra la mail col vestito nuovo, con il suo oggetto «Candidatura per il ruolo di addetto marketing», «Gentile team di Acme Arredi,» e l'attacco «nessuno compra un divano per le sue misure.»; a destra entrano attenuati due frammenti veri di altre risposte con «divano» in accento, «un divano si compra in negozio» e «un divano non si vende con un post»; sotto, l'etichetta «5 su 10». Nessuna etichetta «nuovo» o «originale».
+ANIMAZIONE: Entra un terzo frammento, «nessuno compra un divano per le sue misure», e si allinea sotto l'attacco della mail: le due righe sono identiche, e un riquadro accento le prende insieme con l'etichetta «stessa frase».
+ANIMAZIONE: I frammenti escono; nel corpo della stessa mail si accendono i segnaposto «Negli ultimi [numero] anni» e «presso [azienda]», nello stesso stile della scena 3, e torna accanto l'etichetta «non gliel'hai detto»; in fondo si accende «la cosa che vi chiedo è un colloquio».
+TESTO: 5 su 10
+TESTO: stessa frase
+TESTO: non gliel'hai detto
 
 ## Scena 5 [spiegazione]
-VOCE: Quello che le manca è una cosa che sai ==solo tu==.
-VOCE: Tipo che Marco ha passato una vita a litigare con la fotocopiatrice.
-VOCE: E in fondo al biglietto scrive: la fotocopiatrice ci ha chiesto di salutarti.
-VOCE: Poi si è…
-ANIMAZIONE: Il verbale esce; la carta «richiesta» torna al centro, la riga «Sii originale.» ne scivola fuori (senza barrarla) e al suo posto resta una riga vuota con un cursore accento.
-ANIMAZIONE: La riga vuota si riempie in accento, in sincrono con la voce: «Marco ha passato una vita a litigare con la fotocopiatrice.» (ora la carta è la richiesta D2 parola per parola); poi la carta si compatta in alto.
-ANIMAZIONE: Sotto entra il biglietto pulito, e si scrive un cartellino alla volta insieme alla voce: «La fotocopiatrice ci ha chiesto di salutarti.»
-ANIMAZIONE: Seconda riga: «Poi», «si», «è», e il cursore lampeggia subito dopo «è» fino alla fine della scena (~1 s di vuoto: la seconda prova, con lo stesso gesto della scena 1).
-TESTO: che sai solo tu
+VOCE: Togli «sii originale» e dille un fatto vero che sai solo tu.
+VOCE: Tipo che hai portato una newsletter a duemilacento iscritti.
+VOCE: Ora scrive: in un anno ho portato gli iscritti da trecento a…
+ANIMAZIONE: La mail esce; la carta «richiesta» torna al centro, la riga «Sii originale.» ne scivola fuori (senza barrarla) e al suo posto resta una riga vuota con un cursore accento.
+ANIMAZIONE: La riga vuota si riempie in accento, in sincrono con la voce: «Nel mio lavoro attuale ho portato la newsletter di un negozio di biciclette da 300 a 2.100 iscritti in un anno.» (ora la carta è la richiesta C parola per parola); sotto la carta l'etichetta «esempio: candidato inventato». Poi la carta si compatta in alto.
+ANIMAZIONE: Sotto entra una mail pulita con il suo oggetto, «Candidatura per la posizione di addetto marketing», e il suo saluto, «Gentile team di Acme Arredi,»; una riga si scrive un cartellino alla volta insieme alla voce: «in», «un», «anno», «ho», «portato», «gli», «iscritti», «da», «300», «a», e il cursore lampeggia subito dopo «a» fino alla fine della scena (~1 s di vuoto: la seconda prova, con lo stesso gesto della scena 1).
+TESTO: un fatto vero
+TESTO: esempio inventato
 
 ## Scena 6 [spiegazione]
-VOCE: Inceppata, vero? L'hai finita di nuovo.
-VOCE: È ancora una parola probabile, ma probabile ==dopo la fotocopiatrice==.
-VOCE: Ecco una frase che vale solo per Marco, e la riga gliel'hai data tu.
-ANIMAZIONE: GRANDE: «INCEPPATA» a tutto schermo in accento per ~1 s, nello stesso stile di «SVEGLIA»; poi la parola rientra nel biglietto al posto del cursore: «Poi si è inceppata.»
-ANIMAZIONE: Sotto il biglietto torna la colonna delle candidate della scena 3 (stesso oggetto, esempio: numeri inventati), ora dopo «si è»: «inceppata» in testa, poi «bloccata» e «spenta»; una freccia parte dalla parola «fotocopiatrice» nella carta in alto e arriva alla colonna.
-ANIMAZIONE: La colonna esce; l'etichetta «solo per Marco?» della scena 2 perde il punto di domanda, si accende in accento e scende accanto al biglietto; sulla riga della fotocopiatrice nella carta entra una graffa con l'etichetta «l'hai data tu».
-TESTO: dopo la fotocopiatrice
-TESTO: l'hai data tu
+VOCE: Duemilacento, vero?
+VOCE: È ancora una parola probabile, ma probabile ==dopo il tuo numero==.
+VOCE: Ecco una mail che parla di te, e il numero ce l'hai messo tu.
+ANIMAZIONE: GRANDE: «2.100» a tutto schermo in accento per ~1 s, nello stesso stile di «COLLOQUIO»; poi il numero rientra nella mail al posto del cursore: «in un anno ho portato gli iscritti da 300 a 2.100.»
+ANIMAZIONE: Sotto la mail torna la colonna delle candidate della scena 3 (stesso oggetto, esempio: numeri inventati), ora dopo «da 300 a»: «2.100» in testa, poi «500» e «1.000»; una freccia parte dalla riga del numero nella carta in alto e arriva alla colonna.
+ANIMAZIONE: La colonna esce; l'etichetta «parla di te?» della scena 2 perde il punto di domanda, si accende in accento e scende accanto alla mail; sulla riga del numero nella carta entra una graffa con l'etichetta «l'hai messo tu».
+TESTO: dopo il tuo numero
+TESTO: l'hai messo tu
 
 ## Scena 7 [chiusura]
-MESSAGGIO: L'IA non ha mai conosciuto Marco. ==Tu sì==.
-CTA: Mandalo a chi scrive i biglietti in ufficio
-VOCE: L'IA non ha mai conosciuto Marco.
-VOCE: Tu sì.
-VOCE: Quindi diglielo tu, nella richiesta.
-VOCE: E salutami la fotocopiatrice.
-ANIMAZIONE: Esce tutto; a sinistra l'icona «bot», a destra l'icona «user» con l'etichetta «Marco»; fra le due una linea tratteggiata interrotta.
-ANIMAZIONE: GRANDE: «TU SÌ» a tutto schermo in accento per ~1 s; poi una linea accento va dal riquadro del presentatore a «Marco».
-ANIMAZIONE: Entra la carta «richiesta» e ci scivola dentro, in accento, la riga della fotocopiatrice; sopra entra il messaggio.
-ANIMAZIONE: Il diagramma esce, il messaggio scende al centro e sotto entra la CTA a pillola; nell'ultimo secondo, sotto la CTA, ricompare il biglietto con «Caro Marco,» e il cursore, come nel primo fotogramma dell'hook (per il replay).
+MESSAGGIO: Non basta «sii originale». ==Dalle un fatto che sai solo tu==.
+CTA: Mandalo a chi sta cercando lavoro
+VOCE: La prima era scritta bene.
+VOCE: Solo che poteva firmarla chiunque.
+VOCE: Questa la puoi firmare solo tu.
+ANIMAZIONE: Esce tutto; a sinistra la prima mail, rimpicciolita, con «colloquio» acceso; a destra la mail nuova, con «2.100» acceso e, attenuato ma leggibile, il segnaposto «da [numero] anni» ancora da completare. «Colloquio» resta nel testo di tutte e due: cambia solo la parola accesa.
+ANIMAZIONE: GRANDE: dietro la prima mail scivolano molte copie sfalsate, grigie e senza testo leggibile come nella scena 2, fino a coprire la metà sinistra: simili, non duplicati (nessuna copia riporta il testo della prima); la mail nuova resta sola a destra.
+ANIMAZIONE: Le copie e la prima mail escono; la mail nuova va al centro, sopra entra il messaggio e sotto la CTA a pillola. Nell'ultimo secondo, sotto la CTA, ricompare la prima mail con «Gentile responsabile della selezione,» e il cursore, come nel primo fotogramma dell'hook (per il replay).
 
 ## Note di produzione
 
-**Da dove vengono i testi del modello.** Tutti da `contenuti/media/generativa-probabile/biglietti-claude-2026-09-14.md`
-(Claude Opus 5, 14 settembre 2026, CLI `claude -p`, Claude Code 2.1.270, non l'app; condizioni nell'intestazione del
-file). Set consigliato dall'ideatore, cioè le richieste senza «originale»: ogni stato della carta «richiesta» coincide
-parola per parola con la richiesta che ha prodotto il testo mostrato. Nessun testo nuovo generato.
-- Carta, scene 1-3 (A2): «Un biglietto per la pensione di Marco. Lo firma tutto l'ufficio.»
-- Prova 1 (scene 1-3): `A2-opus-5`, «Versione spiritosa», la **seconda di tre proposte** della risposta: «Caro Marco, /
-  finalmente potrai spegnere la sveglia senza sensi di colpa!». Per questo la VOCE non dice «comincia così»: dice
-  «ho chiesto… Finisci tu.». Taglio: il resto della proposta e le altre due proposte (la prima, «Versione calorosa»,
-  apre con «Caro Marco, dopo tanti anni passati insieme…»).
-- Scena 2, i quattro frammenti: `A2-opus-1` «niente sveglie», `A2-opus-2` «la sveglia spenta il lunedì mattina»,
-  `A2-opus-3` «Adesso la sveglia la puoi spegnere.», `A2-opus-4` «le mattine senza sveglia». Uno per risposta, testuali.
-- Carta, scena 4 (C2): la stessa riga, più «Sii originale.»
-- Il verbale, scena 4: `C2-opus-3`, tutto dalla stessa uscita. L'intestazione «VERBALE DELLA RIUNIONE STRAORDINARIA
-  DELL'UFFICIO» e, dal «Punto 3», «punta la sveglia solo quando vuole lui;» e «non partecipa più alle riunioni che
-  "potevano essere una mail".». Tagli: tutto fra l'intestazione e il Punto 3 (oggetto, presenti, punti 1-2) e la prima
-  voce del Punto 3 («può ignorare tutte le mail con oggetto "URGENTE";»). Le due copie dietro rappresentano
-  `C2-opus-1` e `C2-opus-4`, che hanno la stessa intestazione: se ne mostra solo quella.
-- Carta, scene 5-7 (D2): «Un biglietto per la pensione di Marco. Lo firma tutto l'ufficio. Marco ha passato una vita
-  a litigare con la fotocopiatrice.»
-- Prova 2 (scene 5-6): `D2-opus-5`, il P.S. in fondo all'interno: «La fotocopiatrice ci ha chiesto di salutarti. Poi si
-  è inceppata.». La voce non legge «P.S.» («e in fondo al biglietto scrive…»). Taglio: tutto il resto del biglietto
-  (fronte «Caro Marco, finalmente libero. (E anche lei.)», interno, versione corta).
+**Struttura narrativa** (schema @marcocamisanicalzolari · r0037, adattato nell'idea):
+- Scena 1 — [fatto minimo] + [domanda pratica]: la prova 1 e la carta «richiesta» con l'annuncio. Tag: `caso-esemplare`.
+- Scena 2 — [conseguenza] diventata posta in gioco al «tu», con il conto vero e il loop «parla di te?». Tag:
+  `caso-esemplare`, `domanda-pivot` (la domanda del loop).
+- Scena 3 — [una media che suona bene] (il meccanismo, la colonna), [tono di uno che sa] («fluente») e [non sapeva
+  niente: tre negazioni] in una frase con tre verbi e tre segnaposto. Tag: `contrasto` (fluente, ma non gliel'hai
+  detto). Tagliata per durata la seconda metà della fase («per spostare un appuntamento va benissimo, per una
+  candidatura no»): va in caption come lato buono del probabile.
+- Scena 4 — [non hanno sbagliato a usarla, hanno sbagliato a…] e l'errore comune con le uscite B. Tag:
+  `assolvere-prima-di-accusare`, `contrasto`.
+- Scena 5 — [regola pratica con fonte umana]: la mossa (la fonte sei tu) e la prova 2. Tag: `caso-esemplare`.
+- Scena 6 — seguito della regola pratica: la rivelazione 2 e il loop chiuso («una mail che parla di te»). Tag:
+  `contrasto` (stessa colonna, contesto diverso), `formula-ripetuta` solo come ripetizione di «probabile».
+- Scena 7 — [diagnosi] tagliata come nell'idea, ne resta l'`aforisma` («poteva firmarla chiunque»); [domanda finale]
+  sostituita da chiusura a battuta + CTA di invio (vince il repo: niente `finale-aperto` generico).
 
-**Numeri** (tutti di Claude Opus 5, contati da me sul file; da ricontrollare dal revisore):
-- «tutte e cinque» (scena 2, etichetta «5 su 5»): «sveglia» o «sveglie» in 5 risposte su 5 alla richiesta A2
-  (`A2-opus-1` «niente sveglie», `-2`, `-3`, `-4`, `-5`). Il conto grezzo in testa alla sezione A2 dice 4 perché cerca solo
-  «sveglia». Con Sonnet 5 la stessa richiesta dà 0 su 5: va in caption, con modello e data.
-- «tre volte su cinque» (scena 4, etichetta «3 su 5»): l'intestazione identica in `C2-opus-1`, `-3`, `-4`.
-- Colonna della scena 3: «sveglia» è vera (`A2-opus-5`), «luce» e «televisione» sono inventate; barre inventate.
-  Colonna della scena 6: «inceppata» (`D2-opus-5`, anche `D2-opus-1` «Si è inceppata per l'emozione») e «bloccata»
-  (`D2-opus-3`, «e poi si è bloccata») sono vere, «spenta» è inventata; barre inventate (l'API non restituisce le
-  probabilità). Le due colonne portano la nota «esempio: numeri inventati» della `Classifica`.
-- In VOCE ci sono solo questi due numeri, detti in prima persona dal presentatore («io gliel'ho chiesto», «mi ha fatto»):
-  è la sua prova, fatta con il suo account. Non si dice «in chat».
+**Da dove vengono i testi del modello.** Tutti da `contenuti/idee/uscite/generativa-probabile-2026-09-16.md` (Claude
+Code 2.1.273, `claude -p`, prompt di sistema neutro, 16 settembre 2026, azienda «Acme Arredi»; 1-5 Opus 5, 6-10
+Sonnet 5). La generazione precedente con «Morandin Arredi» è scartata: nessuna sigla o conto della versione di prima
+vale più. Ogni stato della carta «richiesta» coincide parola per parola con la richiesta che ha prodotto la mail
+mostrata. La mail principale è una sola uscita per stato, tutte e tre di Opus 5:
+- **Scene 1-3, la prima mail: `A1`.** Oggetto «Candidatura per la posizione di addetto marketing» (così com'è, senza
+  nome), saluto «Gentile responsabile della selezione,», prova 1 «Allego il mio curriculum e resto a disposizione per
+  un colloquio.» (è l'ultima riga del corpo, prima dei saluti, e finisce proprio su «colloquio»), segnaposto «Ho
+  [numero] anni di esperienza nel marketing, maturata presso [azienda/e].» e la riga «[Facoltativo: una frase su cosa
+  vi attira di Acme Arredi o del settore dell'arredamento.]», mostrata accorciata come «[… cosa vi attira di Acme
+  Arredi …]» (taglio nostro). Tagli: il resto del corpo passa attenuato; firma («Nome Cognome»), contatti e la nota
+  finale del modello non si mostrano.
+- **Scena 2, i quattro frammenti:** `A2` «resto a disposizione per un colloquio, anche online» (minuscola
+  dell'originale, a metà frase), `A4` «Sarei felice di approfondire la mia candidatura in un colloquio», `A6` «Resto a
+  disposizione per un eventuale colloquio conoscitivo», `A9` «Resto a disposizione per un colloquio conoscitivo»
+  (tagliato il seguito «, nei tempi e modi…»). Uno per uscita, due Opus e due Sonnet, testuali salvo i tagli in coda.
+- **Scena 4, la mail col vestito nuovo: `B2`.** Oggetto «Candidatura per il ruolo di addetto marketing» (tagliato
+  «– Nome Cognome»), saluto «Gentile team di Acme Arredi,», attacco «nessuno compra un divano per le sue misure.»
+  (prima frase di B2, minuscola come nell'originale), segnaposto
+  «Negli ultimi [numero] anni» e «presso [azienda]» (dalla frase «Negli ultimi [numero] anni ho lavorato come [ruolo]
+  presso [azienda].») e «la cosa che vi chiedo è un colloquio» (da «Ho scritto questa mail con la stessa regola, e la
+  cosa che vi chiedo è un colloquio.»). Come chiede il revisore (punto 27 della passata precedente), il testo di A1
+  esce del tutto: dal cambio in poi ogni parola leggibile è di B2. Frammenti: `B1` «un divano si compra in negozio»
+  (tagliato il seguito «, ma spesso…»), `B4` «un divano non si vende con un post», `B3` «nessuno compra un divano per
+  le sue misure» (la prima frase di B3 è identica a quella di B2, parola per parola).
+- **Scene 5-7, la mail nuova: `C4`.** Oggetto «Candidatura per la posizione di addetto marketing» (il suo, che
+  coincide parola per parola con quello di A1), saluto «Gentile team di Acme Arredi,», e la riga «in un anno ho
+  portato gli iscritti da 300 a 2.100.» Taglio: la parte prima dei due punti («Il risultato di cui vado più fiero
+  riguarda la newsletter:»). Il segnaposto della scena 7, «da [numero] anni», è di C4 («…promozioni in negozio] da
+  [numero] anni.»). Scelta C4 e non C1 perché in C1 la frase è «in un anno l'ho portata da 300 a 2.100 iscritti»: a
+  voce «l'ho portata» senza la newsletter davanti non si capisce. La VOCE dice i numeri in lettere perché il
+  presentatore li legge dal karaoke.
+- **Colonne (scene 3 e 6):** «colloquio» (A1) e «2.100» (C4) sono veri; «incontro», «confronto», «500», «1.000» sono
+  inventati, e le barre sono tutte inventate (la CLI non restituisce le probabilità). Le colonne portano la nota
+  «esempio: numeri inventati» della `Classifica`.
+- Nome ed email dell'account (anonimizzati nel file come «Nome Cognome» e «nome.cognome@email.it») non vanno mai a
+  schermo: oggetti con il nome e firme si tagliano.
+
+**Numeri** (ricontati da me sulle uscite nuove, per uscita e con i plurali; da ricontrollare dal revisore):
+- «dieci volte… in tutte e dieci» (scena 2, etichetta «10 su 10»): «colloquio» in A1-A10, 10 su 10 (5 Opus, 5
+  Sonnet). La formula «resto a disposizione per un (eventuale) colloquio» c'è in 8 su 10 (A1, A2, A3, A6-A10; A4 e A5
+  scrivono «Sarei felice di approfondire la mia candidatura in un colloquio»); «colloquio conoscitivo» solo in Sonnet,
+  5 su 5 (A6-A10; «eventuale» in A6 e A7). Per questo la VOCE conta la parola, non la formula. Altrove: «colloquio» in
+  9 B su 10 (manca in B3) e in C 10 su 10.
+- «una mail su due comincia con un divano» (scena 4, etichetta «5 su 10»): «divano» in B1, B2, B3, B4 (Opus) e B9
+  (Sonnet), sempre nella prima frase dopo il saluto; in nessuna B compare più avanti. Il divano non è più «8 su 10»
+  come nella generazione scartata. Il luogo comune largo è l'arredamento: 8 attacchi su 10 partono da un'immagine di
+  casa o di mobili (B1-B4 e B9 il divano, B6 «non sta comprando un tavolo», B7 «se un negozio di arredamento fosse una
+  casa», B10 «un salotto»); B5 e B8 attaccano invece dalla «scrittura chiara» dell'annuncio. Ho tenuto il divano
+  perché è una parola sola, concreta, da mostrare grande, e il conto è onesto detto come «una mail su due».
+- «e due con la stessa frase» (scena 4, etichetta «stessa frase»): B2 e B3 (Opus) aprono tutte e due con
+  «nessuno compra un divano per le sue misure.»; la frase dopo cambia appena («Lo compra per la domenica
+  pomeriggio…» / «per le domeniche pomeriggio…»), il resto delle due mail è diverso. Il claim è sulla frase
+  d'attacco, non sulla mail.
+- «da trecento a duemilacento» è un **esempio dichiarato** (candidato inventato), a schermo con l'etichetta. Il numero
+  compare in C1-C10, 10 su 10, e in nessuna A o B.
+- In VOCE ci sono solo questi conti, detti in prima persona dal presentatore («io gliel'ho chiesta», «io l'ho fatto»):
+  sono le sue prove. Non si dice «in chat» (sono uscite della CLI).
 
 **Claim per il revisore** (le cautele dell'idea, e dove le ho applicate):
-- «Ne prende una delle più probabili» (scena 3), mai «la più probabile» né «sempre»; «una parola alla volta» è la
-  semplificazione dei token già accettata.
-- «Sì, ma non basta chiederglielo» (scena 2) e «al suo posto» (scena 5): «sii originale» è trattato come
-  insufficiente, non inutile. La riga esce dalla carta senza barratura. La scena 5 dice «al suo posto» perché la carta
-  deve coincidere con D2; resta vero che nei nostri dati «originale» insieme al dettaglio sembrava aiutare la trovata
-  (D contro D2): è un indizio su cinque campioni, e non lo neghiamo.
-- «L'hai finita di nuovo… è ancora una parola probabile, ma probabile dopo la fotocopiatrice» (scena 6): non dice che
-  il dettaglio abbia reso l'IA creativa. Lo reggono i dati: la macchina che si inceppa o si blocca in 3 su 5 (D2), la
-  stessa idea «saluta e poi si inceppa» in 2 su 5.
-- «Ecco una frase che vale solo per Marco» (scena 6): dice che la frase riguarda solo Marco, non che sia nuova o unica
-  (la stessa idea torna in più uscite). Chiude il loop della scena 2 con le sue parole.
-- «La riga gliel'hai data tu»: l'ingrediente è tuo, la combinazione è del modello. In caption: «Il dettaglio l'hai
-  messo tu, la battuta l'ha scritta lei.»
-- Sul verbale nessun «nuovo» né «originale», a voce o a schermo. Il contesto delle prove non era neutro (`C2-opus-3`
-  scrive «ufficio universitario»): non lo si dice «neutro».
-- Il lato buono del probabile (per una mail formale o un riassunto la strada battuta è quella che vuoi) non sta nella
-  VOCE, che non aveva più spazio: va in caption. «Fluente» della scena 3 è l'unico accenno a voce.
-- La chiusura (scelta del presentatore per il primo reel) porta con sé la cautela T8: l'IA non conosce Marco perché
-  non glielo hai detto (memoria e connettori a parte: nelle prove Opus ha provato a cercarlo in Gmail).
+- «Una parola alla volta» (token) e «ne prende una delle più probabili» (scena 3): mai «la più probabile» né «sempre».
+- «Hai fatto un po' quello che fa lei» (scena 2): la prevedibilità per chi legge e la probabilità per il modello sono
+  correlate, non identiche; il «un po'» è voluto.
+- «Non sa da quanti anni lavori, non sa dove, non sa perché vuoi proprio loro» (scena 3): regge su A1 (i tre
+  segnaposto sono lì). Con le uscite nuove **tutte e dieci le A lasciano vuoti gli anni** (Opus «[numero]»; Sonnet
+  «[inserisci qui il numero]» in A6, «[XX]» in A7, «[inserisci qui il numero di anni, es. "due anni"]» in A8-A10).
+  Però **Sonnet attribuisce al candidato le attività dell'annuncio in 5 su 5** (A6-A10: «occupandomi in particolare
+  di gestione dei canali social, … newsletter e coordinamento di attività promozionali»; A10 le mette anche in un
+  elenco, A8 e A10 aggiungono «precisa, organizzata / creativa»). È il limite «quello che non le hai dato, può averlo
+  messo lei»: resta fuori dalla VOCE come da idea e va in caption.
+- «Sii originale» è **insufficiente, non inutile** (scena 4, «sbagli se pensi che basti»): la riga esce dalla carta
+  senza barratura nella scena 5. Il vestito di B2 non si chiama mai «nuovo» né «originale».
+- «Cambia il vestito, ma del tuo lavoro non le hai ancora detto niente» (scena 4, la correzione del revisore): vero
+  per tutte le B, perché la richiesta B non contiene niente del lavoro del candidato. Sotto il vestito le B lasciano i
+  vuoti (Opus: «[numero]» in B2, B3, B5, «[due/X]» in B1, «[due/tre]» in B4) oppure li riempiono: **Sonnet scrive
+  «Negli ultimi due anni…» in 5 su 5 (B6-B10)**, cioè si inventa gli anni che chiede l'annuncio. «Colloquio»
+  resta in 9 B su 10: la scena 4 lo mostra solo acceso in B2, senza conto a voce. L'etichetta «non gliel'hai detto»
+  (scene 3 e 4) sostituisce «di te niente»: la CLI ha passato al modello nome ed email, quindi «di te niente» detto in assoluto è falso.
+- «È ancora una parola probabile, ma probabile dopo il tuo numero» (scena 6): non dice che il dettaglio abbia reso
+  l'IA creativa. «Una mail che parla di te» chiude il loop della scena 2: in C4 il fatto tuo è uno solo e restano
+  altri segnaposto («[attività principali…]», «[numero] anni», «[breve spiegazione…]»), e il colloquio resta in C 10
+  su 10. È il limite della mossa, da dire in caption; la scena 7 lascia leggibile «da [numero] anni».
+- «Questa la puoi firmare solo tu» (scena 7): vuol dire che contiene un fatto che è solo tuo, non che la mail sia
+  unica (lo stesso numero torna in tutte e dieci le C) né che si possa spedire senza rileggerla. Con la richiesta C
+  **Sonnet aggiunge fatti che non gli hai dato in 5 su 5** (C6 «La mia esperienza, che supera i due anni richiesti» e
+  «gestisco in autonomia i canali social, le promozioni»; C7 i social; C8 «gestisco in autonomia social media,
+  newsletter e attività promozionali»; C9 «gestione di social, newsletter e attività promozionali»; C10 «Da due anni
+  lavoro»), e anche Opus aggiunge il come in C2, C3 e C5 («un lavoro costante sui contenuti», «ho curato con costanza
+  i contenuti», «le iniziative per raccogliere nuovi contatti, sia online sia in negozio»). C1 e C4 lasciano
+  «[breve spiegazione…]», e C3 scrive perfino «Non ho inserito competenze sui social o sulle promozioni in negozio
+  che non mi hai indicato».
+- «E la tua mail finisce accanto a quelle degli altri» (scena 2): non dice che gli altri usano l'IA né che
+  i selezionatori la riconoscono.
+- Scena 7, le copie grigie: simili e non duplicati, senza testo leggibile (correzione ❌ 45 della passata precedente).
+  Le dieci A sono dieci testi diversi con le stesse formule.
+- Annuncio, azienda (Acme Arredi, Padova) e candidato (la newsletter del negozio di biciclette) sono **inventati**:
+  a schermo «annuncio · inventato» e «esempio: candidato inventato». «Acme Arredi» è il nome scelto dal presentatore
+  al posto di «Morandin Arredi»: da controllare che non coincida con un'azienda reale di Padova.
 
-**Per l'animatore: il filo visivo.** Tre oggetti in tutte le scene, più le battute grandi.
-- **La carta «richiesta»** (`Carta`), cioè «quello che viene prima»: A2 nelle scene 1-3, riceve «Sii originale.» nella
-  4 (C2), lo perde e riceve la riga della fotocopiatrice nella 5 (D2), resta compatta in alto nella 6, torna nella 7.
-- **Il biglietto con il cursore**: si ferma due volte sullo stesso gesto, «spegnere la ▌» (scena 1) e «Poi si è ▌»
-  (scena 5). Nella 4 è lo stesso oggetto con il vestito da verbale. Il cursore non è in libreria: il primo reel ne ha
-  uno (`cursore_dopo` e `lampeggio` in `contenuti/archivio/generativa-non-creativa/animazioni.py`).
-- **La colonna delle candidate** (`Classifica`): dopo «spegnere la» nella 3 e dopo «si è» nella 6. Stesso oggetto,
-  contesto diverso, vincitrice diversa.
-- **Le battute grandi** (`self.punch`): «SVEGLIA» (2) e «INCEPPATA» (6) nello stesso stile, come firma delle due prove;
-  «TU SÌ» nella chiusura. Zoom di camera (`zoom_su`) nelle scene 3 e 4. Il riquadro del presentatore grande sulle due
-  reazioni («vero?») e sulla chiusura, quando ci sarà in libreria.
-- **L'etichetta «solo per Marco?»** è l'oggetto del loop: entra nella 2, resta piccola e attenuata nelle 3-5 senza
-  disturbare la composizione, perde il «?» nella 6. Se affolla lo schermo si può togliere nelle scene 3-5 e far tornare
-  nella 6.
-- Icone «bot» e «user» ci sono; l'icona della fotocopiatrice (`printer` di Lucide) non c'è, e il reel non la usa.
+**Caption obbligatorie** (dalla revisione del 2026-09-16, riviste sui conti nuovi; il pacchetto social le deve
+contenere):
+- **Due modelli**: «"colloquio" in 10 risposte su 10: 5 di Claude Opus 5 e 5 di Sonnet 5, da Claude Code 2.1.273
+  (alias opus/sonnet, prompt di sistema neutro), 16 settembre 2026».
+- **Conta la parola, non la formula**: la chiusa cambia forma («resto a disposizione per un colloquio», «un eventuale
+  colloquio conoscitivo», «approfondire in un colloquio»), la parola no.
+- **Il divano**: «con "Sii originale." il divano apre 5 mail su 10 (4 di Opus su 5), e 8 attacchi su 10 partono da
+  un mobile o dalla casa; due Opus cominciano con la stessa frase».
+- **Sonnet inventa fatti**: «senza fatti tuoi Sonnet scrive le attività dell'annuncio come se fossero tue e, con
+  "Sii originale." o con il numero, si inventa anche gli anni ("negli ultimi due anni", "da due anni"); Opus lascia gli
+  spazi fra parentesi e ti chiede i dati veri».
+- **Rileggi la mail prima di mandarla**: ogni fatto dev'essere tuo; se poteva firmarla un altro candidato, aggiungi un
+  altro fatto tuo; niente dati riservati del datore di lavoro attuale.
+- **La CLI passa nome ed email dell'account**: le uscite li contenevano, a schermo sono tagliati; per questo il reel
+  non dice «di te non sa niente» ma «del tuo lavoro non le hai detto niente».
+- Il resto dall'idea: i tagli nostri, il lato buono del probabile (per una conferma o per spostare un appuntamento la
+  strada battuta va benissimo), «il dettaglio l'hai messo tu, la mail l'ha scritta lei», le altre due mosse con i loro
+  limiti.
 
-**Per il presentatore.**
-- Scena 1: «Finisci tu.» a camera, poi leggi la frase del biglietto guardando la grafica e **fermati su «la…»**,
-  sospeso, per circa un secondo prima del taglio. Stesso gesto su «Poi si è…» alla fine della scena 5.
-- «Sveglia, vero?» e «Inceppata, vero?» sono le due reazioni: a camera, con un mezzo sorriso, come chi ha appena visto
-  l'altro indovinare.
-- «Io gliel'ho chiesto cinque volte» è la tua prova: detta come esperienza, non come statistica.
-- Chiusura: «Tu sì.» a camera, pausa breve; «E salutami la fotocopiatrice» più leggera, quasi un saluto.
+**Per l'animatore (filo visivo).** Tre oggetti per tutto il reel: la **carta «richiesta»** con l'annuncio agganciato
+(A → B → C, parola per parola), la **mail con il cursore** (si ferma due volte con lo stesso gesto: scene 1 e 5; tre
+uscite diverse, A1, B2 e C4, e ogni volta il testo di prima esce del tutto) e la **colonna delle candidate** (scene 3
+e 6, stessa `Classifica`, vincitrice diversa). L'annuncio intero è lungo (29 parole): tenerlo piccolo e attenuato, mai
+da leggere, e accendere al massimo «Acme Arredi». I tre GRANDE a parola («COLLOQUIO», «DIVANO», «2.100») hanno lo
+stesso stile, così chi guarda riconosce il gesto. Le pile di copie grigie (scene 2 e 7) sono carte senza testo
+leggibile: nessun componente nuovo. L'etichetta «non gliel'hai detto» è la stessa nelle scene 3 e 4. Il riquadro
+«stessa frase» della scena 4 è un'`Evidenzia` attorno alle due righe identiche.
 
-**Durata.** ~77 s stimati, poco sopra i 75 dell'obiettivo dell'idea: la prima stesura era 79 s, e ho già tolto «con lo
-stesso titolo» dalla scena 4 (lo portano le tre copie sfalsate: l'animatore non le salti). Se si deve tagliare ancora,
-in quest'ordine: «Guarda,» (scena 3, ma lega la spiegazione alla domanda della scena 2), «E salutami la
-fotocopiatrice» (scena 7: la chiusura scende a 13 parole, però perde il richiamo al P.S. della prova 2).
+**Durata.** 85 s stimati (222 parole: scene 20/44/37/45/33/27/16), sotto il limite di 90 e sopra l'obiettivo di 75
+dell'idea. Per starci ho tolto, rispetto alla versione rivista, «ogni volta» (scena 3), «da trecento» nella riga
+dell'esempio (scena 5) e «L'hai finita di nuovo» (scena 6: «Duemilacento, vero?» riprende da solo «Colloquio,
+vero?»). La scena 4 cresce per la correzione del revisore e per la riga sulla «stessa frase». Se il reel va
+accorciato ancora, le prime candidate sono «e due con la stessa frase» (scena 4: il conto resta in caption e il
+riquadro a schermo) e «Hai fatto un po' quello che fa lei» (scena 2).
 
-**Caption** (proposte, dalla revisione archiviata e dall'idea): la dichiarazione dei testi («estratti da risposte più
-lunghe di Claude Opus 5, 14 settembre 2026: le parole sono sue, i tagli nostri»); il criterio corretto («se la finisci
-anche senza conoscere Marco, è ancora il biglietto di tutti: aggiungi un'altra cosa vera»); il lato buono del probabile
-(mail formali, riassunti); il limite della mossa (con il dettaglio Opus apre ancora con «Caro Marco, dopo tanti anni»
-in 4 risposte su 5, e con Sonnet 5 il dettaglio si attacca al biglietto di tutti); con Sonnet 5 la sveglia della A2 è
-0 su 5; «Il dettaglio l'hai messo tu, la battuta l'ha scritta lei»; in 10 risposte su 10 della A2 il modello chiede
-qualcosa di Marco (V17, da ricontrollare).
+**Per il presentatore.** Scena 1: la seconda riga si legge come una mail, rallentando su «per un…» e poi silenzio.
+Scena 2: «Colloquio, vero?» a camera con un mezzo sorriso. Scena 4: «un divano» è la battuta, una piccola pausa
+prima; «e due con la stessa frase» detto quasi a parte. Scena 5: stesso gesto della scena 1 su «da trecento
+a…». Scena 7: le tre frasi a camera, pausa prima di «Questa».
 
 ## Revisione tecnica
-Revisione del 2026-09-15, prima passata. Claim esaminati: 39 (VOCE, TITOLO, TESTO, MESSAGGIO/CTA, ANIMAZIONE, note,
-file idea). Esito: 26 ✅ · 13 ⚠️ · 0 ❌. Ho riletto le 30 uscite A2, C2 e D2 in
-`contenuti/media/generativa-probabile/biglietti-claude-2026-09-14.md` e rifatto i conti da capo (per risposta, nel testo
-dei biglietti, con i plurali). Dove il claim è lo stesso del primo reel riuso le conclusioni della revisione archiviata
-(`contenuti/archivio/generativa-non-creativa/sceneggiatura.md`) e cito il punto.
+Revisione del 2026-09-16, seconda passata (corsa `/pipeline --tutto`), dopo il cambio di azienda in «Acme Arredi» e
+la rigenerazione delle 30 uscite. Ho riletto tutto contro `contenuti/idee/uscite/generativa-probabile-2026-09-16.md`,
+senza riusare nulla della generazione «Morandin». Ho rifatto i conti per uscita e con i plurali (`colloqui*`,
+`divan*`) e controllato una per una le parole a schermo nei brief. Claim esaminati: 46. Esito: **34 ✅ · 11 ⚠️ · 1 ❌**.
+
+**Correzioni della prima passata: applicate bene.**
+- S4 VOCE «Cambia il vestito, ma del tuo lavoro non le hai ancora detto niente.»: giusta per tutte le B, perché la
+  richiesta B non contiene niente del lavoro.
+- TESTO «non gliel'hai detto» nelle scene 3 e 4, al posto di «di te niente».
+- S7: le copie sono «simili, non duplicati», senza testo leggibile.
+- S5: l'oggetto è quello di C4, identico alla riga 685 del file.
+
+**Il ❌ di questa passata** sta su una riga che la prima passata non aveva segnalato (S3, punto 14).
+
+**Risolto (coordinatore, 2026-09-16):** applicata alla lettera la riformulazione proposta per il ❌ 14 (S3, seconda
+riga VOCE), dello stesso tipo della correzione di S4 già approvata dal presentatore; `stato: rivisto`. Da fare
+prima della pubblicazione: le caption degli ⚠️ 20 e 43.
 
 **Scena 1 [hook]**
-1. ✅ TITOLO «Generativa non vuol dire creativa». = punto 1 dell'archivio. Qui «creativa» non viene barrata, quindi il
-   ⚠️ del punto 3 non si applica; Doshi & Hauser resta buono per LinkedIn.
-2. ✅ VOCE «Ho chiesto all'IA un biglietto per la pensione di Marco.» e la carta «richiesta»: la carta è la richiesta A2
-   parola per parola. Non dice «in chat» (V16).
-3. ✅ VOCE «Finisci tu. Caro Marco, finalmente potrai spegnere la…» e i cartellini: parole di `A2-opus-5` («Versione
-   spiritosa»), identiche. È la seconda di tre proposte, e infatti la voce non dice «comincia così»; il taglio è
-   dichiarato nelle note. Serve la riga di caption di V3 («estratti da risposte più lunghe…»).
-4. ✅ ANIMAZIONE cursore che lampeggia per ~1 s: nessun claim.
+1. ✅ TITOLO «Generativa non vuol dire creativa»: non nega la creatività, dice che il nome non la promette.
+2. ✅ VOCE «Ti fai scrivere la candidatura dall'IA? Finisci tu la frase.»: nessun claim.
+3. ✅ VOCE «Allego il mio curriculum e resto a disposizione per un…» e i cartellini: la riga è identica in A1 (riga 36
+   del file), ultima frase del corpo prima dei saluti.
+4. ✅ ANIMAZIONE carta «richiesta» e annuncio: la carta riporta alla lettera la prima frase della richiesta A,
+   l'annuncio è quello del file e a schermo è dichiarato «inventato».
+5. ✅ ANIMAZIONE mail A1: oggetto «Candidatura per la posizione di addetto marketing» senza nome, saluto «Gentile
+   responsabile della selezione,». A schermo non compaiono dati dell'account (firma e contatti tagliati).
 
 **Scena 2**
-5. ⚠️ VOCE «Sveglia, vero? L'hai finita tu, proprio come lei.» (punto delicato segnalato). Sul caso mostrato è vero alla
-   lettera: dopo «spegnere la» Opus ha scritto «sveglia», ed è proprio quello che fa un modello autoregressivo, finire
-   il testo che ha davanti una parola alla volta. «Proprio come lei» dice che il risultato coincide, e invita a pensare
-   che anche il processo sia lo stesso. È l'analogia su cui si regge il reel, onesta con il limite del punto 5
-   dell'archivio: quello che chi legge prevede e quello che il modello trova probabile sono correlati, non identici.
-   Cosa si perde: il modello non «indovina» una parola, pesa tutte le candidate e ne estrae una. Lo rimette a posto la
-   scena 3 subito dopo («ne prende una delle più probabili»). Va bene così, a patto che la 3 tenga quella riga.
-6. ⚠️ VOCE «Io gliel'ho chiesto cinque volte, e c'era in ==tutte e cinque==.» e TESTO «5 su 5». Il conto torna:
-   «sveglia» o «sveglie» in 5 risposte su 5 di Opus 5 alla A2 (`-1` «niente sveglie», `-2` «la sveglia spenta», `-3`
-   «Adesso la sveglia», `-4` «mattine senza sveglia», `-5` «spegnere la sveglia»). Il conto grezzo del file dice 4
-   perché non conta il plurale. Il punto delicato è un altro: la stessa richiesta è andata anche a Sonnet 5, con 0 su 5
-   (e 2 risposte su 5 non scrivono il biglietto, chiedono prima i dettagli). La voce dice «l'IA» e riporta il modello
-   che conferma. Regge perché è in prima persona, il conto è vero e la tesi vale anche per Sonnet, che scrive un altro
-   biglietto di tutti: «dopo tanti anni di lavoro insieme» in `A2-sonnet-1` e `-4`, «una nuova avventura» in `-2`.
-   Pesa perché Sonnet 5 è il modello predefinito dei piani Free e Pro (verificato oggi): chi prova con l'app gratuita la
-   sveglia forse non la vede. **Caption obbligatoria**, con modello e data: «La sveglia c'è in 5 risposte su 5 di Claude
-   Opus 5 (14 settembre 2026). Con Sonnet 5, stessa richiesta, in nessuna, ma il biglietto è di tutti lo stesso: "dopo
-   tanti anni di lavoro insieme".»
-7. ✅ ANIMAZIONE i quattro frammenti: ognuno è identico e viene da una sola uscita (`A2-opus-1` … `-4`). Con il biglietto
-   fanno le 5 risposte dell'etichetta «5 su 5».
-8. ✅ VOCE «Si può avere una frase che valga solo per Marco? Sì, ma non basta chiederglielo.» «Non basta» vuol dire
-   insufficiente, non inutile: è la taratura dell'idea (punto 16 e W5 dell'archivio). Lo dice il modello stesso: in
-   tutte e 10 le risposte alla A2 si offre di personalizzare il biglietto se gli dai qualcosa su Marco (`A2-opus-1`:
-   «Il testo è generico perché… Se mi dici qualcosa di lui, lo rendo più personale»). V17 è confermato con una
-   sfumatura: 9 risposte chiedono, `A2-sonnet-2` si offre soltanto («Vuoi che: 1. lo personalizzi (es. quanti anni ha
-   lavorato, un aneddoto…)»). In caption quindi: «in 10 risposte su 10 si offre di personalizzarlo se le dici qualcosa
-   di Marco».
-9. ✅ ANIMAZIONE etichetta «solo per Marco?»: apre il loop, nessun claim.
+6. ⚠️ VOCE «Colloquio, vero? Hai fatto un po' quello che fa lei.»: il «un po'» tiene la differenza. Quello che chi
+   legge prevede e quello che il modello trova probabile sono correlati, non identici. Il modello non indovina una
+   parola: pesa le candidate e ne estrae una, e la scena 3 lo rimette a posto subito.
+7. ✅ VOCE «Io gliel'ho chiesta dieci volte, e c'era in tutte e dieci.» e TESTO «10 su 10»: «colloquio» c'è in A1-A10,
+   10 su 10 (5 Opus 5 e 5 Sonnet 5, quindi nessun confronto sfavorevole fra modelli). Ho ricontato anche la formula:
+   «resto a disposizione per un (eventuale) colloquio» in 8 su 10 (A1, A2, A3, A6-A10); A4 e A5 scrivono «Sarei felice
+   di approfondire…». Giusto che la voce conti la parola e non la formula. Caption «due modelli» e «conta la parola»
+   confermate.
+8. ✅ ANIMAZIONE i quattro frammenti: ognuno viene da una sola uscita ed è testuale.
+   - `A2`, riga 67: «…resto a disposizione per un colloquio, anche online.»
+   - `A4`, riga 129.
+   - `A6`, riga 196.
+   - `A9`, riga 280, con il seguito tagliato.
+
+   Sono due Opus e due Sonnet; tagli dichiarati.
+9. ⚠️ VOCE «E la tua mail finisce accanto a quelle degli altri.» e la pila grigia: è la posta in gioco, non un dato.
+   Non dice che gli altri usano l'IA né che il selezionatore se ne accorge (nessuna fonte). Va bene così: le copie
+   restano senza testo leggibile.
+10. ⚠️ VOCE «E una mail che parla di te? Si può, ma non basta chiederlo.» (frase incerta): regge. Chiedere «parla di
+    me» senza dare fatti produce segnaposto (Opus) o fatti inventati (Sonnet, vedi 43), e i modelli stessi chiedono
+    i dati. In 7 risposte A su 10 (A1, A2, A6-A10) si offrono di adattare la mail alla tua esperienza reale (A1: «Se mi
+    racconti la tua esperienza… posso scriverti una versione completa e più su misura»). Cosa si perde: con la
+    memoria attiva l'app può sapere già qualcosa di te (vedi 14). «Non basta» resta vero, perché i fatti che contano
+    li porti tu. Il parlato è a posto: non è la forma «X, sì. Y, no.».
+11. ✅ ANIMAZIONE etichetta «parla di te?»: apre il loop, nessun claim.
 
 **Scena 3**
-10. ⚠️ VOCE «Guarda, generativa vuol dire che scrive una parola alla volta,». Contiene due semplificazioni.
-    - Sono token, spesso pezzi di parola: = punto 7 dell'archivio, accettata.
-    - Nuova: la frase fonde «generativa» con «autoregressiva». In senso tecnico generativo vuol dire che il modello
-      impara la probabilità dei testi e ne estrae dei campioni, cioè la seconda metà della frase; «una parola alla volta»
-      è il modo in cui lo fanno i chatbot di oggi. Anche i generatori di immagini sono generativi, e i modelli di
-      linguaggio a diffusione (Gemini Diffusion di Google, Mercury 2 di Inception Labs) scrivono blocchi di token in
-      parallelo.
+12. ⚠️ VOCE «lei scrive una parola alla volta, e ne prende una delle più probabili»: in realtà sono token.
+    Semplificazione già accettata. «Una delle più probabili» è la formula giusta per il campionamento; mai «la più
+    probabile».
+13. ✅ VOCE «Per questo la mail viene fluente,»: la causa è giusta, perché la scelta fra le continuazioni probabili
+    produce testo grammaticale e tipico. «Per questo» regge solo «fluente», non le negazioni che seguono.
+14. ❌ VOCE «ma non sa da quanti anni lavori, / non sa dove, e non sa perché vuoi proprio loro.»
+    - **Sul caso mostrato è vero**: A1 lascia «[numero]», «[azienda/e]» e «[… cosa vi attira …]».
+    - **Come regola sull'IA è falso con i prodotti di oggi.** Da marzo 2026 la memoria di Claude è gratuita per tutti
+      e ricorda nome, ruolo e lavoro fra una conversazione e l'altra (vedi sotto); ChatGPT ha la sua memoria.
+      Per chi l'ha attiva, «non sa dove» lavori può essere falso.
+    - **È lo stesso errore corretto in S4** («di te niente» → «non le hai detto»), e la lezione del 2026-09-13 lo
+      dice: ogni «non sa» passa dal contesto. L'etichetta a schermo dice già la cosa giusta, la voce no.
 
-    Per i prodotti che usa chi guarda è giusto, quindi non insegna un modello mentale sbagliato. Un collega del settore
-    però lo può notare. Facoltativa, se il presentatore vuole essere inattaccabile: «Guarda, quando genera, scrive una
-    parola alla volta,» (8 parole, scena 3 da 33 a 31); il titolo lo scioglie la riga dopo («probabili»). Altrimenti
-    la definizione esatta va nella variante LinkedIn.
-11. ✅ VOCE «e ogni volta ne prende una delle più ==probabili==.» = punto 9 e S1 dell'archivio: con il campionamento
-    (temperatura, top-p) è la formulazione giusta; mai «la più probabile».
-12. ✅ VOCE «Per questo il testo viene fluente, e per questo è il biglietto di tutti.» Il doppio «per questo» dice una
-    causa, ed è quella giusta (lezione del 2026-09-15 sui connettivi). La probabilità su cui il modello sceglie contiene
-    già il post-training. La voce non dice «probabile nei testi», quindi qui cade il ⚠️ del punto 10 dell'archivio: la
-    banalità viene dalla frequenza nei testi e dalla preferenza delle persone per il familiare (Kirk et al. 2024,
-    Zhang et al. 2025), e «probabili» le contiene tutte e due. «Fluente» = S3. «Il biglietto di tutti», detto del
-    biglietto mostrato, è vero: la sveglia c'è in 5 su 5, «la porta dell'ufficio (per te) resta (sempre) aperta» in 4 su
-    5 (`A2-opus-1` … `-4`).
-13. ✅ ANIMAZIONE colonna «sveglia», «luce», «televisione» (esempio): «sveglia» è vera, le altre due sono inventate e la
-    `Classifica` lo dichiara. Vince la prima, coerente con «una delle più probabili». In caption e su LinkedIn mai «le
-    candidate del modello»: l'API non restituisce le probabilità (V7).
-14. ✅ ANIMAZIONE e TESTO «fluente», «di tutti»: ripetono la voce.
+    **Riformulazione** (stessi beat e animazione, scena 3 da 37 a 41 parole):
+    `VOCE: Per questo la mail viene fluente, ma se non gliel'hai detto, non sa da quanti anni lavori,`
+    La terza riga resta com'è. Con la memoria resta vero anche per «perché vuoi proprio loro» e per gli anni esatti.
+15. ✅ ANIMAZIONE colonna «colloquio / incontro / confronto»: «colloquio» è vero (A1), il resto è inventato e la nota
+    «esempio: numeri inventati» lo dichiara. Vince la prima candidata, coerente con «una delle più probabili».
+16. ✅ ANIMAZIONE segnaposto di A1: «Ho [numero] anni di esperienza nel marketing,» e «maturata presso [azienda/e]»
+    sono testuali (riga 24). «[… cosa vi attira di Acme Arredi …]» è un taglio della riga 34, dichiarato nelle note.
+17. ✅ TESTO «fluente» e «non gliel'hai detto»: il secondo è la formulazione giusta (vedi 14). **Condizione per
+    l'animatore**: l'etichetta entra sul beat della terza riga e resta finché la voce ha finito le tre negazioni.
 
 **Scena 4**
-15. ✅ VOCE «E se aggiungi «sii originale»?» e la riga nella carta: ora la carta è la C2 parola per parola.
-16. ✅ VOCE «Tre volte su cinque mi ha fatto un verbale.», TESTO «3 su 5» e le copie sfalsate. L'intestazione «VERBALE
-    DELLA RIUNIONE STRAORDINARIA DELL'UFFICIO» è identica in `C2-opus-1`, `-3` e `-4` (in `-4` è la prima di tre
-    proposte). Il conto è prudente: `C2-opus-2` è una «COMUNICAZIONE DI SERVIZIO», e `C2-opus-5` sotto il bugiardino
-    propone come alternativa un verbale corto. Le tre intestazioni identiche sono la prova del probabile (lezione del
-    2026-09-14). Vale per Opus: Sonnet 5 fa certificati e attestati (`C2-sonnet-2`, `-3`, `-4`), lo stesso genere del
-    finto documento. Se la caption cita i conti, lo dice.
-17. ✅ VOCE «Ma dentro ci sono ancora la ==sveglia== e le riunioni che potevano essere una mail.» È vero alla lettera nel
-    verbale mostrato (`C2-opus-3`), e la sveglia c'è in 5 su 5 delle risposte di Opus alla C2 (in `-2` come
-    «sveglie»). Per le riunioni «ancora» è addirittura prudente: erano già in 4 su 5 nella A2, e «potevano essere una
-    mail» passa da 1 a 2 su 5 con Opus (da 1 a 6 su 10 con tutti e due i modelli). = W2 e X3 dell'archivio.
-18. ⚠️ ANIMAZIONE «il biglietto cambia vestito: in cima gli entra l'intestazione». La metafora è giusta: la forma cambia e
-    si vede, il contenuto resta (W2, X2). Non dice «zero effetto», quindi il ❌ di W4 non si ripete, e sul verbale non ci
-    sono etichette «nuovo» né «originale» (X5). **Condizione per l'animatore**: quando entra l'intestazione, dal
-    biglietto escono le righe A2 («Caro Marco, / finalmente potrai spegnere la sveglia…»). Se restano sotto il VERBALE,
-    lo schermo mostra un testo composto da due uscite (`A2-opus-5` e `C2-opus-3`), per giunta falso nel dettaglio: con
-    «Sii originale.» nessuna risposta di Opus apre con «Caro Marco,» (0 su 5). Sotto l'intestazione solo parole di
-    `C2-opus-3`. «Stesso oggetto, vestito nuovo» lo fa la cornice della `Carta`, non il testo.
-19. ✅ ANIMAZIONE le due righe del Punto 3 e lo zoom su «sveglia» e «una mail»: sono identiche in `C2-opus-3`, e i tagli
-    sono dichiarati nelle note (oggetto, presenti, punti 1-2, prima voce del Punto 3).
+18. ✅ VOCE «Non sbagli a fartela scrivere, ci mancherebbe.»: giudizio, nessun claim tecnico.
+19. ✅ VOCE «Sbagli se pensi che basti «sii originale».»: dice «insufficiente», non «inutile»; la riga esce senza
+    barratura nella scena 5.
+20. ⚠️ VOCE «Io l'ho fatto, e una mail su due comincia con un ==divano==,» e TESTO «5 su 10». Il conto è giusto:
+    «divano» c'è in B1, B2, B3, B4 (Opus) e B9 (Sonnet), 5 su 10, sempre nella prima frase dopo il saluto e mai più
+    avanti.
+    - **B9 è al limite**: comincia con «se un armadio potesse raccontare una storia, un divano suggerire
+      un'abitudine…», quindi il divano è il secondo oggetto della frase, non l'attacco. Alla lettera, «comincia con un
+      divano» vale per 4 su 10. Detto a voce come «una mail su due» è accettabile.
+    - **Per Opus e Sonnet i conti sono diversi** (4 su 5 contro 1 su 5): va detto in caption.
+    - **Correggi la caption «Il divano»**: non «il divano apre 5 mail su 10», ma «il divano è nella prima frase di 5
+      mail su 10 (4 di Opus su 5, 1 di Sonnet su 5)». Il resto è confermato: 8 attacchi su 10 da casa o mobili (B1-B4,
+      B6 «tavolo», B7 «casa», B9, B10 «salotto»); B5 e B8 partono dalla «scrittura chiara».
+21. ✅ VOCE «e due con la stessa frase.» (frase incerta) e il riquadro «stessa frase»: B2 (riga 367) e B3 (riga 400)
+    aprono tutte e due con «nessuno compra un divano per le sue misure.», parola per parola. La frase dopo cambia appena
+    e il resto delle due mail è diverso. Il claim parla della frase e non della mail, quindi è giusto. Si capisce anche
+    detto «quasi a parte».
+22. ✅ VOCE «Cambia il vestito, ma del tuo lavoro non le hai ancora detto niente.»: correzione applicata (vedi sopra).
+    «Cambia il vestito» regge: attacchi e oggetti di B sono visibilmente diversi da A.
+23. ✅ ANIMAZIONE mail B2 e frammenti. Controllati uno per uno:
+    - oggetto «Candidatura per il ruolo di addetto marketing» (il taglio «– Nome Cognome» è necessario e dichiarato);
+    - saluto «Gentile team di Acme Arredi,» e attacco «nessuno compra un divano per le sue misure.»: testuali;
+    - `B1` «un divano si compra in negozio» (seguito tagliato), `B4` «un divano non si vende con un post», `B3` «nessuno
+      compra un divano per le sue misure»: testuali, uno per uscita;
+    - il testo di A1 esce del tutto prima del cambio, quindi a schermo non si mescolano due uscite.
+
+    Nessuna etichetta «nuovo» o «originale».
+24. ✅ ANIMAZIONE segnaposto di B2: «Negli ultimi [numero] anni» e «presso [azienda]» vengono dalla riga 369, «la cosa
+    che vi chiedo è un colloquio» dalla riga 375. «Colloquio» c'è in 9 B su 10 (manca solo in B3): la scena lo accende
+    senza dirne il conto, ed è corretto.
+25. ✅ ANIMAZIONE carta: con «Sii originale.» coincide parola per parola con la richiesta B. Nessuna barratura.
 
 **Scena 5**
-20. ⚠️ VOCE «Al suo posto scrivi una cosa che sai ==solo tu==.» (punto delicato segnalato). «Sii originale» non sembra
-    inutile: la scena 2 ha detto «non basta», la 4 ha mostrato che la forma cambia. E la mossa funziona anche senza,
-    come dice D2: il P.S. sulla fotocopiatrice c'è in 5 risposte su 5 di Opus, la sveglia in 1 su 5 (`D2-opus-1`,
-    «niente sveglie»). Cosa si perde:
-    - «al suo posto» trasforma in regola una scelta della dimostrazione, perché la carta deve coincidere con D2. I
-      nostri dati, deboli, dicono un'altra cosa: con il dettaglio, «originale» nella richiesta sembra aiutare la
-      trovata. La fotocopiatrice scrive la lettera in 3 risposte su 5 con D («originale» nella prima riga) e in 0 su 5
-      con D2, su cinque campioni;
-    - la voce non dice il perché: «sii originale» non basta perché non dice niente di Marco.
-
-    Facoltativa, stesso beat e stessa animazione: «Quello che le manca è una cosa che sai ==solo tu==.» (11 parole,
-    scena 5 da 38 a 39). Dà il perché (manca un'informazione) e non prescrive di togliere la riga. La riga che esce
-    dalla carta senza barratura resta onesta, perché mostra la richiesta D2 così com'è. «Solo tu» va inteso rispetto
-    all'IA (T10: la fotocopiatrice la conosce tutto l'ufficio). Consigliata in caption, qualunque cosa si decida: «"Sii
-    originale" puoi anche lasciarlo: cambia la forma. Il biglietto lo cambia il dettaglio.»
-21. ✅ VOCE «Tipo che Marco ha passato una vita a litigare con la fotocopiatrice.» e la riga nella carta: ora la carta è
-    la D2 parola per parola. È un fatto, non un aggettivo (punto 2 di «Cosa impara»).
-22. ✅ VOCE «E in fondo al biglietto scrive: la fotocopiatrice ci ha chiesto di salutarti.» e «Poi si è…». Il P.S. di
-    `D2-opus-5` è identico e sta davvero in fondo, dopo la firma dell'interno. Il presente «scrive», detto di un'uscita
-    vera con i tagli dichiarati, è V10. Ed è il caso tipico: il P.S. sulla fotocopiatrice c'è in 5 risposte su 5, «saluta
-    e poi si inceppa» in 2 (`D2-opus-1`: «La fotocopiatrice ti saluta. Si è inceppata per l'emozione.»), la macchina
-    che nel P.S. si inceppa o si blocca in 3 (`-1`, `-3`, `-5`). Qui i due punti introducono una citazione: ammessi.
-23. ⚠️ ANIMAZIONE «Sotto entra il biglietto pulito», con il solo P.S. Una carta con dentro solo le due righe del P.S. dice
-    «il biglietto è questa battuta». In `D2-opus-5`, sopra il P.S., c'è un interno di quattro paragrafi che apre con «Caro
-    Marco, dopo anni di fogli inceppati…», cioè la cornice di sempre riempita con il dettaglio (punto 37). La voce dice
-    «in fondo», quindi regge. Proposta per l'animatore, non bloccante: il P.S. nella parte bassa della carta, e sopra
-    due o tre righe grigie senza parole, o un «…». Così «in fondo» si vede, senza attribuire al modello parole in più.
-24. ✅ ANIMAZIONE «Sii originale.» esce senza barratura e la riga vuota si riempie: la carta passa da C2 a D2 senza
-    affermare niente su «originale».
+26. ⚠️ VOCE «Togli «sii originale» e dille un fatto vero che sai solo tu.»
+    - **«Togli» è una scelta della dimostrazione**: la richiesta C non contiene «Sii originale.». Non abbiamo uscite
+      con dettaglio e «Sii originale.» insieme, quindi niente dice che la riga faccia male.
+    - **Il rischio** è che chi guarda capisca «è dannoso», mentre la scena 4 ha detto «non basta».
+    - **Facoltativa**, stessa animazione (la riga esce senza barratura): «Invece di «sii originale», dille un fatto vero
+      che sai solo tu.» (11 parole, scena 5 da 33 a 34). «Solo tu» vale rispetto all'IA: l'azienda il numero lo
+      conosce.
+27. ✅ VOCE «Tipo che hai portato una newsletter a duemilacento iscritti.» (frase incerta), la carta C e l'etichetta
+    «esempio: candidato inventato»: la carta coincide parola per parola con la richiesta C. La voce riassume senza
+    cambiare il fatto e lascia a «da trecento a…» la riga dopo. È un fatto, non un aggettivo, come vuole la mossa. Il
+    «tipo che» è parlato vero. L'esempio è dichiarato a schermo.
+28. ✅ VOCE «Ora scrive: in un anno ho portato gli iscritti da trecento a…» e i cartellini: la riga è identica in C4
+    (riga 691); i due punti introducono una citazione, quindi sono ammessi. La stessa frase quasi uguale c'è in C10, e
+    il 300 → 2.100 in tutte e dieci le C, quindi il caso è tipico.
+29. ⚠️ ANIMAZIONE «mail pulita» C4: oggetto e saluto sono testuali (l'⚠️ sull'oggetto è risolto). Una mail con dentro
+    solo quella riga, però, dice «la mail è questa frase». In C4, prima e dopo, ci sono segnaposto e frasi generiche
+    (vedi 43). **Proposta per l'animatore**, non bloccante: due righe grigie senza parole sopra la riga, così si vede
+    che è un pezzo di una mail più lunga (la scena 7 poi mostra «da [numero] anni»).
 
 **Scena 6**
-25. ✅ VOCE «Inceppata, vero? L'hai finita di nuovo.» e il GRANDE «INCEPPATA»: la parola è di `D2-opus-5`.
-26. ✅ VOCE «È ancora una parola probabile, ma probabile ==dopo la fotocopiatrice==.» e TESTO. = T4, V11 e X10
-    dell'archivio: stessi pesi e stesso modo di scegliere, cambia il contesto su cui si calcola la distribuzione. Non
-    dice che il dettaglio ha reso l'IA creativa, e i dati lo reggono (la stessa idea di P.S. in 2 su 5, l'inceppo in 3
-    su 5). Da sapere: «inceppata» la rende probabile anche la «fotocopiatrice» dentro il P.S., che però c'è solo perché
-    c'era nella richiesta. La freccia che parte dalla carta segue la catena giusta.
-27. ⚠️ VOCE «Ecco una frase che vale solo per Marco,» e l'etichetta «solo per Marco» senza «?». Controllo dell'aggettivo
-    sul caso concreto (lezione del 2026-09-13): la frase vale per Marco grazie al suo dettaglio, e il reel non dice che
-    sia nuova o unica (la stessa idea torna in 2 uscite su 5). Il limite sta nel dettaglio scelto per la prova: la
-    stampante che si inceppa è già un luogo comune d'ufficio, che il modello usa anche senza dettaglio:
-    - `A2-opus-3`, fra le idee per chi firma: «Ci mancherai… soprattutto quando la stampante si inceppa!»;
-    - `C2-opus-2`: «la stampante ubbidiva soltanto a lui»;
-    - `C2-opus-4`, fra i consigli: «la sua pazienza con la stampante».
+30. ✅ VOCE «Duemilacento, vero?» (frase incerta) e il GRANDE «2.100»: il numero è in C4. Funziona come eco di
+    «Colloquio, vero?», e la parola rientra al posto del cursore con il testo di C4.
+31. ✅ VOCE «È ancora una parola probabile, ma probabile ==dopo il tuo numero==.», la colonna e la freccia: stessi pesi,
+    stesso modo di scegliere, cambia il contesto. «500» e «1.000» sono inventati e dichiarati. La freccia dalla carta
+    alla colonna segue la catena giusta: il 2.100 è probabile perché sta nella richiesta. Non dice che l'IA è diventata
+    creativa.
+32. ⚠️ VOCE «Ecco una mail che parla di te,» e l'etichetta «parla di te» senza punto di domanda: sul caso mostrato è
+    vero, C4 è costruita sul tuo numero. Il limite:
+    - in C4 restano «[attività principali…]», «da [numero] anni» e «[breve spiegazione…]»;
+    - C4 scrive anche frasi su di te che non le hai dato: «ho imparato a scrivere testi semplici e diretti, che… li
+      portano in negozio», «è proprio l'approccio che applico ogni giorno».
 
-    «Solo per Marco» vuol dire quindi «per chi ha quel dettaglio», e andrebbe bene anche per chiunque abbia litigato con
-    la fotocopiatrice. Nel mondo del reel, dove è il dettaglio di Marco, è accettabile. Il criterio in caption (punto
-    36) deve dire che più il dettaglio è solo suo, più il biglietto è suo.
-28. ⚠️ VOCE «e la riga gliel'hai data tu.» e la graffa «l'hai data tu» sulla riga della carta. = T5 e V12: la riga
-    (l'ingrediente) è tua, la battuta (la combinazione) è del modello. «La riga», detta della carta, è più precisa di «la
-    parte nuova» del primo reel. Restano le due condizioni di V12. **In caption, obbligatoria**: «Il dettaglio l'hai
-    messo tu, la battuta l'ha scritta lei.» (è già nelle note). **Per l'animatore**: quando entra la graffa, «inceppata»
-    nel biglietto è già tornata al colore normale, così l'accento non sta sulla battuta del modello accanto a «l'hai data
-    tu».
-29. ✅ ANIMAZIONE colonna «inceppata», «bloccata», «spenta» (esempio) e freccia da «fotocopiatrice». Due candidate sono
-    vere (`D2-opus-5` e `-1`; `D2-opus-3`, «poi si è bloccata»), la terza e le barre sono inventate e dichiarate. È lo
-    stesso oggetto della 3 in un contesto diverso: il modello mentale è giusto (punti 18 e 23 dell'archivio).
+    «Parla di te» vuol dire che contiene un fatto tuo, non che sia tutta tua. Serve la caption «rileggi la mail».
+33. ✅ VOCE «e il numero ce l'hai messo tu.» e la graffa «l'hai messo tu» sulla riga della carta: il numero, cioè
+    l'ingrediente, è tuo; la frase l'ha scritta il modello. Caption «il dettaglio l'hai messo tu, la mail l'ha scritta
+    lei» confermata. **Per l'animatore**: quando entra la graffa, «2.100» nella mail è già tornato al colore normale.
 
 **Scena 7 [chiusura]**
-30. ⚠️ MESSAGGIO e VOCE «L'IA non ha mai conosciuto Marco. ==Tu sì==.» = T8 e T9. Vero per il modello; si perde che gli
-    assistenti di oggi possono aver letto **di** Marco, con la memoria e i connettori. In queste stesse prove Opus ha
-    provato a cercare Marco nella posta (`A2-opus-1` … `-4`, `C2-opus-1` … `-5`). Il modello mentale regge se
-    l'immagine dice «passa dal contesto» (punto 31). Facoltativa su LinkedIn la riga di T8.
-31. ⚠️ ANIMAZIONE «bot» e «user» con «Marco», e fra le due una linea tratteggiata interrotta. È T13, e la lezione del
-    2026-09-13: da sola la linea spezzata dice «nessun collegamento», che con memoria e connettori è falso. Nel brief la
-    carta entra nel beat 3, ma non si dice dove. **Condizione obbligatoria per l'animatore**: la carta «richiesta» con la
-    riga della fotocopiatrice entra nel buco della linea tratteggiata, come nel primo reel
-    (`contenuti/archivio/generativa-non-creativa/animazioni.py`, righe 375-396: «la carta che entra nel buco la copre»).
-    Così l'immagine finale dice «l'IA arriva a Marco solo da quello che scrivi». Se la carta entra altrove, si torna al
-    problema di T13.
-32. ⚠️ VOCE «Quindi scrivilo tu, nella richiesta.» La mossa arriva ed è corretta (= T10 e U1): «nella richiesta» è il
-    contesto, e il «quindi» è una causa giusta (a lei manca l'informazione, tu ce l'hai). Il dubbio è sul «lo» (U4), e
-    qui c'è di più: detto a voce, «scrivilo tu» si capisce prima di tutto come «scrivi tu il biglietto», cioè senza
-    l'IA, il contrario della mossa. Lo rimette a posto «nella richiesta», che però arriva dopo la virgola. Facoltativa,
-    stesse 5 parole: «Quindi diglielo tu, nella richiesta.» Porta l'informazione verso l'IA e toglie la lettura «fallo da
-    solo». Per l'animatore resta la condizione di U4: la riga della fotocopiatrice sta intera nella carta per almeno
-    1 s prima che il diagramma esca.
-33. ✅ VOCE «E salutami la fotocopiatrice.»: è una battuta (T11).
-34. ✅ CTA «Mandalo a chi scrive i biglietti in ufficio»: nessun claim (T12).
-35. ✅ ANIMAZIONE «TU SÌ», la linea dal riquadro a «Marco», la riga che entra nella carta (T14), il biglietto con il
-    cursore nell'ultimo secondo: il replay non afferma niente.
+34. ✅ VOCE «La prima era scritta bene.»: A1 è corretta e ordinata. È il lato «potenziale».
+35. ✅ VOCE «Solo che poteva firmarla chiunque.» e le copie grigie: A1 è un modello con segnaposto, firmabile da
+    chiunque, alla lettera. Le copie sono simili e non duplicati (correzione applicata); le dieci A sono testi diversi
+    con le stesse formule.
+36. ⚠️ VOCE «Questa la puoi firmare solo tu.»: vuol dire che contiene un fatto solo tuo. Non vuol dire che sia unica
+    (lo stesso numero torna in 10 C su 10), né che si possa spedire senza rileggerla (segnaposto e frasi generiche,
+    vedi 32 e 43). Il segnaposto «da [numero] anni» lasciato leggibile aiuta.
+37. ✅ MESSAGGIO «Non basta «sii originale». Dalle un fatto che sai solo tu.»: porta la mossa di «Cosa impara» (punto
+    2), corretta e applicabile con qualsiasi chatbot di oggi. «Non basta» è la taratura giusta.
+38. ✅ CTA «Mandalo a chi sta cercando lavoro»: nessun claim.
+39. ✅ ANIMAZIONE «Colloquio resta nel testo di tutte e due»: è vero, C4 alla riga 695 dice «Sarei felice di
+    approfondire la mia candidatura in un colloquio.», e «colloquio» c'è in 10 C su 10. **Condizione per
+    l'animatore**: nella mail nuova «colloquio» si legge dentro questa riga di C4, non dentro la chiusa di A1.
+40. ✅ ANIMAZIONE replay con la mail A1 e il cursore: testo di A1, nessun claim.
 
-**Trasversali**
-36. ⚠️ «Cosa impara chi guarda» (regola 7). Il punto 1 è nella VOCE (scene 2-3). La mossa del punto 2 è nella VOCE due
-    volte (scene 5 e 7), è corretta e si applica oggi con qualunque chat; la suggeriscono perfino i modelli (punto 8).
-    Il criterio del punto 3 sta solo in caption, e la formulazione delle note contiene un paradosso: «se la finisci
-    anche senza conoscere Marco, è ancora il biglietto di tutti». Chi guarda ha appena finito «Poi si è…» senza
-    conoscere Marco, perché la fotocopiatrice era già nella frase. Forma senza paradosso, per la caption (obbligatoria,
-    come il punto 31 del primo reel): «Rileggi il biglietto e chiediti se andrebbe bene anche per un altro collega in
-    pensione. Se sì, è ancora il biglietto di tutti: aggiungi un'altra cosa vera, solo sua.»
-37. ⚠️ Potenziale e limite (regola 8). Nella VOCE ci sono il potenziale («fluente» nella 3; nella 6 lo stesso meccanismo
-    che, con una riga in più, scrive una frase per Marco) e il limite del meccanismo (il biglietto di tutti; «sii
-    originale» che cambia solo la forma; la battuta nuova che è ancora probabile). In caption, **obbligatori**:
-    - il lato buono del probabile, che nella VOCE non c'è: «per una mail formale, un riassunto o un'istruzione la strada
-      battuta è quella che vuoi» (punto 32 dell'archivio, e lo chiede l'idea);
-    - il limite della mossa, con i dati D2 e non con quelli B del primo reel. «Con il dettaglio Opus apre ancora con
-      "Caro Marco, dopo tanti anni" in 4 risposte su 5» (note) non è letterale: «dopo tanti anni» c'è in `D2-opus-1` e
-      `-3`, «dopo anni di battaglie» in `-2`, «dopo anni di fogli inceppati» in `-5`, e `-4` apre con «oggi si chiude
-      un'epoca». Forma verificabile: «anche con il dettaglio, 4 risposte su 5 aprono con "Caro Marco, dopo (tanti)
-      anni…" e la quinta con "oggi si chiude un'epoca"». In due delle quattro gli anni sono già «di battaglie» e «di
-      fogli inceppati»: la cornice resta, ma dentro c'è il dettaglio;
-    - Sonnet 5 (V15), con citazioni D2: «la leggendaria guerra» e «oggi si chiude un capitolo epico» vengono dalle
-      richieste B e D, che contengono «originale». Conti miei sulla D2: «onorato servizio» o «onorata carriera» in 4 su
-      5 (`-2`, `-3`, `-4`, `-5`), «meritato riposo» in 3 (`-1`, `-4`, `-5`). Citazione da una sola uscita,
-      `D2-sonnet-2`: «Dopo anni di onorato servizio — e di altrettanti anni di battaglie epiche contro la fotocopiatrice
-      del terzo piano — è arrivato il momento della meritata pace.» Che Sonnet 5 sia il predefinito dei piani Free e
-      Pro l'ho verificato oggi; va ricontrollato il giorno della pubblicazione.
-38. ✅ Numeri (regola 6). In VOCE ce ne sono due, «tutte e cinque» e «tre volte su cinque», e tornano sul file (punti 6
-    e 16). A schermo ci sono «5 su 5» e «3 su 5», reali. La caption dice Claude Opus 5, 14 settembre 2026, «stessa
-    richiesta, ripetuta cinque volte». Non dice «in chat», «senza strumenti» né «contesto neutro», perché `C2-opus-3`
-    scrive «ufficio universitario» e `C2-opus-2` «Roma» (V16, W1). Le due colonne sono esempi dichiarati. I conti grezzi
-    del file sottostimano i plurali (sveglia: A2 Opus da 4 a 5, C2 Opus da 4 a 5, D2 da 0 a 1); le note lo correggono
-    già.
-39. ✅ Fedeltà dei testi attribuiti al modello (lezione del 2026-09-14). Ogni parola viene da una sola uscita: `A2-opus-5`
-    nelle scene 1-3, un frammento per uscita da `A2-opus-1` … `-4`, `C2-opus-3` per il verbale, `D2-opus-5` per il
-    P.S., e per le colonne «inceppata» e «bloccata». I tagli sono dichiarati nelle note e non c'è nessun ritocco. Ogni
-    stato della carta coincide con la richiesta che ha prodotto il testo mostrato (A2, C2, D2), e dalle richieste con
-    «originale» (A, B, C, D) non arriva niente. Le ripetizioni che provano il probabile sono quelle a schermo: la
-    sveglia in 5 su 5, l'intestazione identica in 3 su 5.
+**Note, fonti, dati**
+41. ✅ «Acme Arredi»: cercato il 2026-09-16 con e senza «Padova», nessuna azienda con questo nome. A Padova escono solo
+    mobilifici con altri nomi (ArredissimA, Salvò Arredamenti, L'Artigiana, aRRedo iO). «Acme» è il nome inventato per
+    antonomasia (Looney Tunes). Esistono aziende «Acme» in altri settori (Acme Systems, Acme Furniture negli USA), ma
+    con «annuncio · inventato» a schermo non c'è confusione.
+42. ✅ Dati personali: in nessun brief va a schermo «Nome Cognome», l'email, un'università o una firma. Gli oggetti di
+    A1 e C4 non hanno il nome, quello di B2 è tagliato.
+43. ⚠️ **Caption «Sonnet inventa fatti»: da correggere, obbligatorio.** «Opus lascia gli spazi fra parentesi e ti
+    chiede i dati veri» è vero solo per i dati duri (anni, aziende, risultati). Anche Opus scrive frasi su di te che
+    non gli hai dato:
+    - A1: «Le attività che descrivete corrispondono a quelle che svolgo ogni giorno»;
+    - A1 e A5: «Scrivere in modo chiaro è una parte centrale del mio lavoro»;
+    - C1: «Conosco il lavoro di un negozio fisico e so come parlare ai clienti per farli tornare»;
+    - C4: le frasi del punto 32.
 
-**Per l'animatore** (condizioni che non toccano la VOCE): 18 (le righe A2 escono quando entra il VERBALE), 28 (niente
-accento su «inceppata» accanto alla graffa), 31 (la carta nel buco della linea: obbligatoria), 32 (U4: la riga intera
-per almeno 1 s). Facoltativa: 23 (il P.S. in fondo alla carta).
-**Scelte del presentatore** (facoltative, già dentro i limiti): 10 «Guarda, quando genera, scrive una parola alla
-volta,» (scena 3 a 31 parole); 20 «Quello che le manca è una cosa che sai ==solo tu==.» (scena 5 a 39); 32 «Quindi
-diglielo tu, nella richiesta.» (chiusura a 17). **Applicate tutte e tre il 2026-09-15, su decisione del presentatore**:
-i punti 10, 20 e 32 restano ⚠️ per memoria, con il testo nuovo già in scena.
-**In caption, obbligatorie**: la dichiarazione dei testi (V3); la sveglia con Opus e con Sonnet (6); «Il dettaglio l'hai
-messo tu, la battuta l'ha scritta lei.» (28); il criterio (36); il lato buono del probabile e il limite della mossa con i
-dati D2 (37). **Consigliate**: «"Sii originale" puoi anche lasciarlo…» (20); V17 nella forma del punto 8.
+    Anche la nota «C1 e C4 lasciano «[breve spiegazione…]»» va letta così: lasciano quel vuoto, ma aggiungono altro.
+    **Testo proposto**: «Senza fatti tuoi, Sonnet scrive le attività dell'annuncio come se fossero tue e si inventa
+    gli anni ("negli ultimi due anni", "da due anni"). Opus lascia fra parentesi anni, aziende e risultati, ma
+    scrive lo stesso frasi su di te ("le attività che descrivete corrispondono a quelle che svolgo ogni giorno").
+    Rileggi e togli quello che non è tuo.» Da aggiungere alla caption «La CLI passa nome ed email»: «nelle app con la
+    memoria attiva l'IA può sapere già dove lavori; i numeri e il perché glieli dai tu.»
 
-**Fonti** (valgono ancora quelle della revisione archiviata per i punti riusati: Kirk et al. 2024, Zhang et al. 2025,
-Jiang et al. 2025, memoria e connettori di T8)
-- Anthropic, *Introducing Claude Sonnet 5*: https://www.anthropic.com/news/claude-sonnet-5 · Sonnet 5 predefinito per
-  Free e Pro: https://www.edtechinnovationhub.com/news/anthropic-makes-claude-sonnet-5-the-default-for-free-and-pro-users
-- Google DeepMind, *Gemini Diffusion*: https://deepmind.google/models/gemini-diffusion/ · Inception Labs, Mercury 2:
-  https://www.digitalapplied.com/blog/inception-labs-mercury-2-diffusion-llm-speed-guide
+    Gli altri conti delle note li ho ricontrollati e sono giusti:
+    - Sonnet attribuisce le attività in A6-A10, 5 su 5;
+    - Sonnet scrive «Negli ultimi due anni» in B6-B10, 5 su 5;
+    - le invenzioni di C6-C10, e quelle di Opus in C2, C3 e C5;
+    - la nota di C3;
+    - il 2.100 in C1-C10 e in nessuna A o B;
+    - «colloquio conoscitivo» in A6-A10, «eventuale» in A6 e A7.
 
-`reel valida`: 0 errori, 0 avvisi (77 s stimati, 7 scene, 199 parole).
+    Un dettaglio: A9 scrive «[inserisci qui: es. "due anni"]», non «[inserisci qui il numero di anni…]», e il senso non
+    cambia.
+44. ✅ Provenienza dei testi: ogni parola a schermo attribuita al modello viene da una sola uscita per stato (A1, B2,
+    C4), con i tagli dichiarati. La versione di Claude Code (2.1.273), gli alias e la data coincidono con l'intestazione
+    del file. I testi non sono ritoccati, a parte l'anonimizzazione.
+45. ⚠️ Potenziale e limite nella compressione:
+    - il potenziale in voce è solo «La prima era scritta bene»;
+    - il lato buono del probabile («per una conferma o per spostare un appuntamento la strada battuta va benissimo») è
+      finito tutto in caption, e ci deve restare;
+    - il limite dei fatti inventati è solo in caption (vedi 43), e lì dev'essere scritto bene.
+46. ✅ «Cosa impara chi guarda»: la mossa (punto 2) c'è in VOCE (S5) e nel MESSAGGIO, ed è corretta e applicabile
+    oggi. Il criterio (punto 3) c'è nella battuta «poteva firmarla chiunque», e la sua seconda metà («controlla che ogni
+    fatto sia tuo») va in caption con il testo del punto 43. Il modo di leggere (punto 1) sta nelle due prove.
 
-**APPROVATO TECNICAMENTE** (2026-09-15)
+**`uv run reel valida`**: [OK], 0 errori, 0 avvisi. 85 s stimati, 7 scene, 222 parole (scene 20/44/37/45/33/27/16).
+Con la correzione del punto 14 diventano 226 parole e circa 86 s, sotto il limite di 90.
+
+Fonti: [Claude makes its AI memory feature free for all users (Digital Trends)](https://www.digitaltrends.com/computing/claude-makes-its-ai-memory-feature-free-for-all-users-in-battle-against-chatgpt/),
+[Claude Memory free for all users (Android Headlines, marzo 2026)](https://www.androidheadlines.com/2026/03/claude-memory-free-import-tool-ai-switching.html),
+[Acme Corporation (Wikipedia)](https://en.wikipedia.org/wiki/Acme_Corporation).
+
+**DA CORREGGERE** (2026-09-16)
+- ❌ 14, S3 VOCE, seconda riga. Sostituire con «Per questo la mail viene fluente, ma se non gliel'hai detto, non sa
+  da quanti anni lavori,». Il motivo: «non sa dove» è falso per chi ha la memoria attiva (gratuita su Claude da marzo
+  2026).
+
+Da portare comunque nel pacchetto social: le caption corrette dei punti 20 e 43. Facoltativa per il presentatore: la
+riformulazione del punto 26.
 
 ## Note di animazione
-Animatore, 2026-09-15. File: `contenuti/animazioni/generativa-probabile.py`. Anteprima `reel monta --prova --anteprima`:
-**68,9 s** (7,1 · 12,5 · 10,9 · 8,6 · 12,2 · 11,5 · 7,5 s, dissolvenze di 0,25 s), tempi `voce-sintetica`, 0 avvisi di
-tempo, 0 controlli, diagnostica vuota. Manim in bassa qualità: 1,6 · 2,4 · 1,8 · 3,1 · 2,9 · 2,6 · 2,3 s per scena
-(14,7 s nel montaggio). Fotogrammi fitti di tutte le scene guardati, anche sui video montati col riquadro.
+Animatore, 2026-09-16 (rifacimento da zero di `contenuti/animazioni/generativa-probabile.py`, corsa `--tutto`).
+Anteprima `monta --prova --anteprima`: **73,6 s**, 0 errori,
+0 avvisi di tempo, 0 controlli; Manim 30 s, totale 41 s. Durate per scena (voce di prova): 1 · 7,1 s, 2 · 14,0 s,
+3 · 13,2 s, 4 · 15,0 s, 5 · 10,5 s, 6 · 9,2 s, 7 · 6,1 s.
 
-**Filo visivo.** La carta «richiesta» (A2 → pillola → C2 al centro → D2 al centro → riga del dettaglio → nel buco della
-linea), il biglietto a cartellini con il cursore (stesso riquadro anche col vestito da verbale), la colonna delle
-candidate (stessa larghezza e posizione nella 3 e nella 6), l'etichetta del loop in alto a destra dalla 2 alla 6. Ogni
-scena parte dall'ultimo fotogramma della precedente (le funzioni di impaginazione sono condivise nel file).
-Cambi grandi: «SVEGLIA» (2), zoom 1,6× (3 e 4), «INCEPPATA» (6), «TU SÌ» (7).
+**Storyboard e mosse wow** (una per scena, nessuna ripetuta fra scene vicine, `punch` due volte):
+| Scena | Mossa | Su quale frase | Fotogrammi chiave |
+|---|---|---|---|
+| 1 | viaggio | «Finisci tu la frase» | titolo + carta intera con l'annuncio + testa della mail → la carta si compatta, la mail sale e il corpo scorre veloce (righe grigie) fino in fondo → «…per un ▌» (copertina) |
+| 2 | punch «COLLOQUIO» | «Colloquio» (fotogramma 0) | COLLOQUIO → mail intera con «colloquio.» acceso → sagoma a sinistra e quattro frammenti → tre mail a ventaglio → mail intera e «parla di te?» |
+| 3 | metamorfosi e zoom 1,8× | «ne prende una delle più probabili» | la frase si riduce a gettoni vuoti, restano «per un ▌» → colonna → zoom, «colloquio» vola nel cursore → corpo della mail con i tre segnaposto accesi |
+| 4 | punch «DIVANO» | «divano» | carta al centro e mail a pillola → «Sii originale.» → mail vuota che si riempie di righe grigie → DIVANO → B2, due frammenti, «5 su 10» → «stessa frase» → corpo di B2 |
+| 5 | rivelazione a tratto (con carica) | «Togli «sii originale»» | carta intera → «Sii originale.» parte a destra (curva con carica) e si disegna la riga vuota → il fatto si scrive → carta compatta in alto, mail C4 fino a «da 300 a ▌» |
+| 6 | contrasto di scala | «Duemilacento, vero?» | la scena si spegne (velo) e «2.100» cresce enorme dal cursore al centro, poi ci rientra → coda «da 300 a 2.100.» con la colonna e la freccia → mail intera, loop acceso, graffa |
+| 7 | moltiplicazione | «poteva firmarla chiunque» | due mail affiancate → la prima perde il testo, si riduce a sagoma e diventa una di 24 sagome simili (metà sinistra) → messaggio, mail nuova compatta, CTA |
 
-**Scena 1** (7,1 s). Fotogramma 0: titolo grande, carta A2, biglietto con «Caro Marco, ▌». Beat 0: entro 0,5 s il
-titolo si riduce (0,6: resta a 62 px, leggibile nella copertina) e carta e biglietto salgono; su «un biglietto…» la
-carta ha il bordo accento. Beat 1: il bordo torna normale e il biglietto fa posto a tre righe; «finalmente», «potrai»,
-«spegnere», «la» entrano sulle loro parole (tempi stimati a sillabe dentro la frase) col cursore che segue; poi il
-cursore lampeggia. Il gruppo è centrato nell'area dell'hook, così il ritaglio 4:5 della copertina lo prende intero.
-- Il vuoto della prova con la voce di prova dura ~0,5 s (la voce finisce a 6,6 s, la scena a 7,1): il secondo pieno
-  lo dà la pausa del presentatore su «la…».
+Curve: `ease_out_back` per gli ingressi che contano (etichette, copie, zoom del numero, sagome), `ease_in_back` per la
+riga «Sii originale.» che parte, `rush_into` per le uscite, `ease_out_expo` per zoom e frammenti, `ease_out_cubic` per
+gli spostamenti e lo scorrimento; `linear` solo per la scrittura sincronizzata.
 
-**Scena 2** (12,5 s). Beat 0: «SVEGLIA» a tutto schermo per 0,9 s; al ritorno (un taglio) «sveglia» è già nel posto
-del cursore, in accento; poi il titolo esce, la carta si compatta in pillola in alto a sinistra, il biglietto sale al
-suo posto (390 px) e la riga si completa («senza sensi di colpa!»). Beat 1: i quattro frammenti entrano uno alla volta
-sotto il biglietto, attenuati con la sola «sveglia/sveglie» in accento; «5 su 5» su «tutte e cinque». Beat 2: i
-frammenti escono, «sveglia» torna normale; su «solo per Marco?» entra l'etichetta in alto a destra con il «?» in
-accento, che si attenua su «ma non basta chiederglielo».
-- Cambiato: i frammenti vanno **sotto** il biglietto, non a destra di un biglietto rimpicciolito: i cartellini sono
-  alti 80 px e non si possono ridurre sotto i 36 px di testo, e i frammenti a 44 px sono larghi fino a 800 px.
-  L'ultimo è il più corto («niente sveglie») e «5 su 5» gli sta accanto. Il biglietto non si sposta, quindi «torna al
-  centro» non serve.
-- Prima del punch il gruppo dell'hook viene rimesso in alto (il taglio lo nasconde): nell'hook arriva a ~1380 px e il
-  cerchio del presentatore avrebbe coperto «sveglia» proprio al ritorno.
+**Beat per scena** (inizi delle frasi con la voce di prova):
+- **1** (0,0 / 3,7 s). Fotogramma 0 pieno: titolo, carta «richiesta» con «annuncio · inventato» e «Acme Arredi» in
+  accento, testa della mail A1. Beat 0: in 0,5 s il titolo si riduce (75 px) e tutto si centra; su «candidatura» il
+  bordo della carta si accende; su «Finisci tu la frase» il viaggio (1,2 s): carta → pillola, mail su, corpo che scorre,
+  cursore. Beat 1: dieci cartellini con la voce, poi il cursore lampeggia dopo «un» fino alla fine. La copertina 4:5 è
+  l'ultimo fotogramma (titolo, pillola, mail con «per un ▌»).
+- **2** (0,0 / 3,5 / 6,9 / 9,9 s). Beat 0: punch; al ritorno «colloquio.» acceso al posto del cursore (terza riga), un
+  colpo di scala su «quello che fa lei». Beat 1: la mail si riduce a sagoma (il suo testo esce, resta «colloquio.»);
+  i quattro frammenti A2, A4, A6, A9 entrano uno alla volta, attenuati, con «colloquio» in accento; su «tutte e dieci»
+  «10 su 10» e un colpo sui quattro «colloquio». Beat 2: i frammenti escono in alto, la sagoma va al centro e su
+  «accanto» due copie grigie senza testo le escono ai lati, ruotate. Beat 3: le copie rientrano, la mail torna intera;
+  «parla di te?» con il «?» in accento su «parla di te?», il «?» si attenua su «non basta chiederlo».
+- **3** (0,0 / 4,8 / 10,0 s). Beat 0: «colloquio.» esce, oggetto e saluto diventano righe grigie, le otto parole già
+  scritte diventano gettoni vuoti, restano «per un ▌»; la colonna (esempio: numeri inventati) sotto «per»; zoom 1,8× su
+  «e ne prende»; su «più probabili» «colloquio» si accende e vola nel posto del cursore; la camera torna prima del beat
+  dopo. A zoom pieno ogni testo è intero e dentro l'area (controllo locale `controlla_zoom`, 0 violazioni). Beat 1: la
+  mail scorre al corpo di A1 (segnaposto, riga di cosa vi attira, ultima riga attenuata); «fluente» su «fluente»;
+  «[numero]» acceso con riquadro su «da quanti anni». Beat 2: «non gliel'hai detto» all'inizio del beat (resta fino alla
+  fine, ✅ 17); «[azienda/e]» su «dove», la riga di cosa vi attira su «perché».
+- **4** (0,0 / 3,0 / 5,7 / 9,1 / 10,9 s). Beat 0: le etichette e il testo di A1 escono, la mail diventa una pillola
+  «mail» in alto a sinistra, la carta scende al centro intera (richiesta A) e su «ci mancherebbe» il bordo si accende e
+  torna (nessuna barratura). Beat 1: su «sii originale» entra «Sii originale.» in accento (richiesta B). Beat 2: la carta
+  torna pillola, la mail scende vuota e si riempie di righe grigie; punch su «divano»: al ritorno B2 (oggetto senza nome,
+  saluto, attacco con «divano» in accento), B1 e B4 attenuati, «5 su 10». Beat 3: B3 scivola sotto l'attacco con gli
+  stessi a capo, riquadro accento e «stessa frase» (resta intero 1,0 s prima di uscire). Beat 4: esce tutto quello che
+  non è B2, anche l'oggetto; il corpo di B2; su «del tuo lavoro» «[numero]» e «[azienda]» accesi con riquadro e «non
+  gliel'hai detto»; su «niente» «la cosa che vi chiedo è un colloquio.» in accento.
+- **5** (0,0 / 3,3 / 6,7 s). Beat 0: B2 esce del tutto; la carta intera con «Sii originale.» (0,7 s); su «sii
+  originale» la riga parte a destra (0,55 s, nessuna barratura), si disegna la riga vuota tratteggiata col cursore;
+  «un fatto vero» su «un fatto vero», in alto a sinistra. Beat 1: il fatto si scrive in accento, agganciato alla voce
+  su «portato», «newsletter», «duemilacento», «iscritti» (ora la carta è la richiesta C); sotto la carta «esempio:
+  candidato inventato». Beat 2: la carta si compatta in alto (il fatto va a capo su quattro righe, «da 300 a 2.100» ha
+  una riga sua; la nota sale sotto il titolo); il loop scende sull'angolo della mail C4, che entra con oggetto, saluto e
+  due righe grigie (proposta ⚠️ 29); i dieci cartellini con la voce e il cursore dopo «a» fino alla fine.
+- **6** (0,0 / 1,8 / 5,6 s). Beat 0: velo sulla scena e «2.100» (stile dei punch) cresce dal cursore al centro, tiene,
+  e rientra come cartellino «2.100.» in accento. Beat 1: la mail si riduce alla coda «da 300 a 2.100.» (il loop esce),
+  sotto la colonna con «2.100» in testa già scelto, «500», «1.000» (esempio); su «dopo il tuo numero» la freccia a gomito
+  dalla riga «da 300 a 2.100» della carta alla barra di «2.100», un colpo sul numero nella carta, l'etichetta. Beat 2:
+  colonna e freccia escono, la mail torna intera con «2.100.» di nuovo normale; su «parla di te» il loop, senza «?»,
+  diventa pieno in accento; su «il numero ce l'hai messo tu» la graffa a destra della riga del numero con «l'hai messo
+  tu» (dopo che il numero nella mail è tornato normale, ✅ 33).
+- **7** (0,0 / 1,7 / 4,0 s), un passaggio per frase, ognuno ≥ 0,9 s. Beat 0: esce tutto; a sinistra A1 ridotta
+  (saluto, righe grigie, «…per un colloquio.» con «colloquio» acceso), a destra C4 (saluto, «…da 300 a 2.100.» con il
+  numero acceso, «…da [numero] anni.» attenuato, «Sarei felice di approfondire la mia candidatura in un colloquio.» con
+  «colloquio» non acceso, ✅ 39). Beat 1: la moltiplicazione (1,3 s). Beat 2: muro fuori, la mail nuova compatta al
+  centro (riga del numero e «da [numero] anni»), il messaggio sopra e la CTA sotto (0,9 s); l'ultimo fotogramma resta
+  pulito ~1,2 s.
 
-**Scena 3** (10,9 s). Beat 0: il biglietto si svuota (riquadro compreso: la colonna sta sotto il cursore) e si
-ricompone un cartellino per parola fino a «spegnere la ▌». Beat 1: la colonna «sveglia / luce / televisione» (nota
-«esempio: numeri inventati»); zoom 1,6×; «sveglia» si accende, le altre sbiadiscono, il cartellino vola nel posto del
-cursore; lo zoom torna prima del beat 2. Beat 2: il biglietto intero; «fluente» (terziario) su «fluente», «di tutti»
-(accento) su «di tutti».
-- Lo zoom non usa `zoom_su`: il campo è scelto a mano (bordo alto a 445 px, sinistro a 56 px) perché a zoom pieno
-  ogni testo sia intero o fuori campo: la fascia in alto resta fuori, «Caro Marco,» e la nota sono interi, «finalmente
-  potrai» e il cursore sotto i 220 px dell'interfaccia, la nota sopra il cerchio. Le righe del biglietto sono a capo
-  entro 630 px per stare nel campo.
+**Cosa ho cambiato rispetto al brief, e perché.**
+- Il loop «parla di te?» sta in alto a destra (scene 2-5) e non in alto a sinistra: a sinistra c'è la pillola
+  «richiesta» con «annuncio · inventato». Dalla scena 5 (beat 2) è appeso all'angolo della mail C4, perché la carta col
+  fatto occupa tutta la fascia alta; nella 6 si accende lì (è la mail «che parla di te»). È un cartellino piccolo, corpo
+  36 px.
+- Scena 2: i quattro frammenti sono in corpo 36 px (il minimo) accanto alla sagoma della mail. In corpo 44 non ci
+  stanno in quattro nella metà destra.
+- Scena 2, beat 2: le due copie escono ai lati della mail, a ventaglio (è «accanto»), invece di sfalsarsi dietro.
+- Scena 3: la metamorfosi in gettoni vuoti non è nel brief: serve a lasciare in campo solo «per un ▌» e la colonna, così a
+  zoom pieno nessun testo è tagliato (lezione del 2026-09-14).
+- Scena 4: i frammenti B1 e B4 e «5 su 10» stanno sotto la mail e non a destra (la mail B2 è larga quanto l'area). La
+  mail, fra il beat 0 e il beat 2, è una pillola «mail» in alto, senza testo: il testo di A1 esce già al beat 0, prima
+  del vestito nuovo.
+- Scena 5: sotto la carta scrivo «esempio: candidato inventato» (brief e revisione ✅ 27), non il TESTO «esempio
+  inventato». Da decidere se allineare la riga TESTO.
+- Scena 6: il GRANDE «2.100» non è un terzo punch (il manuale ne ammette due per reel) ma un contrasto di scala con lo
+  stesso carattere dei due punch: il numero esce dal cursore e ci rientra. La freccia arriva alla barra di «2.100» con
+  un gomito a destra, per non attraversare la coda dei cartellini; la graffa sta a destra della riga «da 300 a 2.100»
+  (una riga sua), non sotto la carta.
+- Scena 7: la prima mail non resta davanti al muro. Perde il testo, diventa una delle 24 sagome (bordo terziario) e le
+  altre le crescono intorno: davanti, la mail larga 430 px nascondeva quasi tutto il muro. Nessuna sagoma ha testo
+  leggibile, righe di lunghezze diverse (✅ 35). **Tolto il richiamo per il replay** (la prima mail con «Gentile
+  responsabile della selezione,» e il cursore sotto la CTA): nel beat 2 (1,6 s con la voce di prova) c'era posto per un
+  solo passaggio calmo e un ultimo fotogramma pulito (lezione del 2026-09-14). La copertina e la chiusura restano
+  comunque vicine: la stessa mail con i cartellini.
 
-**Scena 4** (8,6 s). Beat 0: il biglietto esce; la carta scende al centro intera (A2) e su «sii originale» cresce e
-riceve la riga in accento (C2). Beat 1: la carta torna pillola; il biglietto torna nello stesso riquadro col vestito da
-verbale: solo l'intestazione di C2-opus-3 (le righe A2 sono uscite nel beat 0: ⚠️ 18), e da dietro scivolano su due
-copie con la stessa intestazione (C2-opus-1 e -4), che spuntano sopra; «3 su 5». Beat 2: le copie escono, il verbale
-sale e riceve le due righe del Punto 3; zoom 1,6×; su «la sveglia» si accende «sveglia», su «una mail» «una mail»;
-lo zoom torna prima della fine. Nessuna etichetta «nuovo»/«originale».
-- Il verbale è a capo entro 560 px (intestazione su tre righe) per stare intero nel campo; bordo alto a 356 px: la
-  fascia in alto resta fuori, l'intestazione sotto l'interfaccia.
-- La carta C2 intera resta a schermo ~0,6 s: il beat 0 dura 1,75 s.
-
-**Scena 5** (12,2 s). Beat 0: il verbale esce; la carta torna al centro con «Sii originale.», la riga scivola fuori a
-destra (senza barratura) e al suo posto resta una riga vuota col cursore; «che sai solo tu» (accento) sotto la carta su
-«solo tu». Beat 1: l'etichetta si attenua; la riga «Marco ha passato una vita a litigare con la fotocopiatrice.» si
-scrive in accento con la voce (ora la carta è D2). Beat 2: la carta si compatta in alto; sotto il biglietto pulito con
-tre righe grigie senza parole e, in fondo, il P.S. a cartellini sulle parole della voce (⚠️ 23). Beat 3: «Poi», «si»,
-«è» e il cursore lampeggia fino alla fine.
-- Il cartellino «P.S.» è del testo di D2-opus-5 (la voce non lo legge): dice «in fondo» insieme alle righe grigie.
-- Anche qui il vuoto della prova con la voce di prova è ~0,5 s: lo allunga la pausa su «Poi si è…».
-
-**Scena 6** (11,5 s). Beat 0: «INCEPPATA» per 0,9 s, nello stesso stile di «SVEGLIA»; al ritorno «inceppata.» è nel
-posto del cursore, in accento. Beat 1: del biglietto resta la riga «Poi si è inceppata.», di nuovo normale; la carta
-scende e mostra la riga del dettaglio; sotto la riga torna la colonna «inceppata / bloccata / spenta» (esempio); su
-«dopo la fotocopiatrice» una freccia accento scende dalla parola «fotocopiatrice» all'intestazione «dopo la
-fotocopiatrice» (il TESTO) sopra la colonna, a destra della riga. Beat 2: la colonna esce, la carta torna in alto, il
-biglietto intero sotto, e l'etichetta del loop scende sul suo angolo in alto a destra; su «solo per Marco» perde il «?»
-e si accende; su «gliel'hai data tu» entra la graffa accento «l'hai data tu» sulla riga della carta e l'etichetta
-diventa terziaria (un accento per volta). «inceppata» è normale dal beat 1 (⚠️ 28).
-- Cambiato: nel beat 1 la carta sta a 370 px (non in alto) così l'etichetta del loop resta nella fascia alta, e la
-  freccia scende dritta senza attraversare la riga del biglietto. La colonna non si accende: l'accento è la freccia.
-
-**Scena 7** (7,5 s), un passaggio per frase. Beat 0 (1,0 s): esce tutto; il messaggio «L'IA non ha mai conosciuto
-Marco.», l'IA (icona bot) e Marco (icona user), fra loro la linea tratteggiata interrotta. Beat 1: «TU SÌ» a tutto
-schermo (0,5 s: la frase è di 0,65 s); al ritorno il messaggio ha anche «Tu sì.» in accento. Beat 2 (0,8 s): la linea
-accento dal riquadro del presentatore a «Marco» e la carta «richiesta» che entra **nel buco della linea**, con la riga
-della fotocopiatrice in accento (⚠️ 31); la riga resta intera 1,7 s prima che il diagramma esca (U4). Beat 3 (1,1 s):
-il diagramma esce, messaggio e CTA al centro, sotto il biglietto con «Caro Marco, ▌» come nel primo fotogramma
-dell'hook (per il replay); ultimo fotogramma fermo 1,2 s, col cursore che lampeggia.
-- Cambiato: il messaggio entra nel beat 0 e «Tu sì.» al ritorno dal punch, non nel beat 2 (che resta un passaggio
-  solo); la linea dal presentatore entra nel beat 2, perché il beat 1 è tutto punch; il biglietto per il replay entra
-  nello stesso passaggio della CTA, non in un passaggio in più nell'ultimo secondo.
-- La chiusura dura 7,5 s per la voce (7,0 s + 0,5 di coda), sopra i 6-7 s della regola: la si accorcia togliendo
-  parole, se lo decide il presentatore.
+**Per il presentatore.** Scena 1: il vuoto dopo «per un…» dura 0,5 s con la voce di prova; con la clip vera dura
+quanto la pausa che fai. Scena 6: «Duemilacento, vero?» dura 1,8 s ed è tutta del numero grande: non accorciarla.
 
 ## Pacchetto social
 **Caption Reel:**

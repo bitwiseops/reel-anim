@@ -53,6 +53,9 @@ dall'output prendi l'evento `type == "result"`. Salva tutto in `contenuti/idee/u
 richiesta il testo esatto, poi le uscite con una sigla (A1…A10 per la prima richiesta, B1… per la seconda; 1-5 Opus,
 6-10 Sonnet) e il modello. Poi con Edit aggiungi all'idea `**Uscite:** <percorso>` sotto la riga dello stato. Se
 `claude -p` fallisce, fermati: senza uscite vere lo sceneggiatore non scrive i testi del modello.
+`claude -p` passa al modello nome ed email dell'account anche da una cartella neutra (`--bare` vale solo con chiave
+API): prima di salvare sostituisci i dati veri con «Nome Cognome» e «nome.cognome@email.it» e dichiaralo in testa al
+file (2026-09-16: nome in 28 uscite su 30).
 
 **T1 · sceneggiatura.** Prima lancia `uv run reel stile`: se il verdetto è `da rifare` o `manca`, dillo nel report
 (lo `stilista` si lancia a parte, non blocca); riporta anche la riga `pattern:` (se manca, lo schema dell'idea non ha
@@ -69,7 +72,8 @@ Altrimenti prosegui con T3.
 
 **T3 · animazione.** Lancia `animatore`: `.py`, `anima --json`, fotogrammi, `monta --prova --anteprima`,
 `stato: animato`. Prima di consegnare guarda tu `contact-sheet.png` e i fotogrammi fitti di ogni scena: un testo
-tagliato o un beat vuoto si rimanda all'animatore, non al presentatore.
+tagliato o un beat vuoto si rimanda all'animatore, non al presentatore. I cambi di stato si guardano a 8 fps (a 2 fps i testi
+sovrapposti per 0,3 s non si vedono).
 
 **T4 · anteprima e report.** Se `contenuti/render/<slug>/report.json` manca o è più vecchio della sceneggiatura,
 rilancia `uv run reel monta <file> --prova --anteprima`. Poi il report qui sotto: è la FERMATA 3, e con `--tutto` è

@@ -1,7 +1,8 @@
 ---
 fonte: testo
 data: 2026-09-15
-stato: spunto
+stato: ideato
+idea: contenuti/idee/2026-09-15-generativa-probabile.md
 ---
 
 Rifacciamo il reel «generativa = probabile» con un esempio più utile del biglietto per il collega: **la mail di

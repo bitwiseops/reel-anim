@@ -56,9 +56,9 @@ Fasi 0 e 1 chiuse (2026-09-13, in `main`). Fase 2 in corso (branch `fase-2-primo
 e il workflow `reel`. Le revisioni del presentatore hanno l'ultima parola. Prima corsa `--tutto` il 2026-09-15
 (`generativa-probabile`, biglietto per Marco, commit 3ae4d09). Il 2026-09-16: pattern narrativi di reelkit agli
 agenti (`[stile] pattern`, `reel stile`, tappa T0b) e lo spunto riscritto con la mail di risposta a un annuncio di
-lavoro, stesso slug, render cancellato. **Prossimo passo**: quando il presentatore dice che `pattern.md` è pronto, in
-una sessione nuova: `uv run reel stile` → `stilista` (guida da rifare, corpus 30 reel) →
-`/pipeline contenuti/spunti/2026-09-15-generativa-probabile.md --tutto`.
+lavoro, stesso slug, render cancellato; la corsa `--tutto` è arrivata all'anteprima (74 s, azienda «Acme Arredi»)
+con le mosse wow (`docs/animazioni.md` §11bis). **Prossimo passo**: l'animatore corregge i testi sovrapposti nei
+passaggi delle scene 4, 5 e 7, poi il presentatore guarda l'anteprima (dettagli nella memoria `stato-avanzamento`).
 
 ## Comandi
 `uv run reel setup` · `stile` · `valida <file>` · `gobbo <file> [--scrivi]` · `clip <file>` · `voce <file>` ·

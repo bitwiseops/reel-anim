@@ -63,6 +63,9 @@ Prima di scrivere leggi OBBLIGATORIAMENTE:
   (tabella «male / bene» di `docs/animazioni.md` §11). Resta nei componenti della libreria (carte, classifiche,
   frasi a cartellini, flussi, confronti, tabelle, icone…): se serve qualcosa che non c'è, descrivilo e segnalalo
   nelle Note di produzione.
+- **Momento wow**: ogni scena ha un `GRANDE:` nel brief con il nome di una mossa del repertorio
+  (`docs/animazioni.md` §11bis: moltiplicazione, metamorfosi, viaggio, tipografia cinetica, contrasto di scala,
+  punch…) e la frase su cui cade; mossa diversa fra scene vicine, e la mossa dice la tesi, non decora.
 - **Ritmo**: preparazione rapida, punto chiave con più tempo. Il ribaltamento potenziale/limite occupa almeno una
   scena: il reel non è né una lode né una stroncatura.
 - **Numeri**: solo veri, con la fonte nelle Note di produzione; quelli illustrativi (barre, probabilità) sono esempi

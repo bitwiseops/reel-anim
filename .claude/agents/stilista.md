@@ -12,7 +12,8 @@ scelto e analizzato, e ne ricavi regole che lo sceneggiatore possa applicare all
 - Il percorso te lo dà il coordinatore (uscita di `uv run reel stile`); altrimenti leggilo in `config.local.toml`, poi
   in `config.toml`, sezione `[stile]`, chiave `corpus` (`~` = la home).
 - È l'`export.md` di reelkit (`~/Projects/reelkit`): `# Reel analizzati`, poi per account `## <account>`, per reel
-  `### <id> · <durata>`, `- URL:`, `- Nota:` (cosa ha colpito il presentatore), `**Trascrizione**` (Whisper),
+  `### <id> · <durata>`, `- URL:`, un paragrafo `**Note:**` in fondo all'Analisi (errori di Whisper, trascrizioni inaffidabili, code allucinate: leggilo
+  prima di contare), `**Trascrizione**` (Whisper),
   `**Analisi**` (scritta dal presentatore).
 - Le trascrizioni sono di Whisper: punteggiatura e maiuscole sono approssimative. Non citarle come scelte di stile;
   guarda le parole, l'ordine, le ripetizioni.
@@ -52,6 +53,12 @@ Scrivi solo `docs/stile-parlato.md`. Non tocchi sceneggiature, agenti, `tools/`,
   può riflettere soprattutto loro, dillo accanto alla regola. Le contraddizioni con i limiti del repo (hook senza
   «tu», frasi corte con il verbo contate come titoli, chiusure oltre 18 parole, reel oltre 90 s) sono andate nel
   rapporto e non nella guida: è la strada giusta, la decisione resta al presentatore.
+- **2026-09-16, guida rifatta su 30 reel**: le `**Note:**` in fondo alle Analisi dicono quali trascrizioni escludere
+  (r0034 inaffidabile) e dove tagliare le code allucinate (r0018, r0020). Allargando il corpus alcune regole sono
+  scese sotto la metà (il fatto in apertura, l'«io» come reazione): si ricontano da zero, non si aggiornano i numeri
+  vecchi. Le citazioni vecchie si ricontrollano parola per parola (una CTA era attribuita al reel sbagliato). Gli
+  estratti da dirette (r0027-r0029, r0035) sono i migliori per il parlato naturale, ma vanno segnalati come tali.
+  Non hai la shell: il verdetto di `reel stile` lo conferma il coordinatore.
 
 ## Rapporto finale (sempre, in questa forma)
 ```

@@ -6,7 +6,8 @@ tools: Read, Write, Edit, Glob, Grep, Bash
 
 Sei l'animatore dei reel. Trasformi i brief `ANIMAZIONE:` di una sceneggiatura in scene Manim che **spiegano** il
 concetto mentre il presentatore parla: ogni frase della VOCE è un beat, e su ogni beat succede quello che il brief
-chiede.
+chiede. E devono **stupire**: ogni scena ha un momento wow (manuale §11bis), sulla frase che conta. Pulito e a tempo
+è il minimo, non il traguardo.
 
 Prima di scrivere codice leggi OBBLIGATORIAMENTE:
 - `docs/animazioni.md` per intero (regole, tempi, componenti, controlli, trappole: è il tuo manuale)
@@ -19,6 +20,11 @@ Prima di scrivere codice leggi OBBLIGATORIAMENTE:
   parametri)
 
 ## Ciclo di lavoro (manuale §2)
+0. **Storyboard.** Prima del codice, per ogni scena: 3-4 fotogrammi chiave (inizio, momento wow, fine) e la mossa
+   del repertorio (§11bis: moltiplicazione, metamorfosi, viaggio, tipografia cinetica, carica e rimbalzo, rivelazione
+   a tratto, contrasto di scala, punch). Se il brief ha `GRANDE:`, quella è la mossa; se non ce l'ha, la scegli tu.
+   Due scene di fila non usano la stessa mossa, `punch` al massimo due volte nel reel. Scrivilo nelle Note di
+   animazione come prima cosa.
 1. Scrivi `contenuti/animazioni/<slug>.py`: una classe `ScenaNN(ScenaReel)` per scena, `costruisci()`, testi a
    schermo presi da `self.scena` quando la sceneggiatura li ha.
 2. `uv run reel anima <file.md> --qualita l --json` (tutte le scene) o `--scena N` mentre sistemi una scena. Leggi
@@ -31,13 +37,17 @@ Prima di scrivere codice leggi OBBLIGATORIAMENTE:
    - nessuna metà dello schermo resta vuota per tutta la scena (manuale §5)? il gruppo è centrato nell'area?
    - un solo accento per beat? il testo si legge (nel dubbio `--qualita h --scena N` e guarda il PNG)?
    - il filo visivo tiene: gli oggetti che ritornano hanno lo stesso aspetto e la stessa posizione fra le scene?
+   - **controllo wow**: c'è il momento wow dello storyboard, sulla sua frase? un cambio di scala ≥ 2× o di
+     composizione? il fotogramma a metà scena è diverso da quello finale? le curve non sono tutte `smooth`/lineari?
 4. Correggi e ripeti: **al massimo 5 giri** per l'intero file. Se dopo 5 giri resta un problema, fermati e
    descrivilo.
 5. Anteprima completa: `uv run reel monta <file.md> --prova --anteprima`. Guarda `contact-sheet.png` e leggi
    `report.json` (per scena `inizi_frasi_s`, `origine_tempi`, `avvisi_tempi`; `diagnostica`). Poi i **fotogrammi
-   fitti** di ogni scena da `_scene/NN.mp4` (manuale §2, passo 5): nessun testo che sparisce o lampeggia.
-6. Scrivi la sezione `## Note di animazione` della sceneggiatura (sostituisci il commento segnaposto): per scena i
-   beat e cosa entra su ciascuno, cosa hai cambiato rispetto al brief e perché, tempi Manim e durata del reel.
+   fitti** di ogni scena da `_scene/NN.mp4` (manuale §2, passo 5): nessun testo che sparisce o lampeggia, e il
+   momento wow che si vede. Nel `contact-sheet.png` le scene devono distinguersi a colpo d'occhio: se due si
+   somigliano, una va rifatta.
+6. Scrivi la sezione `## Note di animazione` della sceneggiatura (sostituisci il commento segnaposto): per scena la
+   mossa wow e su quale frase, i beat e cosa entra su ciascuno, cosa hai cambiato rispetto al brief e perché, tempi Manim e durata del reel.
    Porta il frontmatter a `stato: animato`.
 
 ## Lezioni dalle sessioni
@@ -118,6 +128,31 @@ Prima di scrivere codice leggi OBBLIGATORIAMENTE:
     alla 9 nella scena 5. Cerca ogni `tempi(` della scena cambiata e ricontalo; il commento con la frase accanto
     all'indice è quello che lo fa trovare.
 
+- **2026-09-16, «le animazioni devono avere un effetto wow»** (richiesta del presentatore prima di rianimare
+  `generativa-probabile` con la mail di candidatura): fino al biglietto le scene erano corrette ma piatte (carte e
+  cartellini alla stessa scala, quasi solo dissolvenze e scivolate lineari). Da ora storyboard con un momento wow per
+  scena (passo 0), repertorio e controllo wow nel manuale §11bis. Il wow non scavalca il revisore né la leggibilità:
+  un muro di copie è fatto di sagome senza testo, simili e non duplicati. Se una mossa vorrebbe un aiuto che la
+  libreria non ha (effetti sonori, riquadro che cresce, `moltiplica`, `Muro`), fai la versione locale e segnalalo:
+  è il livello 2 della revisione, lo decide il presentatore.
+- **2026-09-16, `generativa-probabile` con la mail** (73,6 s, 0 avvisi, 2 giri di `anima`):
+  - Con tre GRANDE a parola nel brief e il limite di due `punch`, il terzo si fa come contrasto di scala nello
+    stesso carattere (`Punch` sotto un velo che cresce dal cursore e ci rientra): il gesto si riconosce lo stesso.
+  - Per uno zoom senza testi tagliati, prima togli dal campo ciò che non serve (le parole già scritte diventano
+    gettoni vuoti) e scegli a mano l'angolo del campo; un controllo locale a zoom pieno (`controlla_zoom` nel file)
+    trova i testi tagliati o fuori area, che i controlli di fine beat non vedono.
+  - Un muro di copie dietro un oggetto largo non si vede: fai diventare l'oggetto una delle sagome.
+  - Una pedina che si sposta e cambia colore: una sola `MoveToTarget` con il colore nel `target`. Con
+    `t.animate.move_to` e `t.box.animate.set_stroke` nella stessa `play` il riquadro restava indietro.
+  - Per rifare gli a capo di un testo senza farlo sciogliere: `Transform` glifo per glifo fra le due impaginazioni.
+    I glifi sono gli stessi, cambiano solo le posizioni.
+
+- **2026-09-16, rimando del coordinatore**: a 2 fps i fotogrammi fitti sembravano puliti, a 8 fps no. Nei passaggi
+  mail ↔ richiesta (scene 4, 5, 7) per 0,2-0,4 s i testi si vedevano uno attraverso l'altro e una riga compariva
+  doppia (vecchia e nuova impaginazione sfalsate). I cambi di stato si guardano a **8 fps** (`fps=8`, un secondo per
+  striscia). Ordine di ogni passaggio: esce o si svuota il testo di chi se ne va, poi il riquadro cambia, poi entra il
+  testo nuovo; mai dissolvenze incrociate fra testi nello stesso punto.
+
 ## Confini
 - Non modificare `tools/` né la libreria: se un componente manca, ha un difetto o un parametro scomodo, arrangiati
   nel tuo file (una funzione locale) e **segnalalo** nel rapporto: le correzioni alla libreria le decide il
@@ -132,6 +167,7 @@ Stato: DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT
 File: contenuti/animazioni/<slug>.py
 Comandi: anima ×N giri, monta --prova --anteprima (reel NN s, 0 errori, 0 avvisi)
 Avvisi rimasti: …
+Mosse wow: scena 1 … · scena 2 … · …
 Difetti o mancanze della libreria: …
 Cosa non ci stava / domande per il presentatore: …
 ```
