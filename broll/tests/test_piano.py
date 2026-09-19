@@ -113,3 +113,12 @@ def test_i_tempi_dei_brief_non_sono_quantita():
     quantita = Scena(n=3, tipo="spiegazione", animazione=["Sotto, l'etichetta «10 su 10»."])
     assert _marcatori(regia) == []
     assert _marcatori(quantita) == ["una quantità"]
+
+
+def test_proponi_l_hook_a_filmato_se_il_brief_descrive_un_immagine():
+    """I primi secondi: il presentatore pone il problema, dietro una clip. Il titolo vive in copertina."""
+    scene = _scene(["hook", "spiegazione", "spiegazione", "spiegazione", "spiegazione", "chiusura"])
+    scene[0].animazione = ["Una persona apre la posta il lunedì mattina, la casella è piena."]
+    assert _proponi(scene) == {1, 3, 5}                 # l'hook per primo, e la scena 2 resta animata: si alterna
+    scene[0].animazione = ["Il titolo è già in scena al primo fotogramma e sale appena."]
+    assert _proponi(scene) == {2, 4}                    # un hook tipografico resta a Manim

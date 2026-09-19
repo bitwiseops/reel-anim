@@ -59,6 +59,14 @@ voce, testo e immagine insieme, dal primo fotogramma.
 - **Animatore**: il fotogramma 0 è già pieno e leggibile (niente nero, niente parola sola), con un movimento entro
   0,5 s.
 
+**I primi 5-10 secondi (nota del presentatore, 2026-09-19).** L'apertura deve catturare l'attenzione prima di
+spiegare qualcosa. L'hook porta **un problema o una domanda**, e lo sfondo in quel momento mostra **una clip che
+richiama quel problema**: materiale filmato scelto con `broll`, non una carta animata. Manim spiega, il filmato
+tiene l'attenzione — e l'attenzione si gioca qui. La spiegazione animata parte dopo.
+Il presentatore è nel riquadro sopra la clip e il problema lo pone lui, a voce: **a schermo non c'è titolo**. Il
+`TITOLO:` della sceneggiatura vive solo in copertina (`docs/sceneggiatura.md` §2, «L'hook a filmato»). La regola
+dell'animatore qui sopra vale per gli hook che restano animati.
+
 ### 2. Parla a una persona
 Tu e io, domande, gesti che chi guarda ha già fatto. Frasi **come le dici** (6-18 parole, con il verbo e i
 connettivi) e la parola chiave ripetuta (nel primo reel «probabile» torna tre volte: bene). I titoli restano a schermo:

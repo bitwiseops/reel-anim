@@ -59,6 +59,20 @@ Scrivi solo `docs/stile-parlato.md`. Non tocchi sceneggiature, agenti, `tools/`,
   vecchi. Le citazioni vecchie si ricontrollano parola per parola (una CTA era attribuita al reel sbagliato). Gli
   estratti da dirette (r0027-r0029, r0035) sono i migliori per il parlato naturale, ma vanno segnalati come tali.
   Non hai la shell: il verdetto di `reel stile` lo conferma il coordinatore.
+- **2026-09-19, guida rifatta su 40 reel dopo «la voce narrante deve risultare più umana e naturale»** (seconda
+  volta che il presentatore lo dice): le regole astratte non bastano, la guida deve dare l'orecchio. Servono una
+  sezione quasi solo di citazioni raggruppate per mossa («Come suona il parlato vero»), una di tic dello scritto con
+  esempi in negativo costruiti e dichiarati tali, mai attribuiti al corpus, e 5-8 id da leggere per intero, di
+  account diversi, con il perché (lo sceneggiatore ora legge le trascrizioni intere). Accanto a ogni mossa vanno reel
+  **e account**: una mossa di un solo account è una firma e sta in una sezione a parte, come in `pattern.md`. Un
+  account nuovo può rovesciare un «mai»: con @gabrysolution sono entrati nel corpus le frasi nominali in fila,
+  l'antitesi in coppia e la terna finale, cioè proprio i tic che il presentatore rifiuta: un reel del corpus può
+  valere da controesempio, e va detto. Le terne vanno distinte: l'enumerazione di cose (35 su 40, spesso di 2, 4 o 6
+  membri) è parlato, la terna messa per il ritmo no. Le citazioni con un errore di Whisper dentro si scartano; nomi e
+  cifre non valgono mai come dati. **Il passo non si stima a mano**: non hai la shell, quindi chiedi al coordinatore
+  l'uscita di `uv run reel stile --trascrizioni` (la stima a occhio ha sbagliato tre account su dodici). `reel stile`
+  legge la **prima** occorrenza di «Reel letti:» e «Letto il:»: fuori dalla sezione Corpus quelle due stringhe non si
+  scrivono. Le contraddizioni con i limiti del repo stanno anche nella guida, in breve, con «decisa» o «aperta».
 
 ## Rapporto finale (sempre, in questa forma)
 ```

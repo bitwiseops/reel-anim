@@ -6,6 +6,8 @@ Riporta anche il file dei pattern narrativi di reelkit (pattern.md), che gli age
 """
 from __future__ import annotations
 
+import json
+
 import datetime as dt
 import re
 from pathlib import Path
@@ -40,6 +42,36 @@ def leggi_pattern(p: Path | None) -> dict:
             "data": dt.date.fromtimestamp(p.stat().st_mtime).isoformat()}
 
 
+def trascrizioni(cfg, lingua: str | None = None, account: str | None = None) -> list[dict]:
+    """I reel trascritti di reelkit, dall'indice: chi parla, in che lingua, per quanto, e dov'è il testo.
+
+    La guida `docs/stile-parlato.md` dà le regole; le trascrizioni danno l'orecchio. Lo sceneggiatore ne legge
+    alcune **intere** prima del monologo, perché il ritmo del parlato (gli attacchi, le riprese, le frasi lasciate
+    a metà) non sopravvive a una regola. `parole_al_s` dice quanto corre chi parla: serve a scegliere reel del
+    passo del presentatore. Si leggono solo le voci che hanno davvero il file del testo.
+    """
+    indice, cartella = cfg.percorso("stile", "indice"), cfg.percorso("stile", "trascrizioni")
+    if indice is None or cartella is None or not indice.is_file() or not cartella.is_dir():
+        return []
+    try:
+        voci = json.loads(indice.read_text(encoding="utf-8")).get("voci", [])
+    except (json.JSONDecodeError, AttributeError):
+        return []
+    out = []
+    for v in voci:
+        f = cartella / f"{v.get('id')}.txt"
+        if not f.is_file():
+            continue
+        if (lingua and v.get("lingua") != lingua) or (account and v.get("account") != account):
+            continue
+        parole = len(f.read_text(encoding="utf-8").split())
+        durata = float((v.get("registrazione") or {}).get("durata_s") or 0)
+        out.append({"id": v["id"], "account": v.get("account") or "?", "lingua": v.get("lingua") or "?",
+                    "durata_s": durata, "parole": parole, "parole_al_s": round(parole / durata, 1) if durata else None,
+                    "analizzato": v.get("stato") == "analizzato", "file": f})
+    return out
+
+
 def stato(cfg) -> dict:
     """verdetto: manca (niente guida) · provvisoria (corpus assente o vuoto) · aggiornata · da rifare."""
     corpus, guida = cfg.percorso("stile", "corpus"), cfg.percorso("stile", "guida")
@@ -58,7 +90,10 @@ def stato(cfg) -> dict:
         verdetto = "da rifare"
     pattern = cfg.percorso("stile", "pattern")
     pt = leggi_pattern(pattern)
-    return {"corpus": corpus, "corpus_esiste": corpus_esiste, "corpus_data": corpus_data, "reel": reel,
+    tr = trascrizioni(cfg)
+    return {"trascrizioni": cfg.percorso("stile", "trascrizioni"), "trascrizioni_n": len(tr),
+            "trascrizioni_it": sum(1 for x in tr if x["lingua"] == "it"),
+            "corpus": corpus, "corpus_esiste": corpus_esiste, "corpus_data": corpus_data, "reel": reel,
             "guida": guida, "guida_esiste": guida_esiste, "guida_data": g["data"], "guida_reel": g["reel"],
             "verdetto": verdetto, "pattern": pattern, "pattern_esiste": pt["esiste"], "pattern_reel": pt["reel"],
             "pattern_tag": pt["tag"], "pattern_data": pt["data"]}

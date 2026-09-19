@@ -13,7 +13,8 @@ Piano completo: `~/.claude/plans/dobbiamo-revisionare-il-modello-lovely-piglet.m
 ## Struttura
 - `config.toml` — identità e misure (video 1080×1920 @30, safe area, riquadro, schermo, palette, font, voce di prova)
   e `[stile]` (corpus di reelkit, guida del parlato, `pattern` = `~/Projects/reelkit/pattern.md` con i pattern
-  narrativi che ideatore e sceneggiatore leggono direttamente)
+  narrativi che ideatore e sceneggiatore leggono direttamente, `indice` e `trascrizioni` = il parlato vero reel per
+  reel: lo sceneggiatore ne legge 4-6 intere prima della VOCE, `uv run reel stile --trascrizioni --lingua it`)
 - `tools/anim/` — libreria Manim: `config` (TOML + font Pango + opzioni `tempconfig`), `misure` (px ↔ unità,
   minimi di leggibilità, `FATTORE_FONT_SIZE` misurato con `calibra.py`), `base` (`ScenaReel` con `durata_s`,
   `beat(i)` sugli inizi delle frasi, `durata_beat`, `arrotonda`, `fino_a`, `chiudi`, aree contenuto/riquadro/schermo, `debug` con guide; cambi grandi `punch(s)` e `zoom_su(mob)`/`torna()`), `componenti` (Titolo,
@@ -27,7 +28,9 @@ Piano completo: `~/.claude/plans/dobbiamo-revisionare-il-modello-lovely-piglet.m
   `__main__` (CLI `uv run reel`)
 - `broll/` — sottosistema del materiale esterno (filmati che si alternano alle animazioni): **progetto `uv`
   a sé**, con proprio `pyproject.toml`, `uv.lock` e `.venv`, così le sue dipendenze non entrano mai in quelle
-  della radice. `uv run --project broll broll piano|stato|prova-inquadratura` (`broll/README.md`)
+  della radice. `uv run --project broll broll piano|stato|cerca|provini|scegli|rendi|scrivi|prova-inquadratura` (`broll/README.md`):
+  dal piano a `contenuti/media/<slug>/broll-scena-NN.mp4`, poi `scrivi` mette nel `.md` il tipo `[broll]` che `reel monta` legge;
+  banco di prova `broll/esempi/demo-alternanza.md`
 - `contenuti/` — `spunti/` (link, righe o tema: il punto di partenza, `stato: spunto → ideato`), `idee/`,
   `sceneggiature/`, `bozze/ in-produzione/ pubblicati/ db/`, `archivio/<slug>/` (reel chiusi o abbandonati: si
   leggono, non girano), `animazioni/<slug>.py` (una classe
@@ -71,9 +74,10 @@ passaggi delle scene 4, 5 e 7, poi il presentatore guarda l'anteprima (dettagli 
 completa senza il presentatore, **non pubblicabile**.
 
 ## Grammatica (vedi templates/reel.md)
-`## Scena N [hook|spiegazione|schermo|chiusura, durata=Ns, transizione=…]` con righe `VOCE:` (una riga =
+`## Scena N [hook|spiegazione|schermo|broll|chiusura, durata=Ns, transizione=…]` con righe `VOCE:` (una riga =
 un beat = un pezzo di parlato), `ANIMAZIONE:` (brief per l'animatore), `TESTO:`, `TITOLO:/SOTTOTITOLO:` (hook), `MESSAGGIO:/CTA:`
-(chiusura), `SCHERMO: file`, `RIQUADRO: no|si|posizione`; inline `==evidenzia==`, `**grassetto**`.
+(chiusura), `SCHERMO: file`, `RIQUADRO: no|si|posizione`; `[broll]` = filmato a tutto schermo col riquadro sopra, senza
+grafica né `TESTO:` né classe Manim (lo scrive `broll scrivi`, `docs/sceneggiatura.md` §2); inline `==evidenzia==`, `**grassetto**`.
 Limiti in `tools/reel/validate.py::LIMITI`: 6-8 scene (5-9), VOCE ≤ 50 parole/scena (hook ≤ 20, chiusura ≤ 18), scena 2,5-19 s,
 reel 30-90 s (dal 2026-09-15: la VOCE è parlato vero, «prima il monologo, poi i beat», `docs/sceneggiatura.md` §5;
 `valida` avvisa su frasi da titolo in fila, «X, sì. Y, no.», due punti come snodo). La durata reale di ogni scena la
@@ -101,7 +105,8 @@ scena `inizi_frasi_s`, `origine_tempi`, `avvisi_tempi` (beat in ritardo, scena c
 
 ## Pipeline (`.claude/commands/pipeline.md`; completa in fase 3)
 spunto → idea (ideatore, **fermata 1**) → sceneggiatura (**fermata 2**) → revisione tecnica (con ❌ ci si ferma) →
-animazione (animatore: `.py` + anteprima `--prova`) → **fermata 3: il presentatore guarda l'anteprima** →
+filmati (T2b: `broll piano/cerca/provini`, **fermata 2b** sulla scelta dai provini, poi `rendi` e `scrivi`; con `--tutto`
+la scelta è provvisoria e si conferma alla fermata 3) → animazione (animatore: `.py` + anteprima `--prova`) → **fermata 3: il presentatore guarda l'anteprima** →
 registrazione (`reel registra`) → montaggio → social → approvazione → pubblica (container REELS). Con `--tutto` (o
 il workflow `reel`) si salta dalla partenza alla fermata 3, fermandosi solo su ❌, errori o agenti bloccati. Spunti:
 `stato: spunto → ideato`; idee: `**Stato:** idea → sceneggiata`; sceneggiature: `stato: sceneggiatura → rivisto →

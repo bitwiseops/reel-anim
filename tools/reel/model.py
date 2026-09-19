@@ -5,7 +5,10 @@ import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
-TIPI_SCENA = ("hook", "spiegazione", "schermo", "chiusura")
+# [broll]: il filmato (o le immagini composte) a tutto schermo col riquadro sopra, senza grafica Manim.
+# [schermo] resta il materiale nella finestra, con la grafica intorno.
+TIPI_SCENA = ("hook", "spiegazione", "schermo", "broll", "chiusura")
+CON_FILE = ("schermo", "broll")         # i tipi che senza SCHERMO: <file> non hanno niente da mostrare
 TRANSIZIONI = ("taglio", "dissolvenza")
 POSIZIONI_RIQUADRO = ("basso-destra", "basso-sinistra", "alto-destra", "alto-sinistra")
 STATI = ("sceneggiatura", "rivisto", "animato", "montato", "approvato", "pubblicato")
@@ -52,6 +55,7 @@ class Scena:
     messaggio: str | None = None                         # chiusura
     cta: str | None = None                               # chiusura
     schermo: str | None = None                           # file b-roll (relativo a contenuti/media/<slug>/)
+                                                         # in [schermo] sta nella finestra, in [broll] è tutta la tela
     riquadro: str | None = None                          # None = default per tipo; "no" | "si" | posizione
     durata_min_s: float | None = None
     transizione: str | None = None
@@ -69,10 +73,19 @@ class Scena:
         """Tutto ciò che compare a schermo o si dice (per emoji, evidenzia, claim)."""
         return [t for t in (self.titolo, self.sottotitolo, self.messaggio, self.cta) if t] + self.testo + self.voce
 
+    @property
+    def a_filmato(self) -> bool:
+        """La scena è materiale esterno a tutta tela, senza grafica: una [broll], o un hook con `SCHERMO:`.
+
+        L'hook a filmato è l'apertura parlata: il presentatore nel riquadro pone il problema, dietro c'è una clip
+        che lo richiama, e il `TITOLO:` non va a schermo — vive solo in copertina.
+        """
+        return self.tipo == "broll" or (self.tipo == "hook" and bool(self.schermo))
+
     def riquadro_effettivo(self) -> str:
         if self.riquadro is not None:
             return self.riquadro
-        return "no" if self.tipo == "hook" else "si"
+        return "no" if self.tipo == "hook" and not self.a_filmato else "si"
 
     def to_dict(self) -> dict:
         return {"n": self.n, "tipo": self.tipo, "voce": self.voce, "animazione": self.animazione, "testo": self.testo,

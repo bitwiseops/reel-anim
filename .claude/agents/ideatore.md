@@ -101,7 +101,14 @@ chiudi con NEEDS_CONTEXT e 2-3 domande precise per il presentatore.
     fine: scrivi per ogni domanda quale opzione consigli e perché, così il coordinatore sceglie la tua.
   - Il set di testi del modello con le richieste identiche alle carte a schermo (A2/C2/D2) ha evitato il «richieste
     quasi uguali» del primo reel: quando si riusano uscite vere, cercalo per primo.
-
+- **2026-09-19, nota del presentatore sull'apertura (vale per tutti i reel da qui in poi)**: i primi 5-10 secondi
+  devono catturare l'attenzione. L'hook porta **un problema o una domanda** di chi guarda, non la tesi; e dietro, in
+  quel momento, si vede **una clip che richiama quel problema** (materiale filmato, non una carta Manim). Nelle
+  «Note per il reel» l'hook candidato va scritto in coppia: la frase **e** l'immagine che la accompagna («chi apre
+  la posta il lunedì mattina con la casella piena»), concreta abbastanza da poterla cercare su un banco di filmati.
+  Se per il problema non ti viene in mente un'immagine filmabile, il problema è ancora troppo astratto.
+  Decisione del presentatore sullo stesso punto: **a schermo nell'apertura non c'è il titolo**, c'è lui nel riquadro
+  sopra la clip; il titolo che proponi serve alla copertina (la griglia del profilo), quindi può restare la tesi.
 ## Rapporto finale (sempre, in questa forma)
 ```
 Stato: DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT

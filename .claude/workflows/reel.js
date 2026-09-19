@@ -6,6 +6,7 @@ export const meta = {
     { title: 'Idea', detail: "ideatore sullo spunto (saltata se si parte da un'idea o da una sceneggiatura)" },
     { title: 'Sceneggiatura', detail: "sceneggiatore; poi valida a 0 errori e l'idea passa a sceneggiata" },
     { title: 'Revisione', detail: 'revisore-tecnico: con un ❌ la corsa si ferma' },
+    { title: 'Filmati', detail: 'broll: piano, provini, scelta provvisoria, rendi, scrivi (saltata se il piano non propone filmati)' },
     { title: 'Animazione', detail: 'animatore: .py, anima --json, fotogrammi, monta --prova --anteprima' },
     { title: 'Rapporto', detail: 'VOCE per scena, durate, avvisi, fotogrammi, prossimo passo' },
   ],
@@ -76,6 +77,22 @@ phase('Revisione')
 const rv = await tappa('Revisione', `Rivedi ${file}. Se il frontmatter è già stato: rivisto (o animato) e la Revisione tecnica dice APPROVATO, non rifarla: restituisci lo stato com'è.`, 'revisore-tecnico')
 if (rv.bloccato || !['rivisto', 'animato'].includes(rv.stato)) return ferma('revisione', rv)
 
+// T2b di pipeline.md. La scelta del filmato è la più soggettiva della corsa: qui è provvisoria e si dichiara nel rapporto;
+// cambiarla dopo non tocca le animazioni (scegli, rendi --forza, monta).
+phase('Filmati')
+const fl = await tappa('Filmati',
+  `Esegui la tappa «T2b · filmati» di .claude/commands/pipeline.md su ${file}, nella modalità --tutto: ` +
+  `\`uv run --project broll broll piano\`, \`cerca\`, \`provini\`; GUARDA i contact sheet dei candidati (Read dei PNG) e scegli per ogni scena ` +
+  `il candidato migliore con i criteri scritti lì; poi \`scegli\`, \`rendi\` (guarda reso-scena-NN.png), \`prova-inquadratura\`, \`scrivi\`, e ` +
+  `\`uv run reel valida ${file}\`. Non modificare la sceneggiatura a mano: la tocca solo \`broll scrivi\`. Non toccare tools/ né broll/. ` +
+  `Se il piano non propone nessuna scena a filmato non è un errore: bloccato = false e scrivilo in motivo. ` +
+  `stato = lo stato del frontmatter (resta rivisto), file = ${file}, errori/avvisi = i conteggi di valida, ` +
+  `motivo = per ogni scena a filmato: query, candidato scelto (fornitore:id, autore) e perché, cosa copre il riquadro; ` +
+  `più l'eventuale assenza dell'hook fra le scene a filmato e le scene che scrivi non ha convertito. ` +
+  `bloccato = true solo se un comando fallisce, se manca la chiave di ricerca (\`broll chiavi\`) o se valida dà errori.`,
+  'general-purpose')
+if (fl.bloccato || fl.errori > 0) return ferma('filmati', fl)
+
 phase('Animazione')
 const an = await tappa('Animazione', `Anima ${file} fino a \`uv run reel monta ${file} --prova --anteprima\` con 0 avvisi di tempo e 0 controlli, e porta il frontmatter a stato: animato.`, 'animatore')
 if (an.bloccato || an.stato !== 'animato') return ferma('animazione', an)
@@ -85,6 +102,6 @@ const rapporto = await agent(
   `Scrivi il report unico per il presentatore sul reel ${file}, seguendo la sezione «Report della FERMATA 3» di .claude/commands/pipeline.md. ` +
   `Leggi la sceneggiatura, l'idea collegata e contenuti/render/<slug>/report.json (lo slug è nel frontmatter). ` +
   `Note dello sceneggiatore (titolo alternativo, frasi incerte): ${noteSceneggiatore || 'nessuna'}. ` +
-  `Revisione: ${rv.motivo || 'nessuna nota'}. Animazione: ${an.motivo || 'nessuna nota'} (${an.errori} controlli, ${an.avvisi} avvisi di tempo).`,
+  `Revisione: ${rv.motivo || 'nessuna nota'}. Filmati (scelte PROVVISORIE, da mettere in testa ai punti da confermare): ${fl.motivo || 'nessuna scena a filmato'}. Animazione: ${an.motivo || 'nessuna nota'} (${an.errori} controlli, ${an.avvisi} avvisi di tempo).`,
   { agentType: 'general-purpose', effort: 'low', phase: 'Rapporto', label: 'Rapporto' })
 return { completato: true, file, rapporto }

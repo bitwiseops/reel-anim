@@ -7,7 +7,7 @@ from pathlib import Path
 
 import yaml
 
-from .model import POSIZIONI_RIQUADRO, TIPI_SCENA, TRANSIZIONI, Diagnostica, Reel, Scena, avviso, errore
+from .model import CON_FILE, POSIZIONI_RIQUADRO, TIPI_SCENA, TRANSIZIONI, Diagnostica, Reel, Scena, avviso, errore
 
 
 class ErroreParse(Exception):
@@ -27,7 +27,7 @@ PREFISSI = ["VOCE", "ANIMAZIONE", "TESTO", "TITOLO", "SOTTOTITOLO", "MESSAGGIO",
 RIPETIBILI = {"VOCE": "voce", "ANIMAZIONE": "animazione", "TESTO": "testo"}
 SINGOLI = {"TITOLO": "titolo", "SOTTOTITOLO": "sottotitolo", "MESSAGGIO": "messaggio", "CTA": "cta", "SCHERMO": "schermo"}
 DOVE = {"TITOLO": ("hook",), "SOTTOTITOLO": ("hook",), "MESSAGGIO": ("chiusura",), "CTA": ("chiusura",),
-        "SCHERMO": ("schermo", "spiegazione")}
+        "SCHERMO": ("schermo", "spiegazione", "broll", "hook")}
 
 
 def _durata_s(valore: str) -> float | None:
@@ -177,11 +177,14 @@ def parse_testo(testo: str, sorgente: Path | None = None) -> tuple[Reel, list[Di
         for s in scene:
             if s.tipo == "hook" and not s.titolo:
                 errori.append(errore("scena [hook] senza TITOLO", s.riga, s.n))
+            elif s.tipo == "hook" and s.schermo and not s.voce:
+                errori.append(errore("hook a filmato senza VOCE: il titolo non va a schermo, il problema lo pone "
+                                     "il presentatore", s.riga, s.n))
             elif s.tipo == "chiusura" and not s.messaggio:
                 errori.append(errore("scena [chiusura] senza MESSAGGIO", s.riga, s.n))
-            elif s.tipo == "schermo" and not s.schermo:
-                errori.append(errore("scena [schermo] senza SCHERMO: <file>", s.riga, s.n))
-            elif s.tipo in ("spiegazione", "schermo") and not s.voce:
+            elif s.tipo in CON_FILE and not s.schermo:
+                errori.append(errore(f"scena [{s.tipo}] senza SCHERMO: <file>", s.riga, s.n))
+            elif s.tipo in ("spiegazione", *CON_FILE) and not s.voce:
                 errori.append(errore(f"scena [{s.tipo}] senza VOCE: cosa dice il presentatore?", s.riga, s.n))
     if errori:
         raise ErroreParse(errori)

@@ -109,7 +109,16 @@ def check(r: Reel) -> list[Diagnostica]:
             a(f"VOCE di {s.parole_voce} parole (max {L['parole_voce_max']}): spezza la scena in due")
         if len(s.voce) > L["beat_max"]:
             a(f"{len(s.voce)} righe VOCE (max {L['beat_max']}): troppi beat per una scena")
-        if s.tipo != "hook" and not s.animazione:
+        if s.a_filmato:
+            # filmato e grafica non stanno mai insieme: qui si vede il filmato e il riquadro, nient'altro.
+            # ANIMAZIONE è ammessa e facoltativa: non si anima niente, ma descrive cosa si vede, ed è da lì
+            # che `broll piano` prende le query.
+            if s.testo:
+                e(f"TESTO in una scena a filmato («{s.testo[0][:30]}»): sopra il filmato non va nessuna grafica")
+            if s.tipo == "hook" and s.riquadro_effettivo() == "no":
+                a("hook a filmato con RIQUADRO: no: il titolo non è a schermo e il presentatore nemmeno, "
+                  "resta una clip con una voce sopra")
+        elif s.tipo != "hook" and not s.animazione:
             a("scena senza ANIMAZIONE: l'animatore non sa cosa disegnare")
         if s.voce and s.animazione and len(s.animazione) not in (1, len(s.voce)):
             a(f"{len(s.animazione)} righe ANIMAZIONE per {len(s.voce)} righe VOCE: o una sola, o una per frase (beat)")
@@ -128,7 +137,8 @@ def check(r: Reel) -> list[Diagnostica]:
             f = cartella_media(r) / s.schermo
             if not f.exists():
                 e(f"SCHERMO: file '{s.schermo}' non trovato in {f.parent.relative_to(RADICE)}/")
-        if s.schermo and s.riquadro_effettivo() != "no" and _riquadro_su_schermo(s.riquadro_effettivo()):
+        # in [broll] il presentatore sopra il filmato è il look voluto: la cornice della finestra non c'entra
+        if s.schermo and not s.a_filmato and s.riquadro_effettivo() != "no" and _riquadro_su_schermo(s.riquadro_effettivo()):
             a(f"il riquadro ({s.riquadro_effettivo()}) copre la cornice del b-roll: usa RIQUADRO: alto-destra, alto-sinistra o no")
         sec = durata_stimata_s(s)
         totale += sec
@@ -136,6 +146,14 @@ def check(r: Reel) -> list[Diagnostica]:
             a(f"scena stimata {sec:.1f} s (max {L['scena_max_s']} s): troppa voce per una scena")
         elif sec < L["scena_min_s"]:
             a(f"scena stimata {sec:.1f} s, sotto i {L['scena_min_s']} s")
+    # l'alternanza: Manim spiega, il filmato tiene l'attenzione. Gli stessi due limiti di `broll piano`.
+    filmati = [s for s in r.scene if s.a_filmato]
+    if len(filmati) > len(r.scene) // 2:
+        d.append(avviso(f"{len(filmati)} scene a filmato su {len(r.scene)}: più della metà del reel è materiale esterno"))
+    for prima, dopo in zip(r.scene, r.scene[1:]):
+        if prima.a_filmato and dopo.a_filmato:
+            d.append(avviso(f"scene {prima.n} e {dopo.n} entrambe a filmato: l'alternanza si vede solo se si alterna",
+                            dopo.riga, dopo.n))
     if len(titoli_reel) > L["frasi_titolo_reel_max"]:
         d.append(avviso(f"{len(titoli_reel)} frasi da titolo nel reel ({' / '.join('«' + t + '»' for t in titoli_reel)}): "
                         "al massimo un aforisma, ed è la battuta finale"))

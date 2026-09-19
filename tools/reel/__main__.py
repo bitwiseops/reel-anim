@@ -247,8 +247,19 @@ def cmd_setup(args) -> int:
 
 def cmd_stile(args) -> int:
     from ..anim.config import carica
-    from .stile import stato
-    s = stato(carica())
+    from .stile import stato, trascrizioni
+    cfg = carica()
+    if args.trascrizioni:
+        tr = trascrizioni(cfg, lingua=args.lingua, account=args.account)
+        if not tr:
+            print("-> nessuna trascrizione: controlla [stile] indice e trascrizioni nel config", file=sys.stderr)
+            return 1
+        for x in sorted(tr, key=lambda x: (x["account"], x["id"])):
+            passo = f"{x['parole_al_s']:.1f} parole/s" if x["parole_al_s"] else "—"
+            print(f"  {x['id']}  {x['account']:<24} {x['lingua']:<4} {x['durata_s']:5.0f} s  {x['parole']:4d} parole  {passo:<14} {x['file']}")
+        print(f"-> {len(tr)} trascrizioni: leggine alcune INTERE (Read) prima di scrivere la VOCE; si prende il passo, non le frasi")
+        return 0
+    s = stato(cfg)
     c = s["corpus"]
     if c is None:
         print("corpus: nessuno ([stile].corpus vuoto)")
@@ -270,6 +281,12 @@ def cmd_stile(args) -> int:
         n = "?" if s["pattern_reel"] is None else s["pattern_reel"]
         m = "?" if s["pattern_tag"] is None else s["pattern_tag"]
         print(f"pattern: {pt} ({n} reel, {m} tag, modificato il {s['pattern_data']})")
+    if s["trascrizioni_n"]:
+        print(f"trascrizioni: {s['trascrizioni']} ({s['trascrizioni_n']} reel, {s['trascrizioni_it']} in italiano: "
+              "`uv run reel stile --trascrizioni`)")
+        if s["corpus_esiste"] and s["trascrizioni_n"] > s["reel"]:
+            print(f"  ⚠ {s['trascrizioni_n']} reel trascritti ma il corpus ne ha {s['reel']}: in reelkit `./reelkit export` "
+                  "(entrano quelli analizzati), poi la guida sarà da rifare")
     spiega = {"manca": "lancia l'agente stilista",
               "provvisoria": "nata dalle regole dei docs, senza reel veri: si rifà quando il corpus ha dei reel",
               "aggiornata": "distillata da tutti i reel del corpus",
@@ -330,6 +347,9 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("setup", help="controlla ffmpeg/manim/font, genera avatar segnaposto e maschere"); p.add_argument("--forza", action="store_true")
     p.set_defaults(fn=cmd_setup)
     p = sub.add_parser("stile", help="corpus di reelkit e stato della guida docs/stile-parlato.md")
+    p.add_argument("--trascrizioni", action="store_true", help="elenca i reel trascritti (il parlato vero) con il percorso del testo")
+    p.add_argument("--lingua", help="con --trascrizioni: solo questa lingua (es. it)")
+    p.add_argument("--account", help="con --trascrizioni: solo questo account")
     p.set_defaults(fn=cmd_stile)
 
     args = ap.parse_args(argv)

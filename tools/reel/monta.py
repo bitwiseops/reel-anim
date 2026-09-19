@@ -113,6 +113,8 @@ def anima(r: Reel, diag: list[Diagnostica], out: Path, qualita: str = "l", solo:
     for s in r.scene:
         if solo and s.n != solo:
             continue
+        if s.a_filmato:            # [broll] o hook a filmato: nessuna classe Manim, il file lo prepara `broll rendi`
+            continue
         t = None
         if con_voce:
             try:
@@ -147,6 +149,42 @@ def anima(r: Reel, diag: list[Diagnostica], out: Path, qualita: str = "l", solo:
                      "png": str(png.relative_to(out)), "filmstrip": str(fs.relative_to(out)),
                      "tempo_manim_s": round(time.time() - t0, 1)})
     return info
+
+
+def _scena_broll(r: Reel, s: Scena, t: TempiScena, out: Path, avatar: Path, args, cfg: Config,
+                 diag: list[Diagnostica]) -> dict | None:
+    """Una scena a filmato ([broll], o l'hook con `SCHERMO:`): niente Manim, il file di `SCHERMO:` fa da grafica a
+    tutta tela, col riquadro sopra."""
+    filmato = clipmod.cartella(r.slug) / (s.schermo or "")
+    if not s.schermo or not filmato.exists():
+        diag.append(errore(f"filmato '{s.schermo}' non trovato in contenuti/media/{r.slug}/ "
+                           f"(`uv run --project broll broll rendi {r.slug}`)", s.riga, s.n))
+        return None
+    avvisi_tempi: list[str] = []
+    video = filmato.suffix.lower() in (".mp4", ".mov", ".webm", ".m4v")
+    durata_filmato = (ffprobe(filmato).get("durata_s") or 0.0) if video else None
+    if durata_filmato is not None and durata_filmato < t.durata_s - 1.5 / cfg.fps:
+        # il filmato è stato reso sulla durata di prima (stima, voce di prova): la presa vera è più lunga
+        avvisi_tempi.append(f"il filmato dura {durata_filmato:.2f} s, la scena {t.durata_s:.2f} s: l'ultimo fotogramma resta "
+                            f"fermo per {t.durata_s - durata_filmato:.2f} s. Rifai `broll piano` e `broll rendi`")
+    for a in avvisi_tempi:
+        diag.append(avviso(a, s.riga, s.n))
+    t2 = time.time()
+    riq = s.riquadro_effettivo()
+    c = clipmod.trova(r.slug, s.n) if t.origine == "clip" else None
+    src = compositing.Sorgenti(grafica=filmato, durata_s=t.durata_s, riquadro=riq, video_presentatore=c,
+                               avatar=avatar if (c is None and riq != "no" and avatar.exists()) else None, audio=t.audio,
+                               filmato=True)
+    dest = compositing.componi_scena(src, out / "_scene" / f"{s.n:02d}.mp4", cfg, anteprima=args.anteprima)
+    tc = time.time() - t2
+    png = fotogrammi.fotogramma_chiave(dest, t.durata_s, out / "scene" / f"{s.n:02d}.png")
+    fs = fotogrammi.filmstrip_scena(dest, t.durata_s, out / "fotogrammi" / f"{s.n:02d}-filmstrip.png")
+    return {"ordine": s.n, "tipo": "png", "file": str(png.relative_to(out)), "scena": s.n, "tipo_scena": s.tipo,
+            "durata_s": t.durata_s, "parole_voce": s.parole_voce, "durata_stimata_s": durata_stimata_s(s, cfg),
+            "origine_durata": t.origine, "inizi_frasi_s": t.inizi_frasi_s, "origine_tempi": t.origine_tempi,
+            "avvisi_tempi": avvisi_tempi, "controlli": [], "riquadro": riq, "schermo": s.schermo, "filmato": True,
+            "filmstrip": str(fs.relative_to(out)), "grafica": str(filmato.relative_to(RADICE)) if filmato.is_relative_to(RADICE) else str(filmato),
+            "video": str(dest.relative_to(out)), "tempo_manim_s": 0.0, "tempo_ffmpeg_s": round(tc, 1)}
 
 
 def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None = None) -> int:
@@ -188,6 +226,12 @@ def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None 
             diag.append(avviso(f"tempi della presa ignorati: {len(presa)} frasi nel sidecar, {len(s.voce)} nella sceneggiatura: "
                                "registra di nuovo la scena", s.riga, s.n))
         usa_prova = usa_prova or t.origine in ("voce-sintetica", "stima")
+        if s.a_filmato:
+            pezzo = _scena_broll(r, s, t, out, avatar, args, cfg, diag)
+            if pezzo:
+                elementi.append(pezzo)
+                pezzi.append((out / pezzo["video"], t.durata_s))
+            continue
         try:
             cls = classe_scena(mod, s.n)
         except AnimazioneMancante as e:
@@ -240,17 +284,26 @@ def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None 
         t3 = time.time()
         tr = cfg.dati["transizioni"]
         tipo_tr, d_tr = str(tr.get("tipo", "dissolvenza")), float(tr.get("durata_s", 0.25))
-        finale = compositing.concatena(pezzi, out / "reel-9x16.mp4", tipo_tr, d_tr, cfg, anteprima=args.anteprima)
-        durata_tot = compositing.durata_concat(pezzi, tipo_tr, d_tr)
+        # fra animazione e filmato si stacca: grafica scura e filmato chiaro sciolti insieme lasciano il fantasma
+        # dei testi sopra l'immagine ([transizioni] filmato = "dissolvenza" per riavere la dissolvenza ovunque)
+        tagli = frozenset(k for k in range(1, len(elementi))
+                          if (elementi[k - 1].get("filmato") or elementi[k].get("filmato"))
+                          and str(tr.get("filmato", "taglio")) == "taglio")
+        finale = compositing.concatena(pezzi, out / "reel-9x16.mp4", tipo_tr, d_tr, cfg, anteprima=args.anteprima, tagli=tagli)
+        durata_tot = compositing.durata_concat(pezzi, tipo_tr, d_tr, tagli)
         tempi["concat"] = time.time() - t3
         t_acc = 0.0
-        for e in elementi:
+        for k, e in enumerate(elementi):
             e["t_inizio_s"] = round(t_acc, 2)
-            t_acc += e["durata_s"] - (d_tr if tipo_tr == "dissolvenza" else 0)
+            sciolta = tipo_tr == "dissolvenza" and (k + 1) not in tagli
+            t_acc += e["durata_s"] - (d_tr if sciolta else 0)
             e["t_fine_s"] = round(e["t_inizio_s"] + e["durata_s"], 2)
         fs = fotogrammi.filmstrip(finale, fotogrammi.tempi_campione(durata_tot, 10), out / "fotogrammi" / "reel-filmstrip.png", 220)
         hook = elementi[0]
-        cop, cop45 = fotogrammi.cover(out / hook["video"], hook["durata_s"], out, cfg)
+        s_hook = r.hook if r.hook is not None and hook.get("filmato") else None   # a filmato il titolo non è a schermo
+        cop, cop45 = fotogrammi.cover(out / hook["video"], hook["durata_s"], out, cfg,
+                                      titolo=s_hook.titolo if s_hook else None,
+                                      sottotitolo=s_hook.sottotitolo if s_hook else None)
         probe = ffprobe(finale)
         _verifica_probe(probe, cfg, durata_tot, diag)
         reel_info = {"file": "reel-9x16.mp4", "formato": "9:16", "durata_s": durata_tot, "fps": cfg.fps, "transizione": tipo_tr,

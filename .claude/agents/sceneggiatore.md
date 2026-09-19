@@ -49,6 +49,12 @@ Prima di scrivere leggi OBBLIGATORIAMENTE:
   In una `pillola` la CTA non rimanda mai alla formazione.
 - **Hook** (Scena 1): una domanda o una promessa a chi guarda in ≤ 20 parole di voce, non un titolo detto a voce;
   `TITOLO:` ≤ 10 parole che ferma lo scroll e regge da solo (è anche la copertina); niente spiegazioni.
+- **Prima di scrivere la VOCE, ascolta il parlato vero** (`docs/sceneggiatura.md` §5, punto 0): lancia
+  `uv run reel stile --trascrizioni --lingua it` e **leggi per intero quattro-sei trascrizioni** (Read sul percorso
+  stampato), di almeno tre account diversi, scegliendo durate vicine al nostro reel e un passo vicino a 2,8 parole/s.
+  Nelle Note di produzione scrivi quali hai letto (gli id) e **tre mosse del parlato** che hai deciso di usare, ognuna
+  con la riga della trascrizione da cui viene. Si prende il passo, non le frasi: sono reel altrui, e i nomi propri li
+  sbaglia Whisper, quindi nessun fatto e nessuna battuta vengono da lì.
 - **VOCE = parlato vero, prima il monologo e poi i beat** (`docs/sceneggiatura.md` §5). Per ogni scena scrivi prima
   il parlato intero come lo diresti a un collega: «io» e «tu», connettivi («quindi», «cioè», «guarda», «e non è
   che…»), il verbo in ogni frase, frasi di 6-18 parole. Poi spezzalo in righe `VOCE:` dove cambia lo schermo:
@@ -137,6 +143,34 @@ Prima di scrivere leggi OBBLIGATORIAMENTE:
   capiscono al contrario o dipendono da una scena prima: «Quindi scrivilo tu, nella richiesta» (si sente «scrivi tu
   il biglietto»; meglio «diglielo tu») e «Al suo posto scrivi…» (rimanda a una carta di un'altra scena). Rileggi le
   frasi con un pronome come le sentirebbe chi guarda senza lo schermo.
+- **2026-09-19, nota del presentatore sull'apertura (vale per tutti i reel da qui in poi)**: i primi 5-10 secondi
+  devono catturare l'attenzione. L'hook è **un problema o una domanda** posta a chi guarda (non la tesi, non un
+  preambolo), e lo sfondo in quel momento è **una clip che richiama quel problema**: la scena si vede prima di
+  capirla. Scrivi l'apertura pensando alle due cose insieme: la VOCE pone il problema, la riga `ANIMAZIONE:`
+  dell'apertura descrive **cosa si vede nel filmato** (soggetto, luogo, gesto: è da lì che `broll piano` prende le
+  query), non una grafica da disegnare. La spiegazione animata comincia dopo, quando l'attenzione c'è già. Se
+  l'apertura sta in due scene (hook + prima spiegazione), il filmato copre quella che pone il problema.
+  Decisione del presentatore sullo stesso punto (hook a filmato, `docs/sceneggiatura.md` §2): nell'apertura **non
+  c'è titolo a schermo**, c'è lui nel riquadro sopra la clip. Quindi nell'hook: niente `RIQUADRO: no`, niente
+  `TESTO:`, la `VOCE:` deve reggere da sola (il problema lo dice lui), il `TITOLO:` lo scrivi per la copertina, e la
+  riga `ANIMAZIONE:` descrive la clip senza nominare il titolo (se lo nomina, `broll piano` lascia l'hook animato).
+- **2026-09-19, scene a filmato (`[broll]`, `docs/sceneggiatura.md` §2)**: animazione e filmato si alternano fra
+  scene e non stanno mai insieme. Tu non scrivi `[broll]`: scrivi `[spiegazione]`. Ma una scena che **non ha niente
+  da disegnare** (nessun meccanismo, quantità o figura: una scena d'attenzione, un'esperienza riconosciuta) scrivila
+  perché possa andare a filmato: brief `ANIMAZIONE:` di **una riga** che descrive un'immagine filmabile (chi, dove,
+  che gesto), e **nessun `TESTO:`** — sopra il filmato non va grafica, e `broll scrivi` una scena con `TESTO:` non la
+  converte. Mai due scene così di fila, mai più di metà del reel.
+- **2026-09-19, nota del presentatore: «la voce narrante deve risultare più umana e naturale»** (detta davanti
+  all'anteprima di `generativa-probabile`, scritta con la sola guida distillata). Le regole non bastano a dare
+  l'orecchio: da qui in poi leggi le trascrizioni vere prima del monologo (sopra) e fai la **prova dell'orecchio**
+  dopo. Cosa tradiva la VOCE come scritta, in quel reel: le antitesi in coppia («Non sbagli a fartela scrivere, ci
+  mancherebbe. / Sbagli se pensi che basti…»), le frasi tutte chiuse e della stessa misura, la metafora a effetto
+  («Cambia il vestito, ma…»), la battuta che ferma la scena a ogni scena. Cosa fa chi parla davvero, nelle
+  trascrizioni: frasi che si allungano con «che… e che…», il soggetto ripreso in coda, domande fatte a se stesso,
+  «tra l'altro» e «appunto», un numero preciso al posto dell'aggettivo, e una frase su tre che non conclude niente ma
+  porta alla successiva. Il limite di 50 parole per scena resta: il parlato naturale non è più lungo, è **meno
+  simmetrico**. Non aggiungere intercalari a pioggia per sembrare parlato: uno o due per scena, dove servono a
+  respirare.
 
 ## Consegna
 File in `contenuti/sceneggiature/` (nome `YYYY-MM-DD-<slug>.md` con la data di oggi), `stato: sceneggiatura`,

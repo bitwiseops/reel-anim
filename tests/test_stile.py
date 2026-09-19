@@ -99,3 +99,35 @@ def test_comando_stile_stampa_e_esce_zero(capsys):
     assert main(["stile"]) == 0
     out = capsys.readouterr().out
     assert "corpus:" in out and "guida:" in out and "pattern:" in out and "verdetto:" in out
+
+
+def test_trascrizioni_dall_indice_di_reelkit(tmp_path):
+    """Lo sceneggiatore legge il parlato vero: l'elenco viene dall'indice, e conta solo i testi che esistono."""
+    import json
+
+    from tools.reel.stile import trascrizioni
+
+    rk = tmp_path / "reelkit"
+    (rk / "trascrizioni").mkdir(parents=True)
+    (rk / "trascrizioni" / "r0001.txt").write_text("uno due tre quattro cinque sei", encoding="utf-8")
+    (rk / "trascrizioni" / "r0002.txt").write_text("one two", encoding="utf-8")
+    voce = lambda i, acc, lin, d: {"id": i, "account": acc, "lingua": lin, "stato": "trascritto",   # noqa: E731
+                                   "registrazione": {"durata_s": d}}
+    (rk / "indice.json").write_text(json.dumps({"versione": 1, "voci": [
+        voce("r0001", "a", "it", 3.0), voce("r0002", "b", "en", 2.0), voce("r0003", "a", "it", 9.0)]}), encoding="utf-8")
+
+    class Cfg:
+        def percorso(self, sezione, chiave):
+            return {"indice": rk / "indice.json", "trascrizioni": rk / "trascrizioni"}.get(chiave)
+
+    tutte = trascrizioni(Cfg())
+    assert [x["id"] for x in tutte] == ["r0001", "r0002"]                 # r0003 è nell'indice ma non ha il testo
+    assert (tutte[0]["parole"], tutte[0]["parole_al_s"]) == (6, 2.0)
+    assert [x["id"] for x in trascrizioni(Cfg(), lingua="it")] == ["r0001"]
+    assert trascrizioni(Cfg(), account="b")[0]["file"] == rk / "trascrizioni" / "r0002.txt"
+
+    class Vuoto:
+        def percorso(self, sezione, chiave):
+            return None
+
+    assert trascrizioni(Vuoto()) == []

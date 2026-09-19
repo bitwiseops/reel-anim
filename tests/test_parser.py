@@ -58,3 +58,24 @@ def test_campi_obbligatori_e_vuoti():
     msg = _errori("## Scena 1 [hook]\nVOCE:\n\n## Scena 2 [schermo]\nVOCE: v\n\n## Scena 3 [chiusura]\nCTA: c\n")
     for atteso in ("VOCE vuoto", "[hook] senza TITOLO", "[schermo] senza SCHERMO", "[chiusura] senza MESSAGGIO"):
         assert atteso in msg
+
+
+def test_scena_broll():
+    """Il filmato a tutto schermo: stesse regole di [schermo], col riquadro al suo posto di sempre."""
+    r, avvisi = parse_testo(FM + "## Scena 1 [hook]\nTITOLO: T\nVOCE: v\n\n"
+                            "## Scena 2 [broll, durata=9s]\nSCHERMO: broll-scena-02.mp4\nVOCE: una\nVOCE: due\n\n"
+                            "## Scena 3 [chiusura]\nMESSAGGIO: M\n")
+    s = r.scena(2)
+    assert avvisi == [] and s.tipo == "broll" and s.schermo == "broll-scena-02.mp4"
+    assert s.durata_min_s == 9.0 and len(s.voce) == 2 and s.riquadro_effettivo() == "si"
+
+
+def test_scena_broll_vuole_file_e_voce():
+    msg = _errori("## Scena 1 [hook]\nTITOLO: T\n\n## Scena 2 [broll]\nVOCE: v\n\n"
+                  "## Scena 3 [broll]\nSCHERMO: f.mp4\n\n## Scena 4 [chiusura]\nMESSAGGIO: M\n")
+    assert "[broll] senza SCHERMO" in msg and "scena [broll] senza VOCE" in msg
+
+
+def test_hook_a_filmato_vuole_la_voce():
+    msg = _errori("## Scena 1 [hook]\nTITOLO: T\nSCHERMO: f.mp4\n\n## Scena 2 [chiusura]\nMESSAGGIO: M\n")
+    assert "hook a filmato senza VOCE" in msg

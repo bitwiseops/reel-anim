@@ -46,6 +46,11 @@ class Candidato:
                 "autore": self.autore, "autore_url": self.autore_url, "licenza": self.licenza,
                 "query": self.query, "resta_ritaglio": round(self.resta_dopo_il_ritaglio(), 3)}
 
+    @classmethod
+    def da_dict(cls, d: dict) -> Candidato:
+        """Da un candidato o da un taglio del piano, che ha anche campi suoi (`da_s`, `ancora`…)."""
+        return cls(**{c: d[c] for c in cls.__dataclass_fields__ if c in d})
+
 
 class FornitoreNonConfigurato(RuntimeError):
     pass

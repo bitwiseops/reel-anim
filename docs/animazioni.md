@@ -23,6 +23,10 @@ all'agente animatore; la sezione 11 serve anche allo sceneggiatore. Esempio comp
 Si parte da una sceneggiatura in `stato: rivisto` (`uv run reel valida <file>` senza errori).
 
 1. Scrivi `contenuti/animazioni/<slug>.py`: una classe `ScenaNN(ScenaReel)` per scena (sezione 3).
+   **Una scena `[broll]` non si anima**: è il filmato a tutto schermo col riquadro sopra, senza grafica. Niente
+   classe `ScenaNN` per lei (`anima` la salta, `monta` ci mette il file di `SCHERMO:`). Conta però per il filo
+   visivo: la scena dopo non parte dall'ultimo fotogramma di una scena animata ma da uno stacco, quindi il suo
+   fotogramma 0 deve essere pieno e reggersi da solo, come quello dell'hook.
 2. Renderizza in bassa qualità, una scena alla volta mentre la sistemi:
    ```
    uv run reel anima <file.md> --qualita l --scena 3
@@ -54,6 +58,9 @@ Si parte da una sceneggiatura in `stato: rivisto` (`uv run reel valida <file>` s
    ffmpeg -v error -y -i contenuti/render/<slug>/_scene/05.mp4 -vf "fps=4,scale=180:-1,tile=14x2" -frames:v 1 <scratchpad>/05.png
    ```
    e guarda l'immagine: nessun testo deve sparire, lampeggiare o finire coperto fra un fotogramma e l'altro.
+   I **passaggi** (l'inizio di ogni beat, ogni `play` che sposta o scambia testi) si guardano più fitti, a 8 fps o più,
+   una finestra di ~1,3 s per striscia (`-ss 5.5 -t 1.3`, `fps=10`): a 4 fps due testi uno sull'altro per 0,3 s non
+   si vedono. Vale per tutti i passaggi, sui video di `anima` e poi sui `_scene` montati.
 6. Scrivi le «Note di animazione» nella sceneggiatura (beat scelti, cosa non ci stava, tempi Manim) e porta lo
    stato a `animato`.
 
@@ -375,6 +382,14 @@ restare nello stesso posto della lista (è così che `Classifica.aggiorna` fa sc
   dell'inizio della frase, `punch` prendeva il beat in corso per quello dopo e portava la tenuta al minimo (0,3 s).
   Ora un inizio entro un fotogramma da adesso non conta. L'aiuto `oltre_inizio(i)` del primo reel non serve più.
   Guarda comunque la tenuta del punch sui fotogrammi fitti.
+- **Testi che si attraversano durante un passaggio** (2026-09-19; i controlli non li vedono, solo i fotogrammi a
+  8 fps o più): (a) nella stessa `play` le finestre `squish_rate_func` di chi esce e di chi si muove non devono
+  accavallarsi: prima escono i testi, poi cambiano i riquadri, poi entrano i testi nuovi; (b) due oggetti che si
+  scambiano di posto nella stessa colonna si attraversano per forza: uno dei due si spegne dov'è e ricompare
+  all'arrivo; (c) un `Transform` glifo per glifo fra due impaginazioni con a capo diversi fa viaggiare in diagonale,
+  sopra le righe vicine, le parole che cambiano riga: muovi prima in orizzontale restando sulla riga, poi in verticale
+  (esempio: `reimpagina` e `a_tappe` in `contenuti/animazioni/generativa-probabile.py`); (d) `ease_in_back` arretra del
+  10 % della corsa: su una corsa di 9 unità sono 110 px, oltre il bordo della carta e della tela.
 - **Immagini** (`ImageMobject`): non sono vettoriali, vanno in un `Group` (non `VGroup`) ed entrano solo con
   dissolvenze o scala.
 - **`MoveAlongPath` su una copia di una freccia** segue anche la punta: usa un arco senza punta fra gli stessi

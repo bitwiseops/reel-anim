@@ -26,7 +26,9 @@ Prima di scrivere codice leggi OBBLIGATORIAMENTE:
    Due scene di fila non usano la stessa mossa, `punch` al massimo due volte nel reel. Scrivilo nelle Note di
    animazione come prima cosa.
 1. Scrivi `contenuti/animazioni/<slug>.py`: una classe `ScenaNN(ScenaReel)` per scena, `costruisci()`, testi a
-   schermo presi da `self.scena` quando la sceneggiatura li ha.
+   schermo presi da `self.scena` quando la sceneggiatura li ha. **Le scene `[broll]` non si animano** (filmato a
+   tutto schermo, lo prepara il sottosistema `broll`): nessuna classe per loro, `anima` le salta. La scena che
+   viene dopo un `[broll]` arriva da uno stacco: fotogramma 0 già pieno, niente che «continua» dalla scena prima.
 2. `uv run reel anima <file.md> --qualita l --json` (tutte le scene) o `--scena N` mentre sistemi una scena. Leggi
    il JSON: `avvisi_tempi` (⚠) e `controlli` (✗) devono arrivare a **zero**; un `errore` con `traceback` va
    corretto prima di tutto.
@@ -152,6 +154,44 @@ Prima di scrivere codice leggi OBBLIGATORIAMENTE:
   doppia (vecchia e nuova impaginazione sfalsate). I cambi di stato si guardano a **8 fps** (`fps=8`, un secondo per
   striscia). Ordine di ogni passaggio: esce o si svuota il testo di chi se ne va, poi il riquadro cambia, poi entra il
   testo nuovo; mai dissolvenze incrociate fra testi nello stesso punto.
+
+- **2026-09-19, i testi sovrapposti delle scene 4, 5 e 7 di `generativa-probabile`** (74 s, 0 avvisi, 0 controlli):
+  - **Passo obbligatorio prima di consegnare**: ogni passaggio di ogni scena (non solo quelli sospetti) si guarda a
+    **8 fps o più** sui video di `anima` (a qualità `l` sono 15 fps: prendili tutti, `fps=15`, finestre di ~1,3 s
+    attorno all'inizio di ogni beat e a ogni `play` che sposta testi) e poi sui `_scene/NN.mp4` montati, col cerchio. I
+    controlli di fine beat non vedono nulla di quello che segue.
+  - **Il render può essere più vecchio del `.py`**: i `_scene/*.mp4` del 16 erano di un minuto più vecchi del file, e
+    metà dei difetti segnalati (un `FadeTransform` che stirava due copie della riga, scena 7) nel codice non c'era già
+    più. Prima di cercare la causa rilancia `anima` sulla scena e confronta.
+  - Le cause vere, nessuna era un oggetto dimenticato in scena: (1) **`fra(a, b)` sovrapposti nella stessa `play`**:
+    l'uscita del testo vecchio `fra(0, 0.35)` e il riquadro che parte a `fra(0.1, …)`: per 0,2-0,3 s il testo resta
+    fuori dal riquadro che si stringe, o sotto la carta che arriva. Le finestre di un passaggio non si accavallano:
+    escono i testi → si muovono i riquadri → entrano i testi. (2) **Due oggetti che si scambiano di posto nella stessa
+    colonna** (pillola «mail» ↔ pillola «richiesta», scena 4 ai beat 0 e 2): qualunque percorso rettilineo fa
+    attraversare i due titoli. Uno dei due non viaggia: si chiude e si spegne dov'è, e ricompare all'arrivo quando
+    l'altro ha liberato il posto (aiuto locale `a_tappe`: più stati in una sola animazione, con un tratto trasparente).
+    Lo stesso per nota, etichette e cartellino del loop il cui percorso passa sopra un testo: escono e rientrano. (3)
+    **Il `Transform` glifo per glifo fra due impaginazioni con a capo diversi** (lezione del 16, da correggere): la
+    parola che cambia riga viaggia in diagonale sopra le righe vicine («hoportato», la riga arancione doppia). Aiuto
+    locale `reimpagina`: prima ogni glifo va alla x e al corpo d'arrivo restando sulla sua riga, poi chi sale di riga
+    sale in verticale; chi scende su una riga nuova scende e poi scorre; chi scende su una riga già occupata si spegne
+    e si riaccende al suo posto. (4) Un testo in `FadeTransform` verso una sagoma rimpicciolisce sopra gli altri
+    testi che stanno uscendo: i testi escono tutti, poi il riquadro diventa sagoma.
+  - `ease_in_back` su una corsa lunga (9 unità) arretra di ~110 px: «Sii originale.» usciva dalla carta e dalla tela
+    a sinistra. Per le corse lunghe una carica più corta (`carica`, arretra del 3 %).
+  - Un ingresso da sotto con `shift=UP * 0.8` di un riquadro che finisce a 10 px dal cerchio del presentatore ci
+    passa sotto per due fotogrammi: si vede solo sui `_scene` montati.
+- **2026-09-19, il fatto a filo del bordo della carta** (scena 5 di `generativa-probabile`, stessa giornata):
+  - I controlli guardano l'ingombro della carta nell'area e i testi fra loro, **non il margine interno**: un `testo()`
+    con a capo fissi (`\n`, senza `larghezza_px`) non va mai a capo da solo, e la riga «la newsletter di un negozio di
+    biciclette» (867 px) stava in una carta con 852 px utili: 9 px a destra contro 24 a sinistra, 0 controlli. Per ogni
+    testo dentro un riquadro misura `destra(riquadro) − destra(riga più lunga)` e confrontalo col margine sinistro
+    (uno script di dieci righe che importa il `.py` dentro `tempconfig` e stampa le righe: più sicuro dell'occhio
+    sui fotogrammi a 540 px). Un testo a filo del bordo si legge come un errore anche se non lo supera.
+  - Se gli a capo sono un vincolo di un'altra scena (una riga che viene indicata, graffata o accesa per indice), il
+    rimedio che cambia meno è il corpo: `blocco.scale(utile / larghezza)` se resta ≥ 36 px (qui 44 → 43). Quando
+    `reimpagina` cambia anche il corpo, i gruppi che scendono di riga («lampo», «gomito») devono prendere il corpo
+    d'arrivo nella prima tappa come gli altri (`corpo_rigido=True`), sennò si staccano dalla riga che si stringe.
 
 ## Confini
 - Non modificare `tools/` né la libreria: se un componente manca, ha un difetto o un parametro scomodo, arrangiati

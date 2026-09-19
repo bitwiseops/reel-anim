@@ -26,9 +26,12 @@ VERSIONE = 1
 # una per frase, per richiamare quello che il presentatore sta dicendo in quel momento.
 REGISTRI = ("animazione", "filmato", "immagini")
 STATI_SCENA = ("da-scegliere", "scelto", "reso")
-# i tipi di scena che possono diventare [broll]: l'hook è il titolo, la chiusura è la CTA, e una scena
-# [schermo] ha già il suo materiale nella finestra 900x980.
-AMMESSE = ("spiegazione",)
+# i tipi di scena che possono andare a filmato. La chiusura è la CTA, e una scena [schermo] ha già il suo
+# materiale nella finestra 900x980. L'hook sì, ed è il primo candidato: i primi 5-10 secondi devono
+# catturare l'attenzione, quindi il presentatore pone il problema nel riquadro e dietro c'è una clip che
+# lo richiama; il TITOLO non va a schermo, vive in copertina (decisione di Flavio, 2026-09-19). Resta
+# animato l'hook il cui brief parla del titolo: lì c'è una tipografia da disegnare, non un'immagine.
+AMMESSE = ("hook", "spiegazione")
 
 # Quello che si spiega disegnando: meccanismi, quantità, e le figure della libreria. Se una scena nomina
 # una di queste cose, il filmato non la può raccontare e la scena resta animata.
@@ -210,13 +213,27 @@ def _marcatori(s: Scena) -> list[str]:
     return trovati
 
 
+RE_TIPOGRAFIA = re.compile(r"\b(sotto)?titolo\b")
+
+
+def _hook_filmabile(s: Scena) -> bool:
+    """Il brief dell'hook descrive un'immagine da cercare, o un titolo da animare?
+
+    Senza brief non c'è niente da cercare; con un brief che parla del titolo c'è una tipografia da
+    disegnare. In tutti e due i casi l'hook resta a Manim, che è la scelta sicura.
+    """
+    brief = " ".join(s.animazione).lower()
+    return bool(brief) and not RE_TIPOGRAFIA.search(brief)
+
+
 def _proponi(scene: list[Scena]) -> set[int]:
     """Quali scene proporre a filmato: quelle senza niente da spiegare, alternate, non più di metà.
 
     È l'euristica della M1 e serve a far partire il piano. Dalla M5 la proposta la fa l'agente, che legge
     la scena invece di cercarci dentro delle parole; questa resta il ripiego quando l'agente non c'è.
     """
-    ammesse = [s.n for s in scene if s.tipo in AMMESSE and not _tecnica(s)]
+    ammesse = [s.n for s in scene if s.tipo in AMMESSE and not _tecnica(s)
+               and (s.tipo != "hook" or _hook_filmabile(s))]
     tetto = len(scene) // 2
     scelte: list[int] = []
     for n in ammesse:
@@ -260,6 +277,30 @@ def da_sceneggiatura(md: Path, cfg: Config | None = None) -> tuple[Piano, list[D
               cornice={"pieno": [cfg.larghezza, cfg.altezza],
                        "finestra": [int(sc["larghezza"]), int(sc["altezza"])]})
     return p, diag + controlla(p)
+
+
+def eredita(nuovo: Piano, vecchio: Piano, fps: int = 30) -> list[int]:
+    """Rifare il piano non deve disfare le decisioni: porta nel nuovo candidati e scelte del vecchio.
+
+    Una scena eredita se è ancora a filmato e dice ancora le stesse frasi (la VOCE è congelata da prima
+    della tappa: se è cambiata, il filmato scelto rispondeva a un'altra scena). Se nel frattempo è cambiata
+    la durata — è arrivata la presa vera al posto della stima — la scelta resta ma la resa no: si torna a
+    `scelto`, e `broll rendi` la rifà lunga giusta. Ritorna le scene che hanno ereditato.
+    """
+    ereditate: list[int] = []
+    for s in nuovo.scene:
+        v = vecchio.scena(s.n)
+        if v is None or s.registro != "filmato" or v.registro != "filmato" or v.voce != s.voce:
+            continue
+        s.query = v.query or s.query
+        s.candidati, s.scelti, s.file = v.candidati, v.scelti, v.file or s.file
+        s.stato = v.stato
+        if v.stato == "reso" and abs(v.durata_s - s.durata_s) > 1 / fps:
+            s.stato = "scelto"
+            s.note = f"durata cambiata da {v.durata_s:.2f} a {s.durata_s:.2f} s: da rendere di nuovo"
+        if s.candidati or s.scelti:
+            ereditate.append(s.n)
+    return ereditate
 
 
 # --- controlli ------------------------------------------------------------------------------------

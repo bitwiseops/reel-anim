@@ -105,3 +105,55 @@ def test_stima_della_durata():
     assert durata_stimata_s(Scena(2, voce=["uno due"])) == 2.5               # il minimo
     assert durata_stimata_s(Scena(3, voce=[" ".join(["p"] * 28)])) == round(28 / 2.8 + 0.8, 2)
     assert durata_stimata_s(Scena(4, voce=["a b"], durata_min_s=6)) == 6
+
+
+def _broll(n: int, extra: str = "") -> str:
+    return f"## Scena {n} [broll]\nSCHERMO: nessuno.mp4\n{VOCE_20}{extra}"
+
+
+def test_broll_il_riquadro_sopra_il_filmato_e_voluto():
+    scene = _base()
+    scene[2] = _broll(3)
+    m = _msg(_check(scene))
+    assert "SCHERMO: file 'nessuno.mp4' non trovato" in m          # il file deve esserci, come per [schermo]
+    assert "copre la cornice" not in m and "senza ANIMAZIONE" not in m
+    scene[2] = _broll(3, "\nANIMAZIONE: una mano sfoglia una pila di lettere")
+    assert "righe ANIMAZIONE" not in _msg(_check(scene))            # il brief di cosa si vede è ammesso
+
+
+def test_broll_niente_grafica_sopra_il_filmato():
+    scene = _base()
+    scene[2] = _broll(3, "\nTESTO: un'etichetta")
+    d = [x for x in _check(scene) if "TESTO in una scena a filmato" in x.msg]
+    assert len(d) == 1 and d[0].livello == "errore" and d[0].scena == 3
+
+
+def test_broll_alternanza():
+    scene = _base()
+    scene[1], scene[3] = _broll(2), _broll(4)
+    m = _msg(_check(scene))
+    assert "entrambe a filmato" not in m and "più della metà" not in m     # 2 su 6, alternate: va bene
+    scene[2] = _broll(3)
+    m = _msg(_check(scene))
+    assert "scene 2 e 3 entrambe a filmato" in m and "scene 3 e 4 entrambe a filmato" in m
+    scene[4] = _broll(5)
+    assert "4 scene a filmato su 6: più della metà" in _msg(_check(scene))
+
+
+def test_hook_a_filmato_il_titolo_resta_per_la_copertina():
+    """L'apertura parlata: clip dietro, presentatore nel riquadro, TITOLO solo in copertina."""
+    scene = _base()
+    scene[0] = "## Scena 1 [hook]\nTITOLO: Un titolo\nSCHERMO: nessuno.mp4\nVOCE: ti è mai arrivata una mail così?"
+    r, _ = parse_testo(FM + "\n\n".join(scene))
+    assert r.hook.a_filmato and r.hook.riquadro_effettivo() == "si" and r.hook.titolo == "Un titolo"
+    m = _msg(_check(scene))
+    assert "SCHERMO: file 'nessuno.mp4' non trovato" in m and "copre la cornice" not in m
+    scene[1] = _broll(2)                                        # hook a filmato + [broll] subito dopo: non si alterna
+    assert "scene 1 e 2 entrambe a filmato" in _msg(_check(scene))
+    scene[0] += "\nRIQUADRO: no"
+    assert "resta una clip con una voce sopra" in _msg(_check(scene))
+
+
+def test_hook_animato_resta_com_era():
+    r, _ = parse_testo(FM + "\n\n".join(_base()))
+    assert not r.hook.a_filmato and r.hook.riquadro_effettivo() == "no"

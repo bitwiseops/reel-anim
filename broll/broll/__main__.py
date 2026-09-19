@@ -26,7 +26,7 @@ def _rel(p: Path) -> str:
 def cmd_piano(args) -> int:
     from tools.reel.parser import ErroreParse
 
-    from .piano import da_sceneggiatura, esito, salva
+    from .piano import PianoMancante, carica_piano, da_sceneggiatura, eredita, esito, salva
 
     md = Path(args.file)
     if not md.exists():
@@ -38,12 +38,20 @@ def cmd_piano(args) -> int:
         _stampa(e.diagnostiche)
         print(f"-> {len(e.diagnostiche)} errori di sintassi in {md}", file=sys.stderr)
         return 2
+    ereditate: list[int] = []
+    if not args.da_capo:
+        try:
+            ereditate = eredita(p, carica_piano(p.slug))
+        except PianoMancante:
+            pass
     dest = salva(p)
 
     print(f"{p.slug} · {len(p.scene)} scene · {len(p.filmati)} a filmato")
     for s in p.scene:
         segno = "▣" if s.registro == "filmato" else "◻"
         coda = f" · «{s.query[0]}»" if s.query else ""
+        if s.n in ereditate:
+            coda += f" · {s.stato}, dal piano di prima" + (f" ({s.note})" if s.stato == "scelto" and s.note else "")
         print(f"  {segno} scena {s.n} [{s.tipo}] {s.durata_s:.1f}s ({s.origine_durata}) · {s.registro}{coda}")
     _stampa(diag)
     print(f"-> {_rel(dest)}")
@@ -104,7 +112,8 @@ def cmd_cerca(args) -> int:
             except RichiestaFallita as e:
                 print(f"  ⚠ scena {s.n}, «{q}»: {e}", file=sys.stderr)
         s.candidati = list(visti.values())[:args.max]
-        s.stato = "da-scegliere" if s.candidati else s.stato
+        # una scena già scelta resta scelta: cercare ancora allarga la rosa, non disfa la decisione
+        s.stato = "da-scegliere" if s.candidati and not s.scelti else s.stato
         verticali = sum(1 for c in s.candidati if c["altezza"] > c["larghezza"])
         print(f"  scena {s.n}: {len(s.candidati)} candidati ({verticali} verticali) "
               f"da {len(s.query)} query")
@@ -138,6 +147,126 @@ def cmd_provini(args) -> int:
         print("-> nessun provino: prima `broll cerca`", file=sys.stderr)
         return 1
     print("-> guardali e scegli con `broll scegli <slug> --scena N --candidato <fornitore:id>`")
+    return 0
+
+
+def cmd_scegli(args) -> int:
+    from .piano import PianoMancante, carica_piano, salva
+    from .scelta import SceltaNonValida, ancora, controlla_scelta, scegli
+
+    try:
+        p = carica_piano(args.slug)
+    except PianoMancante as e:
+        print(f"-> {e}", file=sys.stderr)
+        return 1
+    s = p.scena(args.scena)
+    if s is None:
+        print(f"-> la scena {args.scena} non è nel piano", file=sys.stderr)
+        return 2
+    try:
+        taglio = scegli(s, args.candidato, da_s=args.da, ancora_x=ancora(args.ancora), aggiungi=args.aggiungi)
+    except SceltaNonValida as e:
+        print(f"-> {e}", file=sys.stderr)
+        return 2
+    diag = controlla_scelta(s)
+    print(f"  scena {s.n} · {s.durata_s:.1f}s · {len(s.scelti)} "
+          f"{'taglio' if len(s.scelti) == 1 else 'tagli'}: " + ", ".join(t["candidato"] for t in s.scelti))
+    print(f"  {taglio['candidato']} · da {taglio['da_s']:.1f}s · ancora {taglio['ancora']:.0%} · "
+          f"{taglio.get('autore') or 'autore non indicato'}")
+    _stampa(diag)
+    print(f"-> {_rel(salva(p))}")
+    if any(d.livello == "errore" for d in diag):
+        print("-> così `broll rendi` si rifiuta: correggi la scelta", file=sys.stderr)
+        return 1
+    print(f"-> poi `broll rendi {p.slug}`")
+    return 0
+
+
+def cmd_rendi(args) -> int:
+    from tools.reel.clip import cartella as cartella_media
+    from tools.reel.ffmpeg import FfmpegMancante, filmstrip, tempi_campione, trova_ffmpeg
+
+    from .crediti import scrivi as scrivi_crediti
+    from .fornitori import RichiestaFallita
+    from .piano import PianoMancante, carica_piano, hash_sceneggiatura, salva
+    from .provini import cartella as cartella_provini
+    from .rendi import rendi_scena
+    from .scelta import confini, controlla_scelta
+
+    try:
+        trova_ffmpeg()
+        p = carica_piano(args.slug)
+    except (FfmpegMancante, PianoMancante) as e:
+        print(f"-> {e}", file=sys.stderr)
+        return 1
+    md = RADICE / p.sorgente
+    if md.is_file() and hash_sceneggiatura(md) != p.hash_md:
+        print(f"  ⚠ {p.sorgente} è cambiata dopo il piano: le durate delle scene possono non valere più "
+              "(rifai `broll piano`)", file=sys.stderr)
+
+    scene = [s for s in p.filmati if args.scena is None or s.n == args.scena]
+    if not scene:
+        print("-> nessuna scena a filmato da rendere", file=sys.stderr)
+        return 1
+    falliti = 0
+    for s in scene:
+        dest = cartella_media(p.slug) / (s.file or f"broll-scena-{s.n:02d}.mp4")
+        if s.stato == "reso" and dest.exists() and not args.forza:
+            print(f"  ✔ scena {s.n}: già resa ({_rel(dest)}), `--forza` per rifarla")
+            continue
+        diag = controlla_scelta(s)
+        _stampa(diag)
+        if any(d.livello == "errore" for d in diag):
+            falliti += 1
+            continue
+        try:
+            video, avvisi = rendi_scena(p.slug, s)
+        except (RichiestaFallita, RuntimeError) as e:
+            print(f"  ✗ scena {s.n}: {e}", file=sys.stderr)
+            falliti += 1
+            continue
+        _stampa(avvisi)
+        salva(p)                                # una scena alla volta: se la prossima fallisce, questa resta
+        # si guarda subito: l'inizio, la fine, e un fotogramma prima e dopo ogni stacco
+        tempi = tempi_campione(s.durata_s, 5)
+        for inizio, _ in confini(len(s.scelti), s.inizi_frasi_s, s.durata_s)[1:]:
+            tempi += [max(0.0, inizio - 0.1), min(s.durata_s - 0.05, inizio + 0.1)]
+        strip = filmstrip(video, sorted(tempi), cartella_provini(p.slug) / f"reso-scena-{s.n:02d}.png", 220)
+        print(f"  ▣ scena {s.n}: {_rel(video)} · {s.durata_s:.2f}s · "
+              + " + ".join(t["candidato"] for t in s.scelti))
+        print(f"    {_rel(strip)}")
+    print(f"-> {_rel(scrivi_crediti(p))}")
+    if falliti:
+        print(f"-> {falliti} scene non rese", file=sys.stderr)
+        return 1
+    return 0
+
+
+def cmd_scrivi(args) -> int:
+    from .piano import PianoMancante, carica_piano, hash_sceneggiatura, salva
+    from .scrivi import scrivi
+
+    try:
+        p = carica_piano(args.slug)
+    except PianoMancante as e:
+        print(f"-> {e}", file=sys.stderr)
+        return 1
+    md = RADICE / p.sorgente
+    if not md.is_file():
+        print(f"-> {p.sorgente} non esiste più: rifai `broll piano`", file=sys.stderr)
+        return 1
+    scritte, diag = scrivi(p, md)
+    _stampa(diag)
+    if any(d.livello == "errore" for d in diag):
+        return 1
+    if not scritte:
+        print(f"-> niente da scrivere in {p.sorgente}")
+        return 0
+    p.hash_md = hash_sceneggiatura(md)          # il piano resta allineato al file che ha appena cambiato
+    salva(p)
+    print(f"  scene {', '.join(str(n) for n in scritte)} → [broll] con la loro riga SCHERMO:")
+    print(f"-> {p.sorgente}  (si torna indietro con `git checkout`)")
+    print(f"-> poi `uv run reel valida {p.sorgente}` e `uv run reel monta {p.sorgente} --prova --anteprima`")
     return 0
 
 
@@ -232,6 +361,7 @@ def main() -> int:
     p = sub.add_parser("piano", help="propone il piano visivo di una sceneggiatura")
     p.add_argument("file", help="contenuti/sceneggiature/<file>.md")
     p.add_argument("--json", action="store_true", help="stampa anche l'esito per la pipeline")
+    p.add_argument("--da-capo", action="store_true", help="butta candidati e scelte del piano di prima")
     p.set_defaults(fn=cmd_piano)
 
     p = sub.add_parser("stato", help="a che punto è il piano di un reel")
@@ -249,6 +379,25 @@ def main() -> int:
     p.add_argument("slug")
     p.add_argument("--scena", type=int)
     p.set_defaults(fn=cmd_provini)
+
+    p = sub.add_parser("scegli", help="fissa nel piano il filmato di una scena")
+    p.add_argument("slug")
+    p.add_argument("--scena", type=int, required=True)
+    p.add_argument("--candidato", required=True, help="<fornitore:id>, come nei provini")
+    p.add_argument("--da", type=float, default=0.0, help="da che secondo del filmato partire (default 0)")
+    p.add_argument("--ancora", default="centro", help="sinistra | centro | destra | 0-1: dove ritagliare un orizzontale")
+    p.add_argument("--aggiungi", action="store_true", help="un taglio in più nella stessa scena, invece di sostituire")
+    p.set_defaults(fn=cmd_scegli)
+
+    p = sub.add_parser("rendi", help="scarica i filmati scelti e scrive broll-scena-NN.mp4")
+    p.add_argument("slug")
+    p.add_argument("--scena", type=int)
+    p.add_argument("--forza", action="store_true", help="rifà anche le scene già rese")
+    p.set_defaults(fn=cmd_rendi)
+
+    p = sub.add_parser("scrivi", help="porta nella sceneggiatura le scene rese, come [broll] con SCHERMO:")
+    p.add_argument("slug")
+    p.set_defaults(fn=cmd_scrivi)
 
     p = sub.add_parser("prova-immagini", help="immagini ferme montate sugli inizi frase di una scena")
     p.add_argument("slug")

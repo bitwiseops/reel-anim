@@ -17,14 +17,16 @@ GRAMMATICA (una riga = un elemento; dentro una Scena non è ammesso altro).
 Verifica sempre con:  uv run reel valida <questo file>   (stampa la durata stimata di ogni scena e del reel)
 
   ## Scena N [tipo, durata=Ns, transizione=taglio|dissolvenza]   N consecutivo da 1; il primo flag è il tipo
-  Tipi: hook (Scena 1, obbligatoria) | spiegazione (default) | schermo (b-roll / screen recording) | chiusura (ultima, obbligatoria)
+  Tipi: hook (Scena 1, obbligatoria) | spiegazione (default) | schermo (materiale nella finestra, con la grafica intorno) | chiusura (ultima, obbligatoria)
+        broll (filmato a tutto schermo col riquadro sopra, senza grafica e senza TESTO: non si scrive a mano, lo mette `broll scrivi`)
 
   VOCE: parlato           ripetibile: ogni riga è un pezzo di parlato detto a camera (= un beat dell'animazione), non per forza una frase chiusa
   ANIMAZIONE: prosa       ripetibile: cosa si vede; una riga sola, oppure una per riga della VOCE (beat i ↔ riga i)
   TESTO: etichetta        ripetibile (max 4, ≤ 4 parole): parole chiave che compaiono a schermo
   TITOLO: / SOTTOTITOLO:  solo hook (titolo ≤ 10 parole: regge da solo)
   MESSAGGIO: / CTA:       solo chiusura (messaggio ≤ 12 parole consigliate, 25 al massimo; CTA una riga)
-  SCHERMO: file.mp4       scena schermo (o spiegazione): file in contenuti/media/<slug>/ mostrato nella cornice
+  SCHERMO: file.mp4       scena schermo (o spiegazione): file in contenuti/media/<slug>/ mostrato nella cornice; in una scena broll è tutta la tela
+                          nell'hook = apertura a filmato: clip a tutto schermo, presentatore nel riquadro, TITOLO solo in copertina (la mette `broll scrivi`)
   RIQUADRO: no|si|posizione   riquadro del presentatore (default: no nell'hook, si altrove); posizioni: basso-destra basso-sinistra alto-destra alto-sinistra
 
 Inline: ==evidenzia== (una per scena: la parola che conta, in colore accento), **grassetto**.

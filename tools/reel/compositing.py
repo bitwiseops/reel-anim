@@ -22,6 +22,7 @@ class Sorgenti:
     avatar: Path | None = None               # ... oppure immagine statica (modalità prova)
     audio: Path | None = None                # audio separato (voce sintetica); se None usa quello della clip
     schermo: Path | None = None              # b-roll / screen recording sotto la grafica
+    filmato: bool = False                    # scena [broll]: `grafica` è materiale esterno a tutta tela, non Manim
 
 
 def posizione_riquadro(cfg: Config, riquadro: str) -> tuple[int, int, int]:
@@ -96,6 +97,13 @@ def comando_scena(src: Sorgenti, dest: Path, cfg: Config | None = None, anteprim
         i_gr = aggiungi("-i", str(src.grafica))
         filtri.append(f"[{i_gr}:v]scale={W}:{H}:flags=lanczos,format=rgba[gr]")
         filtri.append("[base][gr]overlay=0:0:format=auto[v0]")
+    elif src.filmato:
+        # `broll rendi` consegna già 1080×1920 a fps giusti; un file messo a mano no, e stirarlo lo deformerebbe:
+        # si riempie la tela e si ritaglia al centro. Niente ripetizione: se è corto lo dice `monta`.
+        i_gr = aggiungi("-i", str(src.grafica)) if src.grafica.suffix.lower() in (".mp4", ".mov", ".webm", ".m4v") \
+            else aggiungi("-loop", "1", "-i", str(src.grafica))
+        filtri.append(f"[{i_gr}:v]scale={W}:{H}:force_original_aspect_ratio=increase:flags=lanczos,crop={W}:{H},"
+                      f"fps={fps},setsar=1[v0]")
     else:
         i_gr = aggiungi("-i", str(src.grafica))
         filtri.append(f"[{i_gr}:v]scale={W}:{H}:flags=lanczos,setsar=1[v0]")
@@ -145,8 +153,14 @@ def componi_scena(src: Sorgenti, dest: Path, cfg: Config | None = None, anteprim
 
 
 def comando_concat(scene: list[tuple[Path, float]], dest: Path, transizione: str = "dissolvenza", durata_trans_s: float = 0.25,
-                   cfg: Config | None = None, anteprima: bool = False) -> list[str]:
-    """Concatena le scene: dissolvenza incrociata (xfade + acrossfade) oppure taglio netto."""
+                   cfg: Config | None = None, anteprima: bool = False, tagli: frozenset[int] = frozenset()) -> list[str]:
+    """Concatena le scene: dissolvenza incrociata (xfade + acrossfade) oppure taglio netto.
+
+    `tagli` sono le giunzioni che restano un taglio anche quando il reel va in dissolvenza: `k` è la giunzione
+    fra la scena `k-1` e la `k` (indici di `scene`). Servono agli stacchi fra animazione e filmato: grafica
+    scura e filmato chiaro, sciolti uno nell'altro, lasciano per qualche fotogramma il fantasma dei testi
+    sopra l'immagine. Senza `tagli` il comando è quello di sempre.
+    """
     cfg = cfg or carica()
     ff, _ = trova_ffmpeg()
     inputs: list[str] = []
@@ -156,11 +170,23 @@ def comando_concat(scene: list[tuple[Path, float]], dest: Path, transizione: str
     if transizione == "dissolvenza" and len(scene) > 1:
         d = durata_trans_s
         v_prec, a_prec = "0:v", "0:a"
+        if tagli:
+            # concat e xfade nella stessa catena: concat esce con una base dei tempi sua, e xfade rifiuta due
+            # ingressi con basi diverse. Si portano tutti alla stessa prima di cominciare.
+            for k in range(len(scene)):
+                filtri.append(f"[{k}:v]settb=AVTB,fps={cfg.fps}[n{k}]")
+            v_prec = "n0"
         offset = 0.0
         for k in range(1, len(scene)):
-            offset += scene[k - 1][1] - d
-            filtri.append(f"[{v_prec}][{k}:v]xfade=transition=fade:duration={d}:offset={offset:.3f}[v{k}]")
-            filtri.append(f"[{a_prec}][{k}:a]acrossfade=d={d}[a{k}]")
+            v_k = f"n{k}" if tagli else f"{k}:v"
+            if k in tagli:
+                offset += scene[k - 1][1]
+                filtri.append(f"[{v_prec}][{a_prec}][{v_k}][{k}:a]concat=n=2:v=1:a=1[c{k}][a{k}]")
+                filtri.append(f"[c{k}]settb=AVTB,fps={cfg.fps}[v{k}]")
+            else:
+                offset += scene[k - 1][1] - d
+                filtri.append(f"[{v_prec}][{v_k}]xfade=transition=fade:duration={d}:offset={offset:.3f}[v{k}]")
+                filtri.append(f"[{a_prec}][{k}:a]acrossfade=d={d}[a{k}]")
             v_prec, a_prec = f"v{k}", f"a{k}"
         mappa = ["-map", f"[{v_prec}]", "-map", f"[{a_prec}]"]
     else:
@@ -174,15 +200,16 @@ def comando_concat(scene: list[tuple[Path, float]], dest: Path, transizione: str
     return cmd
 
 
-def durata_concat(scene: list[tuple[Path, float]], transizione: str, durata_trans_s: float) -> float:
+def durata_concat(scene: list[tuple[Path, float]], transizione: str, durata_trans_s: float,
+                  tagli: frozenset[int] = frozenset()) -> float:
     tot = sum(d for _, d in scene)
     if transizione == "dissolvenza" and len(scene) > 1:
-        tot -= durata_trans_s * (len(scene) - 1)
+        tot -= durata_trans_s * (len(scene) - 1 - len([k for k in tagli if 0 < k < len(scene)]))
     return round(tot, 3)
 
 
 def concatena(scene: list[tuple[Path, float]], dest: Path, transizione: str = "dissolvenza", durata_trans_s: float = 0.25,
-              cfg: Config | None = None, anteprima: bool = False) -> Path:
+              cfg: Config | None = None, anteprima: bool = False, tagli: frozenset[int] = frozenset()) -> Path:
     dest.parent.mkdir(parents=True, exist_ok=True)
-    esegui(comando_concat(scene, dest, transizione, durata_trans_s, cfg, anteprima), "ffmpeg (concat)")
+    esegui(comando_concat(scene, dest, transizione, durata_trans_s, cfg, anteprima, tagli), "ffmpeg (concat)")
     return dest

@@ -17,7 +17,8 @@ presentatore. Le decisioni le prende lui, alle fermate.
 
 ## Due modalità
 - **A fermate** (default). La pipeline si ferma dove serve una decisione del presentatore, non dopo ogni agente:
-  FERMATA 1 dopo l'idea, FERMATA 2 dopo la sceneggiatura, FERMATA 3 dopo l'anteprima. Revisione e animazione corrono in
+  FERMATA 1 dopo l'idea, FERMATA 2 dopo la sceneggiatura, FERMATA 2b sui provini dei filmati (solo se il piano
+  propone scene a filmato), FERMATA 3 dopo l'anteprima. Revisione e animazione corrono in
   fila, senza fermata in mezzo.
 - **`--tutto`**: nessuna fermata intermedia, dalla partenza fino all'anteprima `--prova` e al report unico. Ci si
   ferma solo se: il revisore lascia un ❌; `uv run reel valida` ha ancora errori dopo due rilanci dello sceneggiatore;
@@ -70,6 +71,26 @@ voce (`uv run reel gobbo <file>`), corregge, poi `/pipeline <sceneggiatura>`.
 riformulazioni proposte (prossimo passo: il presentatore sceglie, lo sceneggiatore corregge, poi si rilancia).
 Altrimenti prosegui con T3.
 
+**T2b · filmati** (la fai tu, senza agenti, finché non esiste l'agente `broll`). Animazione e filmato si alternano
+fra scene e non stanno mai insieme (`docs/sceneggiatura.md` §2, `broll/README.md`): l'apertura e le scene d'attenzione
+vanno a filmato, e va deciso **prima di animare**, perché una scena a filmato non ha una classe Manim e la scena dopo
+parte da uno stacco. La VOCE a questo punto è congelata.
+1. `uv run --project broll broll piano <file>`: riporta quali scene propone a filmato e con quali query. Se l'hook non
+   è fra quelle, dillo: vuol dire che il suo brief parla del titolo o manca, e l'apertura con la clip (nota del
+   presentatore del 2026-09-19) non c'è. Se le query sono parole vaghe, il brief non descrive un'immagine: si rimanda
+   allo sceneggiatore, non si cerca a caso. Zero scene a filmato: scrivilo nel report e prosegui con T3.
+2. `broll cerca <slug>` e `broll provini <slug>`, poi **guarda tu** `contenuti/render/<slug>/broll/candidati-scena-NN.png`.
+3. A fermate → **FERMATA 2b**: i provini, per ogni scena i due candidati che consigli e perché (soggetto pertinente,
+   spazio libero dove cade il riquadro, niente volti in primo piano che rubano la scena al presentatore, niente stock
+   da catalogo), e i comandi pronti. Il presentatore sceglie con `broll scegli`; poi `/pipeline <file>` riparte da qui.
+   Con `--tutto` scegli tu il candidato migliore con gli stessi criteri e prosegui: la scelta è **provvisoria** e va
+   in testa ai punti «da confermare» del report. Cambiarla dopo costa poco: `broll scegli`, `broll rendi --forza`,
+   `uv run reel monta`, senza rianimare niente.
+4. `broll rendi <slug>`: guarda `reso-scena-NN.png` (stacchi, ritaglio) e lancia `broll prova-inquadratura <slug>
+   --filmato contenuti/media/<slug>/broll-scena-NN.mp4` per vedere cosa copre il riquadro. Poi `broll scrivi <slug>` e
+   `uv run reel valida <file>`: 0 errori. Se `scrivi` non converte una scena (ha un `TESTO:`), è una decisione del
+   presentatore: riportala. `contenuti/broll/<slug>/CREDITI.md` va nel report: i nomi servono in didascalia.
+
 **T3 · animazione.** Lancia `animatore`: `.py`, `anima --json`, fotogrammi, `monta --prova --anteprima`,
 `stato: animato`. Prima di consegnare guarda tu `contact-sheet.png` e i fotogrammi fitti di ogni scena: un testo
 tagliato o un beat vuoto si rimanda all'animatore, non al presentatore. I cambi di stato si guardano a 8 fps (a 2 fps i testi
@@ -85,6 +106,8 @@ il report unico.
 2. **La VOCE per scena**, testuale, come la leggerà nel karaoke: è quello che il presentatore deve rileggere prima di
    registrare.
 3. **Durate**: per scena da `report.json` (con `origine_tempi`), il totale, e il confronto con la stima di `valida`.
+3bis. **Filmati**: quali scene sono a filmato, il candidato scelto per ciascuna (con `--tutto` la scelta è provvisoria:
+   dillo per primo), i provini da riguardare, cosa copre il riquadro, i crediti per la didascalia.
 4. **Avvisi**: residui di `valida`, ⚠️ del revisore (una riga ciascuno), rapporto dell'animatore (difetti della
    libreria, cose che non ci stavano), frasi di cui lo sceneggiatore è meno sicuro, stato della guida di stile.
 5. **Da confermare**: i fatti presi dalla fonte (idee da un link), i testi attribuiti a un modello (con la sigla

@@ -32,10 +32,34 @@ le giunzioni.
 
 | Tipo | Dove | Righe proprie | Riquadro del presentatore |
 |---|---|---|---|
-| `hook` | Scena 1, obbligatoria | `TITOLO:` (obbligatorio), `SOTTOTITOLO:` | no (per default) |
+| `hook` | Scena 1, obbligatoria | `TITOLO:` (obbligatorio), `SOTTOTITOLO:`; con `SCHERMO:` è un hook a filmato (sotto) | no (per default); sì nell'hook a filmato |
 | `spiegazione` | nel mezzo (tipo di default) | `VOCE:` obbligatoria | sì, in basso a destra |
 | `schermo` | nel mezzo | `SCHERMO:` obbligatorio, `VOCE:` | sì: mettilo in alto (`RIQUADRO: alto-destra`) |
+| `broll` | nel mezzo, mai due di fila | `SCHERMO:` obbligatorio, `VOCE:`; niente `TESTO:` | sì, sopra il filmato |
 | `chiusura` | ultima, obbligatoria | `MESSAGGIO:` (obbligatorio), `CTA:` | sì |
+
+**`schermo` e `broll` non sono la stessa cosa.** In una scena `schermo` il materiale sta nella finestra 900×980 e
+intorno c'è la grafica animata: serve a *mostrare* qualcosa (una chat, una schermata). In una scena `broll` si vede
+**il filmato a tutto schermo e il riquadro del presentatore, nient'altro**: nessun testo, nessuna grafica, nessuna
+classe Manim. Animazione e filmato non stanno mai insieme: si alternano fra scene — Manim spiega, il filmato tiene
+l'attenzione. Per questo `valida` avvisa su due `[broll]` di fila e su più di metà reel a filmato, e dà errore su un
+`TESTO:` in una scena `[broll]`. La riga `ANIMAZIONE:` lì è facoltativa e non anima niente: descrive **cosa si vede
+nel filmato** (soggetto, luogo, gesto), ed è da quella che `broll piano` ricava le query di ricerca.
+
+**L'hook a filmato (decisione del presentatore, 2026-09-19).** I primi 5-10 secondi devono catturare l'attenzione:
+il presentatore, **nel riquadro**, pone un problema o una domanda, e dietro c'è **una clip che lo richiama**. È uno
+`[hook]` con la riga `SCHERMO:`: a schermo non c'è nessun titolo e nessuna grafica, il riquadro c'è per default
+(`si`, non `no`), la `VOCE:` è obbligatoria. Il `TITOLO:` resta obbligatorio ma **vive solo in copertina** (e il
+`SOTTOTITOLO:` con lui): scrivilo per chi vede la griglia del profilo, non per chi sta guardando il reel. Conta
+nell'alternanza come una scena a filmato: la Scena 2 dopo un hook a filmato è animata. La riga `ANIMAZIONE:`
+dell'hook descrive **cosa si vede nella clip** (chi, dove, che gesto): se invece parla del titolo, `broll piano`
+lascia l'hook a Manim, com'era prima.
+
+Non si scrive `[broll]` a mano (né `SCHERMO:` nell'hook): lo sceneggiatore scrive la scena come `[spiegazione]` con un brief che descrive
+un'immagine filmabile; il sottosistema `broll` (`broll/README.md`) propone quali scene vanno a filmato, il
+presentatore sceglie dai provini, e `broll scrivi` cambia il tipo e aggiunge `SCHERMO:` **quando il file esiste già**.
+Il filmato è reso sulla durata della scena di quel momento: dopo la registrazione `monta` avvisa se la presa vera è
+più lunga, e si rifà `broll piano` + `broll rendi` (le scelte restano).
 
 ## 3. Le righe
 
@@ -86,11 +110,22 @@ Il presentatore, registrando il primo reel (2026-09-15), ha trovato la VOCE «mo
 fila di titoli («Vuol dire probabile.», «Fluente, sì. Originale, no.», «Il testo non lo cerca: lo scrive lei.»). Scritti
 funzionano, detti suonano recitati: nessuno parla per aforismi. Da allora:
 
+0. **Prima ancora si ascolta.** `uv run reel stile --trascrizioni --lingua it` elenca i reel veri trascritti in
+   reelkit, col percorso del testo: se ne leggono **quattro-sei interi**, di almeno tre account diversi e di durata
+   vicina alla nostra, prima di scrivere una riga. La guida `docs/stile-parlato.md` dà le regole, le trascrizioni danno
+   l'orecchio: chi parla davvero allunga la frase con «che… e che…», riprende il soggetto in coda («non ne vediamo
+   traccia, di questi alieni»), si fa le domande da solo («E allora perché?»), infila «tra l'altro», «appunto», «ben»,
+   dà il numero preciso, e non chiude ogni frase con il fiocco. Si prende **il passo, non le frasi**: sono reel di
+   altri, e Whisper sbaglia i nomi, quindi da lì non si prende nessun fatto e nessuna battuta.
 1. **Prima si scrive il parlato intero della scena**, come lo si direbbe a un collega: con «io» e «tu», i connettivi
-   («quindi», «cioè», «guarda», «e non è che…»), il verbo in ogni frase, qualche ripresa. Frasi di 6-18 parole.
+   («quindi», «cioè», «guarda», «e non è che…»), il verbo in ogni frase, qualche ripresa. Frasi di 6-18 parole di norma; una catena parlata («…e quindi… che poi…»)
+   può arrivare a 25 se si dice in un fiato.
 2. **Poi lo si spezza in righe `VOCE:`** nei punti in cui cambia lo schermo: una riga = un beat = un pezzo di parlato
    (una o due proposizioni), non per forza una frase chiusa. 2-5 righe per scena.
-3. **La prova**: lo diresti così al bar? Se una riga si può leggere solo come un titolo, riscrivila con un verbo.
+3. **La prova dell'orecchio**: metti il tuo monologo accanto a una delle trascrizioni lette. Se a colpo d'occhio si
+   capisce qual è quello scritto — frasi tutte della stessa lunghezza, simmetrie («Non sbagli a X. Sbagli se Y.»),
+   terne, ogni frase che chiude un pensiero — è ancora scritto: scioglilo. Il parlato vero è **asimmetrico**.
+   E poi: lo diresti così al bar? Se una riga si può leggere solo come un titolo, riscrivila con un verbo.
    Punta a un solo aforisma, la battuta finale: nella chiusura è libera, fuori `valida` ne tollera uno.
 4. `valida` avvisa sulle frasi da titolo in fila, sullo schema «X, sì. Y, no.» e sui due punti usati come snodo; lo
    sceneggiatore li porta a zero. La verifica vera è il presentatore che la legge in `reel registra`.

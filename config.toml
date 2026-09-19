@@ -58,6 +58,7 @@ pausa_frasi_s = 0.3       # silenzio tra le frasi: una frase alla volta, così g
 [transizioni]
 tipo = "dissolvenza"      # taglio | dissolvenza
 durata_s = 0.25
+filmato = "taglio"        # taglio | dissolvenza: le giunzioni che toccano una scena a filmato ([broll], hook a filmato)
 
 [registrazione]           # `uv run reel registra`: presa unica sull'anteprima --prova (i default sono in tools/reel/registra.py)
 video = 0                 # fotocamera avfoundation: indice o parte del nome (`uv run reel registra --dispositivi`)
@@ -74,3 +75,6 @@ bitrate = "8M"
 corpus = "~/Projects/reelkit/export.md"   # override in config.local.toml; "" = nessun corpus
 guida = "docs/stile-parlato.md"           # relativo alla radice del repo
 pattern = "~/Projects/reelkit/pattern.md" # pattern narrativi (./reelkit pattern): ideatore e sceneggiatore lo leggono così com'è
+indice = "~/Projects/reelkit/indice.json"         # l'indice di reelkit: account, lingua e durata di ogni reel trascritto
+trascrizioni = "~/Projects/reelkit/trascrizioni"  # il parlato vero, un file per reel: lo sceneggiatore ne legge alcune
+                                                  # intere prima di scrivere la VOCE (`uv run reel stile --trascrizioni`)
