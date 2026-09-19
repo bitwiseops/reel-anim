@@ -476,6 +476,35 @@ Anteprima `monta --prova --anteprima`: **73,6 s**, 0 errori,
 0 avvisi di tempo, 0 controlli; Manim 30 s, totale 41 s. Durate per scena (voce di prova): 1 · 7,1 s, 2 · 14,0 s,
 3 · 13,2 s, 4 · 15,0 s, 5 · 10,5 s, 6 · 9,2 s, 7 · 6,1 s.
 
+**Correzione del 2026-09-19 (testi sovrapposti nei passaggi, scene 4, 5 e 7).** Inizi dei beat, durate, testi e
+mosse wow invariati; anteprima rifatta: **73,6 s**, 0 avvisi di tempo, 0 controlli. Ogni passaggio ora ha le finestre
+in fila: escono i testi di chi se ne va, poi si muovono i riquadri, poi entrano i testi nuovi. Guardato a 15 fps sui
+video di `anima` e a 10 fps sui `_scene` montati (`contenuti/render/generativa-probabile/_fitti/prima` e `dopo`).
+- Scena 4, beat 0 e beat 2: mail e richiesta si scambiano di posto nella stessa colonna, e viaggiando si
+  attraversavano («mail» sopra «richiesta»). Ora la mail non viaggia: si chiude su se stessa e si spegne dov'è, la
+  carta si sposta nel posto libero, e la mail ricompare all'arrivo (pillola in alto al beat 0, 1,2 s; riquadro che si
+  riapre sotto al beat 2, 1,0 s). Beat 4: frammenti, riquadro «stessa frase» e oggetto escono prima che saluto e
+  attacco salgano; il corpo entra già dentro il riquadro.
+- Scena 5, beat 0: B2 esce del tutto prima che la carta scenda. Beat 2: il fatto sale su tre righe insieme alla
+  carta e rifà gli a capo solo all'arrivo («la» si spegne a fine riga e si riaccende a capo, «iscritti in un anno.»
+  scende e scorre sulla quarta riga); la nota, «annuncio · inventato» e «un fatto vero» escono e rientrano al posto
+  nuovo invece di viaggiare sopra il fatto. **Cambiato**: il loop «parla di te?» non scende più dall'alto (passava
+  sopra la carta): esce in alto e rientra appeso all'angolo della mail C4, che entra da sotto. La carica di «Sii
+  originale.» arretra di ~30 px invece di ~110 (usciva dalla carta e dalla tela).
+- Scena 7, beat 0: la prima mail entra quando il riquadro della seconda si è già stretto. Beat 1: i testi della prima
+  mail escono tutti prima che il riquadro diventi sagoma (la chiusa non rimpicciolisce più sopra il saluto). Beat 2
+  (1,05 s, ultimo fotogramma pulito ~1,2 s): la riga del numero passa da tre righe a due senza che «portato gli
+  iscritti da» passi sopra «ho»: prima si allarga restando su tre righe, poi le righe salgono in verticale; il
+  messaggio entra quando il riquadro è già sceso.
+- Scena 5, carta col fatto (seconda corsa del 19, margine destro): a 44 px la riga «la newsletter di un negozio di
+  biciclette» era larga 867 px in una carta con 852 px utili (900 − 2 × 24): a destra restavano 9 px contro i 24 di
+  sinistra, testo a filo del bordo. Gli a capo non cambiano (la scena 6 conta sulla riga «da 300 a 2.100»): nella
+  carta compatta il corpo del fatto scende a ~43 px (fattore 0,98) e la riga più lunga sta fra 24 px a sinistra e
+  26 a destra, in ogni fotogramma del passaggio del beat 2 e nelle scene 6-7, che usano la stessa carta. Nel
+  passaggio anche «la» e «iscritti in un anno.» prendono il corpo d'arrivo prima di scendere (`reimpagina(…,
+  corpo_rigido=True)`), sennò «la» si staccava di ~14 px da «portato». Tempi invariati; anteprima 73,6 s, 0 avvisi,
+  0 controlli; fotogrammi in `contenuti/render/generativa-probabile/_fitti/margine/`.
+
 **Storyboard e mosse wow** (una per scena, nessuna ripetuta fra scene vicine, `punch` due volte):
 | Scena | Mossa | Su quale frase | Fotogrammi chiave |
 |---|---|---|---|
@@ -489,7 +518,8 @@ Anteprima `monta --prova --anteprima`: **73,6 s**, 0 errori,
 
 Curve: `ease_out_back` per gli ingressi che contano (etichette, copie, zoom del numero, sagome), `ease_in_back` per la
 riga «Sii originale.» che parte, `rush_into` per le uscite, `ease_out_expo` per zoom e frammenti, `ease_out_cubic` per
-gli spostamenti e lo scorrimento; `linear` solo per la scrittura sincronizzata.
+gli spostamenti e lo scorrimento; `linear` solo per la scrittura sincronizzata. Dal 2026-09-19 «Sii originale.» parte
+con `carica` (come `ease_in_back`, arretramento più corto).
 
 **Beat per scena** (inizi delle frasi con la voce di prova):
 - **1** (0,0 / 3,7 s). Fotogramma 0 pieno: titolo, carta «richiesta» con «annuncio · inventato» e «Acme Arredi» in
@@ -523,8 +553,8 @@ gli spostamenti e lo scorrimento; `linear` solo per la scrittura sincronizzata.
   «un fatto vero» su «un fatto vero», in alto a sinistra. Beat 1: il fatto si scrive in accento, agganciato alla voce
   su «portato», «newsletter», «duemilacento», «iscritti» (ora la carta è la richiesta C); sotto la carta «esempio:
   candidato inventato». Beat 2: la carta si compatta in alto (il fatto va a capo su quattro righe, «da 300 a 2.100» ha
-  una riga sua; la nota sale sotto il titolo); il loop scende sull'angolo della mail C4, che entra con oggetto, saluto e
-  due righe grigie (proposta ⚠️ 29); i dieci cartellini con la voce e il cursore dopo «a» fino alla fine.
+  una riga sua; la nota rientra sotto il titolo); il loop esce in alto e rientra appeso all'angolo della mail C4, che
+  entra da sotto con oggetto, saluto e due righe grigie (proposta ⚠️ 29); i dieci cartellini con la voce e il cursore dopo «a» fino alla fine.
 - **6** (0,0 / 1,8 / 5,6 s). Beat 0: velo sulla scena e «2.100» (stile dei punch) cresce dal cursore al centro, tiene,
   e rientra come cartellino «2.100.» in accento. Beat 1: la mail si riduce alla coda «da 300 a 2.100.» (il loop esce),
   sotto la colonna con «2.100» in testa già scelto, «500», «1.000» (esempio); su «dopo il tuo numero» la freccia a gomito

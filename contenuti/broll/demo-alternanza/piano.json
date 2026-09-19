@@ -1,0 +1,430 @@
+{
+  "versione": 1,
+  "slug": "demo-alternanza",
+  "sorgente": "broll/esempi/demo-alternanza.md",
+  "hash_md": "0e0b76b6f7753dab",
+  "quando": "2026-09-19T17:15:27",
+  "cornice": {
+    "pieno": [
+      1080,
+      1920
+    ],
+    "finestra": [
+      900,
+      980
+    ]
+  },
+  "scene": [
+    {
+      "n": 1,
+      "tipo": "hook",
+      "durata_s": 5.44,
+      "origine_durata": "stima",
+      "inizi_frasi_s": [],
+      "origine_tempi": "",
+      "registro": "animazione",
+      "voce": [
+        "Hai chiesto una mail all'IA?",
+        "Ti è arrivata quella che arriva a tutti."
+      ],
+      "brief": [
+        "Il titolo è già in scena al primo fotogramma e sale appena.",
+        "Sotto compare «quella di tutti» in accento."
+      ],
+      "query": [],
+      "stato": "da-scegliere",
+      "candidati": [],
+      "scelti": [],
+      "file": null,
+      "note": ""
+    },
+    {
+      "n": 2,
+      "tipo": "broll",
+      "durata_s": 11.87,
+      "origine_durata": "stima",
+      "inizi_frasi_s": [],
+      "origine_tempi": "",
+      "registro": "filmato",
+      "voce": [
+        "Pensa a chi la riceve, quella mail.",
+        "È lunedì mattina, ha la casella piena e un caffè che si fredda.",
+        "Apre la tua e ha già capito come va a finire."
+      ],
+      "brief": [
+        "Una persona alla scrivania davanti al portatile, di mattina, legge la posta con una tazza di caffè accanto."
+      ],
+      "query": [
+        "persona scrivania davanti portatile mattina"
+      ],
+      "stato": "reso",
+      "candidati": [
+        {
+          "fornitore": "pexels",
+          "id": "36025107",
+          "url_pagina": "https://www.pexels.com/video/quiet-study-session-with-books-and-coffee-36025107/",
+          "url_file": "https://videos.pexels.com/video-files/36025107/15277425_1080_1920_60fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/36025107/pexels-photo-36025107.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "larghezza": 1080,
+          "altezza": 1920,
+          "durata_s": 15.0,
+          "fps": 59.94,
+          "autore": "Ebahir",
+          "autore_url": "https://www.pexels.com/@ebahir",
+          "licenza": "Pexels License",
+          "query": "persona scrivania davanti portatile mattina",
+          "resta_ritaglio": 1.0
+        },
+        {
+          "fornitore": "pexels",
+          "id": "33530502",
+          "url_pagina": "https://www.pexels.com/video/mystical-cosplay-in-enchanted-forest-setting-33530502/",
+          "url_file": "https://videos.pexels.com/video-files/33530502/14258861_1080_2048_24fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/33530502/pexels-photo-33530502.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "larghezza": 1080,
+          "altezza": 2048,
+          "durata_s": 17.0,
+          "fps": 23.98,
+          "autore": "TBD Tuyên",
+          "autore_url": "https://www.pexels.com/@tbd-tuyen-859104985",
+          "licenza": "Pexels License",
+          "query": "persona scrivania davanti portatile mattina",
+          "resta_ritaglio": 1.0
+        },
+        {
+          "fornitore": "pexels",
+          "id": "36025108",
+          "url_pagina": "https://www.pexels.com/video/productive-workspace-with-digital-clock-36025108/",
+          "url_file": "https://videos.pexels.com/video-files/36025108/15277433_1080_1920_60fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/36025108/pexels-photo-36025108.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "larghezza": 1080,
+          "altezza": 1920,
+          "durata_s": 23.0,
+          "fps": 59.94,
+          "autore": "Ebahir",
+          "autore_url": "https://www.pexels.com/@ebahir",
+          "licenza": "Pexels License",
+          "query": "persona scrivania davanti portatile mattina",
+          "resta_ritaglio": 1.0
+        },
+        {
+          "fornitore": "pexels",
+          "id": "20616932",
+          "url_pagina": "https://www.pexels.com/video/a-woman-sitting-at-a-table-with-a-laptop-and-a-cup-of-coffee-20616932/",
+          "url_file": "https://videos.pexels.com/video-files/20616932/20616932-hd_1080_1920_30fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/20616932/pexels-photo-20616932.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "larghezza": 1080,
+          "altezza": 1920,
+          "durata_s": 30.0,
+          "fps": 29.97,
+          "autore": "Pexels User",
+          "autore_url": "https://www.pexels.com/@pexels-user-1082992152",
+          "licenza": "Pexels License",
+          "query": "persona scrivania davanti portatile mattina",
+          "resta_ritaglio": 1.0
+        },
+        {
+          "fornitore": "pexels",
+          "id": "6000420",
+          "url_pagina": "https://www.pexels.com/video/a-cup-of-coffee-besides-a-woman-6000420/",
+          "url_file": "https://videos.pexels.com/video-files/6000420/6000420-hd_1080_1920_24fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/6000420/pexels-photo-6000420.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "larghezza": 1080,
+          "altezza": 1920,
+          "durata_s": 12.0,
+          "fps": 23.98,
+          "autore": "Sam Lion",
+          "autore_url": "https://www.pexels.com/@sam-lion",
+          "licenza": "Pexels License",
+          "query": "persona scrivania davanti portatile mattina",
+          "resta_ritaglio": 1.0
+        },
+        {
+          "fornitore": "pexels",
+          "id": "33841806",
+          "url_pagina": "https://www.pexels.com/video/modern-workspace-with-laptop-and-view-33841806/",
+          "url_file": "https://videos.pexels.com/video-files/33841806/14361579_1080_1920_30fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/33841806/pexels-photo-33841806.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "larghezza": 1080,
+          "altezza": 1920,
+          "durata_s": 20.0,
+          "fps": 29.97,
+          "autore": "Emanuel Pedro",
+          "autore_url": "https://www.pexels.com/@emanuel-pedro-1266938328",
+          "licenza": "Pexels License",
+          "query": "persona scrivania davanti portatile mattina",
+          "resta_ritaglio": 1.0
+        },
+        {
+          "fornitore": "pexels",
+          "id": "32838970",
+          "url_pagina": "https://www.pexels.com/video/typing-on-laptop-in-modern-office-setting-32838970/",
+          "url_file": "https://videos.pexels.com/video-files/32838970/13996994_1080_1920_30fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/32838970/bluehour-corporateenvironment-hands-home-office-32838970.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "larghezza": 1080,
+          "altezza": 1920,
+          "durata_s": 20.0,
+          "fps": 29.97,
+          "autore": "Emanuel Pedro",
+          "autore_url": "https://www.pexels.com/@emanuel-pedro-1266938328",
+          "licenza": "Pexels License",
+          "query": "persona scrivania davanti portatile mattina",
+          "resta_ritaglio": 1.0
+        }
+      ],
+      "scelti": [
+        {
+          "fornitore": "pexels",
+          "id": "6000420",
+          "url_pagina": "https://www.pexels.com/video/a-cup-of-coffee-besides-a-woman-6000420/",
+          "url_file": "https://videos.pexels.com/video-files/6000420/6000420-hd_1080_1920_24fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/6000420/pexels-photo-6000420.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "larghezza": 1080,
+          "altezza": 1920,
+          "durata_s": 12.0,
+          "fps": 23.98,
+          "autore": "Sam Lion",
+          "autore_url": "https://www.pexels.com/@sam-lion",
+          "licenza": "Pexels License",
+          "query": "persona scrivania davanti portatile mattina",
+          "resta_ritaglio": 1.0,
+          "candidato": "pexels:6000420",
+          "da_s": 0.0,
+          "ancora": 0.5,
+          "sha256": "f8b77b0c1c63f24e567a7fbd5857871cc094670db7b919a93c84aa2cdf79ac03"
+        },
+        {
+          "fornitore": "pexels",
+          "id": "36025108",
+          "url_pagina": "https://www.pexels.com/video/productive-workspace-with-digital-clock-36025108/",
+          "url_file": "https://videos.pexels.com/video-files/36025108/15277433_1080_1920_60fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/36025108/pexels-photo-36025108.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "larghezza": 1080,
+          "altezza": 1920,
+          "durata_s": 23.0,
+          "fps": 59.94,
+          "autore": "Ebahir",
+          "autore_url": "https://www.pexels.com/@ebahir",
+          "licenza": "Pexels License",
+          "query": "persona scrivania davanti portatile mattina",
+          "resta_ritaglio": 1.0,
+          "candidato": "pexels:36025108",
+          "da_s": 3.0,
+          "ancora": 0.5,
+          "sha256": "fcf0f5ea1a156fcbb678ba96451eec445ce19326d96759d6968842f87d046edd"
+        }
+      ],
+      "file": "broll-scena-02.mp4",
+      "note": ""
+    },
+    {
+      "n": 3,
+      "tipo": "spiegazione",
+      "durata_s": 7.23,
+      "origine_durata": "stima",
+      "inizi_frasi_s": [],
+      "origine_tempi": "",
+      "registro": "animazione",
+      "voce": [
+        "Perché l'IA va avanti una parola alla volta.",
+        "E a ogni passo prende una tra le più ==probabili==."
+      ],
+      "brief": [
+        "La frase si compone un token alla volta, con la classifica delle candidate e le barre (esempio)."
+      ],
+      "query": [],
+      "stato": "da-scegliere",
+      "candidati": [],
+      "scelti": [],
+      "file": null,
+      "note": "animata: barre, classifica, passo, probabil, token"
+    },
+    {
+      "n": 4,
+      "tipo": "broll",
+      "durata_s": 9.73,
+      "origine_durata": "stima",
+      "inizi_frasi_s": [],
+      "origine_tempi": "",
+      "registro": "filmato",
+      "voce": [
+        "Il risultato è una mail educata, ordinata, giusta.",
+        "Che però potrebbe averla scritta chiunque.",
+        "E chi legge, di quelle, ne ha già viste una pila."
+      ],
+      "brief": [
+        "Una pila di fogli e lettere tutte uguali su una scrivania, una mano le sfoglia in fretta."
+      ],
+      "query": [
+        "pila fogli lettere uguali scrivania"
+      ],
+      "stato": "reso",
+      "candidati": [
+        {
+          "fornitore": "pexels",
+          "id": "36114345",
+          "url_pagina": "https://www.pexels.com/video/close-up-of-arabic-calligraphy-writing-36114345/",
+          "url_file": "https://videos.pexels.com/video-files/36114345/15315623_1080_1920_29fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/36114345/pexels-photo-36114345.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "larghezza": 1080,
+          "altezza": 1920,
+          "durata_s": 26.0,
+          "fps": 29.0,
+          "autore": "Asiye Betül Dokuyucu",
+          "autore_url": "https://www.pexels.com/@asiye-betul-dokuyucu-2150255763",
+          "licenza": "Pexels License",
+          "query": "pila fogli lettere uguali scrivania",
+          "resta_ritaglio": 1.0
+        },
+        {
+          "fornitore": "pexels",
+          "id": "7344851",
+          "url_pagina": "https://www.pexels.com/video/person-writing-using-pen-and-ink-7344851/",
+          "url_file": "https://videos.pexels.com/video-files/7344851/7344851-hd_1080_1920_25fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/7344851/pexels-photo-7344851.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "larghezza": 1080,
+          "altezza": 1920,
+          "durata_s": 20.0,
+          "fps": 25.0,
+          "autore": "MART  PRODUCTION",
+          "autore_url": "https://www.pexels.com/@mart-production",
+          "licenza": "Pexels License",
+          "query": "pila fogli lettere uguali scrivania",
+          "resta_ritaglio": 1.0
+        },
+        {
+          "fornitore": "pexels",
+          "id": "7344850",
+          "url_pagina": "https://www.pexels.com/video/person-writing-using-pen-and-ink-7344850/",
+          "url_file": "https://videos.pexels.com/video-files/7344850/7344850-hd_1080_1920_25fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/7344850/pexels-photo-7344850.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "larghezza": 1080,
+          "altezza": 1920,
+          "durata_s": 22.0,
+          "fps": 25.0,
+          "autore": "MART  PRODUCTION",
+          "autore_url": "https://www.pexels.com/@mart-production",
+          "licenza": "Pexels License",
+          "query": "pila fogli lettere uguali scrivania",
+          "resta_ritaglio": 1.0
+        },
+        {
+          "fornitore": "pexels",
+          "id": "3831742",
+          "url_pagina": "https://www.pexels.com/video/checking-cut-out-letters-using-a-magnifying-glass-3831742/",
+          "url_file": "https://videos.pexels.com/video-files/3831742/3831742-hd_1080_2048_25fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/3831742/amazing-letter-text-3831742.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "larghezza": 1080,
+          "altezza": 2048,
+          "durata_s": 26.0,
+          "fps": 25.0,
+          "autore": "cottonbro studio",
+          "autore_url": "https://www.pexels.com/@cottonbro",
+          "licenza": "Pexels License",
+          "query": "pila fogli lettere uguali scrivania",
+          "resta_ritaglio": 1.0
+        },
+        {
+          "fornitore": "pexels",
+          "id": "33454156",
+          "url_pagina": "https://www.pexels.com/video/close-up-of-calligraphy-writing-on-paper-33454156/",
+          "url_file": "https://videos.pexels.com/video-files/33454156/14235392_1080_1920_30fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/33454156/pexels-photo-33454156.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "larghezza": 1080,
+          "altezza": 1920,
+          "durata_s": 12.0,
+          "fps": 29.97,
+          "autore": "Ebahir",
+          "autore_url": "https://www.pexels.com/@ebahir",
+          "licenza": "Pexels License",
+          "query": "pila fogli lettere uguali scrivania",
+          "resta_ritaglio": 1.0
+        },
+        {
+          "fornitore": "pexels",
+          "id": "36114346",
+          "url_pagina": "https://www.pexels.com/video/close-up-of-pen-writing-arabic-text-on-paper-36114346/",
+          "url_file": "https://videos.pexels.com/video-files/36114346/15315667_1080_1920_29fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/36114346/pexels-photo-36114346.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "larghezza": 1080,
+          "altezza": 1920,
+          "durata_s": 30.0,
+          "fps": 29.0,
+          "autore": "Asiye Betül Dokuyucu",
+          "autore_url": "https://www.pexels.com/@asiye-betul-dokuyucu-2150255763",
+          "licenza": "Pexels License",
+          "query": "pila fogli lettere uguali scrivania",
+          "resta_ritaglio": 1.0
+        }
+      ],
+      "scelti": [
+        {
+          "fornitore": "pexels",
+          "id": "7344850",
+          "url_pagina": "https://www.pexels.com/video/person-writing-using-pen-and-ink-7344850/",
+          "url_file": "https://videos.pexels.com/video-files/7344850/7344850-hd_1080_1920_25fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/7344850/pexels-photo-7344850.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "larghezza": 1080,
+          "altezza": 1920,
+          "durata_s": 22.0,
+          "fps": 25.0,
+          "autore": "MART  PRODUCTION",
+          "autore_url": "https://www.pexels.com/@mart-production",
+          "licenza": "Pexels License",
+          "query": "pila fogli lettere uguali scrivania",
+          "resta_ritaglio": 1.0,
+          "candidato": "pexels:7344850",
+          "da_s": 2.0,
+          "ancora": 0.5,
+          "sha256": "c07dbe4a80f8a16cb29e4eda178b581a776ddfa7527a72e0eec87d87e98f1fb0"
+        }
+      ],
+      "file": "broll-scena-04.mp4",
+      "note": ""
+    },
+    {
+      "n": 5,
+      "tipo": "spiegazione",
+      "durata_s": 7.23,
+      "origine_durata": "stima",
+      "inizi_frasi_s": [],
+      "origine_tempi": "",
+      "registro": "animazione",
+      "voce": [
+        "Allora non chiederle di essere originale.",
+        "Dalle quello che sai solo tu, un numero, un nome, un dettaglio."
+      ],
+      "brief": [
+        "Confronto a due colonne: a sinistra il prompt «Sii originale.», a destra il prompt con il dettaglio vero."
+      ],
+      "query": [],
+      "stato": "da-scegliere",
+      "candidati": [],
+      "scelti": [],
+      "file": null,
+      "note": "animata: confronto, prompt"
+    },
+    {
+      "n": 6,
+      "tipo": "chiusura",
+      "durata_s": 2.94,
+      "origine_durata": "stima",
+      "inizi_frasi_s": [],
+      "origine_tempi": "",
+      "registro": "animazione",
+      "voce": [
+        "L'IA non ti conosce.",
+        "Tu sì."
+      ],
+      "brief": [
+        "Il messaggio entra una riga alla volta, «Tu sì.» in accento; sotto la CTA."
+      ],
+      "query": [],
+      "stato": "da-scegliere",
+      "candidati": [],
+      "scelti": [],
+      "file": null,
+      "note": ""
+    }
+  ]
+}

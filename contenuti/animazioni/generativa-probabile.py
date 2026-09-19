@@ -160,6 +160,11 @@ def fra(a: float, b: float = 1.0, f=smooth):
     return squish_rate_func(f, max(0.0, a), min(1.0, b))
 
 
+def carica(t: float, c: float = 0.9) -> float:
+    """Come `ease_in_back` ma con l'arretramento più corto (minimo ≈ −0,03 invece di −0,1): per le corse lunghe."""
+    return (c + 1) * t ** 3 - c * t ** 2
+
+
 def grande(scena: dict) -> str:
     for s in scena.get("animazione") or []:
         m = re.search(r"GRANDE:\s*«(.+?)»", s)
@@ -338,6 +343,12 @@ class Carta:
             self.nota = testo(NOTA_FATTO, "piede", colore=P.attenuato)
             a_ul(self.nota, X0 + pad, fondo(self.titolo) + 12)
             self.extra = testo(FATTO_4, "token", colore=P.accento)
+            # gli a capo di FATTO_4 sono fissi (la scena 6 conta sulla riga «da 300 a 2.100»): a 44 px la riga della
+            # newsletter è larga 867 px e a destra restavano 9 px contro i 24 di sinistra. Il corpo scende di quel che
+            # basta (44 → ~43 px) perché la riga più lunga stia fra i due margini uguali; `reimpagina` porta il corpo
+            larg_utile = LARG - 2 * pad
+            if self.extra.width * K > larg_utile:
+                self.extra.scale((larg_utile - 2) / (self.extra.width * K))
             a_ul(self.extra, X0 + pad, fondo(self.nota) + 12)
             self.box = a_ul(riquadro(LARG, fondo(self.extra) + pad - y, P.secondario), X0, y)
 
@@ -355,6 +366,85 @@ class Carta:
 def glifi(blocco) -> list:
     """I glifi di un Blocco in ordine di lettura (stesso testo con altri a capo: stessi glifi, altri posti)."""
     return [g for r in blocco.righe for g in r.glifi.submobjects]
+
+
+def spento(m, scala: float = 1.0):
+    """Copia trasparente di un riquadro (per farlo sparire in un posto e ricomparire in un altro senza traversate)."""
+    return m.copy().set_fill(opacity=0).set_stroke(opacity=0).scale(scala)
+
+
+def a_tappe(mob, stati: list, confini: list[float], curve: list | None = None) -> UpdateFromAlphaFunc:
+    """`mob` passa per gli `stati` (copie con la stessa struttura e gli stessi punti), raggiunti alle frazioni `confini`
+    della play; prima del primo confine resta nel primo stato, dopo l'ultimo nell'ultimo. Una sola animazione per
+    oggetto anche quando il percorso ha più tratti (due animazioni sullo stesso oggetto nella stessa play non si
+    sommano). Un tratto fra due stati trasparenti non si vede: è il modo di cambiare posto senza attraversare nulla."""
+    curve = curve or [ease_out_cubic] * (len(stati) - 1)
+    pezzi = [m.family_members_with_points() for m in (mob, *stati)]
+    for p_ in pezzi[1:]:
+        if len(p_) != len(pezzi[0]) or any(len(x.points) != len(y.points) for x, y in zip(pezzi[0], p_)):
+            raise ValueError("a_tappe: gli stati non hanno la stessa struttura dell'oggetto")
+
+    def f(m, a):
+        k = max((j for j, c in enumerate(confini) if a >= c), default=-1)
+        if k < 0:
+            i, u = 0, 0.0
+        elif k >= len(stati) - 1:
+            i, u = len(stati) - 2, 1.0
+        else:
+            i, u = k, curve[k]((a - confini[k]) / max(confini[k + 1] - confini[k], 1e-6))
+        for sub, s1, s2 in zip(pezzi[0], pezzi[i + 1], pezzi[i + 2]):
+            sub.interpolate(s1, s2, u)
+
+    return UpdateFromAlphaFunc(mob, f, rate_func=linear)
+
+
+def righe_dei_glifi(blocco) -> list[int]:
+    return [k for k, r in enumerate(blocco.righe) for _ in r.glifi.submobjects]
+
+
+def reimpagina(da, a, c0: float, c1: float, c2: float, corpo_rigido: bool = False) -> list:
+    """Stesso testo, altri a capo (e, se serve, altro corpo e altro posto), senza che due parole si attraversino.
+    Fra c0 e c1 ogni glifo va alla x e al corpo d'arrivo restando sulla sua riga di partenza (le righe restano
+    separate); fra c1 e c2 chi sale di riga sale in verticale. Chi scende di riga: se la riga d'arrivo è nuova, scende
+    in verticale e poi scorre lungo la riga; se è già occupata, si spegne dov'è e si riaccende al suo posto."""
+    gs, gt = VGroup(*glifi(da)), VGroup(*glifi(a))
+    gs.align_data(gt)
+    s0, t = list(gs.copy()), list(gt.copy())
+    rs, rt = righe_dei_glifi(da), righe_dei_glifi(a)
+    passo = (a.righe[0].get_center()[1] - a.righe[1].get_center()[1]) if len(a.righe) > 1 else 0.0
+    primo = {r: rs.index(r) for r in set(rs)}                      # il primo glifo di ogni riga di partenza
+    d = c2 - c1
+    corpo = sum(g.height for g in t) / max(sum(g.height for g in s0), 1e-9)
+    gruppi: dict = {}
+    for k in range(len(s0)):
+        if rs[k] >= rt[k]:
+            modo = "su"
+        else:
+            modo = "lampo" if any(rs[j] == rt[j] == rt[k] for j in range(len(s0))) else "gomito"
+        gruppi.setdefault((modo, rs[k], rt[k]), []).append(k)
+    anims = []
+    for (modo, r_s, r_t), idx in gruppi.items():
+        mob = VGroup(*[gs[k] for k in idx])
+        parte = VGroup(*[s0[k] for k in idx])
+        arrivo = VGroup(*[t[k] for k in idx])
+        if modo == "su":
+            mezzo = arrivo.copy().shift(DOWN * passo * (r_s - r_t))
+            anims.append(a_tappe(mob, [parte, mezzo, arrivo], [c0, c1, c2], [ease_out_cubic, smooth]))
+            continue
+        k0 = primo[r_s]
+        rigido = parte.copy()
+        if corpo_rigido:   # anche chi scende prende il corpo d'arrivo: sennò si stacca dalla sua riga, che si stringe
+            rigido.scale(corpo, about_point=s0[k0].get_center())
+        rigido.shift(t[k0].get_center() - s0[k0].get_center())
+        if modo == "gomito":
+            giu = rigido.copy().shift(DOWN * passo * (r_t - r_s))
+            anims.append(a_tappe(mob, [parte, rigido, giu, arrivo], [c0, c1, c1 + 0.4 * d, c2],
+                                 [ease_out_cubic, smooth, smooth]))
+        else:
+            anims.append(a_tappe(mob, [parte, rigido, rigido.copy().set_fill(opacity=0),
+                                       arrivo.copy().set_fill(opacity=0), arrivo],
+                                 [c0, c1, c1 + 0.3 * d, c1 + 0.6 * d, c2], [ease_out_cubic, linear, linear, linear]))
+    return anims
 
 
 def riga_numero(carta: Carta):
@@ -943,15 +1033,22 @@ class Scena04(Scena):
         t0 = self.tempi(0)
         pm = pillola_mail()
         carta = carta_04()
-        self.play(*fuori(fl, nd, shift=DOWN * 0.4, rate_func=fra(0, 0.35, rush_into)),
-                  *fuori(*vecchi[1:], rate_func=fra(0, 0.35)),
-                  Transform(m.box, pm.box, rate_func=fra(0.1, 0.7, ease_out_cubic)),
-                  m.titolo.animate(rate_func=fra(0.1, 0.7, ease_out_cubic)).move_to(pm.titolo),
-                  Transform(pil.box, carta.box, rate_func=fra(0.2, 0.9, ease_out_cubic)),
-                  pil.titolo.animate(rate_func=fra(0.2, 0.9, ease_out_cubic)).move_to(carta.titolo),
-                  Transform(pil.et_ann, carta.et_ann, rate_func=fra(0.2, 0.9, ease_out_cubic)),
-                  *dentro(carta.riga, carta.box_ann, carta.annuncio, rate_func=fra(0.55, 1.0)),
-                  run_time=1.0)
+        # Mail e richiesta si scambiano di posto nella stessa colonna: se viaggiassero tutte e due, «mail» e
+        # «richiesta» si attraverserebbero. Ordine: escono i testi di A1; la mail si chiude su se stessa e si spegne;
+        # la carta scende nel posto libero; la pillola «mail» spunta in alto quando la carta se n'è andata.
+        pil_giu = a_ul(spento(pm.box), X0, Y_MAIL)
+        self.play(*fuori(fl, nd, shift=DOWN * 0.4, rate_func=fra(0, 0.22, rush_into)),
+                  *fuori(*vecchi[1:], rate_func=fra(0, 0.2)),
+                  a_tappe(m.box, [m.box.copy(), pil_giu, spento(pm.box, 0.6), pm.box.copy().scale(1.08), pm.box.copy()],
+                          [0.2, 0.42, 0.62, 0.8, 0.9], [ease_out_cubic, linear, ease_out_cubic, smooth]),
+                  FadeOut(m.titolo, rate_func=fra(0.2, 0.36)),
+                  Transform(pil.box, carta.box, rate_func=fra(0.42, 0.85, ease_out_cubic)),
+                  pil.titolo.animate(rate_func=fra(0.42, 0.85, ease_out_cubic)).move_to(carta.titolo),
+                  Transform(pil.et_ann, carta.et_ann, rate_func=fra(0.42, 0.85, ease_out_cubic)),
+                  FadeIn(pm.titolo, scale=0.6, rate_func=fra(0.64, 0.86, ease_out_cubic)),
+                  *dentro(carta.riga, carta.box_ann, carta.annuncio, rate_func=fra(0.75, 1.0)),
+                  run_time=1.2)
+        m.titolo = pm.titolo
         self.attendi_fino(min(t0[5] - 0.15, self.limite(0) - 0.6))       # «ci mancherebbe»
         self.play(pil.box.animate(rate_func=there_and_back).set_stroke(P.accento, width=tratto(6)), run_time=0.5)
 
@@ -972,13 +1069,17 @@ class Scena04(Scena):
         vuote = [barre([700, 460]), barre([780, 820, 300])]
         a_ul(vuote[0], X0 + 36, alto(mb.p["oggetto"]))
         a_ul(vuote[1], X0 + 36, alto(mb.p["attacco"]) - 10)
-        self.play(Transform(pil.box, p2.box, rate_func=fra(0, 0.6, ease_out_cubic)),
-                  pil.titolo.animate(rate_func=fra(0, 0.6, ease_out_cubic)).move_to(p2.titolo),
-                  Transform(pil.et_ann, p2.et_ann, rate_func=fra(0, 0.6, ease_out_cubic)),
-                  *fuori(carta.riga, carta.box_ann, carta.annuncio, cb.extra, rate_func=fra(0, 0.3)),
-                  Transform(m.box, mb.box, rate_func=fra(0.25, 0.9, ease_out_cubic)),
-                  m.titolo.animate(rate_func=fra(0.25, 0.9, ease_out_cubic)).move_to(mb.titolo),
-                  run_time=0.8)
+        # lo scambio al contrario, con lo stesso ordine: escono i testi della carta e la pillola «mail» si spegne in
+        # alto; la carta torna pillola nel posto libero; la mail si riapre sotto, dove la carta non c'è più
+        self.play(*fuori(carta.riga, carta.box_ann, carta.annuncio, cb.extra, rate_func=fra(0, 0.24)),
+                  FadeOut(m.titolo, rate_func=fra(0, 0.2)),
+                  a_tappe(m.box, [m.box.copy(), spento(m.box, 0.6), a_ul(spento(pm.box), X0, Y_MAIL), mb.box.copy()],
+                          [0.0, 0.24, 0.58, 1.0], [ease_out_cubic, linear, ease_out_cubic]),
+                  Transform(pil.box, p2.box, rate_func=fra(0.24, 0.66, ease_out_cubic)),
+                  pil.titolo.animate(rate_func=fra(0.24, 0.66, ease_out_cubic)).move_to(p2.titolo),
+                  Transform(pil.et_ann, p2.et_ann, rate_func=fra(0.24, 0.66, ease_out_cubic)),
+                  FadeIn(mb.titolo, rate_func=fra(0.7, 1.0)),
+                  run_time=1.0)
         righe_v = [b for g in vuote for b in g]
         self.play(*[GrowFromEdge(b, LEFT, rate_func=fra(k / len(righe_v) * 0.8, k / len(righe_v) * 0.8 + 0.25))
                     for k, b in enumerate(righe_v)],
@@ -1011,13 +1112,15 @@ class Scena04(Scena):
         _, _, mf, segn4, riq4, nd4, chiedo = stato_04()
         self.attendi_fino(t_ev + 1.0)                                    # il riquadro «stessa frase» resta ≥ 1 s
         corpo = [mf.p[k] for k in ("b1", "negli", "b2", "chiedo")]
-        self.play(*fuori(*fr, cinque, b3, ev, stessa, shift=DOWN * 0.3, rate_func=fra(0, 0.4, rush_into)),
-                  FadeOut(mb.p["oggetto"], rate_func=fra(0, 0.35)),
-                  Transform(m.box, mf.box, rate_func=fra(0.15, 0.8, ease_out_cubic)),
-                  mb.p["saluto"].animate(rate_func=fra(0.15, 0.8, ease_out_cubic)).move_to(mf.p["saluto"]),
-                  mb.p["attacco"].animate(rate_func=fra(0.15, 0.8, ease_out_cubic)).move_to(mf.p["attacco"]),
-                  *[FadeIn(p, shift=UP * 0.6, rate_func=fra(0.4 + 0.08 * k, 0.85 + 0.04 * k, ease_out_cubic))
-                    for k, p in enumerate(corpo)], run_time=0.8)
+        # prima escono frammenti, riquadro e oggetto; poi il riquadro della mail cresce e saluto e attacco salgono;
+        # il corpo entra per ultimo, già dentro il riquadro
+        self.play(*fuori(*fr, cinque, b3, ev, stessa, rate_func=fra(0, 0.28, rush_into)),
+                  FadeOut(mb.p["oggetto"], rate_func=fra(0, 0.28)),
+                  Transform(m.box, mf.box, rate_func=fra(0.28, 0.7, ease_out_cubic)),
+                  mb.p["saluto"].animate(rate_func=fra(0.28, 0.7, ease_out_cubic)).move_to(mf.p["saluto"]),
+                  mb.p["attacco"].animate(rate_func=fra(0.28, 0.7, ease_out_cubic)).move_to(mf.p["attacco"]),
+                  *[FadeIn(p, shift=UP * 0.15, rate_func=fra(0.62 + 0.04 * k, 0.9 + 0.03 * k, ease_out_cubic))
+                    for k, p in enumerate(corpo)], run_time=0.9)
         self.attendi_fino(min(t4[5] - 0.15, self.limite(4) - 1.6))       # «del tuo lavoro»
         self.play(*[s.animate.set_color(P.accento) for s in segn4], *[Create(r) for r in riq4],
                   nd4.entra(rate_func=ease_out_back), run_time=0.5)
@@ -1041,17 +1144,19 @@ class Scena05(Scena):
         # beat 0 («Togli «sii originale» e dille un fatto vero che sai solo tu.»)
         t0 = self.tempi(0)
         cb = carta_04(extra=True)
-        self.play(*fuori(*vecchi, *riq, nd, shift=DOWN * 0.5, rate_func=fra(0, 0.45, rush_into)),
-                  Transform(pil.box, cb.box, rate_func=fra(0.1, 0.8, ease_out_cubic)),
-                  pil.titolo.animate(rate_func=fra(0.1, 0.8, ease_out_cubic)).move_to(cb.titolo),
-                  Transform(pil.et_ann, cb.et_ann, rate_func=fra(0.1, 0.8, ease_out_cubic)),
-                  *dentro(cb.riga, cb.box_ann, cb.annuncio, rate_func=fra(0.45, 1.0)),
-                  FadeIn(cb.extra, rate_func=fra(0.5, 1.0)), run_time=0.7)
+        # prima esce la mail di B2 (tutta), poi la carta scende e cresce nel posto libero, poi entrano i suoi testi
+        self.play(*fuori(*vecchi, *riq, nd, rate_func=fra(0, 0.3, rush_into)),
+                  Transform(pil.box, cb.box, rate_func=fra(0.3, 0.8, ease_out_cubic)),
+                  pil.titolo.animate(rate_func=fra(0.3, 0.8, ease_out_cubic)).move_to(cb.titolo),
+                  Transform(pil.et_ann, cb.et_ann, rate_func=fra(0.3, 0.8, ease_out_cubic)),
+                  *dentro(cb.riga, cb.box_ann, cb.annuncio, rate_func=fra(0.7, 1.0)),
+                  FadeIn(cb.extra, rate_func=fra(0.7, 1.0)), run_time=0.75)
         riga_vuota = DashedLine(punto(X0 + 36, fondo(cb.extra) + 6), punto(X1 - 36, fondo(cb.extra) + 6),
                                 dash_length=px(18), stroke_color=P.accento, stroke_width=tratto(4))
         c = cursore().move_to([punto(X0 + 36, 0)[0] + px(4), cb.extra.get_center()[1], 0])
         self.attendi_fino(min(t0[1] - 0.1, self.limite(0) - 1.6))        # «sii originale»
-        self.play(cb.extra.animate(rate_func=ease_in_back).shift(RIGHT * 9).set_opacity(0), run_time=0.55)
+        # la carica arretra di ~30 px: con `ease_in_back` su 9 unità arretrava di ~110 px, oltre il bordo della tela
+        self.play(cb.extra.animate(rate_func=carica).shift(RIGHT * 9).set_opacity(0), run_time=0.55)
         self.remove(cb.extra)
         self.play(Create(riga_vuota, rate_func=ease_out_cubic), FadeIn(c, rate_func=fra(0.6, 1)), run_time=0.5)
         lampeggia(c)
@@ -1089,15 +1194,19 @@ class Scena05(Scena):
         fila_ = mc.p["fila"]
         c2 = cursore().move_to([fila_[0].get_left()[0] + px(4), fila_[0].get_center()[1], 0])
         testa = [mc.box, mc.titolo, mc.p["oggetto"], mc.p["saluto"], mc.p["finestra"]]
-        self.play(Transform(pil.box, cf.box, rate_func=fra(0, 0.6, ease_out_cubic)),
-                  pil.titolo.animate(rate_func=fra(0, 0.6, ease_out_cubic)).move_to(cf.titolo),
-                  Transform(pil.et_ann, cf.et_ann, rate_func=fra(0, 0.6, ease_out_cubic)),
-                  *fuori(cb.riga, cb.box_ann, cb.annuncio, fatto_et, rate_func=fra(0, 0.3)),
-                  Transform(VGroup(*glifi(fatto)), VGroup(*glifi(cf.extra)), rate_func=fra(0.05, 0.65, ease_out_cubic)),
-                  Transform(nota, cf.nota, rate_func=fra(0.05, 0.65, ease_out_cubic)),
-                  Transform(loop, loop_m, rate_func=fra(0.3, 0.95, ease_out_cubic)),
-                  *dentro(*testa, shift=UP * 0.8, rate_func=fra(0.3, 0.9, ease_out_cubic)),
-                  FadeIn(c2, rate_func=fra(0.9, 1)), run_time=0.75)
+        # Ordine del passaggio: escono i testi che non restano (riga, annuncio, nota, etichette, il loop in alto); poi
+        # carta, titolo e fatto salgono insieme (il fatto resta su tre righe: nessuna riga ne attraversa un'altra);
+        # arrivato in alto il fatto rifà gli a capo (`reimpagina`); nota ed etichetta dell'annuncio rientrano al loro
+        # posto nuovo; la mail entra da sotto con il loop già appeso all'angolo, quando la carta ha liberato il posto.
+        # Nota e loop non viaggiano più: i loro percorsi passavano sopra il fatto.
+        run = self.arrotonda(min(0.95, max(0.8, t2[2] - 0.08 - self.t)))
+        self.play(*fuori(cb.riga, cb.box_ann, cb.annuncio, fatto_et, nota, loop, pil.et_ann, rate_func=fra(0, 0.2)),
+                  Transform(pil.box, cf.box, rate_func=fra(0.2, 0.6, ease_out_cubic)),
+                  pil.titolo.animate(rate_func=fra(0.2, 0.6, ease_out_cubic)).move_to(cf.titolo),
+                  *reimpagina(fatto, cf.extra, 0.2, 0.6, 0.9, corpo_rigido=True),
+                  *dentro(cf.et_ann, cf.nota, rate_func=fra(0.62, 0.9)),
+                  *dentro(*testa, loop_m, shift=UP * 0.5, rate_func=fra(0.5, 0.95, ease_out_cubic)),   # 0,8: sotto il cerchio
+                  FadeIn(c2, rate_func=fra(0.92, 1)), run_time=run)
         lampeggia(c2)
         self.scrivi(list(zip(fila_, t2[2:12])), c2, limite=self.limite(2))
         lampeggia(c2)                            # «da 300 a ▌»: la seconda prova, lo stesso gesto della scena 1
@@ -1238,7 +1347,7 @@ class Scena07(Scena):
         self.play(*fuori(*[v for v in vecchi if v is not m.box], rate_func=fra(0, 0.28, rush_into)),
                   Transform(m.box, dx_.box, rate_func=fra(0.3, 0.72, ease_out_cubic)),
                   *dentro(*dx_.testi(), rate_func=fra(0.7, 1.0)),
-                  *dentro(*sx.pezzi(), shift=RIGHT * 0.8, rate_func=fra(0.35, 0.9, ease_out_back)),
+                  *dentro(*sx.pezzi(), shift=RIGHT * 0.8, rate_func=fra(0.5, 0.95, ease_out_back)),
                   run_time=1.1)
 
         # beat 1 («Solo che poteva firmarla chiunque.»): MOLTIPLICAZIONE. La prima mail si riduce a sagoma (il suo testo
@@ -1256,11 +1365,12 @@ class Scena07(Scena):
         muro = [sagoma(*cella(r, col), 105, 140, seme=r * 4 + col) for r, col in celle if (r, col) != sua]
         centro_s = mia.get_center()
         muro.sort(key=lambda g_: np.linalg.norm(g_.get_center() - centro_s))
-        self.play(Transform(sx.box, mia[0], rate_func=fra(0, 0.45, ease_out_cubic)),
-                  *[FadeTransform(sx.p[k], mia[1], rate_func=fra(0, 0.45)) if k == "chiusa"
-                    else FadeOut(sx.p[k], rate_func=fra(0, 0.3)) for k in ("saluto", "barre", "chiusa")],
-                  FadeOut(sx.titolo, rate_func=fra(0, 0.3)),
-                  *[GrowFromCenter(g_, rate_func=fra(0.3 + 0.025 * k, 0.3 + 0.025 * k + 0.25, ease_out_back))
+        # prima escono i testi della prima mail (tutti: un testo che rimpicciolisce con il riquadro passa sopra gli
+        # altri), poi il riquadro si stringe a sagoma e le sue righe grigie entrano; il muro cresce intorno
+        self.play(*fuori(sx.titolo, *[sx.p[k] for k in ("saluto", "barre", "chiusa")], rate_func=fra(0, 0.17)),
+                  Transform(sx.box, mia[0], rate_func=fra(0.17, 0.45, ease_out_cubic)),
+                  FadeIn(mia[1], rate_func=fra(0.36, 0.48)),
+                  *[GrowFromCenter(g_, rate_func=fra(0.36 + 0.018 * k, 0.36 + 0.018 * k + 0.24, ease_out_back))
                     for k, g_ in enumerate(muro)],
                   run_time=self.arrotonda(min(1.5, 0.75 * self.durata_beat(1))))
         muro.append(mia)
@@ -1282,13 +1392,20 @@ class Scena07(Scena):
         a_ul(cta, X0, fondo(fin.box) + 40)
         # il muro esce prima che entri il messaggio; la riga del numero cambia impaginazione glifo per glifo (mai due
         # copie dello stesso testo a schermo); i testi che non restano escono prima che il riquadro si muova
+        # (`reimpagina`: prima ogni riga va alla x e al corpo d'arrivo restando riga, poi «portato gli iscritti da»
+        # sale in verticale accanto a «ho»: nessuna parola passa sopra un'altra). Riquadro e «…da [numero] anni.»
+        # fanno le stesse due tappe: su tre righe, poi su due.
+        passo = fin.p["riga"].righe[0].get_center()[1] - fin.p["riga"].righe[1].get_center()[1]
+        box_3 = a_ul(riquadro(LARG, h(fin.box) + passo * K, P.terziario), X0, alto(fin.box))
+        anni = dx_.p["anni"]
+        c0, c1, c2 = 0.25, 0.62, 0.85
         self.play(*fuori(*muro, shift=LEFT * 1.5, rate_func=fra(0, 0.3, rush_into)),
                   *fuori(dx_.p["saluto"], dx_.p["barre"], dx_.p["barre2"], dx_.p["sare"], rate_func=fra(0, 0.25)),
-                  Transform(m.box, fin.box, rate_func=fra(0.25, 0.75, ease_out_cubic)),
-                  dx_.titolo.animate(rate_func=fra(0.25, 0.75, ease_out_cubic)).move_to(fin.titolo),
-                  Transform(VGroup(*glifi(dx_.p["riga"])), VGroup(*glifi(fin.p["riga"])),
-                            rate_func=fra(0.25, 0.75, ease_out_cubic)),
-                  dx_.p["anni"].animate(rate_func=fra(0.25, 0.75, ease_out_cubic)).move_to(fin.p["anni"]),
-                  FadeIn(msg, shift=DOWN * 0.3, rate_func=fra(0.35, 0.85, ease_out_cubic)),
-                  FadeIn(cta, scale=0.8, rate_func=fra(0.55, 1.0, ease_out_back)),
-                  run_time=0.95)
+                  a_tappe(m.box, [m.box.copy(), box_3, fin.box], [c0, c1, c2], [ease_out_cubic, smooth]),
+                  dx_.titolo.animate(rate_func=fra(c0, c1, ease_out_cubic)).move_to(fin.titolo),
+                  *reimpagina(dx_.p["riga"], fin.p["riga"], c0, c1, c2),
+                  a_tappe(anni, [anni.copy(), anni.copy().move_to(fin.p["anni"]).shift(DOWN * passo),
+                                 anni.copy().move_to(fin.p["anni"])], [c0, c1, c2], [ease_out_cubic, smooth]),
+                  FadeIn(msg, shift=DOWN * 0.3, rate_func=fra(0.45, 0.9, ease_out_cubic)),   # il riquadro è già sceso
+                  FadeIn(cta, scale=0.8, rate_func=fra(0.7, 1.0, ease_out_back)),
+                  run_time=1.05)
