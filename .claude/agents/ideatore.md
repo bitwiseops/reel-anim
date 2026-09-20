@@ -117,6 +117,41 @@ chiudi con NEEDS_CONTEXT e 2-3 domande precise per il presentatore.
   schemi già spesi, claim già verificati): questo resta nelle note interne dell'idea, mai nella Situazione, nella
   Struttura narrativa o nelle richieste da generare. Un concetto già spiegato altrove si ridice in una frase, come
   se fosse la prima volta.
+
+### 2026-09-20 · corse `scrivere-con-ia` e `generativa-probabile`
+- **La mossa del reel è della fonte?** Con `fonte: url`, prima di scrivere «la nostra mossa è più mite / diversa da
+  quella dell'autore», rileggi il metodo che l'autore descrive: in `scrivere-con-ia` la mossa («chiedi i problemi,
+  riscrivi tu») era parola per parola il metodo di Ptacek, e il revisore ha dato ❌ alla riga che la presentava come
+  nostra. Se la mossa è sua, l'idea lo dice e il reel la attribuisce.
+- **Omonimia: cerca anche nel settore dei personaggi.** «Quattroassi Arredi» non aveva omonimi fra i negozi di arredi,
+  ma esisteva una Quattroassi S.r.l. che gestisce un bar, e la cliente del reel apriva un bar. Cerca il nome da solo,
+  non solo «nome + settore dell'azienda». Se il nome sta dentro le richieste da generare, l'omonimia va chiusa prima
+  di T0b: dopo, cambiarlo vuol dire rigenerare tutte le uscite.
+- **Le query dei filmati in inglese.** Le tre query per Pexels che scrivi nell'hook servono davvero: `broll piano` le
+  ricava dalle parole italiane del brief e Pexels le capisce male («piedi» → otto filmati di piedi nudi). Scrivile
+  sempre, in inglese, anche per le scene d'attenzione candidate.
+
+### 2026-09-20 · REGOLA DEL PRESENTATORE: leggi tutto, traccia solo le fonti ufficiali
+Nota di Flavio sullo spunto `ia-e-lavoro`. Quando uno spunto chiede dati o contesto (`fonte: testo` o `tema`):
+- **Cerca e leggi sul web anche gli articoli che ne parlano** (giornali, blog, newsletter): servono a capire quali
+  numeri girano, quali esempi e quali obiezioni. Questo materiale informa l'idea e **non si cataloga**: niente elenco di
+  URL, date di consultazione e citazioni per ogni articolo letto.
+- **In `## Fonte` e nei «Claim per il revisore» entrano solo fonti ufficiali**: istituzioni e organismi (WEF, FMI, OCSE,
+  ILO, Commissione europea, Eurostat, Eurobarometro, Banca d'Italia, Istat, INAPP), studi accademici pubblicati,
+  istituti di ricerca riconosciuti (Pew, Gallup, McKinsey Global Institute, Goldman Sachs Research). Per queste resta il
+  rigore: chi, anno, link, **cosa misura alla lettera**.
+- **Niente opinioni di gente a caso**: la tesi di un commentatore o di un post non entra nel reel né come claim né come
+  autorità. Se un articolo riporta un numero interessante, risali alla fonte ufficiale: se la trovi citi quella, se non
+  la trovi il numero non entra.
+- **Vale anche con `fonte: url`** (precisazione del presentatore, stesso giorno): se il link è il post di una persona
+  qualunque (un blogger, un programmatore, un commentatore: il post di Ptacek per `scrivere-con-ia`), è **uno spunto di
+  riflessione**, non un'autorità. Lo leggi, ne prendi le idee, ma **nel reel non si cita**: niente nome a voce o a
+  schermo, niente «secondo X», niente sue frasi come punch. Il credito va **nella caption** («l'idea viene da un post
+  di …», con il link), e l'idea lo scrive nelle note per la caption. Onestà: il reel non dice «me lo sono inventato
+  io» né presenta come dimostrata una sua opinione; la mossa si presenta per quello che è, senza paternità. A voce o a
+  schermo si citano solo fonti ufficiali.
+- Nel rapporto: i due-tre numeri scelti con la fonte ufficiale, e in due righe cosa hai capito dal resto della lettura.
+
 ## Rapporto finale (sempre, in questa forma)
 ```
 Stato: DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT

@@ -395,6 +395,16 @@ restare nello stesso posto della lista (è così che `Classifica.aggiorna` fa sc
 - **`MoveAlongPath` su una copia di una freccia** segue anche la punta: usa un arco senza punta fra gli stessi
   punti (`ArcBetweenPoints`).
 - **`to_edge` e `to_corner`** misurano dal bordo della tela, non dall'area utile: finiscono sotto l'interfaccia.
+- **`cfg.palette` dentro un mobject → RecursionError su `copy()`** (2026-09-20). `Config.__getattr__` ricorre su `_d`
+  quando `deepcopy` crea l'oggetto senza `__init__`: un mobject che tiene la palette come attributo non si può più
+  copiare né usare con `generate_target()`. Rimedio: tieni le stringhe dei colori, non la palette.
+- **Mono a 36 px misura 34,6 px** (2026-09-20): cifre, contatori e il ruolo `piede` con `mono=True` vanno a 40 px.
+- **`Messaggio(cta=…)` con una CTA lunga** la riduce sotto i 36 px invece di andare a capo: spezzala su due righe.
+- **Testo denso che resta a schermo** (regola del presentatore, 2026-09-20). Un documento lungo (mail, richiesta,
+  elenco) si mostra intero solo per un istante (≤ 1-1,5 s); poi resta leggibile il frammento del beat e il resto
+  diventa **righe-sagoma** (barrette larghe come le righe vere), oppure si va in zoom sul frammento col resto a zero,
+  o la carta si accorcia. Attenuare a grigio non basta. A ogni fine beat: più di una ventina di parole leggibili,
+  esclusi titoli ed etichette, è troppo.
 
 ## 11. Brief ANIMAZIONE: male e bene
 

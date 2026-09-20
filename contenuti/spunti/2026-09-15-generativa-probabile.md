@@ -2,7 +2,7 @@
 fonte: testo
 data: 2026-09-15
 stato: ideato
-idea: contenuti/idee/2026-09-15-generativa-probabile.md
+idea: contenuti/idee/2026-09-20-generativa-probabile.md
 ---
 
 Rifacciamo il reel «generativa = probabile» con un esempio più utile del biglietto per il collega: **la mail di
@@ -15,8 +15,9 @@ candidarmi», «mi ha colpito la vostra realtà dinamica»). L'errore comune è 
 parole, non il risultato. La mossa è cambiare quello che viene prima, cioè darle **un dettaglio vero che sai solo
 tu**: un progetto che hai fatto, un numero tuo, perché proprio quell'azienda.
 
-Nota per la pipeline: è un rifacimento con lo stesso slug `generativa-probabile`. Riscrivi gli stessi file, niente
-file con la data di oggi: idea `contenuti/idee/2026-09-15-generativa-probabile.md`, sceneggiatura
-`contenuti/sceneggiature/2026-09-15-generativa-probabile.md`, animazioni `contenuti/animazioni/generativa-probabile.py`.
-La versione del biglietto resta nella storia git (commit 3ae4d09). Le mail mostrate nel reel vengono da uscite vere,
-con un annuncio fisso scritto nell'idea e tre richieste: la base, «+ sii originale», «+ un dettaglio vero».
+Nota per la pipeline (2026-09-20): si riparte **da zero**, slug `generativa-probabile`. La corsa precedente è in
+`contenuti/archivio/generativa-probabile/` (si legge per non ripetere gli errori, non si copia: idea, uscite e
+sceneggiatura si rifanno). Il reel è a sé stante: azienda, persone e annuncio inventati da capo, nessun richiamo ad
+altri reel. Apertura a filmato: l'hook è il problema o la domanda di chi guarda, con la clip dietro. Le mail mostrate
+nel reel vengono da uscite vere (T0b), con un annuncio fisso scritto nell'idea e tre richieste: la base, «+ sii
+originale», «+ un dettaglio vero».

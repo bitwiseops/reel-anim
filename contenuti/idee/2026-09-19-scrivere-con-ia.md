@@ -3,7 +3,8 @@
 **Data:** 2026-09-19
 **Tipo:** pillola
 **Fonte:** url (contenuti/spunti/2026-09-19-scrivere-con-ia.md)
-**Stato:** idea
+**Stato:** sceneggiata
+**Sceneggiatura:** contenuti/sceneggiature/2026-09-19-scrivere-con-ia.md
 **Uscite:** contenuti/idee/uscite/scrivere-con-ia-2026-09-19.md
 
 Reel a sé stante: chi lo guarda non ha visto gli altri. Il testo **l'hai scritto tu** e il rischio è fartelo
@@ -40,7 +41,7 @@ Tre cautele, perché il reel non diventi né una lode né una stroncatura:
   di Ptacek ed è un concetto a sé: qui resta in caption (vedi «Angoli scartati»).
 
 ## Situazione
-*Proposta* (l'articolo non ha una scena: parla della scrittura dell'autore). Lavori da Quattroassi Arredi, un
+*Proposta* (l'articolo non ha una scena: parla della scrittura dell'autore). Lavori da Banconiera Arredi, un
 negozio di arredi per locali (azienda inventata per questo reel), e devi dire a una cliente che le sedie per
 l'inaugurazione del suo bar arrivano in ritardo. La mail l'hai scritta tu, di getto. A schermo è **la bozza**, dichiarata inventata
 («mail, azienda e persone inventate»):
@@ -292,13 +293,15 @@ suonare come una condanna di «praticamente».
 - Non si dice che chi legge «se ne accorge»: lo dice Ptacek, e gli studi sono misti.
 - «L'IA è brava a trovare i problemi»: è l'esperienza di Ptacek più le uscite C; può mancare difetti, segnalarne di
   falsi e contare male. «Trova», non «trova tutti».
-- «Nemmeno una parola» è la regola di Ptacek, volutamente estrema. Il reel la riporta; la sua mossa è più mite (chiedi
-  i problemi, riscrivi tu). Non presentare la regola come nostra né come dimostrata.
+- «Nemmeno una parola» è la regola di Ptacek, volutamente estrema. Il reel la riporta. **La mossa del reel (chiedi
+  i problemi, riscrivi tu) è il metodo di Ptacek** («Ask the model to spot problems in your writing. For each problem,
+  rewrite the paragraph»: verificato sulla pagina dal revisore il 2026-09-20), non una versione nostra e più mite: nel
+  reel si dice che la mossa viene da lui. Non presentare la regola come nostra né come dimostrata.
 - I riferimenti citati nel «Concetto» (Padmakumar & He 2024; Agarwal et al. 2025; Doshi & Hauser 2024; Sharma et al.
   2024; Russell et al. 2025) sono a memoria: da verificare prima di metterli in caption. Nessuno entra in VOCE.
-- Mail, azienda, cliente e Giulia sono inventati e va dichiarato. «Quattroassi Arredi» è un nome nuovo, scelto per
-  non richiamare un'azienda nota: una ricerca web del 2026-09-19 non ha trovato aziende di arredi o sedie con questo
-  nome, ma **l'omonimia va ricontrollata dal revisore** (ricerca web e registro imprese). Il nome non compare nella
+- Mail, azienda, cliente e Giulia sono inventati e va dichiarato. «Banconiera Arredi» è il nome scelto il
+  2026-09-20 (due ricerche web senza omonimi) al posto del primo, che il revisore ha trovato identico a quello di una
+  società vera attiva nel settore dei bar: **l'omonimia va ricontrollata dal revisore** (ricerca web e registro imprese). Il nome non compare nella
   bozza né nelle richieste, quindi se si cambia non si rigenera niente. Nessun dato personale vero nelle richieste.
 - Le uscite vengono dalla CLI con un prompt di sistema neutro, non dall'app: non si dice «in chat».
 

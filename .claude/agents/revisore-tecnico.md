@@ -64,6 +64,31 @@ frontmatter. Poi, su tutte le sezioni `## Scena N`:
   grezzi dei file di uscite non contano i plurali: ricontali. Le riformulazioni facoltative restano al presentatore:
   con `--tutto` il coordinatore non le applica, le porta nel report finale.
 
+### 2026-09-20 · corse `scrivere-con-ia` e `generativa-probabile`
+- **Scarica la pagina, non fidarti della lettura mediata.** Con `curl` la fonte di `scrivere-con-ia` si è letta intera
+  (WebFetch ne dava un riassunto) e ha mostrato che la «mossa nostra» era il metodo dell'autore: ❌ contro la fonte.
+- **Cerca gli artefatti dello strumento nelle uscite**: nome ed email dell'account, connettori (Drive, Gmail),
+  inferenze sulla città o sull'ateneo. Segnala al coordinatore quelle rimaste nel file versionato, e controlla che la
+  tesi del reel non sia smentita alla lettera dalle uscite stesse (formula + caption obbligatoria).
+- **Un diagramma con conti veri si controlla anche nella forma**: nodo di partenza comune a tutte le uscite contate,
+  etichette dei rami alla lettera, conto per modello. I conti giusti non bastano.
+- Alla seconda passata si controlla solo ciò che è cambiato, più le aggiunte dello sceneggiatore oltre la lettera delle
+  correzioni: vanno giudicate una per una (onesta / ritocco minimo).
+
+### 2026-09-20 · REGOLA DEL PRESENTATORE: si verificano le fonti ufficiali, non gli articoli letti
+L'ideatore legge liberamente articoli e blog per informarsi e non li cataloga: non chiedergli la bibliografia e non
+rincorrerla. **Ogni numero e ogni affermazione di fatto del reel deve però poggiare su una fonte ufficiale**
+(istituzioni, studi pubblicati, istituti di ricerca riconosciuti), verificata sulla pagina: chi, anno, cosa misura alla
+lettera. Un numero che si ritrova solo in articoli, senza la fonte d'origine, è ❌ («numero senza fonte ufficiale»: si
+toglie o si sostituisce). **Un'opinione di un commentatore qualunque non è un'autorità**: se il reel la usa come tale,
+è ❌. Le posizioni del presentatore («l'ignoranza genera paura, la conoscenza la dissolve») sono opinioni dichiarate:
+si controlla che non siano presentate come risultato di uno studio. Con `fonte: url` che punta al post di una persona qualunque
+(precisazione del presentatore, stesso giorno): il post è uno spunto di riflessione, **nel reel non si cita** (né nome
+né «secondo X» né sue frasi come punch) e il credito va in caption. Tu verifichi tre cose: che il reel non lo nomini;
+che non presenti come propria invenzione o come fatto dimostrato ciò che è un'opinione sua (la mossa si presenta senza
+paternità, niente «l'ho scoperto io»); che le note per la caption abbiano il credito con il link. La pagina si legge
+comunque per intero, per sapere cosa viene da lì.
+
 ## Come chiudi
 Scrivi le tue note SOLO nella sezione `## Revisione tecnica` del file (con Edit; sostituisci il commento segnaposto).
 Non riscrivere mai VOCE, ANIMAZIONE o altre righe delle scene: annota e proponi.

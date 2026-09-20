@@ -193,6 +193,37 @@ Prima di scrivere codice leggi OBBLIGATORIAMENTE:
     `reimpagina` cambia anche il corpo, i gruppi che scendono di riga («lampo», «gomito») devono prendere il corpo
     d'arrivo nella prima tappa come gli altri (`corpo_rigido=True`), sennò si staccano dalla riga che si stringe.
 
+### 2026-09-20 · `scrivere-con-ia` (74,6 s, 0 avvisi, 0 controlli; cinque scene animate, due a filmato)
+- **Dopo un filmato si entra con un taglio netto**: il primo fotogramma della scena animata dev'essere già pieno (lo
+  stato di fine della scena animata precedente va benissimo), e il primo cambiamento parte entro 0,3 s.
+- **`cfg.palette` non si tiene come attributo di un mobject**: `__getattr__` in `tools/anim/config.py` ricorre su `_d` e
+  `copy()`/`generate_target()` falliscono con RecursionError. Tieni le stringhe dei colori. (Difetto di libreria aperto.)
+- **Passaggi a finestre non accavallate** su oggetti già in scena: un solo gruppo «mondo» e ogni pezzo con la sua
+  finestra (l'animazione locale `Tappe` di `contenuti/animazioni/scrivere-con-ia.py`); evita i riquadri sopra i testi
+  senza riordinare la scena. Candidata al livello 2 della libreria, come `punch` con firma sotto (`punch_citazione`).
+- **Mono a 36 px misura 34,6 px** e non passa il controllo: cifre e contatori in mono a 40 px. `Messaggio(cta=…)` con
+  una CTA lunga scende sotto i 36 px invece di andare a capo: spezzala tu su due righe.
+- **Un testo lungo (una mail di 78 parole) a 36 px riempie l'area**: a capo fissi, e il wow si fa svuotando lo schermo
+  (tutto a opacità zero, zoom su tre parole), non rimpicciolendo la carta.
+- **Dichiara nel rapporto cosa non hai guardato a 8 fps**: il coordinatore lo ricontrolla sulle `_scene` montate.
+
+### 2026-09-20 · REGOLA DEL PRESENTATORE: niente testo denso che resta a schermo
+Nota di Flavio sull'anteprima di `scrivere-con-ia` (la mail di 78 parole a 36 px restava a schermo per scene intere):
+**le animazioni non possono contenere testo così denso.** Può esserci un momento in cui il testo è molto, ma deve
+passare **subito** a un fuoco su una parte e rendere il resto meno visibile.
+- **Il pieno dura un istante** (≤ 1-1,5 s: il tempo di riconoscere «è una mail», non di leggerla). Poi resta leggibile
+  solo il frammento di cui parla la VOCE in quel beat.
+- **Il resto diventa righe-sagoma**: barrette al posto delle righe, della stessa larghezza delle righe vere, così la
+  forma del documento resta e il testo smette di chiedere di essere letto. Alternative: zoom sul frammento con il resto
+  a opacità zero; carta accorciata alle sole righe che contano; il frammento estratto e ingrandito fuori dalla carta.
+  **Attenuare a grigio lasciando il testo leggibile non basta.**
+- **Controllo a ogni fine beat** (va nello storyboard e nel rapporto): quante parole leggibili ci sono a schermo? Oltre
+  una ventina, esclusi titoli ed etichette, è troppo. Nel rapporto: per scena, il massimo di parole leggibili e per
+  quanto tempo.
+- Vale anche per richieste lunghe, elenchi di problemi, schede: una riga, poche parole, il resto sagoma e «[…]».
+- Se una condizione del revisore (testo alla lettera, didascalia sempre leggibile) confligge con la regola: i testi
+  restano alla lettera, ma se ne mostra meno; le didascalie di onestà («inventati», «riscritta da noi») restano.
+
 ## Confini
 - Non modificare `tools/` né la libreria: se un componente manca, ha un difetto o un parametro scomodo, arrangiati
   nel tuo file (una funzione locale) e **segnalalo** nel rapporto: le correzioni alla libreria le decide il

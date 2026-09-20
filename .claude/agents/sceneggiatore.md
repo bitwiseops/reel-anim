@@ -178,6 +178,48 @@ Prima di scrivere leggi OBBLIGATORIAMENTE:
   spiegato altrove, lo ridici in una frase come se fosse la prima volta. Nomi e situazioni inventati sono nuovi a
   ogni reel.
 
+### 2026-09-20 · corse `scrivere-con-ia` e `generativa-probabile` (tre ❌ e un ❌ del revisore)
+- **Un contatore non cambia metro di nascosto.** Se un numero a schermo conta una cosa («frasi tornate uguali») non può
+  riapparire più avanti a contarne un'altra («frasi scritte da lei») con la stessa etichetta: l'etichetta dice il metro,
+  cambia a vista, e dove il metro vecchio darebbe un numero scomodo il valore si spegne. Un valore iniziale si mostra
+  solo se è vero con quell'etichetta («– su 5», non «5 su 5», prima che ci sia qualcosa da contare).
+- **Un conto non sta accanto alla citazione di una sola uscita.** «10 su 10» vicino alla frase di C2 si legge «dieci su
+  dieci hanno detto questo». Il conto si attacca alla cosa contata (le parole segnalate); la citazione entra dopo, senza
+  numero accanto. Lo stesso per un'etichetta «4 su 10» vicino a una frase intera: agganciala alla sola parola contata.
+- **La mossa della fonte si attribuisce.** Se la mossa del reel è il metodo dell'autore citato, la VOCE lo dice («ed è da
+  lui che prendo la mossa»); non si presenta come nostra né come versione più mite della sua.
+- **Un diagramma con conti veri afferma anche la sua forma.** Un bivio «6 · 3 · 1» disegnato a partire dal saluto di
+  UNA uscita dice che tutte e dieci sono passate di lì: il nodo di partenza dev'essere comune a tutte le uscite contate
+  (un'etichetta «saluto», non il saluto di A10), le etichette dei rami alla lettera («(vi) scrivo…» se due su sei dicono
+  «vi scrivo»), e la didascalia dice cosa si è contato («dopo il saluto · 10 prove, 2 modelli»). Se i due modelli non
+  concordano, il conto per modello va in caption.
+- **Artefatti dello strumento nelle uscite.** `claude -p` passa al modello nome, email e connettori dell'account (Drive,
+  Gmail) anche con `--tools ""`: le uscite possono contenere «mi chiamo Nome Cognome», offerte di salvare la bozza in
+  Gmail, commenti sull'indirizzo universitario. Non sono prove né pro né contro la tesi; a schermo si tagliano (taglio
+  dichiarato) e la caption dice che lo strumento li passava. Una formula come «quello che non le hai scritto, non lo sa»
+  va scritta sapendo che le app hanno memoria, profilo e connettori.
+- **Scene a filmato: query in inglese nelle Note.** Per l'hook e per ogni scena scritta per il filmato metti nelle Note
+  di produzione 2-3 query in inglese (soggetto, azione, luogo): il coordinatore le mette in `piano.json`. Le parole
+  italiane del brief non bastano («persona in piedi vicino alla finestra» ha riportato piedi nudi).
+- **Obiettivo di durata.** Due corse su due sono uscite a 84-86 s con l'idea che chiedeva ≤ 75: la voce di prova poi
+  ha dato 74,6 s su 86 stimati (la stima a 2,8 parole/s è larga). Non comprimere il parlato per la stima; elenca i tagli
+  pronti e lascia decidere al presentatore.
+
+### 2026-09-20 · REGOLA DEL PRESENTATORE: niente testo denso a schermo
+Flavio, sull'anteprima di `scrivere-con-ia`: una mail intera che resta a schermo per scene intere non va. Quando il
+filo visivo è un documento (mail, richiesta, annuncio, elenco), il brief `ANIMAZIONE:` dice **a ogni beat quale
+frammento resta leggibile** (poche parole, quelle di cui parla la VOCE) e che il resto diventa righe-sagoma o esce. Il
+documento intero si vede per un istante, quando entra. Scrivi testi-esempio corti: una bozza di 78 parole è già troppa
+da mostrare; bastano le due-tre frasi che il reel usa davvero, con «[…]» dichiarato.
+
+### 2026-09-20 · REGOLA DEL PRESENTATORE: a voce e a schermo solo fonti ufficiali
+Flavio, su `scrivere-con-ia`: il post di una persona qualunque (Ptacek) è uno spunto di riflessione, non un'autorità.
+**Nel reel non si cita**: niente nome in VOCE o a schermo, niente «secondo X», niente sue frasi come punch. Il credito va
+nelle note per la caption («l'idea viene da un post di …», con il link). La mossa si presenta per quello che è, senza
+paternità: non «me la sono inventata io», non «uno dice che». In VOCE e a schermo si nominano solo fonti ufficiali
+(istituzioni, studi pubblicati, istituti di ricerca), e solo quando reggono un numero. Questa regola supera la lezione
+«la mossa della fonte si attribuisce» qui sopra: l'attribuzione si fa in caption, non nel reel.
+
 ## Consegna
 File in `contenuti/sceneggiature/` (nome `YYYY-MM-DD-<slug>.md` con la data di oggi), `stato: sceneggiatura`,
 `idea:` con il percorso dell'idea, `slug` breve e senza data. Esegui `uv run reel valida <file>` e correggi finché

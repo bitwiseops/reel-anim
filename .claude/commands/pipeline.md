@@ -57,6 +57,11 @@ richiesta il testo esatto, poi le uscite con una sigla (A1…A10 per la prima ri
 `claude -p` passa al modello nome ed email dell'account anche da una cartella neutra (`--bare` vale solo con chiave
 API): prima di salvare sostituisci i dati veri con «Nome Cognome» e «nome.cognome@email.it» e dichiaralo in testa al
 file (2026-09-16: nome in 28 uscite su 30).
+Dal 2026-09-20: `--tools ""` **non spegne i connettori dell'account** (uscite che dicono di aver provato ad aprire il
+Drive, che offrono la bozza in Gmail, che commentano l'indirizzo universitario). Cerca nel file anche città, ateneo,
+«Drive», «Gmail»; sostituisci le inferenze personali, dichiara l'artefatto in testa al file e ricordalo al revisore: la
+caption dovrà dire che lo strumento passava nome, email e connettori. Se il nome dell'azienda sta dentro le richieste,
+l'omonimia si controlla **prima** di generare.
 
 **T1 · sceneggiatura.** Prima lancia `uv run reel stile`: se il verdetto è `da rifare` o `manca`, dillo nel report
 (lo `stilista` si lancia a parte, non blocca); riporta anche la riga `pattern:` (se manca, lo schema dell'idea non ha
@@ -77,7 +82,9 @@ vanno a filmato, e va deciso **prima di animare**, perché una scena a filmato n
 parte da uno stacco. La VOCE a questo punto è congelata.
 1. `uv run --project broll broll piano <file>`: riporta quali scene propone a filmato e con quali query. Se l'hook non
    è fra quelle, dillo: vuol dire che il suo brief parla del titolo o manca, e l'apertura con la clip (nota del
-   presentatore del 2026-09-19) non c'è. Se le query sono parole vaghe, il brief non descrive un'immagine: si rimanda
+   presentatore del 2026-09-19) non c'è. **Le query del piano sono parole italiane del brief e Pexels le capisce male**
+   (2026-09-20: «piedi» → otto filmati di piedi nudi): prima di `cerca` riscrivi `query` in `piano.json` con 2-3 query in
+   inglese per scena (quelle dell'idea o delle Note della sceneggiatura), poi `cerca --max 12`. Se le query sono parole vaghe, il brief non descrive un'immagine: si rimanda
    allo sceneggiatore, non si cerca a caso. Zero scene a filmato: scrivilo nel report e prosegui con T3.
 2. `broll cerca <slug>` e `broll provini <slug>`, poi **guarda tu** `contenuti/render/<slug>/broll/candidati-scena-NN.png`.
 3. A fermate → **FERMATA 2b**: i provini, per ogni scena i due candidati che consigli e perché (soggetto pertinente,
@@ -87,7 +94,8 @@ parte da uno stacco. La VOCE a questo punto è congelata.
    in testa ai punti «da confermare» del report. Cambiarla dopo costa poco: `broll scegli`, `broll rendi --forza`,
    `uv run reel monta`, senza rianimare niente.
 4. `broll rendi <slug>`: guarda `reso-scena-NN.png` (stacchi, ritaglio) e lancia `broll prova-inquadratura <slug>
-   --filmato contenuti/media/<slug>/broll-scena-NN.mp4` per vedere cosa copre il riquadro. Poi `broll scrivi <slug>` e
+   --filmato contenuti/media/<slug>/broll-scena-NN.mp4` per vedere cosa copre il riquadro. Se il riquadro copre il soggetto
+   (il telefono, le mani, il volto) si cambia candidato: con i filmati già verticali l'ancora non sposta niente. Poi `broll scrivi <slug>` e
    `uv run reel valida <file>`: 0 errori. Se `scrivi` non converte una scena (ha un `TESTO:`), è una decisione del
    presentatore: riportala. `contenuti/broll/<slug>/CREDITI.md` va nel report: i nomi servono in didascalia.
 

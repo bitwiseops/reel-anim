@@ -54,17 +54,22 @@ Piano completo: `~/.claude/plans/dobbiamo-revisionare-il-modello-lovely-piglet.m
   `.claude/workflows/reel.js` — la stessa corsa come Workflow deterministico (`args` = percorso di partenza)
 
 ## Stato
-Fasi 0 e 1 chiuse (2026-09-13, in `main`). Fase 2 in corso (branch `fase-2-primo-reel`): il primo reel vero
-«Generativa non vuol dire creativa» (slug `generativa-non-creativa`) ha fatto da banco di prova per libreria, agenti e
-`reel registra`; **il 2026-09-15 i contenuti sono stati azzerati** e i suoi testi archiviati in
-`contenuti/archivio/generativa-non-creativa/` (clip, prese e render cancellati). Nuovi: `ideatore` e spunti,
-`stilista` e `reel stile` (corpus in `~/Projects/reelkit/export.md`), `/pipeline --tutto`
-e il workflow `reel`. Le revisioni del presentatore hanno l'ultima parola. Prima corsa `--tutto` il 2026-09-15
-(`generativa-probabile`, biglietto per Marco, commit 3ae4d09). Il 2026-09-16: pattern narrativi di reelkit agli
-agenti (`[stile] pattern`, `reel stile`, tappa T0b) e lo spunto riscritto con la mail di risposta a un annuncio di
-lavoro, stesso slug, render cancellato; la corsa `--tutto` è arrivata all'anteprima (74 s, azienda «Acme Arredi»)
-con le mosse wow (`docs/animazioni.md` §11bis). **Prossimo passo**: l'animatore corregge i testi sovrapposti nei
-passaggi delle scene 4, 5 e 7, poi il presentatore guarda l'anteprima (dettagli nella memoria `stato-avanzamento`).
+Fasi 0 e 1 chiuse (2026-09-13, in `main`). Fase 2 in corso (branch `fase-2-primo-reel`). Il primo reel vero
+«Generativa non vuol dire creativa» ha fatto da banco di prova ed è in `contenuti/archivio/generativa-non-creativa/`;
+il 2026-09-15 i contenuti sono stati azzerati. Poi: `ideatore` e spunti, `stilista` e `reel stile` (corpus
+`~/Projects/reelkit/export.md`), `/pipeline --tutto` e il workflow `reel`, i pattern narrativi di reelkit agli agenti
+(`[stile] pattern`, tappa T0b), il sottosistema `broll/` e le mosse wow (`docs/animazioni.md` §11bis).
+Il **2026-09-20**: la versione del 15/9 di `generativa-probabile` e' finita in
+`contenuti/archivio/generativa-probabile/` e il reel e' stato rifatto da zero (70,4 s, `animato`, manca il controllo dei
+fotogrammi e la fermata 3); **due reel pronti da registrare**, `scrivere-con-ia` (74,5 s, scena 5 riscritta senza
+citare la fonte, che resta in caption) e `ia-e-lavoro` (82,0 s, il primo tutto a figure: pittogrammi, tessere, numeri,
+nessun documento a schermo). Regole nuove del presentatore: ogni reel è a sé stante;
+niente testo denso; solo fonti ufficiali; **i reel si guardano muti** → caption sincronizzate bruciate nel montaggio
+dopo la registrazione, e animazioni che si capiscono senza leggere (ammessi numeri, percentuali e parole singole, due
+solo se espressione unica; vietate le frasi da leggere).
+**Prossimo passo**: il presentatore registra i due reel (`reel registra`), poi parte il piano
+`~/.claude/plans/caption-bruciate-e-animazioni-senza-testo.md` (caption + animazioni senza testo + catalogo di pattern
+Manim; dettagli e decisioni aperte nella memoria `stato-avanzamento`).
 
 ## Comandi
 `uv run reel setup` · `stile` · `valida <file>` · `gobbo <file> [--scrivi]` · `clip <file>` · `voce <file>` ·
