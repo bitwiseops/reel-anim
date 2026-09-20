@@ -3,8 +3,8 @@
 **Data:** 2026-09-19
 **Tipo:** pillola
 **Fonte:** url (contenuti/spunti/2026-09-19-scrivere-con-ia.md)
-**Stato:** sceneggiata
-**Sceneggiatura:** contenuti/sceneggiature/2026-09-19-scrivere-con-ia.md
+**Stato:** idea
+**Sceneggiatura archiviata:** contenuti/archivio/scrivere-con-ia/sceneggiatura.md (regime vecchio, 2026-09-20)
 **Uscite:** contenuti/idee/uscite/scrivere-con-ia-2026-09-19.md
 
 Reel a sé stante: chi lo guarda non ha visto gli altri. Il testo **l'hai scritto tu** e il rischio è fartelo

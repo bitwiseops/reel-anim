@@ -3,8 +3,8 @@
 **Data:** 2026-09-20
 **Tipo:** pillola
 **Fonte:** testo (contenuti/spunti/2026-09-15-generativa-probabile.md)
-**Stato:** sceneggiata
-**Sceneggiatura:** contenuti/sceneggiature/2026-09-20-generativa-probabile.md
+**Stato:** idea
+**Sceneggiatura archiviata:** contenuti/archivio/generativa-probabile/2026-09-20/sceneggiatura.md (regime vecchio, 2026-09-20)
 **Uscite:** contenuti/idee/uscite/generativa-probabile-2026-09-20.md
 
 Reel a sé stante: chi lo guarda non ha visto nient'altro. Azienda, annuncio, persone e vicenda sono inventati da capo

@@ -3,8 +3,8 @@
 **Data:** 2026-09-20
 **Tipo:** pillola
 **Fonte:** testo (contenuti/spunti/2026-09-20-ia-e-lavoro.md)
-**Stato:** sceneggiata
-**Sceneggiatura:** contenuti/sceneggiature/2026-09-20-ia-e-lavoro.md
+**Stato:** idea
+**Sceneggiatura archiviata:** contenuti/archivio/ia-e-lavoro/sceneggiatura.md (regime vecchio, 2026-09-20)
 
 Reel a sé stante: chi lo guarda non ha visto nient'altro. È il reel che dice a cosa serve il canale, ma lo dice come
 promessa («qui trovi come funziona davvero, con i suoi limiti»), in una frase verso la fine, senza richiami ad altri
