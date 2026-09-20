@@ -13,6 +13,7 @@ from pathlib import Path
 
 from ..anim.base import inizi_per_parole
 from ..anim.config import Config, carica
+from . import caption as captionmod
 from . import clip as clipmod
 from . import compositing, fotogrammi
 from .contact_sheet import genera as contact
@@ -151,6 +152,22 @@ def anima(r: Reel, diag: list[Diagnostica], out: Path, qualita: str = "l", solo:
     return info
 
 
+def _caption(r: Reel, s: Scena, t: TempiScena, out: Path, cfg: Config) -> tuple[tuple, tuple[int, int] | None, list[dict]]:
+    """I blocchi di caption della scena: (per il filtergraph, angolo della fascia, per il report).
+
+    Si bruciano qui e non in Manim perché i tempi che contano sono quelli della presa: con `--prova` sono quelli
+    della voce sintetica e servono a far vedere l'ingombro prima di registrare.
+    """
+    dove = captionmod.attiva(cfg, s.caption_effettiva())
+    if dove is None or not s.voce:
+        return (), None, []
+    coppie = captionmod.prepara(s.voce, t.inizi_frasi_s, t.durata_s, out / "_caption", cfg, dove)
+    x, y, _, _ = captionmod.fascia(cfg, dove)
+    per_ffmpeg = tuple((png, b.t0, b.t1) for png, b in coppie)
+    per_report = [{"testo": b.piano, "t0": b.t0, "t1": b.t1, "frase": b.frase} for _, b in coppie]
+    return per_ffmpeg, (x, y), per_report
+
+
 def _scena_broll(r: Reel, s: Scena, t: TempiScena, out: Path, avatar: Path, args, cfg: Config,
                  diag: list[Diagnostica]) -> dict | None:
     """Una scena a filmato ([broll], o l'hook con `SCHERMO:`): niente Manim, il file di `SCHERMO:` fa da grafica a
@@ -172,9 +189,10 @@ def _scena_broll(r: Reel, s: Scena, t: TempiScena, out: Path, avatar: Path, args
     t2 = time.time()
     riq = s.riquadro_effettivo()
     c = clipmod.trova(r.slug, s.n) if t.origine == "clip" else None
+    cap, cap_xy, cap_report = _caption(r, s, t, out, cfg)
     src = compositing.Sorgenti(grafica=filmato, durata_s=t.durata_s, riquadro=riq, video_presentatore=c,
                                avatar=avatar if (c is None and riq != "no" and avatar.exists()) else None, audio=t.audio,
-                               filmato=True)
+                               filmato=True, caption=cap, caption_xy=cap_xy)
     dest = compositing.componi_scena(src, out / "_scene" / f"{s.n:02d}.mp4", cfg, anteprima=args.anteprima)
     tc = time.time() - t2
     png = fotogrammi.fotogramma_chiave(dest, t.durata_s, out / "scene" / f"{s.n:02d}.png")
@@ -182,6 +200,7 @@ def _scena_broll(r: Reel, s: Scena, t: TempiScena, out: Path, avatar: Path, args
     return {"ordine": s.n, "tipo": "png", "file": str(png.relative_to(out)), "scena": s.n, "tipo_scena": s.tipo,
             "durata_s": t.durata_s, "parole_voce": s.parole_voce, "durata_stimata_s": durata_stimata_s(s, cfg),
             "origine_durata": t.origine, "inizi_frasi_s": t.inizi_frasi_s, "origine_tempi": t.origine_tempi,
+            "caption": cap_report,
             "avvisi_tempi": avvisi_tempi, "controlli": [], "riquadro": riq, "schermo": s.schermo, "filmato": True,
             "filmstrip": str(fs.relative_to(out)), "grafica": str(filmato.relative_to(RADICE)) if filmato.is_relative_to(RADICE) else str(filmato),
             "video": str(dest.relative_to(out)), "tempo_manim_s": 0.0, "tempo_ffmpeg_s": round(tc, 1)}
@@ -263,9 +282,10 @@ def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None 
         t2 = time.time()
         riq = s.riquadro_effettivo()
         c = clipmod.trova(r.slug, s.n) if t.origine == "clip" else None
+        cap, cap_xy, cap_report = _caption(r, s, t, out, cfg)
         src = compositing.Sorgenti(grafica=grafica, durata_s=t.durata_s, riquadro=riq, video_presentatore=c,
                                    avatar=avatar if (c is None and riq != "no" and avatar.exists()) else None, audio=t.audio,
-                                   schermo=schermo)
+                                   schermo=schermo, caption=cap, caption_xy=cap_xy)
         dest = compositing.componi_scena(src, out / "_scene" / f"{s.n:02d}.mp4", cfg, anteprima=args.anteprima)
         tc = time.time() - t2
         tempi["compositing"] += tc
@@ -275,6 +295,7 @@ def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None 
                          "durata_s": t.durata_s, "parole_voce": s.parole_voce, "durata_stimata_s": durata_stimata_s(s, cfg),
                          "origine_durata": t.origine, "inizi_frasi_s": t.inizi_frasi_s, "origine_tempi": t.origine_tempi,
                          "avvisi_tempi": avvisi_tempi, "controlli": controlli, "riquadro": riq, "schermo": s.schermo,
+                         "caption": cap_report,
                          "filmstrip": str(fs.relative_to(out)), "grafica": str(grafica.relative_to(out)),
                          "video": str(dest.relative_to(out)), "tempo_manim_s": round(tm, 1), "tempo_ffmpeg_s": round(tc, 1)})
         pezzi.append((dest, t.durata_s))
@@ -301,7 +322,8 @@ def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None 
         fs = fotogrammi.filmstrip(finale, fotogrammi.tempi_campione(durata_tot, 10), out / "fotogrammi" / "reel-filmstrip.png", 220)
         hook = elementi[0]
         s_hook = r.hook if r.hook is not None and hook.get("filmato") else None   # a filmato il titolo non è a schermo
-        cop, cop45 = fotogrammi.cover(out / hook["video"], hook["durata_s"], out, cfg,
+        video_cop = _hook_senza_caption(r, hook, out, avatar, args, cfg)
+        cop, cop45 = fotogrammi.cover(video_cop, hook["durata_s"], out, cfg,
                                       titolo=s_hook.titolo if s_hook else None,
                                       sottotitolo=s_hook.sottotitolo if s_hook else None)
         probe = ffprobe(finale)
@@ -311,6 +333,25 @@ def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None 
     tempi = {k: round(v, 1) for k, v in tempi.items()}
     tempi["totale"] = round(time.time() - t0, 1)
     return _chiudi(r, diag, out, elementi, clip_info, reel_info, tempi, usa_prova, args)
+
+
+def _hook_senza_caption(r: Reel, hook: dict, out: Path, avatar: Path, args, cfg: Config) -> Path:
+    """Il video dell'hook da cui prendere la copertina. Le caption sono bruciate nelle scene, e una copertina con
+    una riga di parlato sopra finirebbe nella griglia del profilo: se l'hook ne ha, la scena si ricompone una volta
+    sola senza."""
+    video = out / hook["video"]
+    if not hook.get("caption"):
+        return video
+    s = r.scena(hook["scena"])
+    if s is None:
+        return video
+    riq = s.riquadro_effettivo()
+    c = clipmod.trova(r.slug, s.n) if hook.get("origine_durata") == "clip" else None
+    sorgente = (clipmod.cartella(r.slug) / s.schermo) if s.a_filmato else (out / hook["grafica"])
+    src = compositing.Sorgenti(grafica=sorgente, durata_s=hook["durata_s"], riquadro=riq, video_presentatore=c,
+                               avatar=avatar if (c is None and riq != "no" and avatar.exists()) else None,
+                               filmato=bool(s.a_filmato))
+    return compositing.componi_scena(src, out / "_scene" / "01-copertina.mp4", cfg, anteprima=True)
 
 
 def _chiudi(r: Reel, diag, out: Path, elementi, clip_info, reel_info, tempi, prova: bool, args) -> int:

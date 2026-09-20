@@ -7,7 +7,8 @@ from pathlib import Path
 
 import yaml
 
-from .model import CON_FILE, POSIZIONI_RIQUADRO, TIPI_SCENA, TRANSIZIONI, Diagnostica, Reel, Scena, avviso, errore
+from .model import (CAPTION, CON_FILE, POSIZIONI_RIQUADRO, TIPI_SCENA, TRANSIZIONI, Diagnostica, Reel, Scena,
+                    avviso, errore)
 
 
 class ErroreParse(Exception):
@@ -19,13 +20,16 @@ class ErroreParse(Exception):
 RE_H2_SCENA = re.compile(r"^##\s+scena\s+(\d+)\s*(?:\[(.*)\])?\s*$", re.I)
 RE_H2 = re.compile(r"^##\s")
 RE_H1 = re.compile(r"^#\s")
-RE_CAMPO = re.compile(r"^(voce|animazione|testo|titolo|sottotitolo|messaggio|cta|schermo|riquadro)\s*:\s*(.*)$", re.I)
+RE_CAMPO = re.compile(r"^(voce|animazione|figura|testo|titolo|sottotitolo|messaggio|cta|schermo|riquadro|caption)"
+                      r"\s*:\s*(.*)$", re.I)
 RE_COMMENTO = re.compile(r"<!--.*?-->", re.S)
 RE_DURATA = re.compile(r"^(\d+(?:[.,]\d+)?)\s*(ms|s)?$", re.I)
 
-PREFISSI = ["VOCE", "ANIMAZIONE", "TESTO", "TITOLO", "SOTTOTITOLO", "MESSAGGIO", "CTA", "SCHERMO", "RIQUADRO"]
+PREFISSI = ["VOCE", "ANIMAZIONE", "FIGURA", "TESTO", "TITOLO", "SOTTOTITOLO", "MESSAGGIO", "CTA", "SCHERMO",
+            "RIQUADRO", "CAPTION"]
 RIPETIBILI = {"VOCE": "voce", "ANIMAZIONE": "animazione", "TESTO": "testo"}
-SINGOLI = {"TITOLO": "titolo", "SOTTOTITOLO": "sottotitolo", "MESSAGGIO": "messaggio", "CTA": "cta", "SCHERMO": "schermo"}
+SINGOLI = {"TITOLO": "titolo", "SOTTOTITOLO": "sottotitolo", "MESSAGGIO": "messaggio", "CTA": "cta",
+           "SCHERMO": "schermo", "FIGURA": "figura"}
 DOVE = {"TITOLO": ("hook",), "SOTTOTITOLO": ("hook",), "MESSAGGIO": ("chiusura",), "CTA": ("chiusura",),
         "SCHERMO": ("schermo", "spiegazione", "broll", "hook")}
 
@@ -136,6 +140,15 @@ def parse_testo(testo: str, sorgente: Path | None = None) -> tuple[Reel, list[Di
                 continue
             if campo in RIPETIBILI:
                 getattr(corrente, RIPETIBILI[campo]).append(contenuto)
+                continue
+            if campo == "CAPTION":
+                v = contenuto.lower()
+                if v in CAPTION or v == "sì":
+                    if corrente.caption is not None:
+                        errori.append(errore("secondo CAPTION nella stessa scena", n_riga, n))
+                    corrente.caption = "si" if v == "sì" else v
+                else:
+                    errori.append(errore(f"CAPTION '{contenuto}' non valido ({' | '.join(CAPTION)})", n_riga, n))
                 continue
             if campo == "RIQUADRO":
                 v = contenuto.lower()

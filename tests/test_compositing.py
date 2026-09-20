@@ -14,9 +14,9 @@ def _filtri(cmd: list[str]) -> str:
 
 def test_posizioni_del_riquadro():
     cfg = carica()
-    assert posizione_riquadro(cfg, "si") == posizione_riquadro(cfg, "basso-destra") == (576, 1220, 360)
+    assert posizione_riquadro(cfg, "si") == posizione_riquadro(cfg, "alto-destra") == (576, 220, 360)
+    assert posizione_riquadro(cfg, "basso-destra") == (576, 1220, 360)
     assert posizione_riquadro(cfg, "basso-sinistra") == (84, 1220, 360)
-    assert posizione_riquadro(cfg, "alto-destra") == (576, 220, 360)
     assert posizione_riquadro(cfg, "alto-sinistra") == (84, 220, 360)
 
 
@@ -37,7 +37,7 @@ def test_scena_con_avatar_nel_riquadro():
 
 def test_scena_con_la_clip_del_presentatore():
     f = _filtri(comando_scena(Sorgenti(GRAFICA, 5.0, "si", video_presentatore=Path("/tmp/scena-02.mov")), DEST))
-    assert "loudnorm=I=-16" in f and "overlay=x=576:y=1220" in f
+    assert "loudnorm=I=-16" in f and "overlay=x=576:y=220" in f   # «si» = alto-destra, sopra la fascia delle caption
 
 
 def test_scena_schermo_con_broll():

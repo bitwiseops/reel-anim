@@ -8,6 +8,7 @@ quando (quale beat) e dove (px dello schermo, origine in alto a sinistra). Misur
 """
 from __future__ import annotations
 
+import re
 from collections.abc import Callable
 from dataclasses import dataclass
 
@@ -22,13 +23,19 @@ TOLLERANZA_PX = 2.0
 COPERTURA_MIN = 0.3          # frazione del testo coperta da una forma piena disegnata dopo
 SOVRAPPOSIZIONE_MIN = 0.15   # frazione del testo più piccolo coperta da un altro testo
 DISTANZA_COLORE = 2.5 / 255  # tolleranza sul canale per riconoscere un colore della palette
+PAROLE_DI_FILA_MAX = 2       # i reel si guardano muti: a spiegare è la caption, non il testo a schermo
+                             # (numeri e percentuali non contano; le etichette si marcano con componenti.etichetta)
+
+_RE_NUMERO = re.compile(r"^[+\-−]?[\d.,]+\s*(%|°|€|\$|x|×)?$", re.IGNORECASE)
+_PAROLINE = {"su", "di", "e", "o", "a", "in", "per", "col", "con", "da", "il", "la", "lo", "i", "le", "un", "una"}
 
 Rett = tuple[float, float, float, float]   # x0, y0, x1, y1 in unità Manim
 
 
 @dataclass(frozen=True)
 class Violazione:
-    controllo: str   # testo-piccolo | testo-fuori | riquadro | testo-coperto | testi-sovrapposti | colore | gradiente
+    controllo: str   # testo-piccolo | testo-fuori | riquadro | caption | parole-leggibili | testo-coperto |
+                     # testi-sovrapposti | colore | gradiente
     momento: str     # «fine beat 1», «fine scena»               | fotogramma-vuoto (hook)
     messaggio: str
     bbox_px: tuple[int, int, int, int] | None = None
@@ -44,6 +51,39 @@ class _Testo:
     glifi: list[VMobject]
     hg_px: float
     rett: Rett   # sullo schermo
+    esente: bool = False   # etichetta di una figura o parola detta (Punch, MESSAGGIO, CTA, titolo di copertina)
+
+
+def parole_di_contenuto(s: str) -> list[str]:
+    """Le parole che chi guarda deve leggere: fuori i numeri, le percentuali, la punteggiatura e le paroline di
+    servizio («6 su 10» = un numero, non tre parole)."""
+    fuori = []
+    for w in s.split():
+        nudo = w.strip(".,;:!?«»\"'()[]…-–—").lower()
+        if not nudo or _RE_NUMERO.match(nudo) or nudo in _PAROLINE:
+            continue
+        fuori.append(nudo)
+    return fuori
+
+
+def _blocchi(testi: list[_Testo]) -> list[tuple[list[_Testo], int]]:
+    """Raggruppa le righe che si leggono di fila (stessa colonna, una sotto l'altra) e conta le parole di ciascun
+    gruppo: una frase spezzata su tre righe da due parole resta una frase."""
+    liberi = [t for t in testi if not t.esente]
+    liberi.sort(key=lambda t: -t.rett[3])
+    gruppi: list[list[_Testo]] = []
+    for t in liberi:
+        for g in gruppi:
+            u = g[-1]
+            salto = u.rett[1] - t.rett[3]                      # aria fra la riga sopra e questa
+            riga = max(u.hg_px, t.hg_px) / PX_PER_UNITA
+            largo = min(u.rett[2], t.rett[2]) - max(u.rett[0], t.rett[0])
+            if -riga * 0.2 <= salto <= riga * 0.8 and largo > 0:
+                g.append(t)
+                break
+        else:
+            gruppi.append([t])
+    return [(g, sum(len(parole_di_contenuto(t.nome)) for t in g)) for g in gruppi]
 
 
 def _rett(m: Mobject) -> Rett:
@@ -117,13 +157,14 @@ def _testi(famiglia: list[Mobject], vista: Callable[[Rett], Rett], z: float) -> 
             glifi = [g for g in m.glifi.family_members_with_points() if _visibile(g)]
             if glifi:
                 hg = m.puntello.height * PX_PER_UNITA if m.allineata else float(m.glifi.font_size) * FATTORE_FONT_SIZE
-                out.append(_Testo(m.piano, glifi, hg * z, vista(_unione([_rett(g) for g in glifi]))))
+                out.append(_Testo(m.piano, glifi, hg * z, vista(_unione([_rett(g) for g in glifi])),
+                                  bool(getattr(m, "_etichetta", False))))
     for m in famiglia:
         if isinstance(m, (Text, MarkupText)) and id(m) not in visti:
             glifi = [g for g in m.family_members_with_points() if _visibile(g)]
             if glifi:
                 out.append(_Testo(str(getattr(m, "original_text", "testo")), glifi, float(m.font_size) * FATTORE_FONT_SIZE * z,
-                                  vista(_unione([_rett(g) for g in glifi]))))
+                                  vista(_unione([_rett(g) for g in glifi])), bool(getattr(m, "_etichetta", False))))
     return out
 
 
@@ -185,6 +226,30 @@ def esegui_controlli(scena, momento: str, escludi: set[int] | None = None) -> li
             elenco = ", ".join(nomi[:4]) + (f" e altri {len(nomi) - 4}" if len(nomi) > 4 else "")
             v.append(Violazione("riquadro", momento, f"sul riquadro del presentatore: {elenco}",
                                 _px(_unione([r for _, r in colpiti]), cfg)))
+
+    cap = getattr(scena.area, "caption", None)
+    if cap is not None:
+        tol = TOLLERANZA_PX / PX_PER_UNITA
+        fascia = (cap.x0 - tol, cap.y0 - tol, cap.x1 + tol, cap.y1 + tol)
+        dentro = [(m, rett[id(m)]) for m in foglie if _inter(rett[id(m)], fascia) > 0]
+        if dentro:
+            nomi: list[str] = []
+            for m, _ in dentro:
+                t = testo_di.get(id(m))
+                n = f"«{_breve(t.nome)}»" if t else type(m).__name__
+                if n not in nomi:
+                    nomi.append(n)
+            elenco = ", ".join(nomi[:4]) + (f" e altri {len(nomi) - 4}" if len(nomi) > 4 else "")
+            v.append(Violazione("caption", momento, f"nella fascia delle caption (che si bruciano nel montaggio): "
+                                f"{elenco} → tienili in self.area.contenuto", _px(_unione([r for _, r in dentro]), cfg)))
+
+    for gruppo, quante in _blocchi(testi):
+        if quante > PAROLE_DI_FILA_MAX:
+            frase = " ".join(t.nome for t in gruppo)
+            v.append(Violazione("parole-leggibili", momento, f"«{_breve(frase, 40)}» è una frase da leggere "
+                                f"({quante} parole, massimo {PAROLE_DI_FILA_MAX}): a spiegare è la caption, il testo a "
+                                "schermo è un extra. Numeri e percentuali non contano; se è l'etichetta di una figura "
+                                "marcala con componenti.etichetta()", _px(_unione([t.rett for t in gruppo]), cfg)))
 
     piene = [m for m in foglie if id(m) not in testo_di and m.get_fill_opacity() >= 0.5 and _riempita(m)]
     for t in testi:

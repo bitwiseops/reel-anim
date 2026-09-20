@@ -4,6 +4,38 @@ La sceneggiatura è un file markdown a grammatica rigida: da lì escono la valid
 animazioni e il montaggio. La grammatica da copiare è in `templates/reel.md`; un esempio che passa tutti i controlli
 è `templates/esempio-reel.md`. Serve allo sceneggiatore e al revisore (persone o agenti).
 
+## 0. Il reel si guarda muto (regola del presentatore, 2026-09-20)
+
+Quasi nessuno attiva l'audio. Perciò nel video ci sono le **caption**: il parlato scritto, sincronizzato con la voce,
+in una fascia in fondo allo schermo (`[caption]` nel config, `tools/reel/caption.py`). Non le disegna Manim: si
+**bruciano nel montaggio dopo la registrazione**, perché i tempi che contano sono quelli della presa vera, non quelli
+della voce di prova. Nell'anteprima `--prova` compaiono sui tempi della voce sintetica, così l'ingombro si vede prima
+di registrare.
+
+Da qui discende tutto il resto:
+
+1. **L'animazione non contiene testo necessario a capire.** Chi guarda sta leggendo la caption: non può leggere anche
+   una frase a schermo. Vanno bene **numeri, percentuali, una parola** (due solo se sono un'espressione sola:
+   «Fondo Monetario», «19 punti»). Non vanno bene le frasi, i documenti, le citazioni.
+2. **L'esempio si deve poter mostrare.** Prima di fissarlo, chiediti «che figura è?»: una quantità, un gesto, un
+   prima/dopo, due forme a confronto, qualcosa che si rompe o si riempie. Se il punto dell'esempio è *quali parole*
+   (una mail, un prompt, l'uscita di un modello), o si cambia esempio o serve una deroga dichiarata.
+3. **Ogni scena animata ha la riga `FIGURA:`**: una riga che dice cosa si capisce guardando, senza leggere niente.
+   È quello che il revisore verifica e che l'animatore deve rendere vero.
+4. **Deroga**: `CAPTION: alto` sposta la fascia in cima e libera il fondo, per le scene in cui il testo *è* il
+   contenuto. Al massimo **due scene per reel**, dichiarate nelle Note di produzione. Un reel intero in deroga non si
+   fa: si cambia esempio.
+5. **Se la figura non regge, si cambia registro, non si scrive.** Quando un concetto non si riesce ad animare, o è
+   troppo complesso per spiegarlo in pochi secondi con una figura, la scena diventa **materiale esterno**: una clip
+   pertinente (`[broll]`, sottosistema `broll/`) oppure **immagini generate con Meshy** messe in
+   `contenuti/media/<slug>/` e richiamate con `SCHERMO:`. Il testo a schermo non è mai il ripiego: è la cosa che chi
+   guarda non può leggere.
+6. Nella **chiusura** le caption sono spente (`CAPTION: no` è il default per quel tipo): il `MESSAGGIO:` è già la
+   frase detta, scritta grande. Stessa cosa dove l'animatore usa un `punch`.
+
+I controlli automatici lo fanno rispettare: `parole-leggibili` (mai più di due parole di fila a schermo, salvo
+etichette marcate) e `caption` (niente disegni dentro la fascia) in `tools/anim/controlli.py`.
+
 ## 1. Il file
 
 Sta in `contenuti/sceneggiature/`, con nome `AAAA-MM-GG-<slug>.md` (la data della prima stesura); per il codice
@@ -33,8 +65,8 @@ le giunzioni.
 | Tipo | Dove | Righe proprie | Riquadro del presentatore |
 |---|---|---|---|
 | `hook` | Scena 1, obbligatoria | `TITOLO:` (obbligatorio), `SOTTOTITOLO:`; con `SCHERMO:` è un hook a filmato (sotto) | no (per default); sì nell'hook a filmato |
-| `spiegazione` | nel mezzo (tipo di default) | `VOCE:` obbligatoria | sì, in basso a destra |
-| `schermo` | nel mezzo | `SCHERMO:` obbligatorio, `VOCE:` | sì: mettilo in alto (`RIQUADRO: alto-destra`) |
+| `spiegazione` | nel mezzo (tipo di default) | `VOCE:` obbligatoria, `FIGURA:` obbligatoria | sì, in alto a destra |
+| `schermo` | nel mezzo | `SCHERMO:` obbligatorio, `VOCE:`, `FIGURA:` | sì: in alto (`RIQUADRO: alto-destra`, ora è il default) |
 | `broll` | nel mezzo, mai due di fila | `SCHERMO:` obbligatorio, `VOCE:`; niente `TESTO:` | sì, sopra il filmato |
 | `chiusura` | ultima, obbligatoria | `MESSAGGIO:` (obbligatorio), `CTA:` | sì |
 
@@ -67,7 +99,9 @@ più lunga, e si rifà `broll piano` + `broll rendi` (le scelte restano).
 |---|---|---|
 | `VOCE:` | fino a 5 per scena | un pezzo di parlato detto a camera (una o due proposizioni): **una riga = un beat** dell'animazione |
 | `ANIMAZIONE:` | una, oppure una per riga `VOCE:` | il brief per l'animatore (sezione 6) |
-| `TESTO:` | fino a 4, ≤ 4 parole | parole chiave che compaiono a schermo |
+| `FIGURA:` | una per scena animata (obbligatoria) | cosa si capisce **guardando**, senza leggere niente a schermo (≤ 20 parole) |
+| `TESTO:` | fino a 2, ≤ 2 parole | un numero, una percentuale, una parola chiave: è un **extra**, non la spiegazione |
+| `CAPTION:` | una | `no` (niente sottotitoli in questa scena) · `alto` (fascia in cima: deroga) · `basso` (default) |
 | `TITOLO:` / `SOTTOTITOLO:` | una | solo nell'hook: il titolo regge da solo (≤ 10 parole) |
 | `MESSAGGIO:` / `CTA:` | una | solo nella chiusura (messaggio ≤ 12 parole consigliate, 25 al massimo; CTA una riga) |
 | `SCHERMO:` | una | un file in `contenuti/media/<slug>/` mostrato nella cornice (b-roll, screen recording, immagine) |
@@ -98,7 +132,9 @@ Limiti (fonte unica: `tools/reel/validate.py::LIMITI`; oltre il limite è un avv
 | VOCE dell'hook | un «tu» o una domanda: l'hook è una promessa a chi guarda (`docs/linguaggio-reel.md` §1) |
 | VOCE della chiusura | ≤ 18 parole (~6-7 s): un payoff, non un riassunto |
 | lingua parlata | niente frasi da titolo in fila (≤ 4 parole, senza «tu» né «io»), al massimo una nel reel fuori dalla chiusura; niente «X, sì. Y, no.»; niente due punti come snodo (valgono solo per citare: «scrive: …») |
-| `TESTO:` | ≤ 4 per scena, ≤ 4 parole ciascuno |
+| `TESTO:` | ≤ 2 per scena, ≤ 2 parole ciascuno (numeri e percentuali non contano); avviso se ripete parole della VOCE |
+| `FIGURA:` | obbligatoria nelle scene animate, ≤ 20 parole |
+| testo a schermo (animazione) | mai più di **2 parole di fila**: lo fa rispettare il controllo `parole-leggibili` |
 | `==evidenzia==` / emoji | 1 per scena |
 | una scena | 2,5-19 s stimati |
 | il reel | 30-90 s stimati (oltre 120 s è un errore) |
@@ -158,10 +194,21 @@ fluente, certo. Ma originale no, non può esserlo.» Stesso contenuto, stessi qu
 
 ## 6. Il brief ANIMAZIONE
 
-Dice **quali oggetti, cosa cambia e su quale frase**: l'animatore non deve indovinare. Esempio (scena 5
-dell'esempio): «Una carta "contesto" con la richiesta del biglietto e, sotto, le candidate con le barre (esempio);
-entra la riga "Sii originale." e le barre si muovono appena.» La tabella «male / bene» e i componenti disponibili
-(carte, classifiche, flussi, cicli, confronti, tabelle, icone…) sono in `docs/animazioni.md` (§8 e §11).
+Dice **quali oggetti ci sono, cosa cambia e su quale frase**: l'animatore non deve indovinare. Da quando il reel si
+guarda muto (§0) il brief non chiede più testi a schermo, ma **oggetti, stati e cambiamenti**. Per ogni beat:
+
+1. **cosa c'è** in scena e in che scala (chi è grande, chi è piccolo);
+2. **cosa cambia su questa frase**: entra, esce, si muove, si accende, si spezza, si riempie;
+3. la **mossa grande** della scena, se c'è (`GRANDE:` davanti alla riga);
+4. quali parole restano leggibili: **di norma nessuna**; altrimenti quali e per quanto.
+
+Esempio, regime nuovo: «Dieci figure uguali in due file da cinque, tutte spente; sulla voce sei si accendono una
+dopo l'altra e sotto resta il numero grande, con l'etichetta della fonte.» Niente frasi a schermo: il concetto è
+nella quantità.
+
+La tabella «male / bene» e i componenti disponibili — quelli che spiegano **senza parole** (quantità a pittogrammi,
+sagome di un documento, gesto, verdetto, lente, prima/dopo) e quelli che invece sono contenitori di testo, da usare
+solo con una deroga dichiarata — sono in `docs/animazioni.md` (§8 e §11).
 
 ## 7. Comandi
 

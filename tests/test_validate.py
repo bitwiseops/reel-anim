@@ -13,8 +13,10 @@ VOCE_20 = "VOCE: " + " ".join(["parola"] * 20)
 def _base(n_spiegazioni: int = 4) -> list[str]:
     """Un reel valido: hook, n spiegazioni da ~7,9 s, chiusura."""
     scene = ["## Scena 1 [hook]\nTITOLO: Un titolo\nVOCE: ti apro con una frase breve"]
-    scene += [f"## Scena {k + 2} [spiegazione]\n{VOCE_20}\nANIMAZIONE: qualcosa" for k in range(n_spiegazioni)]
-    scene.append(f"## Scena {n_spiegazioni + 2} [chiusura]\nMESSAGGIO: Il messaggio\nCTA: salva\nVOCE: chiudiamo qui\nANIMAZIONE: fine")
+    scene += [f"## Scena {k + 2} [spiegazione]\n{VOCE_20}\nANIMAZIONE: qualcosa\nFIGURA: una figura che si capisce guardando"
+              for k in range(n_spiegazioni)]
+    scene.append(f"## Scena {n_spiegazioni + 2} [chiusura]\nMESSAGGIO: Il messaggio\nCTA: salva\nVOCE: chiudiamo qui\n"
+                 "ANIMAZIONE: fine\nFIGURA: il messaggio e tre tessere")
     return scene
 
 
@@ -93,10 +95,12 @@ def test_controlli_di_linguaggio():
 
 def test_schermo_mancante_e_riquadro_sopra_il_broll():
     scene = _base()
-    scene[1] = f"## Scena 2 [schermo]\nSCHERMO: nessuno.mp4\n{VOCE_20}\nANIMAZIONE: a"
+    # il riquadro sta in alto per default (la fascia delle caption occupa il fondo): per farlo finire
+    # sulla cornice del b-roll va chiesto a mano
+    scene[1] = f"## Scena 2 [schermo]\nSCHERMO: nessuno.mp4\n{VOCE_20}\nANIMAZIONE: a\nRIQUADRO: basso-destra"
     d = _check(scene)
     assert ha_errori(d) and "SCHERMO: file 'nessuno.mp4' non trovato" in _msg(d) and "copre la cornice del b-roll" in _msg(d)
-    scene[1] += "\nRIQUADRO: alto-destra"
+    scene[1] = scene[1].replace("RIQUADRO: basso-destra", "RIQUADRO: alto-destra")
     assert "copre la cornice" not in _msg(_check(scene))
 
 

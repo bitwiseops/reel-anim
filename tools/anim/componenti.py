@@ -19,7 +19,7 @@ import numpy as np
 from manim import (BOLD, DOWN, LEFT, ORIGIN, RIGHT, UL, UP, AnimationGroup, Arrow, Create, FadeIn, FadeOut,
                    FadeTransform, GrowArrow, GrowFromEdge, Indicate, LaggedStart, Line, MarkupText, Mobject, Rectangle,
                    RoundedRectangle, SurroundingRectangle, Text, Transform, VGroup, VMobject)
-from manim import Code, SVGMobject, ValueTracker, linear, rush_from
+from manim import Circle, Code, SVGMobject, Succession, ValueTracker, linear, rush_from
 from manim.constants import CapStyleType, LineJointType
 
 from .config import RADICE, Config, carica
@@ -155,6 +155,20 @@ def _limita(f: float) -> float:
     return max(0.02, min(1.0, float(f)))
 
 
+def etichetta(mob: Mobject) -> Mobject:
+    """Marca un testo come **etichetta di una figura** (o come parola detta): il controllo `parole-leggibili` non lo
+    conta fra le frasi da leggere. I reel si guardano muti e a spiegare è la caption: il testo a schermo sta sotto le
+    due parole, salvo numeri, percentuali e appunto le etichette. Si usa sui componenti della libreria che sono già
+    etichette per natura e, a mano, su una didascalia di onestà che deve restare per intero."""
+    for m in mob.get_family() if hasattr(mob, "get_family") else [mob]:
+        m._etichetta = True
+    mob._etichetta = True
+    return mob
+
+
+_marca = etichetta   # alias interno: in Contatore il nome `etichetta` è già un parametro
+
+
 # --- componenti ------------------------------------------------------------------------------------------
 
 class Titolo(VGroup):
@@ -167,6 +181,7 @@ class Titolo(VGroup):
                            allinea=allinea, interlinea=0.14)
         self.righe = self.testo.righe
         self.add(self.testo)
+        _marca(self)
 
     def parola(self, w: str) -> VGroup:
         return self.testo.parola(w)
@@ -179,8 +194,10 @@ class Titolo(VGroup):
         return LaggedStart(*[FadeIn(r, shift=UP * 0.2) for r in self.righe], lag_ratio=lag, group=self, **kw)
 
 
-class Caption(VGroup):
-    """Didascalia attenuata; con `area` si mette in fondo all'area (un Area di base.py)."""
+class Didascalia(VGroup):
+    """Didascalia attenuata; con `area` si mette in fondo all'area (un Area di base.py). È un'etichetta: non conta
+    come frase da leggere (vedi `etichetta`), ma resta soggetta al buon senso — se serve una riga intera di
+    spiegazione, quella riga la dice la voce."""
 
     def __init__(self, s: str, area=None, larghezza_px: float = 880, colore: str | None = None, **kw):
         super().__init__(**kw)
@@ -188,6 +205,7 @@ class Caption(VGroup):
         self.add(self.testo)
         if area is not None:
             self.move_to([area.centro[0], area.y0 + self.height / 2 + px(20), 0])
+        _marca(self)
 
     def entra(self, **kw):
         return FadeIn(self, **kw)
@@ -205,6 +223,7 @@ class Etichetta(VGroup):
         self.box = RoundedRectangle(corner_radius=h / 2, width=self.testo.width + px(64), height=h, stroke_color=col,
                                     stroke_width=tratto(3), fill_color=col if pieno else cfg.palette.sfondo, fill_opacity=1)
         self.add(self.box, self.testo.move_to(self.box))
+        _marca(self)
 
     def entra(self, **kw):
         return FadeIn(self, scale=0.85, **kw)
@@ -257,7 +276,7 @@ class Carta(VGroup):
         self.colore = colore or cfg.palette.secondario
         self.larghezza_px = larghezza_px
         self.pad = px(40)
-        self.titolo = testo(titolo, "etichetta", colore=self.colore, peso=BOLD)
+        self.titolo = _marca(testo(titolo, "etichetta", colore=self.colore, peso=BOLD))   # linguetta = etichetta
         self.righe = VGroup(*[self._riga(r) for r in (righe or [])])
         self.box = self._box(self._altezza(self.righe))
         self.add(self.box, self.titolo, self.righe)
@@ -341,7 +360,7 @@ class Classifica(VGroup):
         self.add(self.barre)
         self.nota = None
         if esempio:
-            self.nota = testo("esempio: numeri inventati", "piede", colore=cfg.palette.attenuato)
+            self.nota = _marca(testo("esempio: numeri inventati", "piede", colore=cfg.palette.attenuato))
             self.nota.next_to(self.barre, DOWN, aligned_edge=LEFT, buff=px(28))
             self.add(self.nota)
 
@@ -480,6 +499,7 @@ class Contatore(VGroup):
         if etichetta:
             self.etich = testo(etichetta, "etichetta", colore=cfg.palette.attenuato).next_to(self.numero, DOWN, buff=px(12), aligned_edge=LEFT)
             self.add(self.etich)
+        _marca(self)
 
     def a(self, valore: int | str, **kw):
         nuovo = testo(str(valore), "messaggio", colore=self.colore, peso=BOLD, mono=True).move_to(self.numero, aligned_edge=LEFT)
@@ -521,6 +541,7 @@ class Piede(VGroup):
             t = testo(h, "piede", colore=cfg.palette.attenuato)
             t.move_to([area.x0 + t.width / 2, area.y0 - px(50), 0])
             self.add(t)
+        _marca(self)
 
 
 class Messaggio(Titolo):
@@ -535,6 +556,7 @@ class Messaggio(Titolo):
                 self.cta.scale_to_fit_width(px(larghezza_px))
             self.cta.next_to(self.testo, DOWN, aligned_edge=LEFT, buff=px(44))
             self.add(self.cta)
+        _marca(self)
 
     def entra(self, **kw):
         anims = [self.per_righe()]
@@ -558,6 +580,7 @@ class Punch(VGroup):
         if self.testo.height > alta:
             self.testo.scale_to_fit_height(alta)
         self.add(self.testo.move_to(area.centro))
+        _marca(self)
 
     def entra(self, **kw):
         """Entrata secca: da un po' più grande, veloce all'inizio (l'uscita è un taglio)."""
@@ -611,6 +634,7 @@ class ContatoreScorre(VGroup):
                                                                                            aligned_edge=LEFT)
             self.add(self.etich)
         self.numero.add_updater(self._aggiorna)
+        _marca(self)
 
     def _formato(self, v: float) -> str:
         return f"{v:,.{self.decimali}f}".replace(",", " ").replace(".", ",").replace(" ", ".")
@@ -622,7 +646,13 @@ class ContatoreScorre(VGroup):
         s = self._formato(self.valore.get_value())
         if s != self._scritto:   # Pango solo quando il numero scritto cambia
             self._scritto = s
-            m.become(self._crea(s).move_to(m, aligned_edge=LEFT))
+            nuovo = self._crea(s).move_to(m, aligned_edge=LEFT)
+            m.become(nuovo)
+            # become allinea i punti ma lascia in piedi le Riga di prima: senza questo i controlli (e
+            # `parole_a_schermo`) continuerebbero a leggere la cifra vecchia
+            for vecchia, adesso in zip(m.righe, nuovo.righe, strict=False):
+                vecchia.piano = adesso.piano
+            _marca(m)
 
     def scorri(self, a: float, **kw):
         kw.setdefault("rate_func", linear)
@@ -686,7 +716,171 @@ class Codice(VGroup):
         return Create(self.riquadro, **kw)
 
 
-__all__ = ["testo", "markup", "piano", "avvolgi", "tratto", "Riga", "Blocco", "Titolo", "Caption", "Etichetta", "Barrato",
+__all__ = ["testo", "markup", "piano", "avvolgi", "tratto", "etichetta", "Riga", "Blocco", "Titolo", "Didascalia",
+           "Sagome", "Fila", "Spunta", "Croce", "Indice", "Lente", "PrimaDopo", "Etichetta", "Barrato",
            "Freccia", "Carta", "Barra", "Classifica", "Token", "Frase", "Lista", "Contatore", "Evidenzia", "CorniceSchermo",
            "Piede", "Messaggio", "Punch", "Icona", "ContatoreScorre", "Codice", "FadeIn", "FadeOut", "FadeTransform", "Indicate", "LaggedStart", "AnimationGroup",
            "Transform", "Create"]
+
+
+# --- spiegare senza parole -------------------------------------------------------------------------------
+# Dal 2026-09-20 i reel si guardano muti, con le caption che dicono il parlato: la figura deve reggere il
+# concetto da sola. Questi componenti non contengono testo (o ne contengono al massimo un'etichetta).
+
+class Sagome(VGroup):
+    """Un documento (mail, pagina, elenco) reso come barrette: si capisce che è un testo, non si legge.
+    `righe` sono le lunghezze relative (0-1) delle righe; `vuote` sono gli indici delle righe spente."""
+
+    def __init__(self, righe: list[float] | int = 5, larghezza_px: float = 620, altezza_px: float = 18,
+                 passo_px: float = 46, colore: str | None = None, **kw):
+        super().__init__(**kw)
+        cfg = _cfg()
+        quote = [0.95, 0.72, 0.88, 0.6, 0.8][:righe] if isinstance(righe, int) else list(righe)
+        if isinstance(righe, int) and righe > 5:
+            quote = [(0.95, 0.72, 0.88, 0.6, 0.8)[i % 5] for i in range(righe)]
+        self.righe = VGroup(*[
+            RoundedRectangle(corner_radius=px(altezza_px / 2), width=px(larghezza_px * max(0.08, q)), height=px(altezza_px),
+                             stroke_width=0, fill_color=colore or cfg.palette.attenuato, fill_opacity=0.45)
+            for q in quote])
+        self.righe.arrange(DOWN, buff=px(passo_px - altezza_px), aligned_edge=LEFT)
+        self.add(self.righe)
+
+    def accendi(self, i: int, colore: str | None = None, **kw):
+        """Una riga si accende: è quella di cui parla la voce (senza mostrarne le parole)."""
+        return self.righe[i].animate(**kw).set_fill(colore or _cfg().palette.accento, opacity=1)
+
+    def entra(self, lag: float = 0.12, **kw):
+        return LaggedStart(*[FadeIn(r, shift=RIGHT * 0.1) for r in self.righe], lag_ratio=lag, group=self, **kw)
+
+
+class Fila(VGroup):
+    """Una quantità come pittogramma: `quanti` icone uguali in righe da `per_riga`, di cui `accese` in accento.
+    È il modo di dire «sei su dieci» senza scrivere una frase."""
+
+    def __init__(self, icona: str = "user", quanti: int = 10, per_riga: int = 5, accese: int = 0,
+                 altezza_px: float = 96, passo_px: float = 128, colore: str | None = None, **kw):
+        super().__init__(**kw)
+        cfg = _cfg()
+        self.spento = colore or cfg.palette.attenuato
+        self.figure = VGroup(*[Icona(icona, altezza_px=altezza_px, colore=self.spento) for _ in range(quanti)])
+        righe = VGroup()
+        for i in range(0, quanti, per_riga):
+            r = VGroup(*self.figure[i:i + per_riga]).arrange(RIGHT, buff=px(passo_px - altezza_px))
+            righe.add(r)
+        righe.arrange(DOWN, buff=px(passo_px - altezza_px), aligned_edge=LEFT)
+        self.add(righe)
+        if accese:
+            for f in self.figure[:accese]:
+                f.svg.set_stroke(cfg.palette.accento)
+
+    def accendi(self, quante: int, colore: str | None = None, lag: float = 0.08, **kw):
+        """Le prime `quante` figure passano in accento, una dopo l'altra."""
+        col = colore or _cfg().palette.accento
+        return LaggedStart(*[f.svg.animate.set_stroke(col) for f in self.figure[:quante]], lag_ratio=lag, group=self, **kw)
+
+    def entra(self, lag: float = 0.05, **kw):
+        return LaggedStart(*[FadeIn(f, scale=0.8) for f in self.figure], lag_ratio=lag, group=self, **kw)
+
+
+class Spunta(VGroup):
+    """Il verdetto «sì» senza scriverlo: un segno di spunta disegnato a tratto."""
+
+    def __init__(self, altezza_px: float = 96, colore: str | None = None, spessore_px: float = 12, **kw):
+        super().__init__(**kw)
+        h = px(altezza_px)
+        self.segno = VMobject(stroke_color=colore or _cfg().palette.terziario, stroke_width=tratto(spessore_px))
+        self.segno.set_points_as_corners([np.array([-h * 0.45, 0.0, 0]), np.array([-h * 0.1, -h * 0.38, 0]),
+                                          np.array([h * 0.5, h * 0.42, 0])])
+        self.segno.cap_style = CapStyleType.ROUND
+        self.segno.joint_type = LineJointType.ROUND
+        self.add(self.segno)
+
+    def entra(self, **kw):
+        return Create(self.segno, **kw)
+
+
+class Croce(VGroup):
+    """Il verdetto «no»: due tratti incrociati (con Spunta è la coppia giusto/sbagliato)."""
+
+    def __init__(self, altezza_px: float = 96, colore: str | None = None, spessore_px: float = 12, **kw):
+        super().__init__(**kw)
+        h, col = px(altezza_px) / 2, colore or _cfg().palette.accento
+        self.tratti = VGroup(
+            Line([-h, -h, 0], [h, h, 0], stroke_color=col, stroke_width=tratto(spessore_px)),
+            Line([-h, h, 0], [h, -h, 0], stroke_color=col, stroke_width=tratto(spessore_px)))
+        for t in self.tratti:
+            t.cap_style = CapStyleType.ROUND
+        self.add(self.tratti)
+
+    def entra(self, **kw):
+        return AnimationGroup(*[Create(t) for t in self.tratti], lag_ratio=0.35, group=self, **kw)
+
+
+class Indice(VGroup):
+    """Il gesto: un puntatore che indica, tocca e trascina. Serve a dire «questo», «prendi quello e mettilo qui»
+    senza una parola. Il puntatore è un triangolo pieno con la punta in alto a sinistra."""
+
+    def __init__(self, altezza_px: float = 88, colore: str | None = None, **kw):
+        super().__init__(**kw)
+        h = px(altezza_px)
+        col = colore or _cfg().palette.testo
+        self.freccia = VMobject(stroke_width=0, fill_color=col, fill_opacity=1)
+        self.freccia.set_points_as_corners([np.array([0.0, 0.0, 0]), np.array([0.0, -h, 0]),
+                                            np.array([h * 0.28, -h * 0.72, 0]), np.array([h * 0.46, -h * 0.98, 0]),
+                                            np.array([h * 0.60, -h * 0.88, 0]), np.array([h * 0.42, -h * 0.62, 0]),
+                                            np.array([h * 0.70, -h * 0.58, 0]), np.array([0.0, 0.0, 0])])
+        self.add(self.freccia)
+        self.scostamento = np.array([-h * 0.12, h * 0.12, 0])   # la punta sta sopra-sinistra rispetto al bersaglio
+
+    def vai_a(self, mob, **kw):
+        """Si sposta sul bersaglio (la punta sul suo centro)."""
+        return self.animate(**kw).move_to(mob.get_center() - self.scostamento + np.array([self.width / 2, -self.height / 2, 0]))
+
+    def tocca(self, scala: float = 0.82, **kw):
+        """Il «tap»: si stringe e torna."""
+        return Succession(self.animate(run_time=0.12).scale(scala), self.animate(run_time=0.12).scale(1 / scala), **kw)
+
+    def trascina(self, mob, a, **kw):
+        """Porta `mob` fino ad `a` (punto o mobject) muovendo insieme puntatore e oggetto."""
+        meta = a.get_center() if hasattr(a, "get_center") else np.array(a)
+        salto = meta - mob.get_center()
+        return AnimationGroup(self.animate.shift(salto), mob.animate.move_to(meta), group=self, **kw)
+
+    def entra(self, **kw):
+        return FadeIn(self, shift=DOWN * 0.2, **kw)
+
+
+class Lente(VGroup):
+    """Una lente che ingrandisce un pezzo della figura restando dentro la figura (il resto non si muove)."""
+
+    def __init__(self, raggio_px: float = 150, colore: str | None = None, spessore_px: float = 8, **kw):
+        super().__init__(**kw)
+        cfg = _cfg()
+        self.cerchio = Circle(radius=px(raggio_px), stroke_color=colore or cfg.palette.testo,
+                              stroke_width=tratto(spessore_px), fill_opacity=0)
+        self.add(self.cerchio)
+
+    def passa_su(self, mob, **kw):
+        return self.animate(**kw).move_to(mob.get_center())
+
+    def entra(self, **kw):
+        return Create(self.cerchio, **kw)
+
+
+class PrimaDopo(VGroup):
+    """Due stati della stessa figura, uno sopra l'altro: una tendina verticale scopre il «dopo».
+    `prima` e `dopo` sono due mobject già impaginati nello stesso posto."""
+
+    def __init__(self, prima: Mobject, dopo: Mobject, **kw):
+        super().__init__(**kw)
+        self.prima, self.dopo = prima, dopo
+        dopo.move_to(prima)
+        self.add(prima, dopo)
+        self._larghezza = max(prima.width, dopo.width)
+        self.dopo.set_opacity(0)
+
+    def passa(self, durata_s: float = 0.8, **kw):
+        """La tendina: il «dopo» compare da sinistra a destra mentre il «prima» sparisce."""
+        kw.setdefault("run_time", durata_s)
+        return AnimationGroup(FadeOut(self.prima), FadeIn(self.dopo.set_opacity(1), shift=RIGHT * 0.15),
+                              lag_ratio=0.25, group=self, **kw)

@@ -70,6 +70,7 @@ class Aree:
     contenuto: Area   # dove stanno testi e grafica
     riquadro: Area | None   # dove va il riquadro del presentatore (da lasciare libero)
     schermo: Area     # cornice del b-roll
+    caption: Area | None    # fascia dei sottotitoli, bruciati nel montaggio: qui l'animazione non disegna
 
 
 def _da_px(cfg: Config, x_px: float, y_px: float) -> tuple[float, float]:
@@ -84,8 +85,20 @@ def area_px(cfg: Config, x0: float, y0: float, x1: float, y1: float) -> Area:
     return Area(ax0, ay0, ax1, ay1)
 
 
-def aree(cfg: Config, riquadro: str | None = None) -> Aree:
-    """Aree utili in base alla safe area e alla posizione del riquadro (None/"no" = nessun riquadro)."""
+def _posizione_caption(c: dict, caption: str | bool | None) -> str | None:
+    """Dove sta la fascia in questa scena: "basso" | "alto" | None (nessuna caption, es. chiusura e punch)."""
+    if not c:
+        return None
+    if caption is None or caption is True or caption == "si":
+        return str(c.get("posizione", "basso"))
+    if caption is False or caption == "no":
+        return None
+    return str(caption)
+
+
+def aree(cfg: Config, riquadro: str | None = None, caption: str | bool | None = None) -> Aree:
+    """Aree utili in base alla safe area, alla posizione del riquadro (None/"no" = nessun riquadro) e alla fascia
+    delle caption (`caption`: None/"si" = dal config, "no" = scena senza caption, "alto"/"basso" = deroga di scena)."""
     s = cfg.dati["safe_area"]
     W, H = cfg.larghezza, cfg.altezza
     x0, y1 = _da_px(cfg, s.get("sinistra", 60), s["alto"])
@@ -106,10 +119,24 @@ def aree(cfg: Config, riquadro: str | None = None) -> Aree:
             contenuto = Area(contenuto.x0, ay1 + px(m), contenuto.x1, contenuto.y1)
         else:
             contenuto = Area(contenuto.x0, contenuto.y0, contenuto.x1, ay0 - px(m))
+    area_cap = None
+    c = cfg.dati.get("caption", {})
+    pos_cap = _posizione_caption(c, caption)
+    if pos_cap:
+        h, m = c.get("altezza_px", 200), c.get("margine_px", 24)
+        cy = H - s["basso"] - h if pos_cap == "basso" else s["alto"]
+        cx0, cy1 = _da_px(cfg, s.get("sinistra", 60), cy)
+        cx1, cy0 = _da_px(cfg, W - s["destra"], cy + h)
+        area_cap = Area(cx0, cy0, cx1, cy1)
+        # il contenuto lascia libera la fascia: le caption si bruciano sopra, dopo la registrazione
+        if pos_cap == "basso":
+            contenuto = Area(contenuto.x0, max(contenuto.y0, cy1 + px(m)), contenuto.x1, contenuto.y1)
+        else:
+            contenuto = Area(contenuto.x0, contenuto.y0, contenuto.x1, min(contenuto.y1, cy0 - px(m)))
     sc = cfg.dati["schermo"]
     sx0, sy1 = _da_px(cfg, sc["x"], sc["y"])
     sx1, sy0 = _da_px(cfg, sc["x"] + sc["larghezza"], sc["y"] + sc["altezza"])
-    return Aree(contenuto, area_riq, Area(sx0, sy0, sx1, sy1))
+    return Aree(contenuto, area_riq, Area(sx0, sy0, sx1, sy1), area_cap)
 
 
 class CameraReel(MovingCamera):
@@ -139,7 +166,7 @@ class ScenaReel(MovingCameraScene):
         self.debug = debug
         self.cfg: Config = carica()
         registra_font(self.cfg)
-        self.area: Aree = aree(self.cfg, self.scena.get("riquadro"))
+        self.area: Aree = aree(self.cfg, self.scena.get("riquadro"), self.scena.get("caption"))
         self.avvisi: list[str] = []
         self.controlli: list[Violazione] = []
         self._visti: set[tuple[str, str]] = set()
@@ -306,6 +333,8 @@ class ScenaReel(MovingCameraScene):
         g.add(self.area.schermo.rettangolo(stroke_color=col.secondario, stroke_width=2))
         if self.area.riquadro:
             g.add(self.area.riquadro.rettangolo(stroke_color=col.accento, stroke_width=2))
+        if self.area.caption:
+            g.add(self.area.caption.rettangolo(stroke_color=col.attenuato, stroke_width=2))
         return g
 
 

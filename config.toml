@@ -38,14 +38,28 @@ sinistra = 60
 forma = "cerchio"         # cerchio | arrotondato
 dimensione_px = 360
 raggio_px = 48            # solo arrotondato
-posizione = "basso-destra"   # basso-destra | basso-sinistra | alto-destra | alto-sinistra
+posizione = "alto-destra"    # basso-destra | basso-sinistra | alto-destra | alto-sinistra
+                             # dal 2026-09-20 sta in alto: la fascia delle caption occupa il fondo
 margine_px = 24
+
+[caption]                 # sottotitoli sincronizzati con la voce, bruciati nel montaggio dopo la registrazione
+                          # (tools/reel/caption.py). L'animazione non può disegnare qui dentro.
+posizione = "basso"       # basso | alto (deroga per scena con `CAPTION: alto`)
+altezza_px = 200          # fascia riservata: 2 righe + interlinea + margine interno
+margine_px = 24           # aria fra la fascia e l'area del contenuto
+righe_max = 2
+caratteri_riga_max = 42   # a capo misurato con Pillow; oltre, il blocco si spezza
+parole_blocco = 7         # parole per blocco (6-8: un respiro di lettura)
+durata_min_s = 0.7        # sotto questa, il blocco si fonde con il vicino
+corpo_px = 56
+piastra_opacita = 0.75    # piastra piena dietro il testo: serve sulle scene a filmato
+raggio_px = 16
 
 [schermo]                 # cornice del b-roll / screen recording (px, dentro la safe area)
 x = 60
-y = 600               # sotto la fascia alta: il riquadro in alto a destra non copre la cornice
+y = 604               # sotto il riquadro in alto a destra
 larghezza = 900
-altezza = 980
+altezza = 752         # fino al bordo della fascia delle caption
 raggio_px = 36
 
 [voce_sintetica]          # solo per l'anteprima senza clip

@@ -1,184 +1,193 @@
-"""Animazioni dell'esempio «Generativa non vuol dire creativa» (templates/esempio-reel.md).
+"""Animazioni dell'esempio (templates/esempio-reel.md): una classe ScenaNN per scena.
 
-Una classe ScenaNN(ScenaReel) per scena. I testi a schermo vengono dalla sceneggiatura (self.scena) quando ci sono;
-i numeri delle barre sono esempi dichiarati. Tempi: self.beat(i) aspetta l'inizio della frase i della VOCE,
-self.fino_a(f) una frazione della scena; la scena dura esattamente quanto la clip (o la voce di prova).
+Rifatto il 2026-09-20 per la regola «il reel si guarda muto» (docs/sceneggiatura.md §0): sul video vengono bruciate
+le caption con il parlato, quindi qui **non ci sono frasi da leggere**. A schermo restano figure, numeri ed etichette
+di una parola; il biglietto è un blocco di righe che si vede ma non si legge (`Sagome`). L'unica deroga è la scena 6,
+dove il contenuto *è* la chat: lì la sceneggiatura dichiara `CAPTION: alto` e la fascia va in cima.
+
+Vale come esempio d'uso della libreria: Titolo/Barrato, Classifica, Sagome, ContatoreScorre, Indice, Carta con la
+sola linguetta, CorniceSchermo, Messaggio, Didascalia, Etichetta.
 """
-from manim import DOWN, LEFT, RIGHT, UP, AnimationGroup, Create, FadeIn, FadeOut, FadeTransform, LaggedStart, VGroup, VMobject
+from __future__ import annotations
 
-from tools.anim.base import ScenaReel, area_px
-from tools.anim.componenti import (Barrato, Carta, Classifica, Contatore, CorniceSchermo, Etichetta, Evidenzia, Frase,
-                                   Freccia, Lista, Messaggio, Piede, Titolo, Token, testo, tratto)
-from tools.anim.misure import px
+from manim import DOWN, LEFT, RIGHT, UP, Create, FadeIn, FadeOut, Line, VGroup
+
+from tools.anim.base import ScenaReel
+from tools.anim.componenti import (Barrato, Carta, Classifica, ContatoreScorre, Didascalia, Etichetta, Evidenzia,
+                                   CorniceSchermo, Indice, Messaggio, Sagome, Titolo, Token, testo)
+from tools.anim.misure import px, tratto
+
+CANDIDATE = [("si", 0.48), ("è", 0.22), ("ti", 0.08)]
+
+
+def tessera(scena, s: str = "", larghezza_px: float = 150) -> VGroup:
+    """Una tessera della riga: un rettangolo con dentro al massimo una parola (o niente)."""
+    from manim import RoundedRectangle
+    cfg = scena.cfg
+    box = RoundedRectangle(corner_radius=px(12), width=px(larghezza_px), height=px(72), stroke_width=tratto(3),
+                           stroke_color=cfg.palette.attenuato, fill_color=cfg.palette.sfondo, fill_opacity=1)
+    g = VGroup(box)
+    if s:
+        g.add(testo(s, "token", colore=cfg.palette.testo).move_to(box))
+    return g
 
 
 class Scena01(ScenaReel):
-    """Hook: il titolo è già in scena al primo fotogramma, «creativa» viene barrata appena detta, compare «probabile»."""
+    """Hook: il titolo è già in scena al primo fotogramma, «creativa» viene barrata, entra «probabile»."""
 
     def costruisci(self):
         a = self.area.contenuto
-        titolo = Titolo(self.scena["titolo"])
-        sotto = Titolo(self.scena["sottotitolo"])
-        a.metti(VGroup(titolo, sotto).arrange(DOWN, aligned_edge=LEFT, buff=px(90)), "centro", "sinistra")
-        titolo.shift(DOWN * px(30))
-        self.add(titolo)                                  # la copertina di chi scorre: mai un primo fotogramma vuoto
-        self.play(titolo.animate.shift(UP * px(30)), run_time=0.5)
+        t = Titolo("Generativa non vuol dire creativa", larghezza_px=880)
+        a.metti(t, "alto", "sinistra", buff_px=20)
+        self.add(t)
+        self.play(t.animate.shift(UP * px(16)), run_time=0.5)
         self.beat(1)
-        parola = titolo.parola("creativa")
-        self.attendi_fino(self.inizi_frasi[2] - self.ANTICIPO_S - 0.45)
-        self.play(Barrato(parola).entra(), parola.animate.set_opacity(0.45), run_time=0.4)
+        barra = Barrato(t.parola("creativa"))
+        self.play(barra.entra(), run_time=0.5)
         self.beat(2)
-        self.play(sotto.per_righe(lag=0.3), run_time=0.6)
+        sub = Titolo("Vuol dire probabile", larghezza_px=760, ruolo="messaggio", colore=self.cfg.palette.accento)
+        sub.next_to(t, DOWN, buff=px(56), aligned_edge=LEFT)
+        self.play(FadeIn(sub, shift=UP * 0.2), run_time=0.6)
 
 
 class Scena02(ScenaReel):
-    """Una parola alla volta: la frase si compone, la colonna delle candidate, la prima vola in coda."""
-
-    def costruisci(self):
-        a, col = self.area.contenuto, self.cfg.palette
-        et = Etichetta(self.scena["testo"][0], pieno=False)
-        a.metti(et, "alto", "sinistra")
-        frase = Frase(ancora=et.get_corner(LEFT + DOWN) + DOWN * px(70))
-        self.play(et.entra(), run_time=0.4)
-        for p in ("Caro", "Marco,", "oggi"):
-            self.play(frase.aggiungi(p), run_time=0.35)
-
-        self.beat(1)
-        domanda = testo("prossima parola?", "caption", colore=col.attenuato)
-        cl = Classifica([("si", 0.62), ("è", 0.21), ("ti", 0.09)], larghezza_px=760)
-        gruppo = VGroup(domanda, cl).arrange(DOWN, aligned_edge=LEFT, buff=px(36))
-        gruppo.next_to(frase.token, DOWN, buff=px(110), aligned_edge=LEFT)
-        self.play(FadeIn(domanda), cl.entra(), run_time=1.4)
-
-        self.beat(2)
-        self.play(cl.scegli(0), run_time=0.4)
-        self.play(frase.aggiungi(cl.token(0, colore=col.accento), da=cl.barre[0].etichetta), run_time=0.7)
-
-
-class Scena03(ScenaReel):
-    """La frase continua da sola con il contatore delle scelte; diventa il biglietto banale, incorniciato."""
-
-    def costruisci(self):
-        a, col = self.area.contenuto, self.cfg.palette
-        frase = Frase(["Caro", "Marco,", "oggi", "si"], ancora=[a.x0, a.y1 - px(20), 0])
-        frase.token[-1].box.set_stroke(col.accento)
-        cont = Contatore(4, "parole scelte")
-        a.metti(cont, "basso", "sinistra", buff_px=20)
-        self.add(frase)
-        self.play(cont.entra(), run_time=0.3)
-        parole = "chiude un capitolo e se ne apre uno nuovo.".split()
-        # contatore 0,3 s + una play per parola + respiro, tutto dentro il beat 0 (a fotogrammi interi)
-        passo = self.arrotonda((self.durata_beat(0) - self.ANTICIPO_S - 0.7) / len(parole))
-        for k, p in enumerate(parole, start=5):
-            self.play(frase.aggiungi(p), cont.a(k), run_time=passo)
-
-        self.beat(1)
-        carta = Carta("Biglietto per Marco", ["Caro Marco, oggi si chiude un capitolo e se ne apre uno nuovo."])
-        a.metti(carta, "centro", "sinistra").shift(UP * px(60))
-        self.play(FadeOut(frase), FadeOut(cont), carta.entra(), run_time=0.7)
-
-        self.beat(2)
-        cornice = Evidenzia(carta.righe, buff=px(18))
-        et = Etichetta(self.scena["testo"][0]).next_to(carta, DOWN, buff=px(60), aligned_edge=LEFT)
-        self.play(Create(cornice), et.entra(), run_time=0.6)
-
-
-class Scena04(ScenaReel):
-    """I bivi: tre continuazioni, il ramo più spesso è la strada battuta; «nuovo» sì, «raro» barrato."""
-
-    def costruisci(self):
-        a, col = self.area.contenuto, self.cfg.palette
-        radice = Token("si chiude un capitolo")
-        a.metti(radice, "alto", "sinistra", buff_px=20)
-        rami = [("e se ne apre uno nuovo", 16), ("ma non un'amicizia", 4), ("della nostra storia", 4)]
-        figli = VGroup(*[Token(s) for s, _ in rami]).arrange(DOWN, aligned_edge=LEFT, buff=px(44))
-        figli.next_to(radice, DOWN, buff=px(70)).align_to(radice, LEFT).shift(RIGHT * px(150))
-        x0, y0 = radice.get_left()[0] + px(70), radice.get_bottom()[1]
-        linee = VGroup(*[
-            VMobject(stroke_color=col.attenuato, stroke_width=tratto(sp)).set_points_as_corners(
-                [[x0, y0, 0], [x0, f.get_center()[1], 0], [f.get_left()[0] - px(6), f.get_center()[1], 0]])
-            for f, (_, sp) in zip(figli, rami)])
-        nota = testo("esempio", "piede", colore=col.attenuato).next_to(figli, DOWN, buff=px(40), aligned_edge=LEFT)
-        self.play(FadeIn(radice, shift=UP * 0.2), run_time=0.4)
-        self.play(LaggedStart(*[AnimationGroup(Create(l), FadeIn(f, shift=RIGHT * 0.2), lag_ratio=0.5)
-                                for l, f in zip(linee, figli)], lag_ratio=0.35), FadeIn(nota), run_time=1.5)
-        self.play(linee[0].animate.set_stroke(col.accento), figli[0].evidenzia(),
-                  *[l.animate.set_stroke(opacity=0.45) for l in linee[1:]], run_time=0.5)
-
-        self.beat(1)
-        nuovo = Etichetta(self.scena["testo"][0], colore=col.terziario)
-        raro = Etichetta(self.scena["testo"][1], colore=col.attenuato, pieno=False)
-        a.metti(VGroup(nuovo, raro).arrange(RIGHT, buff=px(40)), "basso", "sinistra", buff_px=40)
-        self.play(nuovo.entra(), run_time=0.4)
-
-        self.beat(2)
-        self.play(raro.entra(), run_time=0.3)
-        self.play(Barrato(raro.testo).entra(), run_time=0.35)
-
-
-class Scena05(ScenaReel):
-    """La carta «contesto»: «sii originale» sposta appena le barre, la fotocopiatrice le riordina."""
-
-    def costruisci(self):
-        a, col = self.area.contenuto, self.cfg.palette
-        carta = Carta(self.scena["testo"][0], ["Due righe per il biglietto di Marco."])
-        a.metti(carta, "alto", "sinistra")
-        dopo = testo("dopo «Caro Marco,»", "caption", colore=col.attenuato)
-        cl = Classifica([("oggi si chiude un capitolo", 0.58), ("grazie di tutto", 0.26), ("la fotocopiatrice", 0.03)],
-                        larghezza_px=620)
-        a.metti(VGroup(dopo, cl).arrange(DOWN, aligned_edge=LEFT, buff=px(28)), "basso", "sinistra")
-        self.play(carta.entra(), run_time=0.5)
-        self.play(FadeIn(dopo), cl.entra(), run_time=1.2)
-        self.fino_a(0.15)
-        self.play(carta.aggiungi_riga("Sii originale."), run_time=0.6)
-        self.play(cl.aggiorna([0.55, 0.28, 0.05], riordina=False), run_time=0.6)
-
-        self.beat(1)
-        self.play(carta.aggiungi_riga("Marco ha passato una vita a litigare con la fotocopiatrice."), run_time=0.7)
-        self.play(cl.aggiorna([0.10, 0.12, 0.66]), run_time=1.0)
-
-        self.beat(2)
-        x = cl.barre[2].pista.get_right()[0]
-        freccia = Freccia([x + px(80), carta.box.get_bottom()[1], 0], [x + px(20), cl.barre[2].get_center()[1], 0],
-                          colore=col.accento)
-        self.play(cl.scegli(2), freccia.entra(), run_time=0.6)
-
-
-class Scena06(ScenaReel):
-    """Schermo: la chat con il nuovo biglietto; l'etichetta passa da «contesto nuovo» a «l'hai messa tu»."""
-
-    def costruisci(self):
-        col, sch = self.cfg.palette, self.area.schermo
-        cornice = CorniceSchermo(sch)
-        alto_safe = self.cfg.frame_height / 2 - px(self.cfg.dati["safe_area"]["alto"])
-        et = Etichetta(self.scena["testo"][0])
-        et.move_to([sch.x0 + et.width / 2, (alto_safe + sch.y1) / 2, 0])
-        # la bolla con il dettaglio vero: px nell'immagine (li stampa genera_chat.py) + dove è posata ([schermo] x, y)
-        x, y = self.cfg.dati["schermo"]["x"], self.cfg.dati["schermo"]["y"]
-        bolla = area_px(self.cfg, x + 256, y + 328, x + 860, y + 492).rettangolo(stroke_opacity=0, fill_opacity=0)
-        self.play(cornice.entra(), et.entra(), run_time=0.6)
-
-        self.beat(1)
-        et2 = Etichetta(self.scena["testo"][1], colore=col.terziario).move_to(et, aligned_edge=LEFT)
-        self.play(Create(Evidenzia(bolla, buff=px(12))), FadeTransform(et, et2), run_time=0.6)
-
-
-class Scena07(ScenaReel):
-    """Chiusura: messaggio, tre modi di cambiare quello che viene prima, CTA."""
+    """La riga cresce una tessera alla volta; sotto, tre barre: vince la più lunga."""
 
     def costruisci(self):
         a = self.area.contenuto
-        msg = Messaggio(self.scena["messaggio"])
-        a.metti(msg, "alto", "sinistra")
-        lista = Lista(["un dettaglio vero", "un vincolo", "scarta le prime idee"])
-        lista.next_to(msg, DOWN, buff=px(70), aligned_edge=LEFT)
-        cta = Etichetta(self.scena["cta"])
-        a.metti(cta, "basso", "sinistra")
-        piede = Piede(a)
-        self.play(msg.entra(), run_time=1.2)
-
+        self.riga = VGroup(*[tessera(self) for _ in range(3)]).arrange(RIGHT, buff=px(16))
+        a.metti(self.riga, "alto", "sinistra", buff_px=20)
+        self.play(FadeIn(self.riga[0]), run_time=0.3)
+        self.play(FadeIn(self.riga[1]), run_time=0.3)
         self.beat(1)
-        self.play(lista.entra_una_alla_volta(), run_time=1.5)
-
+        vuota = tessera(self)
+        vuota.next_to(self.riga, RIGHT, buff=px(16))
+        vuota[0].set_stroke(self.cfg.palette.accento)
+        self.play(FadeIn(self.riga[2]), Create(vuota[0]), run_time=0.5)
+        self.cl = Classifica(CANDIDATE, larghezza_px=560)
+        self.cl.next_to(self.riga, DOWN, buff=px(90), aligned_edge=LEFT)
+        self.play(self.cl.entra(), run_time=1.0)
         self.beat(2)
-        self.play(cta.entra(), *([FadeIn(piede)] if len(piede) else []), run_time=0.5)
+        self.play(self.cl.scegli(0), run_time=0.4)
+        vincente = tessera(self, "si")
+        vincente.move_to(self.cl.barre[0].etichetta, aligned_edge=LEFT)
+        self.play(FadeIn(vincente), run_time=0.2)
+        self.play(vincente.animate.move_to(vuota), run_time=0.6)
+        self.remove(vuota)
+
+
+class Scena03(ScenaReel):
+    """La riga continua da sola e il contatore sale; il testo finito è un blocco che non si legge."""
+
+    def costruisci(self):
+        a = self.area.contenuto
+        riga = VGroup(*[tessera(self, s) for s in ("", "si", "")]).arrange(RIGHT, buff=px(16))
+        a.metti(riga, "alto", "sinistra", buff_px=20)
+        cont = ContatoreScorre(3, "parole scelte")
+        cont.next_to(riga, DOWN, buff=px(70), aligned_edge=LEFT)
+        self.add(riga, cont)
+        self.beat(1)
+        blocco = Sagome([0.95, 0.8, 0.88, 0.55], larghezza_px=640)
+        blocco.next_to(cont, DOWN, buff=px(70), aligned_edge=LEFT)
+        self.play(blocco.entra(), cont.scorri(14), run_time=1.2)
+        cont.ferma()
+        self.beat(2)
+        cornice = Evidenzia(blocco, buff=px(24))
+        eti = Etichetta("probabile")
+        eti.next_to(cornice, DOWN, buff=px(28)).align_to(blocco, LEFT)
+        self.play(Create(cornice), run_time=0.5)
+        self.play(eti.entra(), run_time=0.4)
+
+
+class Scena04(ScenaReel):
+    """Il bivio: tre rami di spessore diverso, il punto prende il più largo."""
+
+    def costruisci(self):
+        a = self.area.contenuto
+        blocco = Sagome([0.9, 0.7], larghezza_px=420)
+        a.metti(blocco, "alto", "sinistra", buff_px=20)
+        self.add(blocco)
+        partenza = blocco.get_bottom() + DOWN * px(20)
+        rami, spessori = [], (16, 6, 4)
+        for i, sp in enumerate(spessori):
+            fine = partenza + RIGHT * px(230 * i) + DOWN * px(230)
+            rami.append(Line(partenza, fine, stroke_color=self.cfg.palette.attenuato, stroke_width=tratto(sp)))
+        self.play(*[Create(r) for r in rami], run_time=0.8)
+        self.beat(1)
+        grosso = rami[0]   # il primo è il più spesso: è la strada più battuta
+        self.play(grosso.animate.set_stroke(self.cfg.palette.accento), run_time=0.4)
+        nuovo = Etichetta("nuovo")
+        nuovo.next_to(grosso.get_end(), DOWN, buff=px(24)).align_to(blocco, LEFT)
+        self.play(nuovo.entra(), run_time=0.4)
+        self.beat(2)
+        raro = Etichetta("raro", pieno=False)
+        raro.next_to(nuovo, RIGHT, buff=px(60))
+        self.play(raro.entra(), run_time=0.35)
+        self.play(Barrato(raro.testo).entra(), run_time=0.4)
+
+
+class Scena05(ScenaReel):
+    """Le barre si muovono appena con «originale», si riordinano con il dettaglio vero."""
+
+    def costruisci(self):
+        a = self.area.contenuto
+        from manim import RoundedRectangle
+        box = RoundedRectangle(corner_radius=px(24), width=px(620), height=px(150), stroke_width=tratto(3),
+                               stroke_color=self.cfg.palette.attenuato, fill_color=self.cfg.palette.sfondo, fill_opacity=1)
+        linguetta = Etichetta("richiesta", pieno=False)
+        carta = VGroup(box, linguetta.next_to(box, UP, buff=px(14)).align_to(box, LEFT))
+        a.metti(carta, "alto", "sinistra", buff_px=20)
+        cl = Classifica(CANDIDATE, larghezza_px=560)
+        cl.next_to(carta, DOWN, buff=px(60), aligned_edge=LEFT)
+        self.add(carta, cl)
+        self.beat(0)
+        t1 = Token("originale")
+        t1.next_to(carta, RIGHT, buff=px(40))
+        self.play(FadeIn(t1), run_time=0.3)
+        self.play(t1.animate.move_to(box.get_left() + RIGHT * (t1.width / 2 + px(28))), run_time=0.5)
+        self.play(cl.aggiorna([0.46, 0.24, 0.08], riordina=False), run_time=0.6)
+        self.beat(1)
+        t2 = Token("fotocopiatrice", colore=self.cfg.palette.accento)
+        t2.next_to(cl, RIGHT, buff=px(30))
+        mano = Indice()
+        mano.next_to(t2, DOWN, buff=px(6))
+        self.play(FadeIn(t2), mano.entra(), run_time=0.4)
+        self.play(mano.trascina(t2, box.get_right() + LEFT * (t2.width / 2 + px(28))), run_time=0.8)
+        self.play(FadeOut(mano, shift=DOWN * 0.2), run_time=0.25)
+        self.play(cl.aggiorna([0.12, 0.20, 0.62]), run_time=0.8)
+        self.beat(2)
+        self.play(cl.scegli(2), run_time=0.4)
+
+
+class Scena06(ScenaReel):
+    """Deroga (CAPTION: alto): nella cornice c'è la chat, e lì il testo è il contenuto."""
+
+    def costruisci(self):
+        cornice = CorniceSchermo(self.area.schermo)
+        eti = Etichetta("adesso")
+        eti.next_to(cornice, DOWN, buff=px(24)).align_to(cornice, LEFT)
+        self.add(cornice)
+        self.play(eti.entra(), run_time=0.4)
+        self.beat(1)
+        quadro = self.area.schermo
+        alto = quadro.y1 - quadro.altezza * 0.22
+        riquadro = VGroup(Line([quadro.x0 + px(40), alto, 0], [quadro.x1 - px(40), alto, 0],
+                               stroke_color=self.cfg.palette.accento, stroke_width=tratto(6)))
+        self.play(Create(riquadro), run_time=0.5)
+
+
+class Scena07(ScenaReel):
+    """Chiusura: il messaggio e le tre tessere da mettere nella richiesta."""
+
+    def costruisci(self):
+        a = self.area.contenuto
+        m = Messaggio("Non chiederle di essere originale: ==cambia quello che viene prima==", larghezza_px=860)
+        a.metti(m, "alto", "sinistra", buff_px=20)
+        self.play(m.per_righe(), run_time=1.0)
+        self.beat(1)
+        tessere = VGroup(*[tessera(self, s, 300) for s in ("dettaglio", "vincolo", "scarto")]).arrange(DOWN, buff=px(18))
+        tessere.next_to(m, DOWN, buff=px(44)).align_to(m, LEFT)
+        self.play(FadeIn(tessere, shift=UP * 0.15), run_time=0.7)
+        cta = Etichetta("Salva per il prossimo biglietto")
+        a.metti(cta, "basso", "sinistra", buff_px=10)
+        self.play(cta.entra(), run_time=0.4)

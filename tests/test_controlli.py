@@ -129,7 +129,7 @@ def test_punch_e_zoom_tagliano_e_rimettono_la_scena(tmp_path):
 
     class ConPunch(ScenaReel):
         def costruisci(self):
-            t = blocco("prima della battuta", "caption")
+            t = blocco("prima", "caption")
             self.area.contenuto.metti(t, "alto", "sinistra")
             self.add(t)
             self.play(self.zoom_su(t, 1.4), run_time=0.3)

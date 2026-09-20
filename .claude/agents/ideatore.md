@@ -47,6 +47,7 @@ Prima di scrivere leggi:
 ## Situazione                  ← una scena di ufficio o di vita quotidiana, con un momento di prova per chi guarda
 ## Messaggio centrale          ← due frasi al massimo
 ## Struttura narrativa         ← lo schema di reelkit adattato (vedi sotto)
+## Come si mostra              ← LA FIGURA: quantità, gesto, prima/dopo, qualcosa che si rompe o si riempie. Il reel si guarda muto
 ## Cosa impara chi guarda      ← un modo nuovo di leggere + la mossa concreta + il criterio per capire se ha funzionato
 ## Pilastro                    ← come funziona davvero | cosa può fare per te | dove sbaglia
 ## Perché ora
@@ -56,6 +57,12 @@ Prima di scrivere leggi:
 ```
 
 Regole:
+- **Il reel si guarda muto** (regola del presentatore, 2026-09-20): sul video ci sono le caption con il parlato, e
+  chi le legge non può leggere anche un testo nell'animazione. Perciò l'idea deve dire **come si mostra** il
+  concetto: una figura che regge da sola — una quantità (dieci figure di cui sei accese), un gesto, un prima/dopo,
+  due forme a confronto, qualcosa che si spezza in pezzi. Un'idea che non sa rispondere a «che figura è?» non passa
+  la fermata 1: cambiala, o proponi materiale esterno (una clip, o immagini generate con **Meshy**) per le parti che
+  non si possono animare. Mai ripiegare su una frase scritta a schermo.
 - **Nessun personaggio, nessun dialogo**: il presentatore parla a camera e le animazioni spiegano. La situazione
   diventa oggetti a schermo (una richiesta, una risposta, una classifica), non battute fra due voci.
 - Il potenziale e il limite stanno nella stessa idea: il reel non è né una lode né una stroncatura.

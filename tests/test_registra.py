@@ -181,7 +181,7 @@ def test_dispositivi_scelti(tmp_path, monkeypatch):
 def test_riquadro_in_scala_e_dimensioni_pipe(tmp_path, monkeypatch):
     monkeypatch.setattr(reg, "DISPOSITIVI_SCELTI", tmp_path / "dispositivi.json")
     cfg = carica()
-    assert reg.riquadro_in_scala(cfg, "si", 0.375) == (216, 458, 135)
+    assert reg.riquadro_in_scala(cfg, "si", 0.375) == (216, 82, 135)   # «si» = alto-destra
     assert reg.dimensioni_pipe("1920x1080", 480) == (480, 270) and reg.dimensioni_pipe("1080x1920", 405) == (404, 720)
     o = reg.opzioni(cfg)
     assert o["fps"] == 30 and o["latenza_s"] == 0.10 and o["video"] == 0 and o["audio"] is None

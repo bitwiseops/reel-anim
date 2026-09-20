@@ -44,7 +44,8 @@ def test_monta_prova_una_scena_broll_senza_manim(tmp_path, monkeypatch):
     testo = (RADICE / "templates" / "esempio-reel.md").read_text(encoding="utf-8")
     md = tmp_path / "esempio-reel.md"
     testo = testo.replace("## Scena 3 [spiegazione]\n", "## Scena 3 [broll]\nSCHERMO: broll-scena-03.mp4\n")
-    testo = testo.replace("TESTO: la più probabile\n\n## Scena 4", "\n## Scena 4")     # sopra il filmato niente grafica
+    # sopra il filmato niente grafica: via TESTO e FIGURA della scena diventata [broll]
+    testo = testo.replace("FIGURA: la stessa scelta ripetuta molte volte produce un testo intero.\nTESTO: 14\n", "")
     md.write_text(testo, encoding="utf-8")
 
     out = tmp_path / "out"

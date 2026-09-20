@@ -29,7 +29,8 @@ VELO = 0.58             # quanto si scurisce il fotogramma sotto il titolo: deve
 CORPO_TITOLO_PX, CORPO_SOTTOTITOLO_PX = 104, 76
 
 
-def _font_titolo(cfg: Config, corpo: int) -> ImageFont.FreeTypeFont | ImageFont.ImageFont:
+def font_pesato(cfg: Config, corpo: int, peso: int = 800) -> ImageFont.FreeTypeFont | ImageFont.ImageFont:
+    """Il font del canale a un corpo e un peso dati (Pillow): lo usano il titolo di copertina e le caption."""
     try:
         font = ImageFont.truetype(str(cfg.font_file()[0]), corpo)
     except OSError:
@@ -38,13 +39,14 @@ def _font_titolo(cfg: Config, corpo: int) -> ImageFont.FreeTypeFont | ImageFont.
         # Inter Variable ha più assi (opsz, wght): si tocca solo il peso, gli altri restano al loro default
         assi = font.get_variation_axes()
         nome = lambda a: (a["name"].decode() if isinstance(a["name"], bytes) else str(a["name"])).lower()  # noqa: E731
-        font.set_variation_by_axes([min(800, a["maximum"]) if nome(a) in ("weight", "wght") else a["default"] for a in assi])
+        font.set_variation_by_axes([min(peso, a["maximum"]) if nome(a) in ("weight", "wght") else a["default"] for a in assi])
     except (OSError, AttributeError, ValueError):
         pass
     return font
 
 
-def _a_capo(d: ImageDraw.ImageDraw, testo: str, font, larghezza: int) -> list[str]:
+def a_capo(d: ImageDraw.ImageDraw, testo: str, font, larghezza: int) -> list[str]:
+    """A capo greedy misurato con Pillow (come `componenti.avvolgi` fa con Pango)."""
     righe, riga = [], ""
     for parola in testo.split():
         prova = f"{riga} {parola}".strip()
@@ -70,10 +72,10 @@ def titola(immagine: Path, titolo: str, sottotitolo: str | None, cfg: Config) ->
     x = int(s.get("sinistra", 60)) + 24
     larghezza = cfg.larghezza - x - int(s.get("sinistra", 60)) - 24
     _, alto, _, basso = ritaglio_4x5(cfg)
-    blocchi = [(testo_piano(titolo).upper(), _font_titolo(cfg, CORPO_TITOLO_PX), p.testo)]
+    blocchi = [(testo_piano(titolo).upper(), font_pesato(cfg, CORPO_TITOLO_PX), p.testo)]
     if sottotitolo:
-        blocchi.append((testo_piano(sottotitolo).upper(), _font_titolo(cfg, CORPO_SOTTOTITOLO_PX), p.accento))
-    righe = [(r, font, colore) for testo, font, colore in blocchi for r in _a_capo(d, testo, font, larghezza)]
+        blocchi.append((testo_piano(sottotitolo).upper(), font_pesato(cfg, CORPO_SOTTOTITOLO_PX), p.accento))
+    righe = [(r, font, colore) for testo, font, colore in blocchi for r in a_capo(d, testo, font, larghezza)]
     interlinea = 1.12
     altezza = sum(int(font.size * interlinea) for _, font, _ in righe) + (40 if sottotitolo else 0)
     y = alto + max(60, (basso - alto - altezza) // 3)       # un terzo dall'alto: sotto resta il volto nel riquadro

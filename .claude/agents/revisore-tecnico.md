@@ -14,6 +14,11 @@ frontmatter. Poi, su tutte le sezioni `## Scena N`:
 2. **Anche le animazioni affermano.** Una barra che si allunga, un ramo più spesso, un ordine che cambia, una
    freccia da A a B sono claim visivi: leggi le righe `ANIMAZIONE:` e chiediti che modello mentale lasciano
    (es. «le barre non si muovono affatto» dice «zero effetto»; «si muovono appena» dice «poco»).
+   **Dal 2026-09-20 pesano il doppio**: il reel si guarda muto e il testo a schermo è sparito, quindi il claim non
+   si regge più su una frase scritta ma sulla figura. Controlla la riga `FIGURA:` di ogni scena: dice davvero quello
+   che la fonte dice, né più né meno? Una quantità disegnata (sei figure su dieci, tre pezzi su cinque) afferma una
+   proporzione: se nessuno l'ha misurata, non si disegna. Ogni numero grande a schermo vuole accanto un'etichetta
+   con **cosa misura** e **da dove viene**, perché il numero resta molto più a lungo della parola detta.
 3. Per ciascuno: ✅ corretto / ⚠️ semplificazione accettabile (spiega cosa perde) / ❌ errato (proponi una
    riformulazione che stia nei limiti: VOCE ≤ 50 parole per scena, hook ≤ 20, chiusura ≤ 18; parlato vero, cioè
    niente titoli in fila, niente «X, sì. Y, no.», niente due punti come snodo: `docs/sceneggiatura.md` §4-5).

@@ -19,8 +19,8 @@ LIMITI = {
     "parole_titolo_max": 10,
     "parole_messaggio_max": 25,
     "parole_messaggio_consigliate": 12,   # una frase grande a schermo; il resto in caption
-    "testo_max": 4,
-    "parole_testo_max": 4,
+    "testo_max": 2,               # dal 2026-09-20 i reel si guardano muti: a spiegare è la caption, il TESTO è un extra
+    "parole_testo_max": 2,        # numeri e percentuali non contano come parole (tools/anim/controlli.parole_di_contenuto)
     "evidenzia_max": 1,           # ==evidenzia== per scena
     "emoji_scena_max": 1,
     "scena_min_s": 2.5,
@@ -29,7 +29,16 @@ LIMITI = {
     "reel_max_s": 90,             # Instagram non penalizza i video lunghi (docs/linguaggio-reel.md §0); era 60 fino al 2026-09-15
     "reel_errore_s": 120,
     "frasi_titolo_reel_max": 1,   # un solo aforisma per reel fuori dalla chiusura (la battuta finale è a parte)
+    "parole_figura_max": 20,      # FIGURA: cosa si capisce guardando, in una riga
 }
+
+_RE_NUMERO = re.compile(r"^[+\-−]?[\d.,]+\s*(%|°|€|\$|x|×)?$", re.IGNORECASE)
+
+
+def _parole_pesanti(s: str) -> int:
+    """Le parole che chi guarda deve leggere: numeri e percentuali non contano (stessa regola del controllo
+    `parole-leggibili` in tools/anim/controlli.py)."""
+    return len([w for w in testo_piano(s).split() if not _RE_NUMERO.match(w.strip(".,;:!?«»\"'()").lower())])
 
 RADICE = Path(__file__).resolve().parents[2]
 
@@ -120,13 +129,25 @@ def check(r: Reel) -> list[Diagnostica]:
                   "resta una clip con una voce sopra")
         elif s.tipo != "hook" and not s.animazione:
             a("scena senza ANIMAZIONE: l'animatore non sa cosa disegnare")
+        if not s.a_filmato and s.tipo != "hook" and not s.figura:
+            a("scena senza FIGURA: scrivi in una riga cosa si capisce guardando, senza leggere niente a schermo "
+              "(i reel si guardano muti: a spiegare è la caption)")
+        if s.figura and conta_parole(s.figura) > L["parole_figura_max"]:
+            a(f"FIGURA di {conta_parole(s.figura)} parole (max {L['parole_figura_max']}): è quello che si vede, "
+              "non il brief")
         if s.voce and s.animazione and len(s.animazione) not in (1, len(s.voce)):
             a(f"{len(s.animazione)} righe ANIMAZIONE per {len(s.voce)} righe VOCE: o una sola, o una per frase (beat)")
         if len(s.testo) > L["testo_max"]:
             a(f"{len(s.testo)} TESTO (max {L['testo_max']})")
+        parole_voce = {w.strip(".,;:!?«»\"'()").lower() for w in testo_piano(s.voce_piena).split()}
         for t in s.testo:
-            if conta_parole(t) > L["parole_testo_max"]:
-                a(f"TESTO «{t[:30]}» di {conta_parole(t)} parole (max {L['parole_testo_max']}): è un'etichetta, non una frase")
+            if _parole_pesanti(t) > L["parole_testo_max"]:
+                a(f"TESTO «{t[:30]}» di {_parole_pesanti(t)} parole (max {L['parole_testo_max']}): è un'etichetta, "
+                  "non una frase (numeri e percentuali non contano)")
+            comuni = {w.strip(".,;:!?«»\"'()").lower() for w in testo_piano(t).split() if len(w) > 3} & parole_voce
+            if len(comuni) >= 2:
+                a(f"TESTO «{t[:30]}» ripete parole della VOCE ({', '.join(sorted(comuni)[:3])}): "
+                  "quelle le dice già la caption, a schermo serve altro")
         ev = sum(len(evidenziate(t)) for t in s.testi)
         if ev > L["evidenzia_max"]:
             a(f"{ev} ==evidenzia== nella scena (max {L['evidenzia_max']}): una sola parola conta")

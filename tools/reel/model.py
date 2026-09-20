@@ -11,6 +11,10 @@ TIPI_SCENA = ("hook", "spiegazione", "schermo", "broll", "chiusura")
 CON_FILE = ("schermo", "broll")         # i tipi che senza SCHERMO: <file> non hanno niente da mostrare
 TRANSIZIONI = ("taglio", "dissolvenza")
 POSIZIONI_RIQUADRO = ("basso-destra", "basso-sinistra", "alto-destra", "alto-sinistra")
+# CAPTION: i sottotitoli seguono la voce e si bruciano nel montaggio (tools/reel/caption.py). "no" li sospende
+# dove la parola detta è già grande a schermo (punch, MESSAGGIO); "alto" sposta la fascia in cima, per la deroga
+# delle scene in cui il testo *è* il contenuto.
+CAPTION = ("si", "no", "alto", "basso")
 STATI = ("sceneggiatura", "rivisto", "animato", "montato", "approvato", "pubblicato")
 
 
@@ -49,7 +53,8 @@ class Scena:
     riga: int = 0
     voce: list[str] = field(default_factory=list)        # frasi dette a camera: ogni riga è un beat
     animazione: list[str] = field(default_factory=list)  # brief per l'animatore
-    testo: list[str] = field(default_factory=list)       # etichette a schermo
+    figura: str | None = None                            # cosa si capisce guardando, senza leggere niente a schermo
+    testo: list[str] = field(default_factory=list)       # etichette a schermo (extra: numeri, una-due parole)
     titolo: str | None = None                            # hook
     sottotitolo: str | None = None                       # hook
     messaggio: str | None = None                         # chiusura
@@ -57,6 +62,7 @@ class Scena:
     schermo: str | None = None                           # file b-roll (relativo a contenuti/media/<slug>/)
                                                          # in [schermo] sta nella finestra, in [broll] è tutta la tela
     riquadro: str | None = None                          # None = default per tipo; "no" | "si" | posizione
+    caption: str | None = None                           # None = dal config; "no" | "alto" | "basso"
     durata_min_s: float | None = None
     transizione: str | None = None
 
@@ -87,11 +93,18 @@ class Scena:
             return self.riquadro
         return "no" if self.tipo == "hook" and not self.a_filmato else "si"
 
+    def caption_effettiva(self) -> str:
+        """Dove stanno i sottotitoli in questa scena. Nella [chiusura] non ci sono: il MESSAGGIO è già la frase
+        detta, scritta grande, e una caption sotto direbbe le stesse parole una seconda volta."""
+        if self.caption is not None:
+            return self.caption
+        return "no" if self.tipo == "chiusura" else "si"
+
     def to_dict(self) -> dict:
-        return {"n": self.n, "tipo": self.tipo, "voce": self.voce, "animazione": self.animazione, "testo": self.testo,
-                "titolo": self.titolo, "sottotitolo": self.sottotitolo, "messaggio": self.messaggio, "cta": self.cta,
-                "schermo": self.schermo, "riquadro": self.riquadro_effettivo(), "durata_min_s": self.durata_min_s,
-                "transizione": self.transizione}
+        return {"n": self.n, "tipo": self.tipo, "voce": self.voce, "animazione": self.animazione, "figura": self.figura,
+                "testo": self.testo, "titolo": self.titolo, "sottotitolo": self.sottotitolo, "messaggio": self.messaggio,
+                "cta": self.cta, "schermo": self.schermo, "riquadro": self.riquadro_effettivo(),
+                "caption": self.caption_effettiva(), "durata_min_s": self.durata_min_s, "transizione": self.transizione}
 
 
 @dataclass

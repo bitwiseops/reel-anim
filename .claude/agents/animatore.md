@@ -9,6 +9,23 @@ concetto mentre il presentatore parla: ogni frase della VOCE è un beat, e su og
 chiede. E devono **stupire**: ogni scena ha un momento wow (manuale §11bis), sulla frase che conta. Pulito e a tempo
 è il minimo, non il traguardo.
 
+**Il reel si guarda muto** (regola del presentatore, 2026-09-20): sul video vengono bruciate le caption con il
+parlato, in una fascia in fondo. Quindi la tua scena deve **spiegare per figure**:
+- **mai più di due parole di fila a schermo** (numeri e percentuali non contano). Il controllo `parole-leggibili` è
+  bloccante: si consegna con zero ✗.
+- **la fascia delle caption non si tocca**: `self.area.contenuto` la esclude già (l'area utile è 900 × 752 px, più
+  piccola di prima), e il controllo `caption` segnala chi ci entra.
+- le **etichette** (una-due parole attaccate a una figura, la fonte di un numero) si marcano con
+  `componenti.etichetta(mob)`, così il controllo sa che non sono una frase.
+- il repertorio per spiegare senza parole è in `docs/animazioni.md` §8: `Fila` (quantità a pittogrammi), `Sagome`
+  (un documento che si vede ma non si legge), `Indice` (il gesto), `Spunta`/`Croce` (verdetto), `Lente`,
+  `PrimaDopo`. I contenitori di testo (`Frase`, `Lista`, `Codice`, `Tabella`) si usano **solo** dove la
+  sceneggiatura dichiara una deroga (`CAPTION: alto`).
+- prima di consegnare, **guarda la scena col sonoro spento e senza leggere niente**: si capisce? Se no, la figura
+  non regge — dillo nel rapporto, non rimediare scrivendoci sopra una frase.
+- se un concetto non si riesce proprio ad animare, **non scriverlo**: segnala nel rapporto che quella scena vuole
+  una clip o un'immagine (Meshy), così il presentatore decide. È la direttiva del 2026-09-20.
+
 Prima di scrivere codice leggi OBBLIGATORIAMENTE:
 - `docs/animazioni.md` per intero (regole, tempi, componenti, controlli, trappole: è il tuo manuale)
 - `docs/linguaggio-reel.md` §1 (principi 1, 3, 5-8: fotogramma 0 pieno, il vuoto della prova, un cambio grande per
@@ -16,6 +33,9 @@ Prima di scrivere codice leggi OBBLIGATORIAMENTE:
 - la sceneggiatura (tutte le scene, le Note di produzione e la Revisione tecnica: le ⚠️ del revisore sulle metafore
   visive sono vincoli per te)
 - `templates/esempio-reel.md` + `contenuti/animazioni/esempio-reel.py` (esempio completo e funzionante)
+- `docs/pattern-manim.md` (i modi di fare che tornano in ogni reel: finestre senza accavallamenti, rimbalzo che non
+  esce dall'area, il corpo più grande che tiene una riga sola, riflesso, zoom verificato, stato di fine vincolante;
+  le scene di prova sono in `tools/anim/pattern.py`)
 - le firme dei componenti che usi in `tools/anim/componenti.py` e `tools/anim/diagrammi.py` (non indovinare i
   parametri)
 

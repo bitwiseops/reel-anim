@@ -11,10 +11,11 @@ import argparse
 import sys
 from pathlib import Path
 
-from manim import DOWN, AnimationGroup, FadeIn, LaggedStart, VGroup
+from manim import DOWN, LEFT, RIGHT, AnimationGroup, FadeIn, LaggedStart, VGroup
 
 from .base import ScenaReel
-from .componenti import Caption, Classifica, Codice, ContatoreScorre, Icona, Lista, testo
+from .componenti import (Classifica, Codice, ContatoreScorre, Croce, Didascalia, Fila, Icona, Indice, Lente,
+                         Lista, PrimaDopo, Sagome, Spunta, testo)
 from .config import RADICE, carica
 from .diagrammi import Ciclo, Confronto, Corrispondenza, Flusso, Graffa, Tabella
 from .misure import px
@@ -25,7 +26,7 @@ SCENA = {"voce": ["uno due tre", "quattro cinque sei", "sette otto nove"], "riqu
 
 class VetrinaFlusso(ScenaReel):
     def costruisci(self):
-        f = Flusso(["La domanda entra nel modello", "Il modello sceglie una parola", "La parola si aggiunge al testo"])
+        f = Flusso(["domanda", "modello", "parola"])
         self.area.contenuto.metti(f, "alto", "centro", buff_px=20)
         for i in range(3):
             self.beat(i)
@@ -47,8 +48,7 @@ class VetrinaCiclo(ScenaReel):
 
 class VetrinaConfronto(ScenaReel):
     def costruisci(self):
-        c = Confronto("Scrivi un biglietto originale per Marco.",
-                      "Marco ha litigato una vita con la fotocopiatrice: due righe su questo.")
+        c = Confronto("originale", "vero")
         self.area.contenuto.metti(c, "alto", "sinistra")
         self.play(c.mostra_prima(), run_time=0.5)
         self.beat(1)
@@ -72,7 +72,7 @@ class VetrinaCorrispondenza(ScenaReel):
 
 class VetrinaGraffa(ScenaReel):
     def costruisci(self):
-        lista = Lista(["un dettaglio vero", "un vincolo", "scarta le prime idee"], larghezza_px=560)
+        lista = Lista(["dettaglio", "vincolo", "scarto"], larghezza_px=560)
         self.area.contenuto.metti(lista, "centro", "sinistra", buff_px=20)
         g = Graffa(lista, "contesto")
         self.play(lista.entra_una_alla_volta(), run_time=1.0)
@@ -88,7 +88,7 @@ class VetrinaTabella(ScenaReel):
         self.beat(1)
         self.play(t.evidenzia(3), run_time=0.5)
         self.beat(2)
-        nota = Caption("esempio: numeri indicativi", area=self.area.contenuto)
+        nota = Didascalia("esempio: numeri indicativi", area=self.area.contenuto)
         self.play(nota.entra(), run_time=0.4)
 
 
@@ -123,7 +123,7 @@ class VetrinaContatore(ScenaReel):
 
 class VetrinaPunch(ScenaReel):
     def costruisci(self):
-        lista = Lista(["un dettaglio vero", "un vincolo"], larghezza_px=560)
+        lista = Lista(["dettaglio", "vincolo"], larghezza_px=560)
         self.area.contenuto.metti(lista, "centro", "sinistra", buff_px=20)
         self.play(lista.entra_una_alla_volta(), run_time=0.8)
         self.beat(1)
@@ -143,7 +143,79 @@ class VetrinaZoom(ScenaReel):
         self.play(self.torna(), run_time=0.5)
 
 
-SCENE = [VetrinaFlusso, VetrinaCiclo, VetrinaConfronto, VetrinaCorrispondenza, VetrinaGraffa, VetrinaTabella, VetrinaCodice,
+class VetrinaFila(ScenaReel):
+    """Una quantità senza scriverla: sei figure su dieci si accendono."""
+
+    def costruisci(self):
+        f = Fila("user", quanti=10, per_riga=5, altezza_px=96)
+        self.area.contenuto.metti(f, "alto", "centro", buff_px=20)
+        self.play(f.entra(), run_time=0.8)
+        self.beat(1)
+        self.play(f.accendi(6), run_time=0.9)
+
+
+class VetrinaSagome(ScenaReel):
+    """Un documento che si vede ma non si legge: la riga di cui parla la voce si accende."""
+
+    def costruisci(self):
+        s = Sagome(6, larghezza_px=620)
+        self.area.contenuto.metti(s, "centro", "sinistra", buff_px=20)
+        self.play(s.entra(), run_time=0.8)
+        self.beat(1)
+        self.play(s.accendi(2), run_time=0.4)
+        self.beat(2)
+        self.play(s.accendi(4), run_time=0.4)
+
+
+class VetrinaGesto(ScenaReel):
+    """Il gesto: il puntatore indica una riga, la tocca e la trascina."""
+
+    def costruisci(self):
+        s = Sagome(5, larghezza_px=560)
+        self.area.contenuto.metti(s, "alto", "sinistra", buff_px=20)
+        ind = Indice()
+        ind.next_to(s, DOWN, buff=px(40))
+        self.play(FadeIn(s), ind.entra(), run_time=0.6)
+        self.beat(1)
+        self.play(ind.vai_a(s.righe[1]), run_time=0.5)
+        self.play(ind.tocca(), run_time=0.3)
+        self.beat(2)
+        self.play(ind.trascina(s.righe[1], s.get_bottom() + DOWN * px(120)), run_time=0.8)
+
+
+class VetrinaVerdetto(ScenaReel):
+    """Sì e no senza parole, e la lente che guarda un pezzo."""
+
+    def costruisci(self):
+        s = Sagome(4, larghezza_px=520)
+        self.area.contenuto.metti(s, "alto", "sinistra", buff_px=20)
+        sp, cr = Spunta(), Croce()
+        sp.next_to(s, DOWN, buff=px(60)).align_to(s, LEFT)
+        cr.next_to(sp, RIGHT, buff=px(140))
+        le = Lente(raggio_px=120).move_to(s.righe[0])
+        self.play(FadeIn(s), run_time=0.4)
+        self.beat(1)
+        self.play(sp.entra(), run_time=0.5)
+        self.play(cr.entra(), run_time=0.5)
+        self.beat(2)
+        self.play(le.entra(), run_time=0.4)
+        self.play(le.passa_su(s.righe[2]), run_time=0.6)
+
+
+class VetrinaPrimaDopo(ScenaReel):
+    """Lo stesso oggetto prima e dopo, con la tendina."""
+
+    def costruisci(self):
+        prima = Sagome([0.9, 0.85, 0.7, 0.6], larghezza_px=560)
+        dopo = Sagome([0.5, 0.45], larghezza_px=560, colore=self.cfg.palette.terziario)
+        pd = PrimaDopo(prima, dopo)
+        self.area.contenuto.metti(pd, "centro", "centro")
+        self.play(FadeIn(prima), run_time=0.5)
+        self.beat(1)
+        self.play(pd.passa(), run_time=0.9)
+
+
+SCENE = [VetrinaFila, VetrinaSagome, VetrinaGesto, VetrinaVerdetto, VetrinaPrimaDopo, VetrinaFlusso, VetrinaCiclo, VetrinaConfronto, VetrinaCorrispondenza, VetrinaGraffa, VetrinaTabella, VetrinaCodice,
          VetrinaIcone, VetrinaContatore, VetrinaPunch, VetrinaZoom]
 
 

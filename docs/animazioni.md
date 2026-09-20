@@ -4,6 +4,26 @@ Come si scrivono le animazioni dei reel: una classe Manim per scena, con la libr
 all'agente animatore; la sezione 11 serve anche allo sceneggiatore. Esempio completo e funzionante:
 `templates/esempio-reel.md` + `contenuti/animazioni/esempio-reel.py` (7 scene, tutti i componenti).
 
+## 0. Il reel si guarda muto: la figura spiega, non il testo
+
+Regola del presentatore del 2026-09-20. Sul video vengono bruciate le **caption** (il parlato scritto, sincronizzato,
+in una fascia in fondo: `[caption]` nel config, `tools/reel/caption.py`), e chi guarda **non può leggere le caption e
+un testo dell'animazione insieme**. Quindi:
+
+- **Niente frasi a schermo.** Vanno bene numeri, percentuali, una parola (due solo se sono un'espressione sola:
+  «Fondo Monetario», «19 punti»). Il controllo `parole-leggibili` dà ✗ sopra due parole di fila.
+- **La fascia delle caption è vietata al disegno**: `self.area.contenuto` la esclude già, e il controllo `caption`
+  segnala chi ci entra. L'area utile è più piccola di prima (900 × 752 px con il riquadro in alto a destra).
+- **Il concetto lo porta la figura**: una quantità (`Fila`), un documento che si vede ma non si legge (`Sagome`), un
+  gesto (`Indice`), un verdetto (`Spunta`/`Croce`), un prima/dopo (`PrimaDopo`), una lente (`Lente`). La riga
+  `FIGURA:` della sceneggiatura dice cosa si deve capire guardando: è quella che devi rendere vera.
+- **Le etichette** (una-due parole attaccate a una figura, la fonte di un numero, una didascalia di onestà) si
+  marcano con `componenti.etichetta(mob)`: così il controllo sa che non sono una frase da leggere. I componenti che
+  sono etichette per natura (`Etichetta`, `Didascalia`, `Contatore`, la linguetta di `Carta`, `Punch`, `Messaggio`,
+  `Titolo`) si marcano da soli.
+- **Prima di consegnare**: guarda la scena col sonoro spento e senza leggere niente. Si capisce? Se no, la figura non
+  regge, e non si rimedia scrivendoci sopra una frase.
+
 ## 1. Dieci regole d'oro
 
 1. **Una idea per scena.** A fine beat non più di ~6 elementi visibili.
@@ -273,7 +293,7 @@ Import da `tools.anim.componenti`. Tutti sono `VGroup` posizionabili; i metodi r
 |---|---|---|
 | `Titolo(s, larghezza_px=900, maiuscolo=True)` | hook, titoli di sezione | `entra()`, `per_righe(lag)`, `.parola(w)` |
 | `Messaggio(s, cta=None)` | chiusura | `entra()`, `per_righe()` |
-| `Caption(s, area=None)` | didascalia attenuata in fondo all'area | `entra()` |
+| `Didascalia(s, area=None)` | didascalia attenuata in fondo all'area (era `Caption`, rinominata: «caption» ora sono i sottotitoli) | `entra()` |
 | `Etichetta(s, colore=None, pieno=True)` | parola chiave a pillola (`TESTO:`) | `entra()`; `.testo` |
 | `Barrato(parola)` | «non vuol dire X» (passa `blocco.parola(...)` o un `Blocco`) | `entra()` |
 | `Freccia(da, a, s=None, colore=None)` | causa → effetto, «da qui a lì» | `entra()` |
@@ -292,6 +312,26 @@ Import da `tools.anim.componenti`. Tutti sono `VGroup` posizionabili; i metodi r
 Note: `Evidenzia(buff=...)` è in **unità**, non in px: scrivi `buff=px(12)`. `Classifica.scegli(i)` e
 `aggiorna()` usano l'indice originale della voce, anche dopo un riordino. `Frase.aggiungi(token, da=...)` fa
 volare il cartellino dal punto `da` (es. `cl.token(0)` dall'etichetta della barra).
+
+### Spiegare senza parole (dal 2026-09-20)
+
+Questi non contengono testo: sono il modo normale di spiegare, adesso.
+
+| Componente | Quando | Animazioni |
+|---|---|---|
+| `Fila(icona, quanti, per_riga, accese)` | una quantità come pittogramma («sei su dieci») | `entra()`, `accendi(quante)` |
+| `Sagome(righe, larghezza_px)` | un documento che si vede ma non si legge (mail, pagina, elenco) | `entra()`, `accendi(i)` |
+| `Indice(altezza_px=88)` | il gesto: indicare, toccare, trascinare | `entra()`, `vai_a(mob)`, `tocca()`, `trascina(mob, a)` |
+| `Spunta()` / `Croce()` | il verdetto sì / no senza scriverlo | `entra()` |
+| `Lente(raggio_px)` | guardare un pezzo restando dentro la figura | `entra()`, `passa_su(mob)` |
+| `PrimaDopo(prima, dopo)` | lo stesso oggetto prima e dopo | `passa()` |
+
+### Contenitori di testo: solo con una deroga dichiarata
+
+`Frase`, `Lista`, `Codice`, `Tabella`, `Corrispondenza` e una `Carta` con più di una-due righe mettono a schermo
+frasi da leggere: con le caption accese fanno a botte con il parlato. Si usano solo quando il testo **è** il
+contenuto, in una scena con `CAPTION: alto` (massimo due per reel), e la deroga va scritta nelle Note di produzione
+e in quelle di animazione. In tutti gli altri casi: una figura.
 
 Sempre da `tools.anim.componenti`:
 

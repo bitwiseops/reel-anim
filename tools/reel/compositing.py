@@ -23,6 +23,8 @@ class Sorgenti:
     audio: Path | None = None                # audio separato (voce sintetica); se None usa quello della clip
     schermo: Path | None = None              # b-roll / screen recording sotto la grafica
     filmato: bool = False                    # scena [broll]: `grafica` è materiale esterno a tutta tela, non Manim
+    caption: tuple[tuple[Path, float, float], ...] = ()   # (png, t0, t1) dei blocchi di sottotitolo, bruciati sopra tutto
+    caption_xy: tuple[int, int] | None = None             # angolo in alto a sinistra della fascia (tools/reel/caption.fascia)
 
 
 def posizione_riquadro(cfg: Config, riquadro: str) -> tuple[int, int, int]:
@@ -122,6 +124,18 @@ def comando_scena(src: Sorgenti, dest: Path, cfg: Config | None = None, anteprim
         ultimo = "v1"
     elif src.video_presentatore:
         i_pres = aggiungi("-i", str(src.video_presentatore))  # solo per l'audio
+
+    # caption: sopra tutto il resto, una per blocco, accesa nella sua finestra. Sono PNG perché questo ffmpeg non ha
+    # drawtext (vedi tools/reel/caption.py); si bruciano qui e non in Manim perché i tempi buoni sono quelli della presa.
+    if src.caption:
+        cx, cy = src.caption_xy or (0, 0)
+        for k, (png, t0, t1) in enumerate(src.caption):
+            i_cap = aggiungi("-loop", "1", "-i", str(png))
+            filtri.append(f"[{i_cap}:v]format=rgba,setpts=PTS-STARTPTS[cap{k}]")
+            prossimo = f"c{k}"
+            filtri.append(f"[{ultimo}][cap{k}]overlay=x={cx}:y={cy}:shortest=0:"
+                          f"enable='between(t,{t0:.3f},{t1:.3f})'[{prossimo}]")
+            ultimo = prossimo
     filtri.append(f"[{ultimo}]format=yuv420p[v]")
 
     # audio

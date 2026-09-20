@@ -12,7 +12,7 @@ import math
 from manim import (BOLD, DOWN, LEFT, ORIGIN, PI, RIGHT, TAU, UP, AnimationGroup, Arc, Brace, Create, DashedLine, Dot,
                    FadeIn, GrowFromCenter, LaggedStart, Line, MoveAlongPath, RoundedRectangle, VectorizedPoint, VGroup)
 
-from .componenti import Barrato, Carta, Etichetta, Evidenzia, Freccia, Token, _cfg, testo
+from .componenti import Barrato, Carta, Etichetta, Evidenzia, Freccia, Token, _cfg, etichetta, testo
 from .misure import px, tratto
 
 
@@ -199,7 +199,7 @@ class Graffa(VGroup):
         super().__init__(**kw)
         col = colore or _cfg().palette.attenuato
         self.graffa = Brace(mob, direction=direzione, buff=px(16), color=col)
-        self.etichetta = testo(s, "etichetta", colore=col)
+        self.etichetta = etichetta(testo(s, "etichetta", colore=col))   # è l'etichetta di una figura, non una frase
         self.graffa.put_at_tip(self.etichetta, buff=px(16))
         self.add(self.graffa, self.etichetta)
 

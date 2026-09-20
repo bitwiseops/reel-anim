@@ -44,6 +44,6 @@ def test_aree_lasciano_libero_il_riquadro():
     senza = aree(cfg, None)
     con = aree(cfg, "si")
     assert senza.riquadro is None and con.riquadro is not None
-    assert con.contenuto.y0 > senza.contenuto.y0          # il contenuto si alza per lasciare la fascia del riquadro
+    assert con.contenuto.y1 < senza.contenuto.y1          # il riquadro sta in alto: il contenuto scende sotto la sua fascia
     assert con.riquadro.larghezza * cfg.px_per_unita == cfg.riquadro.dimensione_px
     assert con.riquadro.x1 <= senza.contenuto.x1 + 1e-6   # dentro la safe area a destra
