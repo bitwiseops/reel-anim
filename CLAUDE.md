@@ -59,17 +59,19 @@ Fasi 0 e 1 chiuse (2026-09-13, in `main`). Fase 2 in corso (branch `fase-2-primo
 il 2026-09-15 i contenuti sono stati azzerati. Poi: `ideatore` e spunti, `stilista` e `reel stile` (corpus
 `~/Projects/reelkit/export.md`), `/pipeline --tutto` e il workflow `reel`, i pattern narrativi di reelkit agli agenti
 (`[stile] pattern`, tappa T0b), il sottosistema `broll/` e le mosse wow (`docs/animazioni.md` §11bis).
-Il **2026-09-20**: la versione del 15/9 di `generativa-probabile` e' finita in
-`contenuti/archivio/generativa-probabile/` e il reel e' stato rifatto da zero (70,4 s, `animato`, manca il controllo dei
-fotogrammi e la fermata 3); **due reel pronti da registrare**, `scrivere-con-ia` (74,5 s, scena 5 riscritta senza
-citare la fonte, che resta in caption) e `ia-e-lavoro` (82,0 s, il primo tutto a figure: pittogrammi, tessere, numeri,
-nessun documento a schermo). Regole nuove del presentatore: ogni reel è a sé stante;
-niente testo denso; solo fonti ufficiali; **i reel si guardano muti** → caption sincronizzate bruciate nel montaggio
-dopo la registrazione, e animazioni che si capiscono senza leggere (ammessi numeri, percentuali e parole singole, due
-solo se espressione unica; vietate le frasi da leggere).
-**Prossimo passo**: il presentatore registra i due reel (`reel registra`), poi parte il piano
-`~/.claude/plans/caption-bruciate-e-animazioni-senza-testo.md` (caption + animazioni senza testo + catalogo di pattern
-Manim; dettagli e decisioni aperte nella memoria `stato-avanzamento`).
+Il **2026-09-20** il progetto ha cambiato regime: **i reel si guardano muti**, quindi nel video entrano le
+**caption** col parlato (bruciate nel montaggio dopo la registrazione, `tools/reel/caption.py`) e l'animazione non
+può più contenere frasi da leggere — numeri, percentuali e parole singole sì. Applicato il piano
+`~/.claude/plans/caption-bruciate-e-animazioni-senza-testo.md`: fascia caption in fondo e riquadro in alto a destra
+(area del contenuto 900×752), righe nuove `FIGURA:` e `CAPTION:`, controlli `parole-leggibili` e `caption`,
+componenti che spiegano senza parole (`Sagome`, `Fila`, `Indice`, `Spunta`/`Croce`, `Lente`, `PrimaDopo`), catalogo
+`docs/pattern-manim.md` + `tools/anim/pattern.py`, agenti e `esempio-reel` rifatti. Resta da fare la tappa T3 (la
+deriva fra karaoke e parlato vero, da misurare sulla prima registrazione). Dove non si riesce ad animare un concetto,
+o è troppo complesso per pochi secondi, si usa **una clip o immagini generate con Meshy**, mai il testo come ripiego.
+I tre reel del regime vecchio (`scrivere-con-ia`, `ia-e-lavoro`, `generativa-probabile`) sono in
+`contenuti/archivio/<slug>/`, mai registrati; **le loro idee restano** in `contenuti/idee/`.
+**Prossimo passo**: rifare la sceneggiatura di `ia-e-lavoro` dall'idea, con le regole nuove (dettagli nella memoria
+`stato-avanzamento`).
 
 ## Comandi
 `uv run reel setup` · `stile` · `valida <file>` · `gobbo <file> [--scrivi]` · `clip <file>` · `voce <file>` ·
