@@ -48,8 +48,11 @@ produce con lo stesso tono sicuro quando ha ragione e quando sbaglia. Le sue cap
 «facile» e «difficile»: compiti che a noi sembrano simili stanno uno dentro e uno fuori dalla sua portata. Uno studio
 sul campo con 758 consulenti (Harvard Business School e altri, con Boston Consulting Group, 2023, GPT-4) l'ha chiamata
 *jagged technological frontier*: nei 18 compiti **dentro** la frontiera, chi aveva l'IA ha prodotto risultati di
-qualità superiore di oltre il 40 % rispetto al gruppo senza; in un compito scelto apposta **fuori**, chi aveva l'IA ha
-dato la soluzione corretta 19 punti percentuali **meno spesso** di chi non l'aveva. Stesse persone, stesso strumento.
+qualità superiore del **32 %** rispetto al gruppo senza (è il numero della versione pubblicata su *Organization
+Science*, 2026; il working paper del 2023 diceva «oltre il 40 %»); in un compito scelto apposta **fuori**, chi aveva
+l'IA ha dato la soluzione corretta 19 punti percentuali **meno spesso** di chi non l'aveva. Stessa azienda, stesso
+strumento, gruppi sorteggiati (i due bracci non si sovrappongono: 385 dentro, 373 fuori — correzione del revisore,
+2026-09-20: **non** sono le stesse persone).
 La differenza non la fa usarla o non usarla: la fa **sapere dove regge e dove no**, cioè conoscerla. Ed è conoscenza
 che si impara e che invecchia (la frontiera si sposta a ogni modello: i compiti «fuori» del 2023 oggi possono essere
 «dentro»; resta vero che il bordo è irregolare e non si vede da fuori).
@@ -84,7 +87,7 @@ trarne vantaggio. E la cautela, detta: sono stime su cosa potrebbe succedere, no
   ragionamento del presentatore e non un dato: l'IA in ufficio entra lo stesso, e chi non la conosce non sa né cosa
   temere né cosa chiederle; la paura resta quella di prima, vaga.
 - *Imparare a usarla nella maniera corretta*: qui «usarla bene» si **vede**. Prima la prova misurata: stessi
-  consulenti, stesso strumento; nei compiti alla sua portata, qualità **+40 %**; poi un compito scelto fuori dalla
+  consulenti, stesso strumento; nei compiti alla sua portata, qualità **+32 %**; poi un compito scelto fuori dalla
   sua portata e un secondo, piccolo momento di prova («con l'IA hanno fatto meglio o peggio?»): **19 punti peggio**.
   Poi il gesto, su un lavoro che chi guarda fa davvero: **il resoconto del mese per il tuo capo**. La tessera
   «resoconto» si spezza in quattro pezzi, ciascuno un'icona e una o due parole: «i numeri», «la bozza», «l'ordine»,
@@ -97,7 +100,7 @@ trarne vantaggio. E la cautela, detta: sono stime su cosa potrebbe succedere, no
   È un **esempio dichiarato** (la divisione dei pezzi è nostra); l'idea di dividersi il lavoro così viene dallo studio,
   che chiama «centauri» i consulenti che facevano esattamente questo, e il reel lo dice.
 
-Potenziale e limite nella stessa idea. Potenziale: nei compiti giusti il guadagno è misurato e grande (+40 % di
+Potenziale e limite nella stessa idea. Potenziale: nei compiti giusti il guadagno è misurato e grande (+32 % di
 qualità lì; +15 % di pratiche risolte all'ora in un servizio clienti, e di più per i meno esperti). Limite: fuori
 dalla sua portata fa sbagliare di più proprio chi si fida; e saperla usare **non è una garanzia sul posto**: gli studi
 mostrano vantaggi per chi la usa, non chi terrà il lavoro.
@@ -137,7 +140,8 @@ dura 140 s.
 - [cosa fa chi crede di aver sbagliato? (mossa attesa). Lei invece (mossa opposta)] → le due strade: la mossa che
   viene spontanea a chi ha paura è starne fuori (l'asceta); quella opposta è andarle incontro e conoscerla. In mezzo,
   la cerniera del presentatore, annunciata come sua: «questa invece la dico io».
-- [terza prova con fonte] → stessi consulenti, stesso strumento: +40 % dentro la sua portata, 19 punti peggio fuori.
+- [terza prova con fonte] → stessa azienda, stesso strumento, gruppi sorteggiati: +32 % dentro la sua portata, 19
+  punti peggio fuori.
   La differenza è sapere dove regge.
 - [quindi (il dato) non è (lettura ovvia), è (riformulazione)] → la mossa: il resoconto del mese che si spezza. Non è
   «usarla o non usarla»: è decidere quale pezzo darle, quale tenere e quale controllare. Qui la promessa del canale.
@@ -170,6 +174,48 @@ dura 140 s.
 - Lunghezza: lo schema è da 140 s e dodici mosse; qui sette scene e obiettivo ≤ 75 s. La prima a perdere una frase è
   la scena 3 (il dato Stanford va in caption), poi il «758» della scena 5.
 
+## Come si mostra
+*Il reel si guarda muto: le caption col parlato sono bruciate in fondo, quindi a schermo non c'è niente da leggere.
+Qui sta la figura che regge il concetto senza parole, scena per scena.*
+
+**La figura madre: una quantità che si apre.** Dieci figure umane identiche in due file da cinque — dieci posti di
+lavoro. Sono l'oggetto del loop e tornano in quattro scene su sette. Tutto il reel è il viaggio di quella fila:
+prima si accende (una quantità), poi si sbarra (la lettura sbagliata), poi una di loro si apre in pezzi (la lettura
+giusta), poi si divide in due (il metà e metà), e alla fine torna identica a com'era, con una sola che fa un passo
+avanti.
+
+- **Scena 2 — una quantità.** Dieci figure spente, un'attesa in cui non si accende niente (il punto interrogativo
+  al posto del numero), poi sei che si accendono una dopo l'altra e il numero che arriva enorme. Si capisce senza
+  leggere: «di questi dieci, sei».
+- **Scena 3 — qualcosa che si sbarra, e poi qualcosa che si apre.** Le sei accese prendono una barra obliqua e
+  scivolano fuori dalla fila: è «persi», detto con la figura e non con la parola. Poi le barre si tolgono, una
+  figura vola al centro e **si apre in cinque pezzi**, di cui solo alcuni si accendono: è «esposto». Infine le sei
+  si dividono in **tre e tre**, con due frecce tratteggiate, una in giù e una in su.
+- **Scena 4 — un gesto, filmato.** Una persona chiude il portatile e prende carta e penna. Non c'è niente da
+  disegnare: è una posizione, non un meccanismo.
+- **Scena 5 — due forme a confronto, dentro un bordo irregolare.** Una linea frastagliata si disegna e chiude un
+  dentro e un fuori: il bordo *si vede* irregolare, ed è la tesi. Dentro, due barre crescono insieme e quella di
+  chi aveva l'IA si ferma più in alto. Fuori, una sola tessera, l'attesa, e poi il verdetto rovesciato: una croce
+  su chi aveva l'IA, una spunta su chi non l'aveva.
+- **Scena 6 — qualcosa che si spezza, e una lente.** Un documento cresce fino a riempire lo schermo e si spezza in
+  quattro pezzi, riconoscibili dalla forma e non da un'etichetta; due scivolano verso la macchina, due restano
+  dalla tua parte, e quando uno torna indietro una lente gli passa sopra e si ferma sul pezzo che controlli. È il
+  gesto della mossa, tutto intero, senza una parola.
+- **Scena 7 — un prima/dopo che non cambia, e un passo.** Le dieci figure tornano **identiche** alla Scena 2, con
+  le sei ancora accese: niente è cambiato, e si vede. Poi una si stacca e fa un passo avanti verso il bordo
+  frastagliato. La scelta è un movimento, non una frase.
+
+**Cosa resta a schermo, in tutto il reel**: quattro numeri nello stesso slot («6 su 10», «+32%», «−19 punti»),
+l'etichetta corta della fonte sotto di loro («Fondo Monetario, 2024», «Harvard, 2023»), la parola «esposto», la
+parola «esempio», «decidi tu» e la parola del punch. Tutto il resto — le didascalie di onestà, il «cosa misura»,
+«stime, non previsioni», i nomi dei quattro pezzi — sta nella caption del post.
+
+**Dove la figura potrebbe non reggere** (e cosa si fa, senza ripiegare sul testo): i quattro pezzi della Scena 6
+devono distinguersi a colpo d'occhio senza etichette. Se in anteprima non si leggono, si passa a quattro immagini
+generate con **Meshy**, una per pezzo, stesso stile e stessa luce (un foglio di tabella con numeri, un foglio con
+righe di testo sfocate, una pila di fogli che si riordina, una lampadina), messe in `contenuti/media/<slug>/` e
+richiamate con `SCHERMO:`.
+
 ## Cosa impara chi guarda
 1. **Un modo nuovo di leggere.** Davanti a un titolo su IA e lavoro, due domande: *esposto o perso?* (quasi sempre
    esposto: vuol dire che una parte dei compiti cambia) e *stima o fatto?* (quasi sempre una stima su ciò che la
@@ -183,7 +229,7 @@ dura 140 s.
 
 ## Pilastro
 Come funziona davvero (cosa misurano i numeri sul lavoro; perché lo stesso strumento aiuta in un compito e fa
-sbagliare in quello accanto). In filigrana gli altri due, perché è il reel del canale: cosa può fare per te (il +40 %)
+sbagliare in quello accanto). In filigrana gli altri due, perché è il reel del canale: cosa può fare per te (il +32 %)
 e dove sbaglia (i 19 punti).
 
 ## Perché ora
@@ -226,7 +272,10 @@ sulla pagina**. Dove scrivo «letto sul PDF» ho letto io le pagine del document
      persi né creati. «60» è l'aggregato delle economie avanzate, **non un dato sull'Italia**. È una nota dello staff:
      «The views expressed […] do not necessarily represent the views of the IMF».
    - Fiducia: **alta** sul numero e sulla citazione (testo primario letto); **media** sull'attualità (gennaio 2024).
-2. **+40 % di qualità dentro la frontiera, 19 punti peggio fuori.** Dell'Acqua, McFowland III, Mollick,
+2. **+32 % di qualità dentro la frontiera, 19 punti peggio fuori** (il working paper 2023 diceva «oltre il 40 %»;
+   il numero da usare è quello della versione pubblicata, verificato dal revisore sul PDF di *Organization Science*,
+   Articles in Advance, © 2026: «enhanced the quality of the responses by an average of 32%»). Dell'Acqua, McFowland
+   III, Mollick,
    Lifshitz-Assaf, Kellogg, Rajendran, Krayer, Candelon, Lakhani, *Navigating the Jagged Technological Frontier: Field
    Experimental Evidence of the Effects of AI on Knowledge Worker Productivity and Quality*, Harvard Business School
    Working Paper 24-013, 22 settembre 2023. https://mitsloan.mit.edu/sites/default/files/2023-10/SSRN-id4573321.pdf ·
@@ -373,8 +422,9 @@ riquadro sopra la clip):
 4. **A filmato (candidata) · la cerniera e l'asceta.** «Questa invece la dico io»: la paura più grossa è quella delle
    cose che non conosci. Due strade. La prima è starne fuori, ed è una scelta seria; solo che in ufficio lei entra
    lo stesso, e la paura resta com'era.
-5. **Animata · la seconda strada, con la prova.** Stessi consulenti, stesso strumento: nei compiti alla sua portata
-   «+40 %» grande («Harvard-BCG, 2023» sotto). Poi un compito scelto fuori: «meglio o peggio?»; il vuoto; «−19
+5. **Animata · la seconda strada, con la prova.** Stessa azienda, stesso strumento, gruppi sorteggiati (mai «gli
+   stessi consulenti»): nei compiti alla sua portata
+   «+32 %» grande («Harvard-BCG, 2023» sotto). Poi un compito scelto fuori: «meglio o peggio?»; il vuoto; «−19
    punti». Il punto è sapere dove regge e dove no.
 6. **Animata · la mossa e la promessa.** Il resoconto del mese si spezza in quattro: prima tutti i pezzi a lei e
    dritto su «invia»; poi due a lei, due a te, e la lente sui numeri. Si chiude il loop: esposto a cosa? A questo, a
@@ -403,14 +453,14 @@ per volta):
   due colori (3), attenuati in alto mentre si parla della mossa (5-6), di nuovo sei in chiusura, con uno che si
   accende per primo (7). È l'oggetto del loop.
 - **Il numero grande con la fonte piccola sotto** (`ContatoreScorre` o `Contatore` + `Etichetta`): «6 su 10» · «FMI,
-  2024»; «+40 %» e «−19 punti» · «Harvard-BCG, 2023». Sempre nella stessa posizione e nello stesso stile, così chi
+  2024»; «+32 %» e «−19 punti» · «Harvard-BCG, 2023». Sempre nella stessa posizione e nello stesso stile, così chi
   guarda impara che sotto il numero c'è sempre da dove viene. Mai più di un numero per volta a schermo.
 - **La tessera che si spezza**: «il tuo lavoro» in scena 3 (pezzi accesi e spenti, senza etichette o con una parola),
   «resoconto del mese» in scena 6 (quattro pezzi: «i numeri», «la bozza», «l'ordine», «la conclusione»; icona `bot` da
   una parte, `user` dall'altra, una lente per il controllo). Nessun documento a schermo: se lo sceneggiatore vuole far
   vedere il resoconto, si vede intero per un istante e poi resta solo il frammento con i numeri.
 Cambi grandi candidati (uno per scena): il «6» a tutto schermo alla rivelazione (2); zoom dentro un omino che diventa
-tessera, e ritorno (3); «+40 %» e poi taglio secco a «−19» a punch (5); la tessera che si spezza e i pezzi che volano
+tessera, e ritorno (3); «+32 %» e poi taglio secco a «−19» a punch (5); la tessera che si spezza e i pezzi che volano
 ai due lati (6); riquadro del presentatore grande sulla battuta (7). Due scene di fila non hanno la stessa
 composizione: omini (2), tessera + omini divisi (3), filmato (4), numero grande (5), tessera e due lati (6).
 
@@ -418,14 +468,15 @@ composizione: omini (2), tessera + omini divisi (3), filmato (4), numero grande 
 modello. Se il presentatore vuole lo stesso una dimostrazione con uscite vere, va ripensata la scena 6 e le richieste
 si scrivono allora (vedi «Domande», n. 2: io consiglio di no).
 
-**Numeri.** In VOCE tre, da due fonti: «sei su dieci» con «la metà» (FMI, gennaio 2024); «quaranta per cento» e
-«diciannove punti» (Dell'Acqua e altri, 2023). Facoltativo «758 consulenti» (meglio «più di settecento»). Tutti gli
+**Numeri.** In VOCE tre, da due fonti: «sei su dieci» con «la metà» (FMI, gennaio 2024); «oltre il trenta per
+cento» (+32 %) e
+«diciannove punti» (Dell'Acqua e altri, *Organization Science*, 2026; esperimento del 2023). Facoltativo «758 consulenti» (meglio «più di settecento»). Tutti gli
 altri in caption, con anno, fonte e cosa misurano. «Dieci omini», «quattro pezzi», il resoconto del mese sono
 **esempio dichiarato**.
 
 **Chi si nomina nel reel** (regola del presentatore, 2026-09-20). A voce e a schermo compaiono **solo due fonti
 ufficiali, e solo perché reggono un numero**: il Fondo Monetario Internazionale («6 su 10», «metà e metà») e lo studio
-Harvard Business School con Boston Consulting Group («+40 %», «−19 punti»). Nessuna persona si nomina, nemmeno gli
+Harvard Business School con Boston Consulting Group («+32 %», «−19 punti»). Nessuna persona si nomina, nemmeno gli
 autori degli studi (stanno in caption); nessun «secondo X», nessuna frase a effetto di qualcuno. Lo schema scelto non
 ha una fase di `autorità` con nome, quindi non c'è niente da tagliare. Nessuna idea del reel viene in modo
 riconoscibile da un articolo o da un post non ufficiale: **in caption non c'è nessun credito di questo tipo da
@@ -458,8 +509,9 @@ vera: «E tu, quale pezzo del tuo lavoro le daresti per primo?»
   «uno studio del Fondo Monetario» va bene; «il Fondo Monetario dice» è tollerabile nella formula ripetuta («lo dicono
   loro, non io») solo se in caption c'è titolo, autori e la clausola. Decide il revisore.
 - **Stime, non previsioni**: l'esposizione non ha un orizzonte temporale. Mai «entro il…» accanto al 60 %.
-- **«+40 %»**: è la qualità (voto di valutatori umani) nei 18 compiti dentro la frontiera, rispetto al gruppo di
-  controllo: «più di quaranta per cento», non «il 40 % più produttivi». **«19 punti»**: punti percentuali di soluzioni
+- **«+32 %»**: è la qualità (voto di valutatori umani) nei 18 compiti dentro la frontiera, rispetto al gruppo di
+  controllo: «oltre il trenta per cento», non «il 32 % più produttivi». **Il «più del 40 %» è il numero del working
+  paper 2023, superato dalla versione pubblicata** (*Organization Science*, 2026: «quality… by an average of 32%»). **«19 punti»**: punti percentuali di soluzioni
   corrette, su un solo compito scelto apposta: «diciannove punti in meno», mai «il 19 % peggio». Un'azienda, GPT-4,
   2023, consulenti molto qualificati: «in un esperimento con più di settecento consulenti», non «gli studi dimostrano».
 - **Perché fuori dalla frontiera chi ha l'IA sbaglia di più**: l'idea dice «proprio chi si fida». Lo studio lo discute

@@ -2,8 +2,8 @@
   "versione": 1,
   "slug": "ia-e-lavoro",
   "sorgente": "contenuti/sceneggiature/2026-09-20-ia-e-lavoro.md",
-  "hash_md": "9d6a17cf1e7e6f63",
-  "quando": "2026-09-20T17:28:29",
+  "hash_md": "502174d82be9b8cf",
+  "quando": "2026-09-20T19:52:02",
   "cornice": {
     "pieno": [
       1080,
@@ -11,7 +11,7 @@
     ],
     "finestra": [
       900,
-      980
+      752
     ]
   },
   "scene": [
@@ -270,10 +270,10 @@
         "Sono ==sei==, e lo dicono loro, non io."
       ],
       "brief": [
-        "Al primo fotogramma sono già in scena dieci icone «user» in due file da cinque, tutte uguali e spente, con sotto la didascalia piccola «dieci posti di lavoro, per far vedere una proporzione»; sulla voce le dieci icone pulsano una volta, in sequenza da sinistra.",
-        "Sotto la fila entra l'etichetta piccola «Fondo Monetario, 2024», nel punto in cui per tutto il reel starà la fonte, e accanto un trattino al posto del numero (non c'è ancora niente da contare, quindi nessun valore).",
-        "Il vuoto della scommessa: le icone restano spente e al posto del trattino un punto interrogativo in accento pulsa per circa un secondo; non si accende niente.",
-        "GRANDE (tipografia cinetica): sulla parola «sei» si accendono in accento sei delle dieci icone e insieme il «6» arriva enorme al centro, spingendo la fila in alto e attenuandola; sotto il numero resta piccola l'etichetta «esposti · Fondo Monetario, 2024»."
+        "Al primo fotogramma sono già in scena dieci figure umane identiche, in due file da cinque, tutte spente; sulla voce pulsano una alla volta da sinistra, come un conteggio che passa su ciascuna.",
+        "Sotto la fila si apre lo slot in cui per tutto il reel starà il numero, e sotto lo slot entra piccola l'etichetta della fonte; nello slot c'è solo un trattino, perché non c'è ancora niente da contare.",
+        "Il trattino esce e al suo posto pulsa per circa un secondo un punto interrogativo in accento; le dieci figure restano spente, non se ne accende nessuna: il vuoto della scommessa si deve vedere.",
+        "GRANDE (tipografia cinetica): il punto interrogativo esce, sei figure si accendono in accento una dopo l'altra e insieme il numero arriva enorme nello slot, spingendo la fila in alto e attenuandola; l'etichetta della fonte resta sotto il numero."
       ],
       "query": [],
       "stato": "da-scegliere",
@@ -297,17 +297,17 @@
         "E di quei sei, ==metà== potrebbe risentirne e metà trarne vantaggio. Lo dicono loro, non io."
       ],
       "brief": [
-        "Il «6» si rimpicciolisce e torna sotto la fila; le sei icone accese diventano sagome barrate e sopra di loro, grande, entra la sola parola «persi», in grigio.",
-        "GRANDE (metamorfosi): una delle sei icone si stacca dalla fila, vola al centro e si trasforma in una tessera «il tuo lavoro» che si apre in cinque pezzi, ognuno con la sola icona e nessun testo; tre pezzi si accendono in accento, due restano spenti.",
-        "«Persi» esce e al suo posto entra l'etichetta «esposto», agganciata con un trattino corto ai soli pezzi accesi, non alla tessera intera; in fondo la didascalia piccola «stime, non previsioni».",
-        "La tessera si richiude e torna nella fila; le sei icone accese si staccano in due gruppi da tre che scivolano ai lati, con sotto le etichette «potrebbe risentirne» e «potrebbe trarne vantaggio», e in mezzo torna piccola «Fondo Monetario, 2024»."
+        "Il numero si rimpicciolisce e torna nel suo slot; sulle sei figure accese cade una barra obliqua ciascuna, il colore se ne va e tutte e sei scivolano giù di poco, come se uscissero dalla fila.",
+        "GRANDE (metamorfosi): le barre si tolgono, una delle sei si stacca, vola al centro crescendo e diventa una tessera che si apre a ventaglio in cinque pezzi, ognuno con la sola icona di un compito; tre pezzi non contigui si accendono uno alla volta, gli altri restano spenti. Sotto, piccola, l'etichetta di esempio.",
+        "Un anello in accento si disegna attorno ai soli pezzi accesi, non attorno alla tessera intera; i pezzi spenti si attenuano ancora, così si vede che la parte toccata è una parte e non il tutto.",
+        "La tessera si richiude e rientra nella fila; le quattro figure non esposte scivolano al centro e le sei accese si aprono in due gruppi da tre che vanno ai lati, in due colori diversi della palette, con sopra ciascun gruppo una freccia tratteggiata, una che punta in giù e una in su. Torna sotto l'etichetta della fonte."
       ],
       "query": [],
       "stato": "da-scegliere",
       "candidati": [],
       "scelti": [],
       "file": null,
-      "note": "animata: metà, una quantità"
+      "note": "animata: barra, barre, metà"
     },
     {
       "n": 4,
@@ -567,18 +567,18 @@
         "Peggio, ==diciannove punti== di risposte giuste in meno."
       ],
       "brief": [
-        "Le dieci icone si attenuano e salgono in alto; al centro si disegna a tratto un bordo irregolare, frastagliato, che divide l'area in un dentro e un fuori (non è un componente della libreria: vedi Note di produzione).",
-        "Dentro il bordo entrano diciotto tessere piccole con la sola icona; sotto, nel punto della fonte, l'etichetta piccola cambia in «Harvard, 2023».",
-        "Le diciotto tessere si accendono in accento e un contatore sale fino a «+32%», grande al centro; sotto il numero l'etichetta piccola «qualità votata da umani, contro chi non l'aveva · 18 compiti».",
-        "Il «+32%» esce; fuori dal bordo si accende una sola tessera e sopra pulsa un punto interrogativo in accento per circa un secondo, come nella scommessa di prima.",
-        "GRANDE (punch): taglio secco a «PEGGIO» a tutto schermo in accento per circa un secondo; al ritorno, accanto alla tessera fuori dal bordo, il numero grande «19 punti in meno» e sotto l'etichetta piccola «risposte corrette, un compito solo · Harvard, 2023»."
+        "Le dieci figure salgono in alto e si attenuano; al centro una linea si disegna a tratto e chiude un bordo tutto frastagliato, con punte e rientranze, che separa un dentro e un fuori (non è un componente della libreria: vedi Note di produzione).",
+        "Sotto il bordo entrano due pile affiancate di sagome minuscole, uguali fra loro e diverse dalle figure dei dieci posti; sopra una delle due si accende l'icona della macchina, sopra l'altra niente. L'etichetta della fonte, nel suo punto, cambia nell'etichetta dell'altro studio.",
+        "Dentro il bordo si riempiono diciotto tessere-compito che si accendono a raffica; accanto alle due pile crescono insieme due barre, e quella della pila con la macchina si ferma un terzo più in alto. Sulla sua cima arriva grande il numero.",
+        "Tessere e barre escono; fuori dal bordo si accende una sola tessera-compito e sopra di lei pulsa per circa un secondo lo stesso punto interrogativo della scommessa. Le due pile restano dove sono.",
+        "GRANDE (punch): taglio secco a una parola sola a tutto schermo in accento per circa un secondo; al ritorno, sopra la pila con la macchina si stampa una croce e sopra l'altra una spunta, e al centro arriva grande il numero in meno."
       ],
       "query": [],
       "stato": "da-scegliere",
       "candidati": [],
       "scelti": [],
       "file": null,
-      "note": "animata: contatore, per cento, una quantità"
+      "note": "animata: barre, per cento, una quantità"
     },
     {
       "n": 6,
@@ -595,10 +595,10 @@
         "Il posto non te lo garantisce nessuno. Però qui vedi come funziona e dove sbaglia."
       ],
       "brief": [
-        "GRANDE (contrasto di scala): il bordo frastagliato esce e al centro entra una tessera «resoconto del mese» che cresce fino a riempire l'area e si spezza in quattro pezzi, ognuno con un'icona e due parole, «i numeri», «la bozza», «l'ordine», «la conclusione»; in fondo la didascalia piccola «esempio nostro».",
-        "A destra entra l'icona «bot»; i pezzi «la bozza» e «l'ordine» scivolano da soli verso di lei e si posano sotto l'icona.",
-        "A sinistra entra l'icona «user» e sotto restano «i numeri» e «la conclusione»; poi «la bozza» torna dal «bot» verso sinistra e una lente le passa sopra e si ferma sui numeri, che si accendono in accento.",
-        "I quattro pezzi si attenuano e tornano in alto, piccole, le dieci icone con le sei accese; sotto entra su una riga sola «come funziona e dove sbaglia», e accanto alla fila l'etichetta piccola «nessuna garanzia sul posto»."
+        "GRANDE (contrasto di scala): il bordo e la fila escono; al centro una tessera piccola come quelle di prima cresce fino a riempire l'area e si spezza in quattro pezzi che si aprono a ventaglio, senza nessuna parola dentro: un blocco di cifre, tre righe-sagoma, le stesse righe con due frecce che le scambiano, una lampadina. In fondo resta piccola l'etichetta di esempio.",
+        "A destra entra l'icona della macchina; le righe-sagoma e il pezzo delle frecce scivolano da soli verso di lei e si posano sotto, mentre gli altri due restano fermi dove sono.",
+        "A sinistra entra la sagoma di una persona e sotto di lei si stringono il blocco di cifre e la lampadina; poi le righe-sagoma tornano indietro dalla macchina e una lente le percorre, si ferma sul blocco di cifre e lo accende in accento.",
+        "Lente e pezzi si attenuano e si stringono in basso; in alto tornano piccole le dieci figure con le sei ancora accese, identiche a prima, e accanto a loro il bordo frastagliato si ridisegna piccolo, con una spunta dentro e una croce fuori."
       ],
       "query": [],
       "stato": "da-scegliere",
@@ -620,8 +620,8 @@
         "Ma una cosa è subirla, un'altra è saperla usare."
       ],
       "brief": [
-        "Esce tutto; le dieci icone tornano al centro nella posizione e nella scala della Scena 2, con le sei accese, e sotto torna piccolo «6 su 10».",
-        "GRANDE (tipografia cinetica): «SUBIRLA» arriva enorme sopra la fila, che si attenua dietro, esce del tutto e lascia il posto a «SAPERLA USARE» nella stessa posizione, su due righe e alla scala più grande che tiene le tre parole dentro l'area di contenuto (mai sotto i 36 px); poi entra il messaggio, grande, e in fondo la CTA a pillola; l'ultimo fotogramma resta pulito."
+        "Esce tutto; le dieci figure tornano al centro nella posizione e nella scala della Scena 2, con le sei accese; nessuna si spegne e nessuna cambia colore, perché non cambia niente.",
+        "GRANDE (tipografia cinetica): una delle sei si stacca dalla fila e fa un passo avanti verso il bordo frastagliato, che rientra piccolo davanti a lei; la fila resta dietro, attenuata, e il messaggio arriva grande, con «Saperla usare» in accento; in fondo la CTA a pillola. L'ultimo fotogramma resta pulito."
       ],
       "query": [],
       "stato": "da-scegliere",
