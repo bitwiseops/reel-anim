@@ -82,27 +82,32 @@ def estrai_fotogramma(video: Path, t_s: float, dest: Path) -> Path:
     raise RuntimeError(f"nessun fotogramma estraibile da {video} a {t_s:.2f} s")
 
 
-def filmstrip(video: Path, tempi_s: list[float], dest: Path, larghezza: int = 300) -> Path:
-    """Striscia di fotogrammi del video agli istanti dati, con l'etichetta del tempo sopra ciascuno."""
+def filmstrip(video: Path, tempi_s: list[float], dest: Path, larghezza: int = 300, per_riga: int | None = None,
+              decimali: int = 1) -> Path:
+    """Striscia di fotogrammi del video agli istanti dati, con l'etichetta del tempo sopra ciascuno.
+    Con `per_riga` va a capo su più righe (le strisce fitte: tante miniature in un'immagine che resti leggibile)."""
     imgs = []
     tmp = dest.parent / f"_{dest.stem}"
     tmp.mkdir(parents=True, exist_ok=True)
     for k, t in enumerate(tempi_s):
         p = estrai_fotogramma(video, t, tmp / f"{k:02d}.png")
-        imgs.append(Image.open(p).convert("RGB"))
+        im = Image.open(p).convert("RGB")
+        # ridotta subito: una striscia fitta ha decine di fotogrammi, a piena risoluzione sono centinaia di MB
+        imgs.append(im.resize((larghezza, int(larghezza * im.height / im.width)), Image.LANCZOS))
     if not imgs:
         return dest
-    ratio = imgs[0].height / imgs[0].width
-    h = int(larghezza * ratio)
+    h = imgs[0].height
     gap, testa = 12, 34
-    W = len(imgs) * larghezza + (len(imgs) - 1) * gap
-    out = Image.new("RGB", (W, h + testa), (246, 243, 238))
+    colonne = min(len(imgs), per_riga or len(imgs))
+    righe = -(-len(imgs) // colonne)
+    W = colonne * larghezza + (colonne - 1) * gap
+    out = Image.new("RGB", (W, righe * (h + testa) + (righe - 1) * gap), (246, 243, 238))
     d = ImageDraw.Draw(out)
     f = _font(22)
     for k, (im, t) in enumerate(zip(imgs, tempi_s)):
-        x = k * (larghezza + gap)
-        out.paste(im.resize((larghezza, h), Image.LANCZOS), (x, testa))
-        d.text((x, 4), f"{t:.1f} s", font=f, fill=(30, 27, 34))
+        x, y = (k % colonne) * (larghezza + gap), (k // colonne) * (h + testa + gap)
+        out.paste(im, (x, y + testa))
+        d.text((x, y + 4), f"{t:.{decimali}f} s", font=f, fill=(30, 27, 34))
     out.save(dest)
     shutil.rmtree(tmp, ignore_errors=True)
     return dest

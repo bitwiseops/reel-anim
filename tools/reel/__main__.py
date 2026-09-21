@@ -215,6 +215,101 @@ def cmd_monta(args) -> int:
     return monta(args, r, diag, out_dir(r, args.out))
 
 
+def cmd_strisce(args) -> int:
+    import json
+    from .ffmpeg import ffprobe
+    from .fotogrammi import strisce_fitte, tempi_dal_report, video_scena
+    r, _ = _carica(Path(args.file))
+    out = Path(args.out) if args.out else RADICE / "contenuti" / "render" / r.slug   # come monta.out_dir, senza importare Manim
+    tempi = tempi_dal_report(out)
+    scene: list[dict] = []
+    for s in r.scene:
+        if args.scena and s.n != args.scena:
+            continue
+        video = video_scena(out, s.n, args.sorgente)
+        if video is None:       # con `anima` le scene a filmato e a volto pieno non hanno un video: si saltano
+            continue
+        avvisi = []
+        durata = ffprobe(video).get("durata_s") or 0.0
+        t = tempi.get(s.n)
+        if t is None:
+            avvisi.append(f"scena {s.n}: nessun report con i tempi in {out}: solo la striscia dell'intera scena")
+        elif durata and abs(durata - t["durata_s"]) > 0.5:
+            avvisi.append(f"scena {s.n}: il video dura {durata:.1f} s, il report dice {t['durata_s']:.1f} s: i beat sono di un "
+                          "altro render, solo la striscia dell'intera scena (rilancia `monta` o `anima`)")
+            t = None
+        durata = durata or (t["durata_s"] if t else 0.0)
+        if not durata:
+            avvisi.append(f"scena {s.n}: durata di {video.name} non leggibile: saltata")
+            scene.append({"scena": s.n, "video": str(video), "strisce": [], "avvisi": avvisi})
+            continue
+        inizi = t["inizi_frasi_s"] if t else []
+        png = strisce_fitte(video, durata, inizi, out / "fotogrammi", s.n, args.fps, args.finestra, args.sorgente)
+        scene.append({"scena": s.n, "video": str(video), "durata_s": durata, "inizi_frasi_s": inizi,
+                      "strisce": [str(p) for p in png], "avvisi": avvisi})
+    if not scene:
+        quale = f"la scena {args.scena}" if args.scena else "nessuna scena"
+        print(f"-> {quale} non ha un video in {out} (sorgente «{args.sorgente}»): prima "
+              f"`uv run reel {'anima' if args.sorgente == 'anima' else 'monta'} {args.file}`", file=sys.stderr)
+        return 1
+    if args.json:
+        print(json.dumps({"ok": True, "cartella": str(out), "sorgente": args.sorgente, "scene": scene}, ensure_ascii=False, indent=1))
+        return 0
+    for i in scene:
+        for a in i["avvisi"]:
+            print(f"   ⚠ {a}", file=sys.stderr)
+        if i["strisce"]:
+            beat = " / ".join(f"{x:.1f}" for x in i["inizi_frasi_s"]) or "nessuno"
+            print(f"scena {i['scena']} {i['durata_s']:.1f}s · beat {beat} s · {Path(i['video']).name}\n   " + "\n   ".join(i["strisce"]))
+    return 0
+
+
+def cmd_uscite(args) -> int:
+    import shlex
+    from datetime import date
+    from ..anim.config import carica
+    from . import uscite
+    idea = Path(args.file)
+    modelli = [m.strip() for m in args.modelli.split(",") if m.strip()]
+    try:
+        rr = uscite.richieste(idea.read_text(encoding="utf-8"))
+    except (OSError, uscite.ErroreUscite) as e:
+        print(f"-> {e}", file=sys.stderr)
+        return 1
+    slug, _ = uscite.slug_e_data(idea)
+    dest = uscite.CARTELLA / f"{slug}-{date.today().isoformat()}.md"
+    n = len(rr) * len(modelli) * args.per_modello
+    if args.prova_a_secco:
+        for r in rr:
+            s = uscite.sigle(r, modelli, args.per_modello)
+            print(f"{r.sigla} · {r.nome}  ({s[0][0]}…{s[-1][0]})\n   {r.testo}")
+            for m in modelli:
+                print(f"   $ {shlex.join(uscite.comando(r, m))}")
+        print(f"-> a secco: {len(rr)} richieste × {len(modelli)} modelli × {args.per_modello} = {n} chiamate, niente lanciato; "
+              f"il file sarebbe {dest}{' (ESISTE: serve --forza)' if dest.exists() else ''}")
+        return 0
+    if dest.exists() and not args.forza:
+        print(f"-> {dest} esiste già: --forza per rigenerare e sovrascrivere", file=sys.stderr)
+        return 1
+    print(f"{len(rr)} richieste ({' '.join(r.sigla for r in rr)}) × {', '.join(modelli)} × {args.per_modello}: {n} chiamate a claude -p, "
+          f"{uscite.IN_PARALLELO} alla volta…", file=sys.stderr)
+    try:
+        fatte = uscite.genera(rr, modelli, args.per_modello, args.timeout,
+                              lambda s, k, tot: print(f"   {s} ({k}/{tot})", file=sys.stderr))
+        esito = uscite.scrivi_file(dest, slug, date.today().isoformat(), uscite.versione_claude(), rr, fatte, modelli, args.per_modello,
+                                   uscite.termini_account(*uscite.account_git(), carica()), forza=args.forza)
+        percorso = str(dest.relative_to(RADICE)) if dest.is_relative_to(RADICE) else str(dest)
+        idea.write_text(uscite.riga_uscite(idea.read_text(encoding="utf-8"), percorso), encoding="utf-8")
+    except uscite.ErroreUscite as e:     # pipeline T0b: se `claude -p` fallisce ci si ferma, senza uscite vere non si scrive
+        print(f"-> {e}", file=sys.stderr)
+        return 1
+    print(f"-> {dest}: {esito['uscite']} uscite · dati dell'account in {len(esito['ritoccate'])} ({esito['sostituzioni']} sostituzioni)"
+          f" · riga **Uscite:** in {idea}")
+    for s, spie in esito["segnalate"].items():
+        print(f"   ⚠ {s} nomina {', '.join(spie)}: da ricontrollare a mano (connettori, inferenze personali)")
+    return 0
+
+
 def cmd_setup(args) -> int:
     from ..anim.config import carica, registra_font
     from .compositing import maschera_riquadro, maschera_schermo
@@ -351,6 +446,22 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--lingua", help="con --trascrizioni: solo questa lingua (es. it)")
     p.add_argument("--account", help="con --trascrizioni: solo questo account")
     p.set_defaults(fn=cmd_stile)
+    p = sub.add_parser("strisce", help="fotogrammi fitti attorno a ogni beat e lungo la scena: ciò che il filmstrip a 6 istanti non mostra")
+    p.add_argument("file"); p.add_argument("--out", help="cartella di render (default contenuti/render/<slug>/)")
+    p.add_argument("--scena", type=int, default=None, help="solo questa scena (default: tutte quelle che hanno il video)")
+    p.add_argument("--fps", type=float, default=8, help="fotogrammi al secondo nelle finestre dei beat (default 8)")
+    p.add_argument("--finestra", type=float, default=1.3, help="secondi guardati attorno a ogni inizio di beat (default 1.3)")
+    p.add_argument("--sorgente", choices=("scene", "anima"), default="scene", help="scene = _scene/NN.mp4 montata → NN-fitti-….png; anima = il video Manim di `anima` → NN-fitti-anima-….png")
+    p.add_argument("--json", action="store_true", help="un solo oggetto JSON su stdout")
+    p.set_defaults(fn=cmd_strisce)
+    p = sub.add_parser("uscite", help="tappa T0b: le uscite vere dei testi attribuiti a un modello (claude -p) → contenuti/idee/uscite/")
+    p.add_argument("file", help="l'idea con «Testi del modello: richieste da generare» nelle Note per il reel")
+    p.add_argument("--per-modello", type=int, default=5, help="uscite per richiesta e per modello (default 5)")
+    p.add_argument("--modelli", default="opus,sonnet", help="modelli di `claude --model`, nell'ordine delle sigle (default opus,sonnet)")
+    p.add_argument("--timeout", type=float, default=300.0, help="secondi per chiamata (default 300)")
+    p.add_argument("--prova-a-secco", action="store_true", help="stampa richieste e comandi senza lanciare niente")
+    p.add_argument("--forza", action="store_true", help="sovrascrive il file delle uscite di oggi se esiste")
+    p.set_defaults(fn=cmd_uscite)
 
     args = ap.parse_args(argv)
     return args.fn(args)

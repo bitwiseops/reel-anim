@@ -27,6 +27,8 @@ class Config:
     dati: dict[str, Any] = field(default_factory=dict)
 
     def __getattr__(self, sezione: str) -> Any:
+        if sezione.startswith("_"):     # vedi _Sezione.__getattr__: `deepcopy` cerca `__setstate__` prima che `dati` esista
+            raise AttributeError(sezione)
         try:
             return _Sezione(self.dati[sezione])
         except KeyError as e:
@@ -75,6 +77,10 @@ class _Sezione:
         self._d = d
 
     def __getattr__(self, k: str) -> Any:
+        # `deepcopy` ricrea l'oggetto senza `__init__` e gli chiede `__setstate__`: senza questa guardia `self._d` torna
+        # qui e ricorre all'infinito (RecursionError in `Mobject.copy()` se un mobject tiene `cfg.palette`)
+        if k.startswith("_"):
+            raise AttributeError(k)
         try:
             return self._d[k]
         except KeyError as e:

@@ -1,6 +1,7 @@
 """Fotogrammi chiave, filmstrip e cover: ciò che Claude Code (che non vede il video) guarda al posto del video."""
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
@@ -23,6 +24,64 @@ def fotogramma_chiave(video: Path, durata_s: float, dest: Path, frazione: float 
 
 def filmstrip_scena(video: Path, durata_s: float, dest: Path, quanti: int = 6) -> Path:
     return filmstrip(video, tempi_campione(durata_s, quanti), dest, 300)
+
+
+ANTICIPO_FITTI_S = 0.2   # la finestra parte poco prima della frase: `beat(i)` anticipa, e lì esce il beat di prima
+FPS_SCENA_FITTA = 4
+
+
+def _campiona(t0: float, t1: float, fps: float) -> list[float]:
+    return [round(t0 + k / fps, 3) for k in range(int((t1 - t0) * fps + 1e-6) + 1)]
+
+
+def tempi_fitti(inizi_frasi_s: list[float], durata_s: float, fps: float = 8, finestra_s: float = 1.3) -> list[list[float]]:
+    """Gli istanti da guardare attorno a ogni passaggio: per ogni inizio di beat una finestra di `finestra_s` secondi che
+    parte ANTICIPO_FITTI_S prima, tagliata a [0, durata] e campionata a `fps`. Una lista per beat (vuota se cade fuori)."""
+    fine = max(0.0, durata_s - 0.05)    # come `tempi_campione`: sull'ultimo istante ffmpeg può non trovare fotogrammi
+    out = []
+    for b in inizi_frasi_s:
+        t0 = max(0.0, b - ANTICIPO_FITTI_S)
+        out.append(_campiona(t0, min(fine, t0 + finestra_s), fps) if t0 <= fine and fps > 0 else [])
+    return out
+
+
+def strisce_fitte(video: Path, durata_s: float, inizi_frasi_s: list[float], cartella: Path, n: int, fps: float = 8,
+                  finestra_s: float = 1.3, sorgente: str = "scene") -> list[Path]:
+    """Le strisce di fotogrammi fitti della scena n: `NN-fitti-b<i>.png` per il passaggio di ogni beat (i come in
+    `beat(i)`) e `NN-fitti-scena.png` con tutta la scena a 4 fps. Il filmstrip a 6 istanti e i controlli a fine beat
+    non vedono un testo che ne attraversa un altro o lampeggia *durante* un'animazione: qui sì, con l'istante scritto
+    sopra ogni miniatura (due decimali: a 8 fps il passo è 0,125 s). Con la sorgente `anima` i nomi sono
+    `NN-fitti-anima-…`, così non sovrascrivono quelli della scena montata (che legge il `controllore-fotogrammi`)."""
+    base = f"{n:02d}-fitti-" + ("" if sorgente == "scene" else f"{sorgente}-")
+    out = []
+    for i, tempi in enumerate(tempi_fitti(inizi_frasi_s, durata_s, fps, finestra_s)):
+        if tempi:
+            out.append(filmstrip(video, tempi, cartella / f"{base}b{i}.png", 270, per_riga=6, decimali=2))
+    intera = _campiona(0.0, max(0.0, durata_s - 0.05), FPS_SCENA_FITTA)
+    return out + [filmstrip(video, intera, cartella / f"{base}scena.png", 180, per_riga=10, decimali=2)]
+
+
+def video_scena(out: Path, n: int, sorgente: str = "scene") -> Path | None:
+    """Il video della scena n nella cartella di render: `scene` = la scena montata (riquadro e caption compresi),
+    `anima` = la sola grafica di `reel anima` (Manim la lascia in _anima/videos/<risoluzione>/: vale la più recente)."""
+    if sorgente == "scene":
+        p = out / "_scene" / f"{n:02d}.mp4"
+        return p if p.exists() else None
+    trovati = sorted((out / "_anima" / "videos").glob(f"*/scena-{n:02d}.mp4"), key=lambda p: p.stat().st_mtime)
+    return trovati[-1] if trovati else None
+
+
+def tempi_dal_report(out: Path) -> dict[int, dict]:
+    """Per scena `durata_s` e `inizi_frasi_s` dell'ultimo montaggio (report.json, poi report-prova.json): sono gli
+    stessi tempi che usa `anima`. Vuoto se non c'è nessun report leggibile."""
+    for nome in ("report.json", "report-prova.json"):
+        try:
+            elementi = json.loads((out / nome).read_text(encoding="utf-8")).get("elementi", [])
+        except (OSError, ValueError):
+            continue
+        return {int(e["scena"]): {"durata_s": float(e["durata_s"]), "inizi_frasi_s": list(e.get("inizi_frasi_s") or [])}
+                for e in elementi if e.get("scena") is not None and e.get("durata_s")}
+    return {}
 
 
 VELO = 0.58             # quanto si scurisce il fotogramma sotto il titolo: deve leggersi in una griglia di miniature

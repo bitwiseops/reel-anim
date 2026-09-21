@@ -57,3 +57,35 @@ def test_monta_prova_una_scena_broll_senza_manim(tmp_path, monkeypatch):
     probe = ffprobe(out / e["video"])
     assert (probe["larghezza"], probe["altezza"]) == (1080, 1920) and probe["audio"]
     assert abs(probe["durata_s"] - e["durata_s"]) < 0.1
+
+
+@pytest.mark.slow
+@pytest.mark.skipif(not shutil.which("say"), reason="la voce di prova richiede macOS say")
+def test_filmato_non_ancora_reso_anima_procede_e_monta_si_ferma(tmp_path, monkeypatch, capsys):
+    """Dopo `broll scrivi --presto` la scena è [broll] ma il file non c'è: `valida` avvisa, `anima` salta la scena
+    e non si blocca, `monta` dà l'errore col comando da lanciare e non arriva al reel."""
+    from tools.reel import clip, validate
+
+    media = tmp_path / "media"
+    shutil.copytree(RADICE / "contenuti" / "media" / "esempio-reel", media)
+    monkeypatch.setattr(clip, "cartella", lambda slug: media)
+    monkeypatch.setattr(validate, "cartella_media", lambda r: media)
+    testo = (RADICE / "templates" / "esempio-reel.md").read_text(encoding="utf-8")
+    testo = testo.replace("## Scena 3 [spiegazione]\n", "## Scena 3 [broll]\nSCHERMO: broll-scena-03.mp4\n")
+    testo = testo.replace("FIGURA: la stessa scelta ripetuta molte volte produce un testo intero.\nTESTO: 14\n", "")
+    md = tmp_path / "esempio-reel.md"
+    md.write_text(testo, encoding="utf-8")
+    out = tmp_path / "out"
+
+    assert main(["valida", str(md)]) == 0
+    assert "non ancora reso" in "".join(capsys.readouterr())
+
+    assert main(["anima", str(md), "--scena", "3", "--json", "--out", str(out)]) == 0
+    esito = json.loads(capsys.readouterr().out)
+    assert esito["ok"] and esito["scene"] == []                     # niente da animare, e nessun blocco di validazione
+
+    assert main(["monta", str(md), "--prova", "--anteprima", "--scena", "3", "--out", str(out)]) == 1
+    err = capsys.readouterr().err
+    assert "filmato 'broll-scena-03.mp4' non trovato" in err and "broll rendi esempio-reel" in err
+    report = json.loads((out / "report.json").read_text())
+    assert report["elementi"] == [] and report["reel"] is None and not (out / "reel-9x16.mp4").exists()

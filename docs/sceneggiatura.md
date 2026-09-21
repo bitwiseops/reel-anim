@@ -114,6 +114,9 @@ ma non è più lo standard e `broll piano` non propone più l'hook.
 Non si scrive `[broll]` a mano (né `SCHERMO:` nell'hook): lo sceneggiatore scrive la scena come `[spiegazione]` con un brief che descrive
 un'immagine filmabile; il sottosistema `broll` (`broll/README.md`) propone quali scene vanno a filmato, il
 presentatore sceglie dai provini, e `broll scrivi` cambia il tipo e aggiunge `SCHERMO:` **quando il file esiste già**.
+Con `broll scrivi --presto` le scene si marcano subito dopo `broll piano`, prima che il filmato sia scelto e reso:
+l'animatore parte intanto sulle altre scene (`reel anima` salta quelle a filmato) mentre si scelgono i filmati. Finché
+il file manca `reel valida` dà un **avviso** («filmato non ancora reso») e `reel monta` si ferma con un errore.
 Il filmato è reso sulla durata della scena di quel momento: dopo la registrazione `monta` avvisa se la presa vera è
 più lunga, e si rifà `broll piano` + `broll rendi` (le scelte restano).
 
@@ -149,10 +152,10 @@ Limiti (fonte unica: `tools/reel/validate.py::LIMITI`; oltre il limite è un avv
 
 | Cosa | Limite |
 |---|---|
-| scene | 6-8 (minimo 5, massimo 9) |
+| scene | 6-9 (minimo 5, massimo 10): il numero lo decide l'equilibrio fra i due registri |
 | parole di `VOCE:` per scena | ≤ 50 (hook ≤ 20) |
 | righe `VOCE:` per scena | ≤ 5 |
-| `TITOLO:` / `MESSAGGIO:` | ≤ 10 / ≤ 25 parole (MESSAGGIO consigliato ≤ 12: una frase grande, il resto in caption) |
+| `TITOLO:` / `MESSAGGIO:` | ≤ 10 / ≤ 25 parole (MESSAGGIO consigliato ≤ 12: è la frase memorabile della caption del post) |
 | VOCE dell'hook | un «tu» o una domanda: l'hook è una promessa a chi guarda (`docs/linguaggio-reel.md` §1) |
 | VOCE della chiusura | ≤ 18 parole (~6-7 s): un payoff, non un riassunto |
 | lingua parlata | niente frasi da titolo in fila (≤ 4 parole, senza «tu» né «io»), al massimo una nel reel fuori dalla chiusura; niente «X, sì. Y, no.»; niente due punti come snodo (valgono solo per citare: «scrive: …») |
@@ -162,7 +165,7 @@ Limiti (fonte unica: `tools/reel/validate.py::LIMITI`; oltre il limite è un avv
 | `==evidenzia==` / emoji | 1 per scena |
 | una scena | 2,5-19 s stimati |
 | il reel | 30-90 s stimati (oltre 120 s è un errore) |
-| `SCHERMO:` | il file deve esistere (errore); il riquadro non deve coprire la cornice (avviso) |
+| `SCHERMO:` | il file deve esistere (errore in una scena `[schermo]`; in una scena a filmato è un avviso, «non ancora reso», e l'errore lo dà `monta`); il riquadro non deve coprire la cornice (avviso) |
 
 ## 5. Come si scrive la VOCE: prima il monologo, poi i beat
 
@@ -196,7 +199,7 @@ battuta. E non è che il testo lo va a cercare da qualche parte: lo scrive lei, 
 fluente, certo. Ma originale no, non può esserlo.» Stesso contenuto, stessi quattro beat, il doppio delle parole.
 
 - **Hook**: una domanda o una promessa a chi guarda in ≤ 20 parole, in 4-8 secondi (20 parole ≈ 8 s); non un titolo
-  detto a voce. Il `TITOLO:` a schermo resta la tesi in forma di titolo.
+  detto a voce. Il `TITOLO:` vive in copertina (non a schermo) e può restare la tesi in forma di titolo.
 - **Numeri**: solo veri, con la fonte nelle note di produzione; quelli illustrativi si dichiarano come esempi anche a
   schermo (la `Classifica` lo scrive da sola).
 - **Testi attribuiti a un modello** («Comincia così: …», «Ora scrive: …»): solo uscite vere, generate **prima** di

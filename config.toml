@@ -94,3 +94,6 @@ pattern = "~/Projects/reelkit/pattern.md" # pattern narrativi (./reelkit pattern
 indice = "~/Projects/reelkit/indice.json"         # l'indice di reelkit: account, lingua e durata di ogni reel trascritto
 trascrizioni = "~/Projects/reelkit/trascrizioni"  # il parlato vero, un file per reel: lo sceneggiatore ne legge alcune
                                                   # intere prima di scrivere la VOCE (`uv run reel stile --trascrizioni`)
+
+[uscite]                  # `uv run reel uscite` (tappa T0b): le uscite vere dei testi attribuiti a un modello
+anonimizza = []           # coppie ["vero", "finto"] oltre a nome ed email di git (dominio, città…): i dati veri stanno in config.local.toml

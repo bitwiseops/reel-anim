@@ -97,6 +97,7 @@ def test_controlli_di_linguaggio():
 
 
 def test_schermo_mancante_e_riquadro_sopra_il_broll():
+    """In una scena [schermo] lo screen recording deve esserci: qui il file mancante resta un errore."""
     scene = _base()
     # il riquadro sta in alto per default (la fascia delle caption occupa il fondo): per farlo finire
     # sulla cornice del b-roll va chiesto a mano
@@ -122,7 +123,7 @@ def test_broll_il_riquadro_sopra_il_filmato_e_voluto():
     scene = _base()
     scene[2] = _broll(3)
     m = _msg(_check(scene))
-    assert "SCHERMO: file 'nessuno.mp4' non trovato" in m          # il file deve esserci, come per [schermo]
+    assert "non trovato" not in m                                   # il filmato può arrivare dopo: vedi il test sotto
     assert "copre la cornice" not in m and "senza ANIMAZIONE" not in m
     scene[2] = _broll(3, "\nANIMAZIONE: una mano sfoglia una pila di lettere")
     assert "righe ANIMAZIONE" not in _msg(_check(scene))            # il brief di cosa si vede è ammesso
@@ -161,6 +162,21 @@ def test_equilibrio_fra_i_due_registri():
     assert "scene a filmato:" not in _msg(_check(_base()))                 # prima di `broll scrivi` non si conta
 
 
+def test_filmato_non_ancora_reso_e_un_avviso():
+    """`broll scrivi --presto` marca la scena prima che il filmato esista: l'animatore parte intanto sulle altre,
+    quindi `valida` avvisa e non blocca. L'errore lo dà `monta` al montaggio."""
+    scene = _base()
+    scene[2] = _broll(3)
+    d = _check(scene)
+    assert not ha_errori(d)
+    dove = [x for x in d if "filmato 'nessuno.mp4' non ancora reso" in x.msg]
+    assert len(dove) == 1 and dove[0].livello == "avviso" and dove[0].scena == 3
+    assert "uv run --project broll broll rendi" in dove[0].msg
+    scene[0] = "## Scena 1 [hook]\nTITOLO: Un titolo\nSCHERMO: nessuno.mp4\nVOCE: ti è mai arrivata una mail così?"
+    d = _check(scene)                                           # vale anche per l'hook a filmato
+    assert not ha_errori(d) and _msg(d).count("non ancora reso") == 2
+
+
 def test_hook_a_filmato_il_titolo_resta_per_la_copertina():
     """L'apertura parlata: clip dietro, presentatore nel riquadro, TITOLO solo in copertina."""
     scene = _base()
@@ -168,7 +184,7 @@ def test_hook_a_filmato_il_titolo_resta_per_la_copertina():
     r, _ = parse_testo(FM + "\n\n".join(scene))
     assert r.hook.a_filmato and r.hook.riquadro_effettivo() == "si" and r.hook.titolo == "Un titolo"
     m = _msg(_check(scene))
-    assert "SCHERMO: file 'nessuno.mp4' non trovato" in m and "copre la cornice" not in m
+    assert "filmato 'nessuno.mp4' non ancora reso" in m and "copre la cornice" not in m
     scene[1] = _broll(2)                                        # hook a filmato + [broll] subito dopo: non si alterna
     assert "scene 1 e 2 entrambe a filmato" in _msg(_check(scene))
     scene[0] += "\nRIQUADRO: no"

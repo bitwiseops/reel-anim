@@ -1,4 +1,7 @@
+import copy
 from pathlib import Path
+
+import pytest
 
 from tools.anim.config import Config, _fondi, carica, opzioni_manim, registra_font
 
@@ -47,3 +50,15 @@ def test_aree_lasciano_libero_il_riquadro():
     assert con.contenuto.y1 < senza.contenuto.y1          # il riquadro sta in alto: il contenuto scende sotto la sua fascia
     assert con.riquadro.larghezza * cfg.px_per_unita == cfg.riquadro.dimensione_px
     assert con.riquadro.x1 <= senza.contenuto.x1 + 1e-6   # dentro la safe area a destra
+
+
+def test_deepcopy_di_sezione_e_config():
+    # un mobject che tiene `cfg.palette` come attributo passa da qui a ogni `copy()`/`generate_target()`
+    cfg = carica()
+    p = copy.deepcopy(cfg.palette)
+    assert p.sfondo == cfg.palette.sfondo and p.get("accento") == cfg.palette.accento
+    assert copy.deepcopy(cfg).larghezza == cfg.larghezza and copy.copy(cfg.palette).sfondo == cfg.palette.sfondo
+    with pytest.raises(AttributeError):
+        cfg.palette._assente
+    with pytest.raises(AttributeError):
+        cfg._assente

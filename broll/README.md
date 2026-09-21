@@ -28,6 +28,7 @@ percorsi relativi che passi sulla riga di comando restano quelli che vedi.
 | `broll scegli <slug> --scena N --candidato <fornitore:id> [--da S] [--ancora …] [--aggiungi]` | fissa nel piano il filmato della scena: da che secondo parte, dove si ritaglia un orizzontale (`sinistra \| centro \| destra \| 0-1`). Con `--aggiungi` un secondo taglio nella stessa scena: lo stacco cade sull'inizio frase più vicino alla divisione in parti uguali |
 | `broll rendi <slug> [--scena N] [--forza]` | scarica i filmati scelti (cache in `contenuti/media/_cache-broll/`), li ritaglia a 9:16 e scrive `contenuti/media/<slug>/broll-scena-NN.mp4`: 1080×1920, muto, lungo quanto la scena **al fotogramma**. Poi una filmstrip `reso-scena-NN.png` da guardare e `CREDITI.md` |
 | `broll scrivi <slug>` | porta nella sceneggiatura le scene **già rese**: il tipo diventa `[broll]` e compare la riga `SCHERMO:`, nient'altro cambia. Non converte una scena con `TESTO:` (toglierlo è una scelta del presentatore) e non salva se il risultato non passa `valida`. Si torna indietro con `git checkout` del `.md` |
+| `broll scrivi <slug> --presto` | lo stesso, ma per **tutte** le scene a filmato (o a immagini) del piano, anche non ancora scelte né rese: `SCHERMO:` prende il nome che `rendi` scriverà. Serve a far correre in parallelo le due tappe: subito dopo `piano` le scene sono marcate, l'animatore sa quali non sono sue e parte (`reel anima` le salta), e intanto si scelgono i filmati. Finché il file manca `reel valida` avvisa («filmato non ancora reso») e `reel monta` si ferma con un errore. Dopo `rendi` non serve un altro `scrivi` |
 | `broll chiavi` | quali chiavi dei servizi esterni sono configurate, **mascherate** |
 | `broll prova-inquadratura <slug> --filmato <file>` | lo stesso fotogramma ritagliato a 9:16 in più punti, col riquadro del presentatore sopra |
 | `broll prova-immagini <slug> --scena N --immagini …` | immagini ferme montate sugli inizi frase della scena, con la filmstrip per verificare gli stacchi |
@@ -90,6 +91,7 @@ Mancano Pixabay e Meshy (M3), `taglio.py` per gli stacchi interni al filmato d'o
 T2b della pipeline (M5). Nessuna dipendenza pesante.
 
 Il giro intero: `piano → cerca → provini → scegli → rendi → scrivi`, poi `uv run reel valida` e `uv run reel monta`.
+In parallelo con l'animazione: `piano → scrivi --presto` (da qui parte l'animatore) `→ cerca → provini → scegli → rendi`.
 Dopo la registrazione le scene durano quanto le prese vere: se `monta` avvisa che un filmato è più corto della
 scena, `broll piano` (tiene le scelte) e `broll rendi` lo rifanno lungo giusto.
 

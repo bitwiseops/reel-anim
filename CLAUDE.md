@@ -39,7 +39,8 @@ Piano completo: `~/.claude/plans/dobbiamo-revisionare-il-modello-lovely-piglet.m
 - `templates/reel.md` — grammatica della sceneggiatura (blocco-commento) · `templates/esempio-reel.md` — esempio
   completo (7 scene, tutti i tipi e tutti i componenti) con `contenuti/animazioni/esempio-reel.py` e il b-roll versionato
   in `contenuti/media/esempio-reel/`: `uv run reel monta templates/esempio-reel.md --prova --anteprima` (~20 s)
-- `docs/` — `sceneggiatura.md` (grammatica, limiti, come si scrive la VOCE), `animazioni.md` (manuale
+- `docs/` — `regole-editoriali.md` (**fonte unica** delle regole del presentatore: reel muto, niente testo denso,
+  registri a metà, estremi a volto pieno, fonti ufficiali, reel a sé stanti, ultima parola), `sceneggiatura.md` (grammatica, limiti, come si scrive la VOCE), `animazioni.md` (manuale
   dell'animatore: regole, tempi, componenti, controlli, trappole, fonti), `registrazione.md` (clip del presentatore),
   `linguaggio-reel.md` (hook, payoff, CTA), `stile-parlato.md` (come parla il presentatore: la scrive lo `stilista`)
 - `assets/fonts/` (Inter Variable, JetBrains Mono) · `assets/presentatore/avatar.png` (segnaposto da `reel setup`) ·
@@ -48,10 +49,17 @@ Piano completo: `~/.claude/plans/dobbiamo-revisionare-il-modello-lovely-piglet.m
   e lo scrive in `## Struttura narrativa`), `stilista` (corpus di reelkit →
   `docs/stile-parlato.md`), `sceneggiatore` (idea → sceneggiatura, `reel valida`), `revisore-tecnico` (claim anche
   nelle animazioni e contro la fonte, `stato: rivisto`), `animatore` (`.py` + `anima --json` + fotogrammi +
-  `monta --prova --anteprima`, `stato: animato`; non tocca `tools/`) · `.claude/commands/pipeline.md` —
+  `monta --prova --anteprima`, `stato: animato`; non tocca `tools/`): questi cinque girano sul modello della sessione;
+  su `sonnet` (nel frontmatter) i tre di servizio: `broll` (modalità `marca` e `scegli`), `controllore-fotogrammi`
+  (uno per scena animata, in parallelo: guarda i passaggi a 8 fps e riferisce) e `verificatore-fonte` (uno per fonte,
+  in parallelo, prima del revisore). Ogni agente ha le **«Regole in vigore» per tema**; la cronaca delle lezioni sta
+  in `.claude/agents/storico/<agente>.md`, che gli agenti non caricano · `.claude/commands/pipeline.md` —
   `/pipeline <file> [--tutto]`: fino alla prossima fermata, o con `--tutto` fino all'anteprima da registrare; la
-  tappa T0b genera le uscite vere dei testi del modello (`claude -p`, Opus e Sonnet) in `contenuti/idee/uscite/` ·
-  `.claude/workflows/reel.js` — la stessa corsa come Workflow deterministico (`args` = percorso di partenza)
+  tappa T0b genera le uscite vere dei testi del modello (`uv run reel uscite`, Opus e Sonnet) in
+  `contenuti/idee/uscite/`; gli agenti non lanciano agenti, quindi il parallelo lo apre il coordinatore (verificatori,
+  filmati ∥ animazione, controllori) · `.claude/workflows/reel.js` — la stessa corsa come Workflow deterministico
+  (`args` = percorso di partenza) · `.claude/workflows/stile.js` — la guida di stile a due tempi (schede dei reel in
+  parallelo su `sonnet`, poi lo `stilista`)
 
 ## Stato
 Fasi 0 e 1 chiuse (2026-09-13, in `main`). Fase 2 in corso (branch `fase-2-primo-reel`). Il primo reel vero
@@ -70,13 +78,17 @@ deriva fra karaoke e parlato vero, da misurare sulla prima registrazione). Dove 
 o è troppo complesso per pochi secondi, si usa **una clip o immagini generate con Meshy**, mai il testo come ripiego.
 I tre reel del regime vecchio (`scrivere-con-ia`, `ia-e-lavoro`, `generativa-probabile`) sono in
 `contenuti/archivio/<slug>/`, mai registrati; **le loro idee restano** in `contenuti/idee/`.
-**Prossimo passo**: rifare la sceneggiatura di `ia-e-lavoro` dall'idea, con le regole nuove (dettagli nella memoria
-`stato-avanzamento`).
+`ia-e-lavoro` e `scrivere-con-ia`, rifatti col regime nuovo, sono fermi alla fermata 3 (`stato: animato`, mai
+registrati: decisione del 2026-09-21). Lo stesso giorno **gli agenti sono stati riordinati** (regole in vigore per
+tema, storico a parte, `docs/regole-editoriali.md`, tre agenti di servizio su `sonnet`, filmati ∥ animazione).
+**Prossimo passo**: un giro nuovo di contenuti scelti ad hoc per il regime attuale (memoria `stato-avanzamento`).
 
 ## Comandi
 `uv run reel setup` · `stile` · `valida <file>` · `gobbo <file> [--scrivi]` · `clip <file>` · `voce <file>` ·
 `registra <file> [--da-scena N] [--dispositivi] [--video N --audio N] [--spezza presa-NN]` ·
 `anima <file> [--scena N] [--qualita l|m|h] [--debug] [--json]` · `monta <file> [--prova] [--anteprima] [--scena N]` ·
+`strisce <file> [--scena N] [--fps 8] [--finestra 1.3] [--sorgente scene|anima]` (fotogrammi fitti attorno a ogni beat) ·
+`uscite <idea> [--per-modello 5] [--prova-a-secco]` (T0b) ·
 `uv run pytest -q` (i test `slow` usano Manim e ffmpeg). `--prova` = voce sintetica + avatar segnaposto: anteprima
 completa senza il presentatore, **non pubblicabile**.
 
@@ -111,13 +123,18 @@ scena `inizi_frasi_s`, `origine_tempi`, `avvisi_tempi` (beat in ritardo, scena c
 - Mai pubblicare senza `--pubblica`; la pubblicazione la lancia il presentatore.
 - Aggiornare la memoria (`~/.claude/projects/-Users-bitwise-Projects-reel-anim/memory/`) a ogni milestone.
 - **Gli agenti imparano**: ogni lezione di una sessione, tecnica (trappole, controlli mancanti) o di stile (note del
-  presentatore sui reel), va nella sezione «Lezioni dalle sessioni» dell'agente giusto in `.claude/agents/`, con la
-  data; se riguarda la libreria anche in `docs/animazioni.md` o `docs/sceneggiatura.md`.
+  presentatore sui reel), **modifica la regola in vigore** nel tema giusto dell'agente giusto in `.claude/agents/`, con
+  la data fra parentesi; una regola superata **si toglie, non si marca**; la cronaca (chi, quale reel, perché) va in
+  `.claude/agents/storico/<agente>.md`. Se riguarda la libreria va in `docs/animazioni.md` o `docs/sceneggiatura.md`
+  (e nell'agente resta il rimando); se è una regola del presentatore che vale per tutti va in
+  `docs/regole-editoriali.md`, e negli agenti solo «cosa cambia per te».
 
 ## Pipeline (`.claude/commands/pipeline.md`; completa in fase 3)
 spunto → idea (ideatore, **fermata 1**) → sceneggiatura (**fermata 2**) → revisione tecnica (con ❌ ci si ferma) →
-filmati (T2b: `broll piano/cerca/provini`, **fermata 2b** sulla scelta dai provini, poi `rendi` e `scrivi`; con `--tutto`
-la scelta è provvisoria e si conferma alla fermata 3) → animazione (animatore: `.py` + anteprima `--prova`) → **fermata 3: il presentatore guarda l'anteprima** →
+filmati (T2b, agente `broll`: prima `marca` — `piano`, equilibrio, `scrivi --presto` —, poi `scegli` **in parallelo con
+l'animazione**: `cerca/provini`, **fermata 2b** sulla scelta, `rendi`; con `--tutto` la scelta è provvisoria e si
+conferma alla fermata 3) ∥ animazione (animatore: `.py` + `anima --json`) → montaggio `--prova` e un
+`controllore-fotogrammi` per scena (max due rimandi) → **fermata 3: il presentatore guarda l'anteprima** →
 registrazione (`reel registra`) → montaggio → social → approvazione → pubblica (container REELS). Con `--tutto` (o
 il workflow `reel`) si salta dalla partenza alla fermata 3, fermandosi solo su ❌, errori o agenti bloccati. Spunti:
 `stato: spunto → ideato`; idee: `**Stato:** idea → sceneggiata`; sceneggiature: `stato: sceneggiatura → rivisto →

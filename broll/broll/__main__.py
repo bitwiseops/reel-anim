@@ -244,7 +244,9 @@ def cmd_rendi(args) -> int:
 
 def cmd_scrivi(args) -> int:
     from .piano import PianoMancante, carica_piano, hash_sceneggiatura, salva
-    from .scrivi import scrivi
+    from tools.reel.clip import cartella as cartella_media
+
+    from .scrivi import nome_file, scrivi
 
     try:
         p = carica_piano(args.slug)
@@ -255,7 +257,7 @@ def cmd_scrivi(args) -> int:
     if not md.is_file():
         print(f"-> {p.sorgente} non esiste più: rifai `broll piano`", file=sys.stderr)
         return 1
-    scritte, diag = scrivi(p, md)
+    scritte, diag = scrivi(p, md, presto=args.presto)
     _stampa(diag)
     if any(d.livello == "errore" for d in diag):
         return 1
@@ -266,6 +268,13 @@ def cmd_scrivi(args) -> int:
     salva(p)
     print(f"  scene {', '.join(str(n) for n in scritte)} → [broll] con la loro riga SCHERMO:")
     print(f"-> {p.sorgente}  (si torna indietro con `git checkout`)")
+    da_rendere = [s.n for s in p.scene if s.n in scritte and not (cartella_media(p.slug) / nome_file(s)).exists()]
+    if da_rendere:
+        # --presto: le scene sono marcate, i filmati no. L'animatore può partire (`reel anima` le salta), il
+        # montaggio no: `reel monta` si ferma finché il file non c'è
+        print(f"-> {len(da_rendere)} scene marcate, filmato da rendere ({', '.join(str(n) for n in da_rendere)}): "
+              f"intanto `uv run reel anima {p.sorgente}`; per il montaggio prima `broll scegli` e `broll rendi {p.slug}`")
+        return 0
     print(f"-> poi `uv run reel valida {p.sorgente}` e `uv run reel monta {p.sorgente} --prova --anteprima`")
     return 0
 
@@ -397,6 +406,8 @@ def main() -> int:
 
     p = sub.add_parser("scrivi", help="porta nella sceneggiatura le scene rese, come [broll] con SCHERMO:")
     p.add_argument("slug")
+    p.add_argument("--presto", action="store_true",
+                   help="marca anche le scene non ancora rese: l'animatore parte mentre si scelgono i filmati")
     p.set_defaults(fn=cmd_scrivi)
 
     p = sub.add_parser("prova-immagini", help="immagini ferme montate sugli inizi frase di una scena")

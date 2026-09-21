@@ -166,8 +166,14 @@ def check(r: Reel) -> list[Diagnostica]:
             a(f"{emoji} emoji nella scena (max {L['emoji_scena_max']})")
         if s.schermo:
             f = cartella_media(r) / s.schermo
-            if not f.exists():
-                e(f"SCHERMO: file '{s.schermo}' non trovato in {f.parent.relative_to(RADICE)}/")
+            dove = f.parent.relative_to(RADICE) if f.parent.is_relative_to(RADICE) else f.parent
+            if not f.exists() and s.a_filmato:
+                # il filmato arriva dopo (`broll scrivi --presto` marca la scena prima che sia scelto e reso), e intanto
+                # l'animatore deve poter lavorare sulle altre: qui è un avviso, l'errore lo dà `monta` al montaggio
+                a(f"SCHERMO: filmato '{s.schermo}' non ancora reso in {dove}/: "
+                  f"`uv run --project broll broll rendi {r.slug}`")
+            elif not f.exists():
+                e(f"SCHERMO: file '{s.schermo}' non trovato in {dove}/")
         # in [broll] il presentatore sopra il filmato è il look voluto: la cornice della finestra non c'entra
         if s.schermo and not s.a_filmato and s.riquadro_effettivo() != "no" and _riquadro_su_schermo(s.riquadro_effettivo()):
             a(f"il riquadro ({s.riquadro_effettivo()}) copre la cornice del b-roll: usa RIQUADRO: alto-destra, alto-sinistra o no")

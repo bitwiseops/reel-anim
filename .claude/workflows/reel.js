@@ -4,11 +4,13 @@ export const meta = {
   whenToUse: "Corsa completa della pipeline dei reel senza fermate intermedie. args = percorso in contenuti/spunti/, contenuti/idee/ o contenuti/sceneggiature/",
   phases: [
     { title: 'Idea', detail: "ideatore sullo spunto (saltata se si parte da un'idea o da una sceneggiatura)" },
-    { title: 'Sceneggiatura', detail: "sceneggiatore; poi valida a 0 errori e l'idea passa a sceneggiata" },
-    { title: 'Revisione', detail: 'revisore-tecnico: con un ❌ la corsa si ferma' },
-    { title: 'Filmati', detail: 'broll: piano, provini, scelta provvisoria, rendi, scrivi (saltata se il piano non propone filmati)' },
-    { title: 'Animazione', detail: 'animatore: .py, anima --json, fotogrammi, monta --prova --anteprima' },
-    { title: 'Rapporto', detail: 'VOCE per scena, durate, avvisi, fotogrammi, prossimo passo' },
+    { title: 'Sceneggiatura', detail: "uscite vere se servono, sceneggiatore; poi valida a 0 errori e l'idea passa a sceneggiata" },
+    { title: 'Fonti', detail: 'un verificatore-fonte per fonte, in parallelo', model: 'sonnet' },
+    { title: 'Revisione', detail: 'revisore-tecnico con le schede delle fonti: con un ❌ la corsa si ferma' },
+    { title: 'Filmati', detail: 'broll: marca le scene (in serie), poi cerca, sceglie e rende in parallelo con l\'animazione', model: 'sonnet' },
+    { title: 'Animazione', detail: 'animatore: .py, anima --json a zero avvisi e zero controlli' },
+    { title: 'Fotogrammi', detail: 'monta --prova, poi un controllore-fotogrammi per scena animata, in parallelo; al massimo due rimandi', model: 'sonnet' },
+    { title: 'Rapporto', detail: 'VOCE per scena, durate, avvisi, fotogrammi, prossimo passo', model: 'sonnet' },
   ],
 }
 
@@ -25,6 +27,28 @@ const ESITO = {
     motivo: { type: 'string', description: 'perché si è bloccato, oppure note per il presentatore' },
   },
 }
+const FONTI = {
+  type: 'object',
+  required: ['fonti'],
+  properties: {
+    fonti: {
+      type: 'array',
+      items: {
+        type: 'object',
+        required: ['url', 'claim'],
+        properties: {
+          url: { type: 'string', description: 'URL della fonte (o titolo esatto, se manca il link)' },
+          claim: { type: 'array', items: { type: 'string' }, description: 'i claim del reel che poggiano su questa fonte, alla lettera' },
+        },
+      },
+    },
+  },
+}
+const SCENE = {
+  type: 'object',
+  required: ['scene'],
+  properties: { scene: { type: 'array', items: { type: 'integer' }, description: 'numeri delle scene ANIMATE (con un video in _scene/ e una classe Manim)' } },
+}
 const vuoto = (motivo) => ({ stato: '', file: '', errori: 0, avvisi: 0, bloccato: true, motivo })
 
 // Un agente che non c'è nel registro (creato in questa sessione) o che muore non fa crollare la corsa: la ferma.
@@ -37,6 +61,8 @@ async function tappa(fase, prompt, agentType, extra) {
   }
 }
 const ferma = (fase, r) => { log(`fermata a ${fase}: ${r.motivo}`); return { fermato_a: fase, ...r } }
+// Le tappe che lanciano un comando e ne riportano l'esito non hanno bisogno del modello forte.
+const COMANDO = { model: 'haiku', effort: 'low' }
 
 const partenza = String(args || '').trim()
 if (!partenza) return ferma('avvio', vuoto("manca args: il percorso di uno spunto, di un'idea o di una sceneggiatura"))
@@ -54,6 +80,14 @@ if (partenza.includes('contenuti/spunti/')) {
 
 if (!partenza.includes('contenuti/sceneggiature/')) {
   phase('Sceneggiatura')
+  // T0b di pipeline.md: le uscite vere dei testi attribuiti a un modello. È un comando, non un giudizio.
+  const u = await tappa('Sceneggiatura',
+    `Tappa T0b di .claude/commands/pipeline.md su ${idea}. Se l'idea ha già la riga \`**Uscite:**\`, o se \`uv run reel uscite ${idea} --prova-a-secco\` ` +
+    `dice che non ci sono richieste da generare, non fare niente: bloccato = false, motivo = "nessuna uscita da generare". ` +
+    `Altrimenti lancia \`uv run reel uscite ${idea}\` e riporta in motivo il percorso del file e le uscite segnalate «da ricontrollare». ` +
+    `bloccato = true solo se il comando fallisce. stato = "idea", file = ${idea}, errori = 0, avvisi = numero di uscite da ricontrollare.`,
+    'general-purpose', COMANDO)
+  if (u.bloccato) return ferma('uscite', u)
   let s = await tappa('Sceneggiatura', `Idea: ${idea}. Scrivi la sceneggiatura in contenuti/sceneggiature/ finché \`uv run reel valida\` non ha errori. Non toccare il file idea.`, 'sceneggiatore')
   if (s.bloccato || !s.file.includes('contenuti/sceneggiature/')) return ferma('sceneggiatura', s)
   let c = null
@@ -62,7 +96,7 @@ if (!partenza.includes('contenuti/sceneggiature/')) {
       `Esegui \`uv run reel valida ${s.file}\` senza modificare la sceneggiatura e metti in errori e avvisi i conteggi, in motivo le righe di errore. ` +
       `Solo se gli errori sono 0: con Edit porta ${idea} a \`**Stato:** sceneggiata\` e aggiungi \`**Sceneggiatura:** ${s.file}\` sotto la riga dello stato (se c'è già, non duplicarla). ` +
       `stato = "sceneggiatura", file = ${s.file}, bloccato = false.`,
-      'general-purpose', { effort: 'low' })
+      'general-purpose', COMANDO)
     if (c.bloccato || c.errori === 0 || giro === 3) break
     s = await tappa('Sceneggiatura', `Correggi ${s.file}: \`uv run reel valida\` dà ancora errori:\n${c.motivo}\nRiscrivi lo stesso file, niente duplicati.`, 'sceneggiatore')
     if (s.bloccato) return ferma('sceneggiatura', s)
@@ -73,35 +107,85 @@ if (!partenza.includes('contenuti/sceneggiature/')) {
   log(`sceneggiatura: ${file} (${c.avvisi} avvisi)`)
 }
 
+// T2 di pipeline.md: prima le fonti, una per agente e tutte insieme; poi il verdetto, che resta al revisore.
+phase('Fonti')
+let schede = ''
+const elenco = await agent(
+  `Leggi ${file} e il file idea indicato da \`idea:\` nel frontmatter. Se il frontmatter è già stato: rivisto o animato, restituisci fonti = []. ` +
+  `Altrimenti elenca le FONTI ESTERNE su cui poggiano numeri e fatti del reel (sezione ## Fonte e «claim per il revisore» dell'idea, Note di produzione della sceneggiatura) ` +
+  `e per ciascuna i claim del reel che le sono attribuiti, alla lettera (VOCE, numeri a schermo, FIGURA:). Solo fonti con un URL o un titolo preciso; nessuna fonte → fonti = [].`,
+  { agentType: 'general-purpose', model: 'sonnet', effort: 'low', phase: 'Fonti', label: 'Fonti · elenco', schema: FONTI })
+const fonti = (elenco && elenco.fonti) || []
+if (fonti.length) {
+  const esiti = await parallel(fonti.map((f, i) => () =>
+    agent(`Fonte: ${f.url}\nClaim che il reel le attribuisce:\n- ${f.claim.join('\n- ')}\nSceneggiatura (per il contesto): ${file}`,
+      { agentType: 'verificatore-fonte', phase: 'Fonti', label: `Fonte ${i + 1} · ${f.url.slice(0, 50)}` })))
+  schede = esiti.filter(Boolean).join('\n\n')
+  log(`fonti verificate: ${esiti.filter(Boolean).length} su ${fonti.length}`)
+}
+
 phase('Revisione')
-const rv = await tappa('Revisione', `Rivedi ${file}. Se il frontmatter è già stato: rivisto (o animato) e la Revisione tecnica dice APPROVATO, non rifarla: restituisci lo stato com'è.`, 'revisore-tecnico')
+const rv = await tappa('Revisione',
+  `Rivedi ${file}. Se il frontmatter è già stato: rivisto (o animato) e la Revisione tecnica dice APPROVATO, non rifarla: restituisci lo stato com'è.` +
+  (schede ? `\n\nSchede dei verificatore-fonte (parti da queste; riapri tu solo le fonti dubbie o decisive):\n\n${schede}` : ''),
+  'revisore-tecnico')
 if (rv.bloccato || !['rivisto', 'animato'].includes(rv.stato)) return ferma('revisione', rv)
 
-// T2b di pipeline.md. La scelta del filmato è la più soggettiva della corsa: qui è provvisoria e si dichiara nel rapporto;
-// cambiarla dopo non tocca le animazioni (scegli, rendi --forza, monta).
+// T2b primo tempo: quali scene vanno a filmato si decide PRIMA di animare (niente classe Manim, stacco dopo).
 phase('Filmati')
-const fl = await tappa('Filmati',
-  `Esegui la tappa «T2b · filmati» di .claude/commands/pipeline.md su ${file}, nella modalità --tutto: ` +
-  `\`uv run --project broll broll piano\`, \`cerca\`, \`provini\`; GUARDA i contact sheet dei candidati (Read dei PNG) e scegli per ogni scena ` +
-  `il candidato migliore con i criteri scritti lì; poi \`scegli\`, \`rendi\` (guarda reso-scena-NN.png), \`prova-inquadratura\`, \`scrivi\`, e ` +
-  `\`uv run reel valida ${file}\`. Non modificare la sceneggiatura a mano: la tocca solo \`broll scrivi\`. Non toccare tools/ né broll/. ` +
-  `Se il piano non propone nessuna scena a filmato non è un errore: bloccato = false e scrivilo in motivo. ` +
-  `stato = lo stato del frontmatter (resta rivisto), file = ${file}, errori/avvisi = i conteggi di valida, ` +
-  `motivo = per ogni scena a filmato: query, candidato scelto (fornitore:id, autore) e perché, cosa copre il riquadro; ` +
-  `più l'eventuale assenza dell'hook fra le scene a filmato e le scene che scrivi non ha convertito. ` +
-  `bloccato = true solo se un comando fallisce, se manca la chiave di ricerca (\`broll chiavi\`) o se valida dà errori.`,
-  'general-purpose')
-if (fl.bloccato || fl.errori > 0) return ferma('filmati', fl)
+const marca = await tappa('Filmati',
+  `Modalità: marca. Sceneggiatura: ${file}. Se le scene a filmato sono già [broll] nel file e l'equilibrio torna, non rifare niente e dillo.`, 'broll')
+if (marca.bloccato || marca.errori > 0) return ferma('filmati (marca)', marca)
 
-phase('Animazione')
-const an = await tappa('Animazione', `Anima ${file} fino a \`uv run reel monta ${file} --prova --anteprima\` con 0 avvisi di tempo e 0 controlli, e porta il frontmatter a stato: animato.`, 'animatore')
+// T2b secondo tempo ∥ T3. La scelta del filmato è la più soggettiva della corsa: qui è provvisoria e si dichiara nel
+// rapporto; cambiarla dopo non tocca le animazioni (scegli, rendi --forza, monta).
+const [fl0, an0] = await parallel([
+  () => tappa('Filmati', `Modalità: scegli, scelta PROVVISORIA (--tutto). Sceneggiatura: ${file}.`, 'broll'),
+  () => tappa('Animazione',
+    `Anima ${file} fino a \`uv run reel anima ${file} --json\` con 0 avvisi di tempo e 0 controlli, e porta il frontmatter a stato: animato. ` +
+    `I filmati delle scene [broll] si stanno rendendo in parallelo: se \`monta --prova --anteprima\` fallisce solo perché un filmato manca, non è un tuo errore (dillo in motivo): il montaggio lo rifà il coordinatore.`,
+    'animatore'),
+])
+const fl = fl0 || vuoto('broll: nessuna risposta')
+let an = an0 || vuoto('animatore: nessuna risposta')
+if (fl.bloccato || fl.errori > 0) return ferma('filmati (scegli)', fl)
 if (an.bloccato || an.stato !== 'animato') return ferma('animazione', an)
+
+// T3b: il montaggio con i filmati veri, poi un paio d'occhi per scena sui passaggi a 8 fps.
+phase('Fotogrammi')
+const MONTA = `Esegui \`uv run --project broll broll piano ${file}\` e, se una scena è tornata a «scelto», \`uv run --project broll broll rendi <slug>\`; ` +
+  `poi \`uv run reel monta ${file} --prova --anteprima\`. Non modificare nessun file a mano. errori/avvisi = i conteggi del montaggio ` +
+  `(da contenuti/render/<slug>/report.json), motivo = durata del reel e righe di errore, bloccato = true se il montaggio fallisce. stato = "animato", file = ${file}.`
+let mt = await tappa('Fotogrammi', MONTA, 'general-purpose', COMANDO)
+if (mt.bloccato) return ferma('montaggio', mt)
+const sc = await agent(
+  `Leggi ${file} e contenuti/render/<slug>/report.json (lo slug è nel frontmatter): elenca i numeri delle scene ANIMATE, cioè non [broll], non a volto pieno (apertura e chiusura), con un video in contenuti/render/<slug>/_scene/NN.mp4.`,
+  { agentType: 'general-purpose', ...COMANDO, phase: 'Fotogrammi', label: 'Fotogrammi · scene', schema: SCENE })
+const scene = (sc && sc.scene) || []
+let difetti = ''
+for (let rimando = 0; rimando <= 2 && scene.length; rimando++) {
+  const occhi = await parallel(scene.map((n) => () =>
+    agent(`Sceneggiatura: ${file}. Scena: ${n}.`, { agentType: 'controllore-fotogrammi', phase: 'Fotogrammi', label: `Scena ${n} · giro ${rimando + 1}`, schema: ESITO })))
+  const gravi = occhi.filter(Boolean).filter((o) => o.errori > 0 && !o.bloccato)
+  difetti = occhi.filter(Boolean).filter((o) => o.errori > 0 || o.avvisi > 0).map((o) => o.motivo).join('\n\n')
+  log(`controllo fotogrammi, giro ${rimando + 1}: ${gravi.length} scene con difetti gravi su ${scene.length}`)
+  if (!gravi.length || rimando === 2) break
+  an = await tappa('Animazione',
+    `Rimando dei controllore-fotogrammi su ${file}: correggi i difetti GRAVI qui sotto (scena, beat, istante), rilancia \`anima --json\` sulle scene toccate fino a 0 avvisi e 0 controlli, ` +
+    `e riguarda quei passaggi con \`uv run reel strisce ${file} --scena N --sorgente anima\`. Non toccare le scene senza difetti.\n\n${gravi.map((o) => o.motivo).join('\n\n')}`,
+    'animatore')
+  if (an.bloccato) return ferma('animazione (rimando)', an)
+  mt = await tappa('Fotogrammi', MONTA, 'general-purpose', COMANDO)
+  if (mt.bloccato) return ferma('montaggio', mt)
+}
 
 phase('Rapporto')
 const rapporto = await agent(
   `Scrivi il report unico per il presentatore sul reel ${file}, seguendo la sezione «Report della FERMATA 3» di .claude/commands/pipeline.md. ` +
   `Leggi la sceneggiatura, l'idea collegata e contenuti/render/<slug>/report.json (lo slug è nel frontmatter). ` +
   `Note dello sceneggiatore (titolo alternativo, frasi incerte): ${noteSceneggiatore || 'nessuna'}. ` +
-  `Revisione: ${rv.motivo || 'nessuna nota'}. Filmati (scelte PROVVISORIE, da mettere in testa ai punti da confermare): ${fl.motivo || 'nessuna scena a filmato'}. Animazione: ${an.motivo || 'nessuna nota'} (${an.errori} controlli, ${an.avvisi} avvisi di tempo).`,
-  { agentType: 'general-purpose', effort: 'low', phase: 'Rapporto', label: 'Rapporto' })
+  `Revisione: ${rv.motivo || 'nessuna nota'}. Filmati: equilibrio e scene marcate: ${marca.motivo || '—'}; scelte PROVVISORIE, da mettere in testa ai punti da confermare: ${fl.motivo || 'nessuna scena a filmato'}. ` +
+  `Animazione: ${an.motivo || 'nessuna nota'} (${an.errori} controlli, ${an.avvisi} avvisi di tempo). Montaggio: ${mt.motivo || '—'}. ` +
+  `Difetti dei controllore-fotogrammi rimasti dopo i rimandi: ${difetti || 'nessuno'}.`,
+  { agentType: 'general-purpose', model: 'sonnet', effort: 'low', phase: 'Rapporto', label: 'Rapporto' })
 return { completato: true, file, rapporto }

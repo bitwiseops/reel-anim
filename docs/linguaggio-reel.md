@@ -7,6 +7,15 @@
 > Scelte fatte sul primo reel: chiusura **B**, hook col «tu», scena 6 col payoff a voce; in libreria per prime la
 > parola punch, i controlli di linguaggio e lo zoom di camera (il presentatore dinamico in un passaggio successivo).
 
+> **Nota del 2026-09-21: cosa qui è superato.** Il documento è del 2026-09-13, prima del regime nuovo
+> (`docs/regole-editoriali.md`, che vince dove i due non coincidono). Restano validi il *come si parla* (§1-5, §8-9:
+> hook al «tu», una persona, fallo provare, payoff e non riassunto, una CTA). Sono **superati**: tutto ciò che mette
+> frasi a schermo (§6: il reel si guarda muto, regole §1: mai più di due parole di fila, `TESTO:` di una-due
+> parole); il riquadro che cresce, la «frase grande» e il messaggio a schermo su hook e chiusura (§7-8: regole §4,
+> apertura e chiusura sono lui a tutta tela con le sole caption, `MESSAGGIO:`/`CTA:` per la caption del post,
+> `TITOLO:` per la copertina); i sottotitoli «decisione aperta» (§6: le caption sono bruciate nel montaggio). La
+> parte 3 è la **cronaca del primo reel**: i blocchi mostrano il ragionamento, non la grammatica di oggi.
+
 ## 0. Cosa sappiamo (con fonte) e cosa no
 
 **Dichiarato da Instagram**
@@ -122,11 +131,13 @@ stessa scala), l'occhio si abitua. È una regola di mestiere, non un numero misu
 Instagram non raccomanda i reel fatti per lo più di testo, e la ridondanza peggiora l'apprendimento. Una frase lunga
 (una richiesta, un biglietto) si mostra ma **non** si fa leggere mentre la voce dice altro: o la voce la legge, o
 resta come oggetto e se ne accende una parola.
-- **Sceneggiatore**: TESTO di 1-3 parole (4 è il massimo tecnico); MESSAGGIO di chiusura ≤ 12 parole (25 è il massimo tecnico).
+- **Sceneggiatore**: `TESTO:` al massimo due per scena, di una-due parole (dal 2026-09-20; prima 1-3 parole);
+  MESSAGGIO di chiusura ≤ 12 parole (25 è il massimo tecnico), dal 2026-09-21 per la caption del post.
 - **Animatore**: la frase che conta va nel corpo `punto` (92 px), non in tre righe da 44 px; ≤ 8 parole nuove da
   leggere per beat.
-- **Sottotitoli**: decisione aperta. A favore: accessibilità e visione senza audio. Contro: ridondanza, e area tolta
-  all'animazione. Proposta: 2-4 parole alla volta sopra il riquadro, disattivabili.
+- **Sottotitoli**: **deciso il 2026-09-20** (regole editoriali §1): il reel si guarda muto, le caption col parlato
+  sono bruciate nel montaggio in una fascia in fondo, e proprio per la ridondanza l'animazione non porta più frasi.
+  *(Fino al 2026-09-13 era una decisione aperta: 2-4 parole alla volta sopra il riquadro, disattivabili.)*
 
 ### 7. Il presentatore è in scena, non in una fototessera
 Il riquadro resta piccolo quando la grafica spiega (il volto si prende lo sguardo) e diventa grande su hook, battuta
@@ -142,12 +153,13 @@ Se l'ultima frase si aggancia alla prima, il replay sembra continuo, e i replay 
 | Male | Bene |
 |---|---|
 | tre mosse elencate | una mossa, detta come un gesto («scrivi nella richiesta quello che sai solo tu») |
-| messaggio + carta + CTA, tutto testo | una frase grande, il volto grande, la CTA |
+| messaggio + carta + CTA, tutto testo | il volto a tutta tela e la battuta detta a voce (dal 2026-09-21; prima: «una frase grande, il volto grande, la CTA») |
 | «in sintesi…» | un richiamo all'hook o alla battuta |
 | «seguimi per altri video» | una CTA con uno scopo legato al reel |
 
 - **Sceneggiatore**: VOCE di 2-3 frasi, ≤ 18 parole (~6-7 s), con la più forte per ultima; la lista completa va in caption.
-- **Animatore**: la chiusura dura ≤ 6-7 s e l'ultimo fotogramma è pulito; per il loop, prepara il primo dell'hook.
+- **Animatore**: dal 2026-09-21 la chiusura non ha classe Manim (è lui a tutta tela, ≤ 6-7 s): l'ultima figura del
+  reel è l'ultimo fotogramma dell'ultima scena animata, e va lasciato pulito.
 - **CTA, una per reel**:
   - **invia** («mandalo a chi scrive i biglietti in ufficio»): gli invii sono il segnale più forte con chi non ci
     segue; serve un destinatario ovvio;
@@ -247,6 +259,9 @@ ANIMAZIONE: Esce tutto; il messaggio grande in alto, il riquadro del presentator
 ```
 
 ### Due riscritture puntuali
+*(Storico del primo reel: oggi l'hook non ha `ANIMAZIONE:` né `RIQUADRO: no` e nessuna scena mostra frasi a
+schermo; resta valido il lavoro sulla VOCE.)*
+
 **Hook: il «tu» e il fotogramma 0 pieno** (14 parole, ~6 s). Va bene con le chiusure B e C; con la A la frase del
 loop va riscritta.
 ```
@@ -261,7 +276,8 @@ ANIMAZIONE: Su «creativa» la barra accento.
 ANIMAZIONE: Sotto entra il sottotitolo, con «probabile» in accento.
 RIQUADRO: no
 ```
-**Scena 6: il payoff si legge a voce e si vede grande** (30 parole, ~12 s).
+**Scena 6: il payoff si legge a voce e si vede grande** (30 parole, ~12 s). *Storico: oggi il payoff si dice a voce
+e lo porta una figura, non una frase a tutto schermo (regole editoriali §1).*
 ```
 ## Scena 6 [spiegazione]
 VOCE: Ora scrive: caro Marco, la fotocopiatrice ha chiesto di te.
