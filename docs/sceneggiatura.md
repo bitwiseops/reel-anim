@@ -30,8 +30,9 @@ Da qui discende tutto il resto:
    pertinente (`[broll]`, sottosistema `broll/`) oppure **immagini generate con Meshy** messe in
    `contenuti/media/<slug>/` e richiamate con `SCHERMO:`. Il testo a schermo non è mai il ripiego: è la cosa che chi
    guarda non può leggere.
-6. Nella **chiusura** le caption sono spente (`CAPTION: no` è il default per quel tipo): il `MESSAGGIO:` è già la
-   frase detta, scritta grande. Stessa cosa dove l'animatore usa un `punch`.
+6. Nella **chiusura** le caption ci sono (dal 2026-09-21): il presentatore la dice a tutta tela, senza nessun
+   testo a schermo, e senza sottotitoli chi guarda muto non la leggerebbe. Le caption si spengono solo in una chiusura riportata al riquadro (`RIQUADRO: si`), dove il
+   `MESSAGGIO:` è la frase detta scritta grande, e dove l'animatore usa un `punch`.
 
 I controlli automatici lo fanno rispettare: `parole-leggibili` (mai più di due parole di fila a schermo, salvo
 etichette marcate) e `caption` (niente disegni dentro la fascia) in `tools/anim/controlli.py`.
@@ -64,28 +65,51 @@ le giunzioni.
 
 | Tipo | Dove | Righe proprie | Riquadro del presentatore |
 |---|---|---|---|
-| `hook` | Scena 1, obbligatoria | `TITOLO:` (obbligatorio), `SOTTOTITOLO:`; con `SCHERMO:` è un hook a filmato (sotto) | no (per default); sì nell'hook a filmato |
+| `hook` | Scena 1, obbligatoria | `TITOLO:` (obbligatorio, per la copertina), `SOTTOTITOLO:`, `VOCE:` | **a tutta tela** (`pieno`, sotto) |
 | `spiegazione` | nel mezzo (tipo di default) | `VOCE:` obbligatoria, `FIGURA:` obbligatoria | sì, in alto a destra |
 | `schermo` | nel mezzo | `SCHERMO:` obbligatorio, `VOCE:`, `FIGURA:` | sì: in alto (`RIQUADRO: alto-destra`, ora è il default) |
 | `broll` | nel mezzo, mai due di fila | `SCHERMO:` obbligatorio, `VOCE:`; niente `TESTO:` | sì, sopra il filmato |
-| `chiusura` | ultima, obbligatoria | `MESSAGGIO:` (obbligatorio), `CTA:` | sì |
+| `chiusura` | ultima, obbligatoria | `MESSAGGIO:` (obbligatorio), `CTA:` | **a tutta tela** (`pieno`, sotto) |
 
 **`schermo` e `broll` non sono la stessa cosa.** In una scena `schermo` il materiale sta nella finestra 900×980 e
 intorno c'è la grafica animata: serve a *mostrare* qualcosa (una chat, una schermata). In una scena `broll` si vede
 **il filmato a tutto schermo e il riquadro del presentatore, nient'altro**: nessun testo, nessuna grafica, nessuna
 classe Manim. Animazione e filmato non stanno mai insieme: si alternano fra scene — Manim spiega, il filmato tiene
-l'attenzione. Per questo `valida` avvisa su due `[broll]` di fila e su più di metà reel a filmato, e dà errore su un
+l'attenzione. Per questo `valida` avvisa su due `[broll]` di fila e su un reel sbilanciato (sotto), e dà errore su un
 `TESTO:` in una scena `[broll]`. La riga `ANIMAZIONE:` lì è facoltativa e non anima niente: descrive **cosa si vede
 nel filmato** (soggetto, luogo, gesto), ed è da quella che `broll piano` ricava le query di ricerca.
 
-**L'hook a filmato (decisione del presentatore, 2026-09-19).** I primi 5-10 secondi devono catturare l'attenzione:
-il presentatore, **nel riquadro**, pone un problema o una domanda, e dietro c'è **una clip che lo richiama**. È uno
-`[hook]` con la riga `SCHERMO:`: a schermo non c'è nessun titolo e nessuna grafica, il riquadro c'è per default
-(`si`, non `no`), la `VOCE:` è obbligatoria. Il `TITOLO:` resta obbligatorio ma **vive solo in copertina** (e il
-`SOTTOTITOLO:` con lui): scrivilo per chi vede la griglia del profilo, non per chi sta guardando il reel. Conta
-nell'alternanza come una scena a filmato: la Scena 2 dopo un hook a filmato è animata. La riga `ANIMAZIONE:`
-dell'hook descrive **cosa si vede nella clip** (chi, dove, che gesto): se invece parla del titolo, `broll piano`
-lascia l'hook a Manim, com'era prima.
+**I due registri stanno a metà (regola del presentatore, 2026-09-21).** Circa **metà delle scene va a filmato**, con
+una scena di tolleranza in più o in meno (`valida` e `broll piano` avvisano fuori da lì), **contate fra le scene in
+mezzo**: apertura e chiusura sono del presentatore e restano fuori dal conto. Il numero di scene non è fisso, lo decide
+il contenuto entro i limiti di `LIMITI`. **La divisione non è solo visiva, è del parlato**:
+- nelle scene a **filmato** la VOCE dice le cose **generiche** — il problema di chi guarda, l'esperienza riconosciuta,
+  la conseguenza, il passaggio da un blocco all'altro. Niente numeri, niente conti, niente termini tecnici: sono
+  proprio quelli che fanno restare una scena a Manim (`broll piano` le riconosce e non le propone), e una sola frase
+  tecnica lì dentro sbilancia il reel;
+- nelle scene **animate** va la **spiegazione complessa**: il meccanismo, le quantità, i confronti, tutto ciò che si
+  capisce solo vedendolo disegnato.
+Se per stare a metà servono più scene, **aggiungile invece di allungare il reel**: le scene a filmato sono corte
+(4-7 s bastano, la voce lì è breve), quelle animate si tengono i 12-16 s. Otto scene a 80 s sono meglio di sei a 85.
+
+**I due estremi sono del presentatore, a tutta tela (decisione del presentatore, 2026-09-21).** L'apertura e la
+chiusura non sono né animazione né filmato: **si vede lui**, a tutto schermo, che guarda in camera. `RIQUADRO: pieno`
+è il default di `hook` e `chiusura` (si torna al riquadro scrivendo `RIQUADRO: si`, e `no` lo toglie).
+- **Apertura**: pone il problema o la domanda di chi guarda (`docs/linguaggio-reel.md` §1). Non c'è grafica e non c'è
+  classe Manim: è lui e basta, con le caption del parlato in fondo. Il `TITOLO:` resta obbligatorio ma **vive solo in
+  copertina** (col `SOTTOTITOLO:`), come già dal 2026-09-19. La riga `ANIMAZIONE:` non serve: non c'è niente da
+  disegnare né da cercare.
+- **Chiusura**: dice la conclusione guardando in camera, con le caption del parlato, **e nient'altro** (decisione del
+  presentatore dopo la prima anteprima, 2026-09-21: niente messaggio a schermo). Come l'apertura, non ha grafica né
+  classe Manim, e le righe `ANIMAZIONE:` e `FIGURA:` non servono. Il `MESSAGGIO:` e la `CTA:` restano obbligatori ma
+  **non vanno a schermo**: sono il testo per la caption del post (e la `CTA:` la dice lui, se sta nella VOCE).
+- Questi due non contano nell'equilibrio fra i registri: la metà e metà si misura sul **corpo**, le scene in mezzo.
+- Si registrano con la fotocamera in verticale (1080×1920 nativi, `config.toml [registrazione]`): le scene a volto
+  pieno tengono il fotogramma intero, le altre ne ritagliano il quadrato del riquadro.
+
+*Superato*: dal 2026-09-19 al 2026-09-21 l'apertura era **a filmato** (`[hook]` con `SCHERMO:`, il presentatore nel
+riquadro sopra una clip che richiamava il problema). La grammatica lo accetta ancora se si scrive `SCHERMO:` a mano,
+ma non è più lo standard e `broll piano` non propone più l'hook.
 
 Non si scrive `[broll]` a mano (né `SCHERMO:` nell'hook): lo sceneggiatore scrive la scena come `[spiegazione]` con un brief che descrive
 un'immagine filmabile; il sottosistema `broll` (`broll/README.md`) propone quali scene vanno a filmato, il

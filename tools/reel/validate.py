@@ -10,8 +10,8 @@ from .stima import durata_stimata_s
 
 LIMITI = {
     "scene_min": 5,
-    "scene_max": 9,
-    "scene_tipiche": (6, 8),
+    "scene_max": 10,   # dal 2026-09-21: i due registri a metà vogliono più scene, non più minuti
+    "scene_tipiche": (6, 9),
     "parole_voce_max": 50,        # per scena (≈ 18 s a 2,8 parole/s): parlato vero, non titoli (dal 2026-09-15; era 35)
     "parole_voce_hook_max": 20,
     "parole_voce_chiusura_max": 18,   # la chiusura è un payoff, non un riassunto (docs/linguaggio-reel.md §8)
@@ -106,7 +106,9 @@ def check(r: Reel) -> list[Diagnostica]:
             n_msg = conta_parole(s.messaggio or "")
             if n_msg > L["parole_messaggio_max"]:
                 a(f"MESSAGGIO lungo ({n_msg} parole, max {L['parole_messaggio_max']})")
-            elif n_msg > L["parole_messaggio_consigliate"]:
+            elif n_msg > L["parole_messaggio_consigliate"] and not s.a_volto_pieno:
+                # a volto pieno il MESSAGGIO non va a schermo (dal 2026-09-21: solo lui e le caption): è il testo
+                # per la caption del post, e lì la misura di una frase grande non conta
                 a(f"MESSAGGIO di {n_msg} parole: a schermo ne reggono {L['parole_messaggio_consigliate']} "
                   "(una frase grande; il resto in caption)")
             if s.parole_voce > L["parole_voce_chiusura_max"]:
@@ -118,6 +120,13 @@ def check(r: Reel) -> list[Diagnostica]:
             a(f"VOCE di {s.parole_voce} parole (max {L['parole_voce_max']}): spezza la scena in due")
         if len(s.voce) > L["beat_max"]:
             a(f"{len(s.voce)} righe VOCE (max {L['beat_max']}): troppi beat per una scena")
+        if s.a_volto_pieno:
+            # "pieno": il presentatore È la tela e la grafica (trasparente) gli va sopra. Dal 2026-09-21 è il default
+            # della chiusura: la conclusione la dice lui guardando in camera.
+            if s.schermo:
+                e("RIQUADRO: pieno con SCHERMO:: sotto il presentatore a tutta tela non va un filmato, la tela è lui")
+            if s.tipo == "broll":
+                e("scena [broll] con RIQUADRO: pieno: o si vede il filmato col riquadro sopra, o si vede lui a tutta tela")
         if s.a_filmato:
             # filmato e grafica non stanno mai insieme: qui si vede il filmato e il riquadro, nient'altro.
             # ANIMAZIONE è ammessa e facoltativa: non si anima niente, ma descrive cosa si vede, ed è da lì
@@ -127,9 +136,10 @@ def check(r: Reel) -> list[Diagnostica]:
             if s.tipo == "hook" and s.riquadro_effettivo() == "no":
                 a("hook a filmato con RIQUADRO: no: il titolo non è a schermo e il presentatore nemmeno, "
                   "resta una clip con una voce sopra")
-        elif s.tipo != "hook" and not s.animazione:
+        elif not s.a_volto_pieno and s.tipo != "hook" and not s.animazione:
             a("scena senza ANIMAZIONE: l'animatore non sa cosa disegnare")
-        if not s.a_filmato and s.tipo != "hook" and not s.figura:
+        # a volto pieno (apertura e chiusura, dal 2026-09-21) si vede lui con le caption: niente da disegnare
+        if not s.a_filmato and not s.a_volto_pieno and s.tipo != "hook" and not s.figura:
             a("scena senza FIGURA: scrivi in una riga cosa si capisce guardando, senza leggere niente a schermo "
               "(i reel si guardano muti: a spiegare è la caption)")
         if s.figura and conta_parole(s.figura) > L["parole_figura_max"]:
@@ -167,10 +177,23 @@ def check(r: Reel) -> list[Diagnostica]:
             a(f"scena stimata {sec:.1f} s (max {L['scena_max_s']} s): troppa voce per una scena")
         elif sec < L["scena_min_s"]:
             a(f"scena stimata {sec:.1f} s, sotto i {L['scena_min_s']} s")
-    # l'alternanza: Manim spiega, il filmato tiene l'attenzione. Gli stessi due limiti di `broll piano`.
-    filmati = [s for s in r.scene if s.a_filmato]
-    if len(filmati) > len(r.scene) // 2:
-        d.append(avviso(f"{len(filmati)} scene a filmato su {len(r.scene)}: più della metà del reel è materiale esterno"))
+    # L'equilibrio fra i due registri (regola del presentatore, 2026-09-21): **metà delle scene a filmato, ± una**.
+    # Manim porta la spiegazione, il filmato tiene l'attenzione e sotto ci va la voce più generica. Il conto vale
+    # solo quando i filmati sono già stati scelti (`broll scrivi`, tappa T2b): prima nessuna scena è a filmato e
+    # sarebbe un avviso su ogni sceneggiatura appena scritta. Lì l'equilibrio lo controlla `broll piano`.
+    # I due estremi del reel sono del presentatore (apertura e chiusura a volto pieno) e non sono né animazione né
+    # filmato: l'equilibrio si misura sul corpo, cioè sulle scene in mezzo.
+    corpo = [s for s in r.scene if not s.a_volto_pieno]
+    filmati = [s for s in corpo if s.a_filmato]
+    if filmati:
+        meta = len(corpo) / 2
+        if len(filmati) > meta + 1:
+            d.append(avviso(f"scene a filmato: {len(filmati)} su {len(corpo)} (senza apertura e chiusura) — troppo "
+                            "materiale esterno, l'equilibrio fra i due registri è metà ± una"))
+        elif len(filmati) < meta - 1:
+            d.append(avviso(f"scene a filmato: {len(filmati)} su {len(corpo)} (senza apertura e chiusura) — troppo "
+                            "poche, l'equilibrio fra i due registri è metà ± una: le scene d'attenzione a filmato "
+                            "con la voce generica, la spiegazione nelle animazioni"))
     for prima, dopo in zip(r.scene, r.scene[1:]):
         if prima.a_filmato and dopo.a_filmato:
             d.append(avviso(f"scene {prima.n} e {dopo.n} entrambe a filmato: l'alternanza si vede solo se si alterna",

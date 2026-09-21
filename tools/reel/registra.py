@@ -25,7 +25,7 @@ from ..anim.config import Config
 from . import clip as clipmod
 from .compositing import posizione_riquadro
 from .ffmpeg import esegui, trova_ffmpeg
-from .model import Diagnostica, Reel, avviso, testo_piano
+from .model import PIENO, Diagnostica, Reel, avviso, testo_piano
 from .voce import CODA_VOCE_S
 
 RADICE = Path(__file__).resolve().parents[2]
@@ -368,7 +368,8 @@ def scene_coperte(tl: Timeline, p: Presa) -> list[ScenaTL]:
 
 def comando_taglio(p: Presa, s: ScenaTL, presa: Path, dest: Path, opz: dict, audio: Path | None = None) -> list[str]:
     """Taglia dalla presa la clip della scena: seek preciso (ri-codifica) sul video e sul wav, durata a fotogrammi
-    interi, ritaglio sull'inquadratura scelta (un quadrato: il montaggio poi lo porta a 360 px senza tagliare altro).
+    interi, ritaglio sull'inquadratura scelta (un quadrato: il montaggio poi lo porta a 360 px senza tagliare altro),
+    tranne nelle scene a volto pieno, che tengono il fotogramma intero.
     Niente loudnorm: lo fa il montaggio."""
     ff, _ = trova_ffmpeg()
     fps = int(opz["fps"])
@@ -378,7 +379,9 @@ def comando_taglio(p: Presa, s: ScenaTL, presa: Path, dest: Path, opz: dict, aud
         cmd += ["-ss", f"{p.t_audio(s.t_inizio_s):.3f}", "-i", str(audio)]
     cmd += ["-t", f"{durata:.3f}", "-map", "0:v"]
     cmd += ["-map", "1:a"] if audio is not None else (["-map", "0:a"] if not p.audio else ["-an"])
-    if p.inquadratura:
+    # a volto pieno (apertura e chiusura, dal 2026-09-21) la tela è lui: si tiene il fotogramma intero, e il
+    # montaggio lo porta a 1080×1920. Il quadrato dell'inquadratura serve solo alle scene col riquadro.
+    if p.inquadratura and s.riquadro != PIENO:
         q = p.inquadratura
         cmd += ["-vf", f"crop={q['lato']}:{q['lato']}:{q['x']}:{q['y']}"]
     cmd += [*_codifica_video(opz), *_codifica_audio(), "-fps_mode", "cfr", "-r", str(fps), "-f", "mov", str(dest)]

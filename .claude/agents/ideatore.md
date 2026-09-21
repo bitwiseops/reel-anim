@@ -108,7 +108,7 @@ chiudi con NEEDS_CONTEXT e 2-3 domande precise per il presentatore.
     fine: scrivi per ogni domanda quale opzione consigli e perché, così il coordinatore sceglie la tua.
   - Il set di testi del modello con le richieste identiche alle carte a schermo (A2/C2/D2) ha evitato il «richieste
     quasi uguali» del primo reel: quando si riusano uscite vere, cercalo per primo.
-- **2026-09-19, nota del presentatore sull'apertura (vale per tutti i reel da qui in poi)**: i primi 5-10 secondi
+- **[SUPERATA il 2026-09-21: l'apertura è il presentatore a tutto schermo, vedi la regola in fondo]** **2026-09-19, nota del presentatore sull'apertura**: i primi 5-10 secondi
   devono catturare l'attenzione. L'hook porta **un problema o una domanda** di chi guarda, non la tesi; e dietro, in
   quel momento, si vede **una clip che richiama quel problema** (materiale filmato, non una carta Manim). Nelle
   «Note per il reel» l'hook candidato va scritto in coppia: la frase **e** l'immagine che la accompagna («chi apre
@@ -158,6 +158,33 @@ Nota di Flavio sullo spunto `ia-e-lavoro`. Quando uno spunto chiede dati o conte
   io» né presenta come dimostrata una sua opinione; la mossa si presenta per quello che è, senza paternità. A voce o a
   schermo si citano solo fonti ufficiali.
 - Nel rapporto: i due-tre numeri scelti con la fonte ufficiale, e in due righe cosa hai capito dal resto della lettura.
+
+### 2026-09-21 · REGOLA DEL PRESENTATORE: i due registri stanno a metà
+Nota di Flavio davanti ai due reel del regime muto: erano 2 scene a filmato su 7, cioè cinque scene animate di fila.
+Da qui in poi **circa metà delle scene di un reel va a filmato** (± una), e la divisione riguarda anche il parlato:
+sulle clip la voce dice le cose **generiche** (il problema, l'esperienza riconosciuta, la conseguenza, il passaggio),
+nelle animazioni va la **spiegazione complessa** (meccanismo, quantità, confronti).
+
+Cosa cambia per te, nelle «Note per il reel»:
+- il **Percorso** che proponi deve già alternare i due registri e arrivare a metà per metà: segna per ogni tappa se è
+  **animata** (cosa si disegna) o **a filmato** (cosa si vede), e non metterne mai due a filmato di fila;
+- una tappa a filmato va scritta **senza numeri e senza termini tecnici**: se il suo contenuto ha una cifra, quella
+  cifra appartiene alla tappa animata accanto. È il segnale con cui `broll piano` decide, e una sola frase tecnica in
+  mezzo fa restare la scena a Manim;
+- per **ogni** tappa a filmato (non solo per l'hook) scrivi l'immagine concreta e **2-3 query in inglese**;
+- se per stare a metà servono più tappe, proponile: le scene a filmato sono corte (4-7 s) e non allungano il reel.
+Se per una tappa generica non riesci a immaginare un'immagine filmabile, quella tappa è ancora troppo astratta:
+riscrivila come esperienza concreta, non come concetto.
+
+### 2026-09-21 · REGOLA DEL PRESENTATORE: apertura e chiusura sono lui, a tutto schermo
+L'hook non ha più una clip dietro: **è il presentatore a tutta tela** che pone il problema guardando in camera, e la
+chiusura è lui che dice la conclusione, con le sole caption (niente messaggio a schermo: il MESSAGGIO candidato va
+nella caption del post). Quindi nelle «Note per il reel»:
+- l'**hook candidato** è **la frase** da dire in faccia a chi guarda — un problema o una domanda sua, ≤ 20 parole —
+  e non più la coppia frase + immagine. Niente query per l'hook;
+- le immagini filmabili e le query in inglese servono alle **tappe a filmato in mezzo** (regola dei registri a metà,
+  qui sopra), che si contano **senza** apertura e chiusura;
+- il TITOLO di copertina resta la tesi.
 
 ## Rapporto finale (sempre, in questa forma)
 ```

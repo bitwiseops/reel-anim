@@ -5,14 +5,21 @@ Regime «il reel si guarda muto» (docs/animazioni.md §0): le caption col parla
 **non c'è nessuna frase da leggere**. A schermo: figure, tre numeri e sei etichette corte (cosa misura, da dove
 viene), più le etichette «esempio», «esposto» e «decidi tu» dichiarate come `TESTO:` nella sceneggiatura.
 
-Scene animate: 2, 3, 5, 6, 7. Le scene 1 e 4 sono a filmato (`[broll]`) e non hanno classe.
+Struttura del 2026-09-21 (nove scene, i due registri a metà, estremi a volto pieno):
+- scena 1 (apertura) e scene 3, 5, 8 (`[broll]`): **nessuna classe**. L'apertura è il presentatore a tutto schermo
+  con le caption; le tre scene a filmato le prepara `broll`.
+- scene animate 2, 4, 6, 7: ognuna parte dall'ultimo fotogramma della scena animata prima (la 4 dalla 2, la 6
+  dalla 4, la 7 dalla 6), perché dopo il filmato si entra con un taglio su uno stato che chi guarda riconosce.
+- scena 9 (chiusura a volto pieno): solo il MESSAGGIO e la CTA, in coda, su un appoggio scuro semitrasparente,
+  su fondo trasparente sopra la faccia. Nessun filo visivo: l'arrivo sulla faccia è uno stacco voluto.
 
 Filo visivo (quattro oggetti che tornano, sempre con lo stesso aspetto):
-1. le **dieci figure** (`Fila`): una figura = un posto di lavoro per tutto il reel;
+1. le **dieci figure** (`Fila`): una figura = un posto di lavoro per tutto il reel; l'ultima volta che si vedono è
+   il richiamo in coda alla scena 7;
 2. lo **slot del numero**, sotto la fila e sempre nello stesso punto, con le sue due etichette; vuoto e senza
    etichette finché non c'è niente da contare;
-3. la **tessera che si spezza**: cinque pezzi-compito nella 3, quattro pezzi del resoconto nella 6;
-4. il **bordo frastagliato**: nasce nella 5, torna piccolo nella 6 e nella 7.
+3. la **tessera che si spezza**: cinque pezzi-compito nella 4, quattro pezzi del resoconto nella 7;
+4. il **bordo frastagliato**: nasce nella 6, torna piccolo nel richiamo della 7.
 """
 from __future__ import annotations
 
@@ -34,9 +41,10 @@ from tools.anim.pattern import rimbalzo
 FIG_PX = 100         # altezza di una figura umana: la stessa in tutto il reel
 PASSO_PX = 134
 FILA_ALTA = 10       # bordo alto della fila, px sotto il bordo alto dell'area contenuto
-FILA_CENTRO = 200    # la fila «al centro»: scene 2 (beat 0-2) e 7 (beat 0)
+FILA_CENTRO = 200    # la fila «al centro»: scena 2, beat 0-2
 NUM_BASSO = 6        # bordo basso del gruppo numero + etichette, px sopra il fondo dell'area
 SLOT_SU = 92         # lo slot vuoto: dove starà il numero piccolo
+NUM_6 = "6 su 10"   # il `TESTO:` della scena 2, che torna nella 4 e nella 6
 
 
 # --- aiuti locali ------------------------------------------------------------------------------------------
@@ -119,6 +127,19 @@ def bordo_frastagliato(colore: str, larghezza_px: float, altezza_px: float, punt
     return m
 
 
+BORDO_W, BORDO_H = 540, 230   # la frontiera «vera»: quella della scena 5
+
+
+def bordo_largo(colore: str, larghezza_px: float = BORDO_W) -> VMobject:
+    """La stessa frontiera, a qualunque misura: si disegna una volta sola e si scala, così la silhouette (le punte,
+    le rientranze, il seme del caso) è identica in tutte le scene. Con `scale` lo spessore del tratto non cambia,
+    quindi la versione piccola non diventa un filo."""
+    b = bordo_frastagliato(colore, BORDO_W, BORDO_H, ampiezza_px=20)
+    if larghezza_px != BORDO_W:
+        b.scale(larghezza_px / BORDO_W)
+    return b
+
+
 def cornice(sc, larghezza_px: float, altezza_px: float, colore: str | None = None,
             raggio_px: float = 18, spessore_px: float = 3) -> RoundedRectangle:
     col = sc.cfg.palette
@@ -140,7 +161,7 @@ def freccia_tratteggiata(sc, da, a, colore: str) -> VGroup:
     return VGroup(f)
 
 
-# --- i cinque pezzi-compito della scena 3 -------------------------------------------------------------------
+# --- i cinque pezzi-compito della scena 4 -------------------------------------------------------------------
 ICONE_COMPITO = ("file-text", "message-square", "database", "search", "book-open")
 FAN_ANGOLI = (-14, -7, 0, 7, 14)
 
@@ -157,7 +178,7 @@ def pezzo_compito(sc, i: int, colore: str | None = None, opacita: float = 1.0) -
     return g
 
 
-# --- i quattro pezzi del resoconto della scena 6 -------------------------------------------------------------
+# --- i quattro pezzi del resoconto della scena 7 -------------------------------------------------------------
 # Quattro forme **diverse fra loro**, non varianti della stessa: si devono distinguere a scena ferma.
 # 0 = blocco di cifre a griglia · 1 = lampadina · 2 = foglio di righe-sagoma con l'angolo piegato ·
 # 3 = scaletta di tre blocchetti a gradini con il pallino davanti.
@@ -290,69 +311,104 @@ class Scena02(ScenaReel):
 
 
 # ============================================================================================================
-class Scena03(ScenaReel):
-    """«Persi» è la lettura sbagliata: si vede e si disfa a vista. Poi il lavoro si apre in compiti, e i sei si
-    dividono tre e tre. GRANDE (metamorfosi) sul beat 1."""
+# Il tre e tre della scena 4: la scena 6 riparte da qui (dopo lo stacco sul filmato della 5), quindi le posizioni
+# si calcolano in un posto solo.
+
+def bersagli_tre_e_tre(sc, fila: Fila) -> tuple[VGroup, VGroup, VGroup]:
+    """Le quattro non esposte al centro, attenuate e fuori dal conto; i sei in due terzetti ai lati, in due colori
+    pari della palette (⚠️ G: nessuno dei due più cupo o più spento dell'altro)."""
+    a, col = sc.area.contenuto, sc.cfg.palette
+    quattro = VGroup(*[fila.figure[i].copy() for i in range(6, 10)])
+    quattro.arrange_in_grid(rows=2, cols=2, buff=px(PASSO_PX - FIG_PX))
+    giu(a, quattro, 262)
+    for q in quattro:
+        q.svg.set_stroke(col.attenuato, opacity=0.3)
+    g_giu = VGroup(*[fila.figure[i].copy() for i in (0, 1, 2)]).arrange(RIGHT, buff=px(PASSO_PX - FIG_PX))
+    g_su = VGroup(*[fila.figure[i].copy() for i in (3, 4, 5)]).arrange(RIGHT, buff=px(PASSO_PX - FIG_PX))
+    giu(a, g_giu, 130, dx_px=-250)
+    giu(a, g_su, 130, dx_px=250)
+    for m in g_giu:
+        m.svg.set_stroke(col.secondario, opacity=1)
+    for m in g_su:
+        m.svg.set_stroke(col.terziario, opacity=1)
+    return quattro, g_giu, g_su
+
+
+def frecce_tre_e_tre(sc) -> VGroup:
+    a, col = sc.area.contenuto, sc.cfg.palette
+    y_a, y_b = y_giu(a, 8), y_giu(a, 116)
+    f_giu = freccia_tratteggiata(sc, np.array([dx(a, -250), y_a, 0]), np.array([dx(a, -250), y_b, 0]), col.secondario)
+    f_su = freccia_tratteggiata(sc, np.array([dx(a, 250), y_b, 0]), np.array([dx(a, 250), y_a, 0]), col.terziario)
+    return VGroup(f_giu, f_su)
+
+
+def stato_fine_2(sc) -> tuple[Fila, VGroup]:
+    """L'ultimo fotogramma della scena 2: le dieci in alto con le sei accese, il numero grande con le etichette."""
+    a, col = sc.area.contenuto, sc.cfg.palette
+    fila = vesti(fila_dieci(accese=6), col.accento, col.attenuato)
+    giu(a, fila, FILA_ALTA)
+    num = numero(sc, NUM_6, "esposti", "Fondo Monetario, 2024", scala=2.1)
+    su(a, num, NUM_BASSO)
+    return fila, num
+
+
+def stato_fine_4(sc) -> tuple[Fila, VGroup, VGroup]:
+    """L'ultimo fotogramma della scena 4: il tre e tre con le frecce, il numero piccolo nello slot."""
+    a, col = sc.area.contenuto, sc.cfg.palette
+    fila = vesti(fila_dieci(accese=6), col.accento, col.attenuato)
+    giu(a, fila, FILA_ALTA)
+    quattro, g_giu, g_su = bersagli_tre_e_tre(sc, fila)
+    for i, b in zip(range(6, 10), quattro):
+        fila.figure[i].become(b)
+    for i, b in zip((0, 1, 2, 3, 4, 5), list(g_giu) + list(g_su)):
+        fila.figure[i].become(b)
+    num = numero(sc, NUM_6, "esposti", "Fondo Monetario, 2024")
+    su(a, num, NUM_BASSO)
+    return fila, num, frecce_tre_e_tre(sc)
+
+
+class Scena04(ScenaReel):
+    """Dopo lo stacco sul filmato della 3: il lavoro si apre in compiti, due su cinque sono «esposto», e i sei si
+    dividono tre e tre. GRANDE (metamorfosi) sul beat 0: una delle sei diventa una tessera che si apre a ventaglio."""
 
     def costruisci(self):
         a, col = self.area.contenuto, self.cfg.palette
-        self.fila = vesti(fila_dieci(accese=6), col.accento, col.attenuato)
-        giu(a, self.fila, FILA_ALTA)
-        self.num = numero(self, "6 su 10", "esposti", "Fondo Monetario, 2024", scala=2.1)
-        su(a, self.num, NUM_BASSO)
+        # fotogramma 0 già pieno: lo stato finale della scena 2, com'era prima del filmato
+        self.fila, self.num = stato_fine_2(self)
         self.add(self.fila, self.num)
 
-        # beat 0 — il numero rientra nel suo slot con le etichette appresso; le sei si sbarrano e scivolano giù
-        piccolo = numero(self, "6 su 10", "esposti", "Fondo Monetario, 2024")
+        # beat 0 — «Ecco, esposto vuol dire questo.»: il numero rientra nel suo slot con le etichette appresso,
+        # e intanto una delle sei vola al centro, diventa tessera e si apre in cinque pezzi-compito
+        piccolo = numero(self, NUM_6, "esposti", "Fondo Monetario, 2024")
         su(a, piccolo, NUM_BASSO)
-        self.play(Transform(self.num, piccolo), run_time=0.55)
-        self.barre = VGroup()
-        for f in self.fila.figure[:6]:
-            h, w, c = f.height * 0.60, f.width * 0.76, f.get_center()
-            self.barre.add(Line(c + np.array([-w, -h, 0]), c + np.array([w, h, 0]),
-                                stroke_color=col.attenuato, stroke_width=tratto(8)))
-        self.play(LaggedStart(*[Create(b) for b in self.barre], lag_ratio=0.1),
-                  *[f.svg.animate.set_stroke(col.attenuato, opacity=0.85) for f in self.fila.figure[:6]],
-                  run_time=0.6)
-        self.play(*[m.animate.shift(DOWN * px(26))
-                    for m in list(self.fila.figure[:6]) + list(self.barre)], run_time=0.35)
-
-        # beat 1 — GRANDE (metamorfosi): la barratura si disfa a vista, e una figura diventa una tessera in pezzi
-        self.beat(1)
-        self.play(LaggedStart(*[Uncreate(b) for b in reversed(list(self.barre))], lag_ratio=0.08), run_time=0.45)
-        self.remove(self.barre)
-        anims = []
-        for f in self.fila.figure[:6]:
-            t = f.copy().shift(UP * px(26))
-            t.svg.set_stroke(col.accento, opacity=1)
-            anims.append(Transform(f, t))
-        self.play(*anims, run_time=0.35)
-
         fig = self.fila.figure[2]
         self.posto = fig.get_center()
         viagg = fig.copy()
         self.add(viagg)
         centro = np.array([a.centro[0], y_giu(a, 350), 0])
-        self.play(fig.svg.animate.set_stroke(opacity=0),
+        self.play(Transform(self.num, piccolo), fig.svg.animate.set_stroke(opacity=0),
                   viagg.animate(rate_func=rate_functions.ease_in_out_sine).move_to(centro).scale(1.6),
-                  run_time=0.65)
+                  run_time=self.arrotonda(0.6))
         chiusa = cornice(self, 136, 176, colore=col.accento, raggio_px=16).move_to(centro)
-        self.play(FadeTransform(viagg, chiusa), run_time=0.4)
+        self.play(FadeTransform(viagg, chiusa), run_time=self.arrotonda(0.27))
         self.pezzi = VGroup(*[pezzo_compito(self, i) for i in range(5)]).arrange(RIGHT, buff=px(10))
         for p, ang in zip(self.pezzi, FAN_ANGOLI):
             p.rotate(ang * np.pi / 180)
         self.pezzi.move_to(centro)
-        self.play(FadeTransform(chiusa, self.pezzi), run_time=0.65)
         self.esempio = etichetta(testo("esempio", "piede", colore=col.attenuato))
         giu(a, self.esempio, 486, dx_px=300)
-        self.play(FadeIn(self.esempio), run_time=0.25)
-        for k in (1, 3):   # due pezzi **non contigui**, accesi uno alla volta, grandi come gli altri
+        self.play(FadeTransform(chiusa, self.pezzi), FadeIn(self.esempio), run_time=self.arrotonda(0.47),
+                  rate_func=rate_functions.ease_out_cubic)
+        # due pezzi **non contigui**, accesi uno alla volta, grandi come gli altri (⚠️ N)
+        accesi = []
+        for k in (1, 3):
             acceso = pezzo_compito(self, k, colore=col.accento)
-            acceso.rotate(FAN_ANGOLI[k] * np.pi / 180).move_to(self.pezzi[k])
-            self.play(Transform(self.pezzi[k], acceso), run_time=0.3)
-
-        # beat 2 — l'anello attorno ai **soli** pezzi accesi: essendo due e non contigui, sono due anelli
-        self.beat(2)
+            accesi.append(acceso.rotate(FAN_ANGOLI[k] * np.pi / 180).move_to(self.pezzi[k]))
+        self.play(Transform(self.pezzi[1], accesi[0], rate_func=squish_rate_func(smooth, 0.0, 0.5)),
+                  Transform(self.pezzi[3], accesi[1], rate_func=squish_rate_func(smooth, 0.5, 1.0)),
+                  run_time=self.arrotonda(0.47))
+        # ⚠️ R: l'anello attorno ai **soli** due accesi e la pillola «esposto» arrivano in coda a questo beat, sulla
+        # frase che dice la parola, e restano fermi almeno 1 s prima che la tessera si richiuda
         self.anelli = VGroup(*[RoundedRectangle(corner_radius=px(22), width=self.pezzi[k].width + px(26),
                                                 height=self.pezzi[k].height + px(26), stroke_color=col.accento,
                                                 stroke_width=tratto(5), fill_opacity=0).move_to(self.pezzi[k])
@@ -361,44 +417,36 @@ class Scena03(ScenaReel):
         for k in (0, 2, 4):
             s = pezzo_compito(self, k, opacita=0.5)
             spenti.append(s.rotate(FAN_ANGOLI[k] * np.pi / 180).move_to(self.pezzi[k]))
-        self.play(*[Create(an) for an in self.anelli],
-                  *[Transform(self.pezzi[k], s) for k, s in zip((0, 2, 4), spenti)], run_time=0.8)
         self.esposto = Etichetta(self.scena["testo"][0])
         giu(a, self.esposto, 466, dx_px=-280)
-        self.play(self.esposto.entra(), run_time=0.4)
+        self.play(*[Create(an) for an in self.anelli],
+                  *[Transform(self.pezzi[k], s) for k, s in zip((0, 2, 4), spenti)],
+                  FadeIn(self.esposto, scale=0.85), run_time=self.arrotonda(0.47))
+        fermo_da = self.t
 
-        # beat 3 — la tessera si richiude e rientra nella fila; quattro fuori dal conto, i sei tre e tre
-        self.beat(3)
+        # beat 1 — «E di quei sei, metà potrebbe risentirne e metà trarne vantaggio.»: la tessera si richiude e
+        # rientra nella fila; le quattro non esposte vanno al centro, fuori dal conto; i sei si aprono tre e tre
+        self.beat(1)
+        self.attendi_fino(fermo_da + 1.1)
         chiusa2 = cornice(self, 136, 176, colore=col.accento, raggio_px=16).move_to(self.pezzi.get_center())
         self.play(FadeOut(self.anelli), FadeOut(self.esposto), FadeOut(self.esempio),
-                  FadeTransform(self.pezzi, chiusa2), run_time=0.55)
+                  FadeTransform(self.pezzi, chiusa2), run_time=self.arrotonda(0.47))
         tornata = Icona("user", altezza_px=FIG_PX, colore=col.accento).move_to(self.posto)
-        self.play(FadeTransform(chiusa2, tornata), run_time=0.6)
+        self.play(FadeTransform(chiusa2, tornata), run_time=self.arrotonda(0.53))
         self.remove(tornata)
         self.fila.figure[2].svg.set_stroke(col.accento, opacity=1)
 
-        quattro = VGroup(*[self.fila.figure[i].copy() for i in range(6, 10)])
-        quattro.arrange_in_grid(rows=2, cols=2, buff=px(PASSO_PX - FIG_PX))
-        giu(a, quattro, 262)
-        for q in quattro:
-            q.svg.set_stroke(col.attenuato, opacity=0.3)
-        self.play(*[Transform(self.fila.figure[6 + i], q) for i, q in enumerate(quattro)], run_time=0.8)
-
-        g_giu = VGroup(*[self.fila.figure[i].copy() for i in (0, 1, 2)]).arrange(RIGHT, buff=px(PASSO_PX - FIG_PX))
-        g_su = VGroup(*[self.fila.figure[i].copy() for i in (3, 4, 5)]).arrange(RIGHT, buff=px(PASSO_PX - FIG_PX))
-        giu(a, g_giu, 130, dx_px=-250)
-        giu(a, g_su, 130, dx_px=250)
-        for m in g_giu:
-            m.svg.set_stroke(col.secondario, opacity=1)
-        for m in g_su:
-            m.svg.set_stroke(col.terziario, opacity=1)
+        quattro, g_giu, g_su = bersagli_tre_e_tre(self, self.fila)
+        self.play(*[Transform(self.fila.figure[6 + i], q) for i, q in enumerate(quattro)],
+                  run_time=self.arrotonda(0.67))
         self.play(*[Transform(self.fila.figure[i], g_giu[i]) for i in (0, 1, 2)],
-                  *[Transform(self.fila.figure[3 + i], g_su[i]) for i in range(3)], run_time=1.0)
-        y_a, y_b = y_giu(a, 8), y_giu(a, 116)
-        f_giu = freccia_tratteggiata(self, np.array([dx(a, -250), y_a, 0]),
-                                     np.array([dx(a, -250), y_b, 0]), col.secondario)
-        f_su = freccia_tratteggiata(self, np.array([dx(a, 250), y_b, 0]),
-                                    np.array([dx(a, 250), y_a, 0]), col.terziario)
+                  *[Transform(self.fila.figure[3 + i], g_su[i]) for i in range(3)],
+                  run_time=self.arrotonda(0.87), rate_func=rate_functions.ease_in_out_cubic)
+
+        # beat 2 — «Lo dicono loro, non io.»: sopra i due terzetti le frecce tratteggiate («potrebbe»). I tre
+        # sotto la freccia in giù restano accesi, interi e dentro la fila (⚠️ G); il numero resta nello slot
+        self.beat(2)
+        f_giu, f_su = frecce_tre_e_tre(self)
         self.play(FadeIn(f_giu, shift=DOWN * 0.15), FadeIn(f_su, shift=UP * 0.15), run_time=0.7)
 
 
@@ -421,36 +469,42 @@ def pile_due(sc) -> VGroup:
     return VGroup(pila(sc, 46, 13, 56, 32), pila(sc, 41, 29, 50, 29))
 
 
-class Scena05(ScenaReel):
+class Scena06(ScenaReel):
     """La frontiera frastagliata: dentro, chi aveva l'IA fa la barra più alta; fuori, prende la croce.
-    GRANDE (punch) sul beat 4: «Peggio.»"""
+    GRANDE (punch) sul beat 4: «Peggio.» (era la scena 5 della struttura del 2026-09-20)"""
 
     BASE_SU = 191      # base comune delle due barre (px sopra il fondo dell'area): stessa base, da zero
 
     def costruisci(self):
         a, col = self.area.contenuto, self.cfg.palette
-        self.fila = vesti(fila_dieci(accese=6), col.accento, col.attenuato)
-        giu(a, self.fila, FILA_ALTA)
-        self.num6 = numero(self, "6 su 10", "esposti", "Fondo Monetario, 2024")
-        su(a, self.num6, NUM_BASSO)
-        self.add(self.fila, self.num6)
+        # fotogramma 0 già pieno (dopo lo stacco sul filmato della 5): lo stato finale della scena 4
+        self.fila, self.num6, frecce = stato_fine_4(self)
+        self.add(self.fila, self.num6, frecce)
 
-        # beat 0 — le dieci salgono e si attenuano, il numero esce con le sue etichette, lo slot resta vuoto;
-        # al centro si disegna a tratto il bordo frastagliato
-        piccola = vesti(self.fila.copy().scale(0.36), col.accento, col.attenuato, 0.4, 0.28)
+        # beat 0 — le dieci risalgono in una fila piccola in alto e si attenuano (i terzetti tornano al colore dei
+        # sei), frecce e numero escono con le sue etichette, lo slot resta vuoto; al centro si disegna a tratto il
+        # bordo frastagliato
+        piccola = vesti(fila_dieci(accese=6).scale(0.36), col.accento, col.attenuato, 0.4, 0.28)
         giu(a, piccola, 0)
-        self.play(Transform(self.fila, piccola), FadeOut(self.num6, shift=DOWN * 0.2), run_time=0.8)
-        self.bordo = bordo_frastagliato(col.testo, 540, 230, ampiezza_px=20)
+        self.play(Transform(self.fila, piccola), FadeOut(self.num6, shift=DOWN * 0.2), FadeOut(frecce),
+                  run_time=0.8)
+        self.bordo = bordo_largo(col.testo)
         giu(a, self.bordo, 100)
         self.play(Create(self.bordo), run_time=1.15)
 
-        # beat 1 — due mucchi di sagome minuscole, non contabili; sopra uno, la macchina; sopra l'altro, niente
+        # beat 1 — «hanno diviso settecentocinquanta consulenti»: un mucchio solo di sagome minuscole, non
+        # contabili, che **si divide in due**; sopra una metà la macchina, sopra l'altra niente
         self.beat(1)
         self.pile = pile_due(self)
         su(a, self.pile[0], 9, dx_px=-215)
         su(a, self.pile[1], 9, dx_px=-35)
-        self.play(LaggedStart(FadeIn(self.pile[0], scale=0.8), FadeIn(self.pile[1], scale=0.8), lag_ratio=0.4),
-                  run_time=1.0)
+        self.pile[0].shift(RIGHT * px(90))        # il mucchio unico: le due metà partono mescolate al centro
+        self.pile[1].shift(LEFT * px(90))
+        self.play(FadeIn(self.pile, scale=0.85), run_time=0.9)
+        self.attendi_fino(self.inizi_frasi[1] + 1.9)
+        self.play(self.pile[0].animate.shift(LEFT * px(90)),
+                  self.pile[1].animate.shift(RIGHT * px(90)),
+                  run_time=1.0, rate_func=rate_functions.ease_out_cubic)
         self.macchina = Icona("bot", altezza_px=60, colore=col.testo)
         su(a, self.macchina, 110, dx_px=-215)
         self.play(FadeIn(self.macchina, shift=DOWN * 0.15), run_time=0.6)
@@ -458,7 +512,9 @@ class Scena05(ScenaReel):
         # beat 2 — diciotto tessere dentro il bordo; due barre che crescono insieme da zero, stessa base e
         # stessa larghezza; il numero si ancora al **divario** fra le due cime, non alla cima alta
         self.beat(2)
-        self.tessere = VGroup(*[tessera(self, 52, 30, colore=col.secondario) for _ in range(18)])
+        # (le tessere-compito restano neutre: secondario e terziario sono i colori dei **due gruppi**, e un compito
+        #  del colore di un gruppo direbbe una cosa che nessuno ha detto)
+        self.tessere = VGroup(*[tessera(self, 52, 30, colore=col.attenuato) for _ in range(18)])
         self.tessere.arrange_in_grid(rows=3, cols=6, buff=px(6)).move_to(self.bordo)
         self.play(LaggedStart(*[FadeIn(t, scale=0.5) for t in self.tessere], lag_ratio=0.05), run_time=1.0)
         base = a.y0 + px(self.BASE_SU)
@@ -470,14 +526,21 @@ class Scena05(ScenaReel):
             self.barre.add(b)
         self.play(AnimationGroup(*[GrowFromEdge(b, DOWN) for b in self.barre]),
                   run_time=1.1, rate_func=rate_functions.ease_out_cubic)
+        # ⚠️ P: il numero sta nel **divario** fra le due cime, mai sulla cima alta. La graffa unisce i due livelli
+        # e una guida orizzontale, a metà del divario, lo porta fino al numero: si legge «tanto più dell'altra».
         cima_a, cima_b = float(self.barre[0].get_top()[1]), float(self.barre[1].get_top()[1])
-        self.graffa = VMobject(stroke_color=col.attenuato, stroke_width=tratto(3))
-        self.graffa.set_points_as_corners([np.array([dx(a, -170), cima_a, 0]), np.array([dx(a, -125), cima_a, 0]),
-                                           np.array([dx(a, -125), cima_b, 0]), np.array([dx(a, -80), cima_b, 0])])
+        meta = (cima_a + cima_b) / 2
         self.n32 = numero(self, self.scena["testo"][0], "qualità", "Harvard, 2023")
-        self.n32.numero.move_to([dx(a, 240), (cima_a + cima_b) / 2, 0])
+        self.n32.numero.move_to([dx(a, 215), meta, 0])
         self.n32.etich.next_to(self.n32.numero, DOWN, buff=px(18))
-        self.play(Create(self.graffa), FadeIn(self.n32, scale=0.8), run_time=0.8)
+        gancio = VMobject(stroke_color=col.attenuato, stroke_width=tratto(3))
+        gancio.set_points_as_corners([np.array([dx(a, -170), cima_a, 0]), np.array([dx(a, -125), cima_a, 0]),
+                                      np.array([dx(a, -125), cima_b, 0]), np.array([dx(a, -80), cima_b, 0])])
+        guida = Line(np.array([dx(a, -125), meta, 0]),
+                     np.array([float(self.n32.numero.get_left()[0]) - px(20), meta, 0]),
+                     stroke_color=col.attenuato, stroke_width=tratto(3))
+        self.graffa = VGroup(gancio, guida)
+        self.play(Create(gancio), Create(guida), FadeIn(self.n32, scale=0.8), run_time=0.8)
 
         # beat 3 — tessere, barre e il numero con le sue etichette escono **insieme**: nessun numero a schermo.
         # Solo dopo, fuori dal bordo si accende una tessera e sopra di lei pulsa lo stesso «?» della scommessa
@@ -508,12 +571,12 @@ class Scena05(ScenaReel):
 
 
 # ============================================================================================================
-def stato_fine_5(sc) -> tuple[VGroup, VGroup]:
-    """L'ultimo fotogramma della scena 5, ricostruito: la scena 6 parte da lì (filo visivo)."""
+def stato_fine_6(sc) -> tuple[VGroup, VGroup]:
+    """L'ultimo fotogramma della scena 6, ricostruito: la scena 7 parte da lì (filo visivo)."""
     a, col = sc.area.contenuto, sc.cfg.palette
     fila = vesti(fila_dieci(accese=6).scale(0.36), col.accento, col.attenuato, 0.4, 0.28)
     giu(a, fila, 0)
-    bordo = bordo_frastagliato(col.testo, 540, 230, ampiezza_px=20)
+    bordo = bordo_largo(col.testo)
     giu(a, bordo, 100)
     macchina = Icona("bot", altezza_px=60, colore=col.testo)
     su(a, macchina, 110, dx_px=-215)
@@ -532,7 +595,7 @@ def stato_fine_5(sc) -> tuple[VGroup, VGroup]:
 
 
 SCALA_PICCOLO = 0.55          # i pezzi quando sono in mano alla persona o alla macchina
-POS_ICONE = 70                # riga delle due icone (persona e macchina)
+POS_ICONE = 60                # riga delle due icone (persona e macchina): sopra il blocco dei quattro pezzi
 POS_RIGA1, POS_RIGA2 = 206, 366   # le due righe dei pezzi
 
 
@@ -541,51 +604,23 @@ def pezzo_piccolo(sc, i: int, giu_px: float, dx_px: float, colore: str | None = 
     return giu(sc.area.contenuto, p, giu_px, dx_px)
 
 
-def cluster_6(sc) -> VGroup:
-    """La disposizione del beat 2 della scena 6 (persona, macchina, i quattro pezzi, la lente): la scena 7
-    riparte da qui, così la dissolvenza fra le due scene non mostra due stati diversi."""
-    a, col = sc.area.contenuto, sc.cfg.palette
-    persona = giu(a, Icona("user", altezza_px=94, colore=col.testo), POS_ICONE, -220)
-    macchina = giu(a, Icona("bot", altezza_px=94, colore=col.testo), POS_ICONE, 220)
-    pezzi = [pezzo_piccolo(sc, 0, POS_RIGA1, -313, colore=col.accento),
-             pezzo_piccolo(sc, 1, POS_RIGA1, -127),
-             pezzo_piccolo(sc, 2, POS_RIGA2, -220),
-             pezzo_piccolo(sc, 3, POS_RIGA1, 220)]
-    lente = Lente(raggio_px=86, colore=col.testo).move_to(pezzi[0])
-    return VGroup(persona, macchina, *pezzi, lente)
-
-
-def stato_fine_6(sc) -> VGroup:
-    """L'ultimo fotogramma della scena 6, ricostruito per la scena 7."""
-    a, col = sc.area.contenuto, sc.cfg.palette
-    fila = giu(a, vesti(fila_dieci(accese=6).scale(0.36), col.accento, col.attenuato, 1.0, 0.5), 20, -250)
-    bordo = giu(a, bordo_frastagliato(col.testo, 280, 170), 14, 170)
-    sp = Spunta(altezza_px=54).move_to(bordo)
-    cr = Croce(altezza_px=46).move_to([dx(a, 390), bordo.get_center()[1], 0])
-    basso = cluster_6(sc).scale(0.78)
-    su(a, basso, 110)
-    for f in basso:
-        attenua(f, 0.5)
-    decidi = Etichetta("decidi tu").move_to([dx(a, -200), a.y0 + px(48), 0])
-    esempio = etichetta(testo("esempio", "piede", colore=col.attenuato))
-    esempio.move_to([dx(a, 280), a.y0 + px(38), 0])
-    return VGroup(fila, bordo, sp, cr, basso, decidi, esempio)
-
-
-class Scena06(ScenaReel):
+# ============================================================================================================
+class Scena07(ScenaReel):
     """Il resoconto del mese si spezza in quattro: due pezzi alla macchina, due restano a te, e una lente
     ricontrolla. GRANDE (contrasto di scala) sul beat 0: la tessera piccola cresce fino a riempire l'area."""
 
-    POS = {0: (-178, -135), 1: (-178, 135), 2: (178, -135), 3: (178, 135)}   # 0,1 a sinistra · 2,3 a destra
+    # 0,1 a sinistra · 2,3 a destra. Le misure lasciano libera la fascia alta dell'area (giu 0-154), dove
+    # entrano la macchina e la persona: un'icona sopra una carta opaca si legge come un errore.
+    POS = {0: (-167, -122), 1: (-167, 122), 2: (167, -122), 3: (167, 122)}
 
     def costruisci(self):
         a, col = self.area.contenuto, self.cfg.palette
-        vecchio, piccola = stato_fine_5(self)
+        vecchio, piccola = stato_fine_6(self)
         self.add(vecchio, piccola)
 
         # beat 0 — GRANDE (contrasto di scala): la tessera cresce di dieci volte e si spezza in quattro pezzi
-        centro_g = np.array([a.centro[0], y_giu(a, 288), 0])
-        k = 356 / CARTA_W          # i quattro pezzi chiusi tappezzano la carta grande
+        centro_g = np.array([a.centro[0], y_giu(a, 405), 0])
+        k = 291 / CARTA_W          # i quattro pezzi chiusi tappezzano la carta grande
         w, h = px(CARTA_W * k), px(CARTA_H * k)
         grande = cornice(self, CARTA_W * k * 2, CARTA_H * k * 2, colore=col.testo, raggio_px=24).move_to(centro_g)
         self.play(FadeOut(vecchio), piccola.animate.move_to(centro_g), run_time=0.6)
@@ -604,85 +639,78 @@ class Scena06(ScenaReel):
         self.play(LaggedStart(*[Transform(q, f) for q, f in zip(self.pz, finali)], lag_ratio=0.12),
                   run_time=1.2, rate_func=rate_functions.ease_out_cubic)
         self.esempio = etichetta(testo("esempio", "piede", colore=col.attenuato))
-        su(a, self.esempio, 118)
+        su(a, self.esempio, 50)
         self.play(FadeIn(self.esempio), run_time=0.25)
 
         # beat 1 — entra la macchina e i due pezzi che le dai (foglio e scaletta) le scivolano sotto
         self.beat(1)
         self.macchina = giu(a, Icona("bot", altezza_px=94, colore=col.testo), POS_ICONE, 220)
         self.play(FadeIn(self.macchina, shift=DOWN * 0.2), run_time=0.35)
-        self.play(Transform(self.pz[2], pezzo_piccolo(self, 2, POS_RIGA1, 127)),
-                  Transform(self.pz[3], pezzo_piccolo(self, 3, POS_RIGA1, 313)),
+        # i due pezzi si posano sotto di lei **uno sopra l'altro**: se andassero fianco a fianco sulla stessa riga
+        # i loro percorsi si incrocerebbero e per mezzo secondo una carta coprirebbe l'altra
+        self.play(Transform(self.pz[2], pezzo_piccolo(self, 2, POS_RIGA1, 220)),
+                  Transform(self.pz[3], pezzo_piccolo(self, 3, POS_RIGA2, 220)),
                   run_time=1.0, rate_func=rate_functions.ease_in_out_sine)
 
-        # beat 2 — entra la persona, cifre e lampadina si stringono sotto di lei, **solo** il foglio torna
-        # indietro (la scaletta resta alla macchina) e la lente lo percorre e si ferma sulle cifre
+        # beat 2 — «I numeri e la conclusione te li tieni, e la bozza la ricontrolli.» Beat stretto (4 s) che deve
+        # portare anche il richiamo finale, obbligatorio e fermo ≥ 1,5 s (⚠️ S): i quattro spostamenti stanno in
+        # **una** play a finestre che non si accavallano sullo stesso percorso, e la lente fa il tragitto corto.
         self.beat(2)
         self.persona = giu(a, Icona("user", altezza_px=94, colore=col.testo), POS_ICONE, -220)
-        self.play(FadeIn(self.persona, shift=DOWN * 0.2), run_time=0.35)
-        self.play(Transform(self.pz[0], pezzo_piccolo(self, 0, POS_RIGA1, -313)),
-                  Transform(self.pz[1], pezzo_piccolo(self, 1, POS_RIGA1, -127)),
-                  run_time=0.7, rate_func=rate_functions.ease_in_out_sine)
-        self.play(Transform(self.pz[2], pezzo_piccolo(self, 2, POS_RIGA2, -220)),
-                  Transform(self.pz[3], pezzo_piccolo(self, 3, POS_RIGA1, 220)),
-                  run_time=0.7, rate_func=rate_functions.ease_in_out_sine)
         self.decidi = Etichetta(piano(self.scena["testo"][0]))
         giu(a, self.decidi, 524, dx_px=-220)
-        self.play(FadeIn(self.decidi, scale=0.85), run_time=0.3)
         self.lente = Lente(raggio_px=86, colore=col.testo)
-        self.lente.move_to(self.pz[2].get_center() + LEFT * px(70))
-        self.play(self.lente.entra(), run_time=0.35)
-        self.play(self.lente.animate.move_to(self.pz[0]),
-                  Transform(self.pz[0], pezzo_piccolo(self, 0, POS_RIGA1, -313, colore=col.accento)), run_time=0.7)
+        self.lente.move_to(pezzo_piccolo(self, 2, POS_RIGA1, -127))
 
-        # beat 3 — tutto si stringe in basso e si attenua; tornano la fila piccola e il bordo, con la spunta
-        # dentro e la croce fuori
-        self.beat(3)
+        def fin(a0: float, a1: float, f=rate_functions.ease_in_out_sine):
+            return squish_rate_func(f, a0, a1)
+
+        # cifre e lampadina si stringono sotto la persona insieme (percorsi separati: una resta in alto e va a
+        # sinistra, l'altra resta in basso); poi il **solo** foglio torna indietro lungo la riga alta, e la scaletta
+        # sale al posto che il foglio ha liberato sotto la macchina, dove resta
+        self.play(FadeIn(self.persona, shift=DOWN * 0.2, rate_func=fin(0.0, 0.3)),
+                  Transform(self.pz[0], pezzo_piccolo(self, 0, POS_RIGA1, -313), rate_func=fin(0.0, 0.4)),
+                  Transform(self.pz[1], pezzo_piccolo(self, 1, POS_RIGA2, -220), rate_func=fin(0.0, 0.4)),
+                  Transform(self.pz[2], pezzo_piccolo(self, 2, POS_RIGA1, -127), rate_func=fin(0.34, 0.74)),
+                  Transform(self.pz[3], pezzo_piccolo(self, 3, POS_RIGA1, 220), rate_func=fin(0.6, 0.92)),
+                  FadeIn(self.lente, scale=0.8, rate_func=fin(0.78, 1.0)),
+                  FadeIn(self.decidi, scale=0.85, rate_func=fin(0.78, 1.0)),
+                  run_time=self.arrotonda(1.1))
+        # la lente parte dal foglio che è tornato e si ferma sul blocco di cifre, che si accende
+        self.play(self.lente.animate.move_to(pezzo_piccolo(self, 0, POS_RIGA1, -313)),
+                  Transform(self.pz[0], pezzo_piccolo(self, 0, POS_RIGA1, -313, colore=col.accento)),
+                  run_time=self.arrotonda(0.47))
+
+        # in coda, il richiamo: tutto si stringe in basso e si attenua; in alto tornano le dieci con le sei accese
+        # (nessuna spenta, nessuna cambiata di colore) e, ben staccato da loro, il bordo piccolo con la spunta
+        # dentro e la croce fuori, alla stessa misura. È l'ultima volta che si vedono i sei.
         gruppo = VGroup(self.persona, self.macchina, *self.pz, self.lente)
         finale = gruppo.copy().scale(0.78)
         su(a, finale, 110)
         for f in finale:
             attenua(f, 0.5)
-        self.play(*[Transform(m, f) for m, f in zip(gruppo, finale)],
-                  self.decidi.animate.move_to([dx(a, -200), a.y0 + px(48), 0]),
-                  self.esempio.animate.move_to([dx(a, 280), a.y0 + px(38), 0]), run_time=0.8)
-        fila = giu(a, vesti(fila_dieci(accese=6).scale(0.36), col.accento, col.attenuato, 1.0, 0.5), 20, -250)
-        bordo = giu(a, bordo_frastagliato(col.testo, 280, 170), 14, 170)
-        self.play(FadeIn(fila, shift=DOWN * 0.15), Create(bordo), run_time=0.9)
-        sp = Spunta(altezza_px=54).move_to(bordo)
-        cr = Croce(altezza_px=46).move_to([dx(a, 390), bordo.get_center()[1], 0])
-        self.play(AnimationGroup(sp.entra(), cr.entra(), lag_ratio=0.35), run_time=0.85)
+        fila, bordo, sp, cr = richiamo(self)
+        self.play(*[Transform(m, f, rate_func=fin(0.0, 0.55)) for m, f in zip(gruppo, finale)],
+                  self.decidi.animate(rate_func=fin(0.0, 0.55)).move_to([dx(a, -200), a.y0 + px(48), 0]),
+                  self.esempio.animate(rate_func=fin(0.0, 0.55)).move_to([dx(a, 280), a.y0 + px(38), 0]),
+                  FadeIn(fila, shift=DOWN * 0.15, rate_func=fin(0.3, 0.8)),
+                  Create(bordo, rate_func=fin(0.35, 0.85)),
+                  FadeIn(sp, scale=0.7, rate_func=fin(0.72, 1.0)),
+                  FadeIn(cr, scale=0.7, rate_func=fin(0.72, 1.0)),
+                  run_time=self.arrotonda(0.93))
+
+
+def richiamo(sc) -> tuple[Fila, VMobject, Spunta, Croce]:
+    """L'ultima figura animata del reel (⚠️ S): la fila piccola a sinistra, il bordo piccolo a destra con la spunta
+    dentro e la croce fuori. Fra la fila e la spunta ci sono ~320 px e il bordo, così la croce non sta mai vicino ai
+    sei (direbbe «persi» subito prima di «Quei sei restano esposti»). Spunta e croce hanno la stessa misura."""
+    a, col = sc.area.contenuto, sc.cfg.palette
+    fila = giu(a, vesti(fila_dieci(accese=6).scale(0.36), col.accento, col.attenuato, 1.0, 0.5), 20, -290)
+    bordo = giu(a, bordo_largo(col.testo, 280), 14, 150)
+    sp = Spunta(altezza_px=52).move_to(bordo)
+    cr = Croce(altezza_px=52).move_to([dx(a, 392), bordo.get_center()[1], 0])
+    return fila, bordo, sp, cr
 
 
 # ============================================================================================================
-class Scena07(ScenaReel):
-    """Chiusura: quei sei restano esposti, e una di loro fa un passo avanti verso il bordo. Non si distingue in
-    niente dalle altre cinque (⚠️ J). GRANDE (tipografia cinetica) sul beat 1."""
-
-    def costruisci(self):
-        a, col = self.area.contenuto, self.cfg.palette
-        # continuità: l'ultimo fotogramma della scena 6, ricostruito pezzo per pezzo
-        vecchio = stato_fine_6(self)
-        self.add(vecchio)
-
-        # beat 0 — esce tutto, e le dieci figure tornano nella posizione e nella scala della scena 2
-        self.fila = vesti(fila_dieci(accese=6), col.accento, col.attenuato)
-        giu(a, self.fila, FILA_CENTRO)
-        self.play(FadeOut(vecchio[1:]), FadeOut(vecchio[0], scale=0.8), run_time=0.5)
-        self.play(FadeIn(self.fila, scale=0.9), run_time=0.8, rate_func=rimbalzo(0.05))
-
-        # beat 1 — GRANDE (tipografia cinetica): una si stacca e fa un passo avanti verso il bordo, che rientra
-        # piccolo; la fila resta dietro, attenuata, e il messaggio arriva grande
-        self.beat(1)
-        piccola = vesti(self.fila.copy().scale(0.62), col.accento, col.attenuato, 0.5, 0.3)
-        giu(a, piccola, 16, dx_px=-190)
-        bordo = bordo_frastagliato(col.testo, 190, 120)
-        giu(a, bordo, 10, dx_px=250)
-        self.play(Transform(self.fila, piccola), FadeIn(bordo), run_time=0.7)
-        self.play(self.fila.figure[4].animate.shift(RIGHT * px(22) + DOWN * px(30)), run_time=0.4)
-        self.msg = Messaggio(self.scena["messaggio"], larghezza_px=880)
-        giu(a, self.msg, 200)
-        self.play(self.msg.per_righe(lag=0.22), run_time=1.1)
-        self.cta = Etichetta("Mandalo a chi ha paura\nche l'IA gli tolga il lavoro")
-        su(a, self.cta, 14)
-        self.play(self.cta.entra(), run_time=0.5)
+# Scena 1 e Scena 9: il presentatore a tutto schermo con le sole caption (2026-09-21), nessuna classe.

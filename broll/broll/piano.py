@@ -27,11 +27,11 @@ VERSIONE = 1
 REGISTRI = ("animazione", "filmato", "immagini")
 STATI_SCENA = ("da-scegliere", "scelto", "reso")
 # i tipi di scena che possono andare a filmato. La chiusura è la CTA, e una scena [schermo] ha già il suo
-# materiale nella finestra 900x980. L'hook sì, ed è il primo candidato: i primi 5-10 secondi devono
-# catturare l'attenzione, quindi il presentatore pone il problema nel riquadro e dietro c'è una clip che
-# lo richiama; il TITOLO non va a schermo, vive in copertina (decisione di Flavio, 2026-09-19). Resta
-# animato l'hook il cui brief parla del titolo: lì c'è una tipografia da disegnare, non un'immagine.
-AMMESSE = ("hook", "spiegazione")
+# materiale nella finestra 900x980. **Nemmeno l'hook, dal 2026-09-21**: l'apertura è il presentatore a
+# tutta tela che pone il problema guardando in camera (decisione di Flavio, che supera quella del
+# 2026-09-19 sull'hook a filmato). I due estremi del reel sono suoi e non si propongono mai; `_proponi`
+# lavora sulle scene in mezzo, che sono anche quelle su cui si misura l'equilibrio fra i due registri.
+AMMESSE = ("spiegazione",)
 
 # Quello che si spiega disegnando: meccanismi, quantità, e le figure della libreria. Se una scena nomina
 # una di queste cose, il filmato non la può raccontare e la scena resta animata.
@@ -60,7 +60,10 @@ def _pattern(marcatori: tuple[str, ...]) -> list[str]:
     return [rf"\b{re.escape(m[:-1])}" if m.endswith("-") else rf"\b{re.escape(m)}\b" for m in marcatori]
 
 
-RE_TECNICA = re.compile("|".join(_pattern(TECNICI) + _pattern(NUMERI) + list(_COMPOSTI)))
+RE_TECNICA = re.compile("|".join(_pattern(TECNICI)))
+# Le quantità dette a lettere contano solo dove chi guarda le sente o le legge (VOCE e TESTO): nel brief di un
+# filmato descrivono l'immagine, non un numero da mostrare («si ferma a metà pagina», 2026-09-21, scrivere-con-ia).
+RE_QUANTITA = re.compile("|".join(_pattern(NUMERI) + list(_COMPOSTI)))
 
 
 class PianoMancante(RuntimeError):
@@ -187,7 +190,8 @@ def _durate_dal_report(slug: str) -> dict[int, dict]:
             continue
         return {int(e["scena"]): {"durata_s": float(e["durata_s"]),
                                   "inizi_frasi_s": list(e.get("inizi_frasi_s") or []),
-                                  "origine_tempi": e.get("origine_tempi") or ""}
+                                  "origine_tempi": e.get("origine_tempi") or "",
+                                  "parole_voce": e.get("parole_voce")}
                 for e in dati.get("elementi", []) if e.get("scena")}
     return {}
 
@@ -207,23 +211,11 @@ def _tecnica(s: Scena) -> bool:
 def _marcatori(s: Scena) -> list[str]:
     """Cosa, nella scena, dice che c'è da disegnare. Vuoto = scena d'attenzione."""
     testo = " ".join(s.animazione + s.voce + s.testo).lower()
-    trovati = sorted(set(RE_TECNICA.findall(testo)))
+    detto = " ".join(s.voce + s.testo).lower()
+    trovati = sorted(set(RE_TECNICA.findall(testo)) | set(RE_QUANTITA.findall(detto)))
     if any(c.isdigit() for c in RE_TEMPI.sub(" ", testo)):
         trovati.append("una quantità")
     return trovati
-
-
-RE_TIPOGRAFIA = re.compile(r"\b(sotto)?titolo\b")
-
-
-def _hook_filmabile(s: Scena) -> bool:
-    """Il brief dell'hook descrive un'immagine da cercare, o un titolo da animare?
-
-    Senza brief non c'è niente da cercare; con un brief che parla del titolo c'è una tipografia da
-    disegnare. In tutti e due i casi l'hook resta a Manim, che è la scelta sicura.
-    """
-    brief = " ".join(s.animazione).lower()
-    return bool(brief) and not RE_TIPOGRAFIA.search(brief)
 
 
 def _proponi(scene: list[Scena]) -> set[int]:
@@ -232,9 +224,8 @@ def _proponi(scene: list[Scena]) -> set[int]:
     È l'euristica della M1 e serve a far partire il piano. Dalla M5 la proposta la fa l'agente, che legge
     la scena invece di cercarci dentro delle parole; questa resta il ripiego quando l'agente non c'è.
     """
-    ammesse = [s.n for s in scene if s.tipo in AMMESSE and not _tecnica(s)
-               and (s.tipo != "hook" or _hook_filmabile(s))]
-    tetto = len(scene) // 2
+    ammesse = [s.n for s in scene if s.tipo in AMMESSE and not _tecnica(s)]
+    tetto = len([s for s in scene if s.tipo not in ("hook", "chiusura")]) // 2
     scelte: list[int] = []
     for n in ammesse:
         if len(scelte) >= tetto:
@@ -257,6 +248,10 @@ def da_sceneggiatura(md: Path, cfg: Config | None = None) -> tuple[Piano, list[D
     scene: list[ScenaBroll] = []
     for s in r.scene:
         d = durate.get(s.n)
+        # il report vale solo per una scena che dice ancora le stesse cose: dopo una ristrutturazione la «scena 3»
+        # del montaggio di prima è un'altra scena (2026-09-21, ia-e-lavoro da 7 a 9 scene), e la sua durata no
+        if d and (d.get("parole_voce") != s.parole_voce or len(d["inizi_frasi_s"]) != len(s.voce)):
+            d = None
         sb = ScenaBroll(n=s.n, tipo=s.tipo,
                         durata_s=round(d["durata_s"] if d else durata_stimata_s(s, cfg), 2),
                         origine_durata="report" if d else "stima",
@@ -311,9 +306,17 @@ def controlla(p: Piano) -> list[Diagnostica]:
     filmati = [s.n for s in p.filmati]
     if not filmati:
         d.append(avviso("nessuna scena a filmato: il piano non cambia niente rispetto a oggi"))
-    if len(filmati) > len(p.scene) // 2:
-        d.append(avviso(f"{len(filmati)} scene su {len(p.scene)} a filmato: più della metà del reel è materiale "
-                        "esterno, è uno stock video e non un reel spiegato"))
+    # L'equilibrio fra i due registri (regola del presentatore, 2026-09-21): metà delle scene a filmato, ± una.
+    corpo = [s for s in p.scene if s.registro == "filmato" or s.tipo not in ("hook", "chiusura")]
+    meta = len(corpo) / 2
+    if len(filmati) > meta + 1:
+        d.append(avviso(f"{len(filmati)} scene su {len(corpo)} a filmato (senza apertura e chiusura): troppo "
+                        "materiale esterno (metà ± una), è uno stock video e non un reel spiegato"))
+    elif filmati and len(filmati) < meta - 1:
+        d.append(avviso(f"{len(filmati)} scene su {len(corpo)} a filmato (senza apertura e chiusura): troppo poche "
+                        "(metà ± una). Le scene con "
+                        "numeri, conti o termini tecnici restano a Manim: se ne restano troppe, la sceneggiatura non "
+                        "sta dividendo i registri (voce generica sul filmato, spiegazione nelle animazioni)"))
     for a, b in zip(filmati, filmati[1:]):
         if b == a + 1:
             d.append(avviso(f"scene {a} e {b} entrambe a filmato: l'alternanza si vede solo se si alterna", scena=b))

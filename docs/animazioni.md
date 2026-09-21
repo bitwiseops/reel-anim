@@ -231,7 +231,29 @@ Regole:
 - **Allineamento a sinistra** per il testo che si legge; centrato solo per un titolo isolato.
 - **Se non ci sta**, riduci il contenuto (meno parole, meno voci); scalare il gruppo intero è l'ultima risorsa e
   poi va ricontrollato il corpo minimo di 36 px.
-- **Hook**: niente riquadro, l'area contenuto è più alta; il titolo è anche la copertina (l'ultimo fotogramma dell'hook: deve essere completo) e il primo
+- **Apertura e chiusura a volto pieno** (dal 2026-09-21, `RIQUADRO: pieno` è il loro default): lì la tela è il
+  presentatore, che guarda in camera. Regole:
+  - **l'apertura non ha classe Manim**: è lui e basta, con le caption. Non scriverla (il montaggio la compone senza
+    grafica); il `TITOLO:` va solo in copertina.
+  - **nemmeno la chiusura ha classe Manim** (decisione del presentatore dopo la prima anteprima, 2026-09-21): è lui
+    che dice la conclusione, con le caption, e nient'altro — niente MESSAGGIO né CTA a schermo. Non scriverla.
+  - Le regole qui sotto valgono solo se un giorno una scena a volto pieno torna ad avere grafica (per ora nessuna):
+    la classe si renderizza **su fondo trasparente** sopra il video; mai un fondo pieno, mai un rettangolo a tutta
+    tela, mai il filo visivo delle scene prima: coprirebbero la faccia.
+  - **il testo sopra un video va su un appoggio**: un pannello scuro semitrasparente (`sfondo` a opacità ~0,75,
+    angoli arrotondati, tinta unita: niente gradienti) sotto al `Messaggio` e alla CTA. Sopra una faccia e uno
+    sfondo di casa qualunque il bianco da solo non ha contrasto garantito — sul segnaposto azzurro di `--prova` si
+    legge a fatica già adesso.
+  - **la faccia sta al centro**: tieni il messaggio in alto, largo e corto, e non farlo scendere sul volto. In
+    numeri (2026-09-21, prima chiusura montata): l'appoggio **finisce entro i 700 px della tela** (dall'alto); la
+    «metà alta» dell'area contenuto arriva a 788 px e sul segnaposto scende già sulla fronte. Se non ci sta, si
+    rimpicciolisce il messaggio (0,7 = 59 px, mai sotto i 36 px) invece di abbassarlo.
+  - l'area contenuto a volto pieno è più alta di quella delle scene col riquadro (manca la fascia del riquadro):
+    **non ricostruire lì l'ultimo fotogramma della scena prima**, perché non c'è continuità da tenere — l'arrivo
+    sulla faccia è uno stacco, ed è voluto.
+  - Nel `--prova` al posto del presentatore c'è l'avatar segnaposto a tutto schermo: la composizione si giudica lì.
+- **Hook animato** (solo se dichiarato con `RIQUADRO: no`, non è più lo standard): niente riquadro, l'area contenuto
+  è più alta; il titolo è anche la copertina (l'ultimo fotogramma dell'hook: deve essere completo) e il primo
   fotogramma non è mai vuoto (controllo `fotogramma-vuoto`).
 - **Scene `schermo`**: il b-roll sta in `self.area.schermo` (lo mette sotto il montaggio); disegna la
   `CorniceSchermo(self.area.schermo)` e le etichette sopra o accanto. Per indicare un punto dell'immagine usa
@@ -445,6 +467,16 @@ restare nello stesso posto della lista (è così che `Classifica.aggiorna` fa sc
   diventa **righe-sagoma** (barrette larghe come le righe vere), oppure si va in zoom sul frammento col resto a zero,
   o la carta si accorcia. Attenuare a grigio non basta. A ogni fine beat: più di una ventina di parole leggibili,
   esclusi titoli ed etichette, è troppo.
+
+- **Scene con aree diverse** (2026-09-21, `ia-e-lavoro`): quando due scene hanno aree contenuto diverse — una ha la
+  fascia caption e l'altra no, una ha il riquadro e l'altra no — ricostruire l'ultimo fotogramma della prima dentro
+  la seconda con `self.area.contenuto` sposta tutto ciò che è ancorato al bordo (lì erano 224 px). Rimedio:
+  ricostruisci con l'area della scena da cui arrivi, e verifica a pixel l'ultimo fotogramma della prima contro il
+  primo della seconda (lì: 59 px su 518.400, solo antialias). Nessun controllo lo vede. Il caso che l'ha fatto
+  scoprire — la chiusura senza fascia caption — non c'è più: dalla sera stessa la chiusura è **a volto pieno** (§5),
+  ha le caption e non riprende la scena prima.
+- **`set_opacity` su un'icona SVG** le accende un riempimento fuori palette e fa scattare il controllo `colore`: per
+  attenuare abbassa l'intensità del colore, non l'opacità.
 
 ## 11. Brief ANIMAZIONE: male e bene
 

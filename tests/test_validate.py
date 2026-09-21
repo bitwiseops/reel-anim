@@ -87,7 +87,10 @@ def test_controlli_di_linguaggio():
     scene[-1] = ("## Scena 6 [chiusura]\nMESSAGGIO: " + " ".join(["parola"] * 13) + "\nCTA: salva\nVOCE: " +
                  " ".join(["x"] * 26) + "\nANIMAZIONE: fine")
     m = _msg(_check(scene))
-    assert "l'hook non parla a chi guarda" in m and "MESSAGGIO di 13 parole" in m and "VOCE della chiusura di 26 parole" in m
+    assert "l'hook non parla a chi guarda" in m and "VOCE della chiusura di 26 parole" in m
+    assert "MESSAGGIO di 13 parole" not in m          # a volto pieno il MESSAGGIO non va a schermo: è per il post
+    scene[-1] += "\nRIQUADRO: si"                     # chiusura riportata al riquadro: il messaggio torna grande
+    assert "MESSAGGIO di 13 parole" in _msg(_check(scene))
     for voce in ("L'IA scrive quello che ti aspetti?", "Hai mai scritto «sii originale»", "Finisci tu questa frase"):
         scene[0] = f"## Scena 1 [hook]\nTITOLO: T\nVOCE: {voce}"
         assert "l'hook non parla" not in _msg(_check(scene)), voce
@@ -136,12 +139,26 @@ def test_broll_alternanza():
     scene = _base()
     scene[1], scene[3] = _broll(2), _broll(4)
     m = _msg(_check(scene))
-    assert "entrambe a filmato" not in m and "più della metà" not in m     # 2 su 6, alternate: va bene
+    assert "entrambe a filmato" not in m and "scene a filmato:" not in m   # 2 su 6, alternate: va bene
     scene[2] = _broll(3)
     m = _msg(_check(scene))
     assert "scene 2 e 3 entrambe a filmato" in m and "scene 3 e 4 entrambe a filmato" in m
-    scene[4] = _broll(5)
-    assert "4 scene a filmato su 6: più della metà" in _msg(_check(scene))
+
+
+def test_equilibrio_fra_i_due_registri():
+    """Regola del presentatore (2026-09-21): metà delle scene a filmato, ± una."""
+    # 8 scene: hook e chiusura sono del presentatore, il corpo è di 6 e l'equilibrio si misura lì
+    scene = _base(6)
+    scene[1], scene[3], scene[5] = _broll(2), _broll(4), _broll(6)
+    assert "scene a filmato:" not in _msg(_check(scene))                   # 3 su 6: metà esatta
+    scene = _base(6)
+    scene[1] = _broll(2)
+    assert "scene a filmato: 1 su 6 (senza apertura e chiusura) — troppo poche" in _msg(_check(scene))
+    scene = _base(6)
+    for k in range(1, 7):
+        scene[k] = _broll(k + 1)
+    assert "scene a filmato: 6 su 6 (senza apertura e chiusura) — troppo materiale esterno" in _msg(_check(scene))
+    assert "scene a filmato:" not in _msg(_check(_base()))                 # prima di `broll scrivi` non si conta
 
 
 def test_hook_a_filmato_il_titolo_resta_per_la_copertina():
@@ -158,6 +175,12 @@ def test_hook_a_filmato_il_titolo_resta_per_la_copertina():
     assert "resta una clip con una voce sopra" in _msg(_check(scene))
 
 
-def test_hook_animato_resta_com_era():
+def test_i_due_estremi_sono_del_presentatore():
+    """Dal 2026-09-21 apertura e chiusura sono lui a tutta tela, con le caption del parlato."""
     r, _ = parse_testo(FM + "\n\n".join(_base()))
-    assert not r.hook.a_filmato and r.hook.riquadro_effettivo() == "no"
+    assert not r.hook.a_filmato and r.hook.riquadro_effettivo() == "pieno" and r.hook.a_volto_pieno
+    assert r.chiusura.a_volto_pieno and r.chiusura.caption_effettiva() == "si"
+    scene = _base()
+    scene[0] += "\nRIQUADRO: si"                       # si torna al riquadro dichiarandolo
+    r2, _ = parse_testo(FM + "\n\n".join(scene))
+    assert not r2.hook.a_volto_pieno and r2.hook.riquadro_effettivo() == "si"

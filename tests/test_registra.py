@@ -370,3 +370,15 @@ def test_app_presa_completa_senza_webcam(tmp_path):
         assert abs(pr["durata_s"] - d) < 0.05 and pr["audio"] == "pcm_s16le" and pr["larghezza"] == app.inq["lato"]
     assert json.loads((media / "scena-02.json").read_text())["inizi_frasi_s"] == [0.0, 1.0]
     assert esito["anteprima_viva"]     # dopo la presa riparte l'anteprima
+
+
+def test_a_volto_pieno_la_clip_tiene_il_fotogramma_intero():
+    """Apertura e chiusura (dal 2026-09-21): la tela è il presentatore, niente quadrato dell'inquadratura."""
+    from dataclasses import replace
+    tl = _timeline()
+    opz = reg.opzioni(carica())
+    p = reg.nuova_presa("presa-01", 1, -2.0, 90, 0.0, opz, 22.0, "abc", inquadratura={"x": 0, "y": 420, "lato": 1080})
+    normale = reg.comando_taglio(p, tl.scene[0], Path("/tmp/p.mov"), Path("/tmp/a.mov"), opz, Path("/tmp/p.wav"))
+    pieno = reg.comando_taglio(p, replace(tl.scene[0], riquadro="pieno"), Path("/tmp/p.mov"), Path("/tmp/b.mov"), opz,
+                               Path("/tmp/p.wav"))
+    assert normale[normale.index("-vf") + 1] == "crop=1080:1080:0:420" and "-vf" not in pieno

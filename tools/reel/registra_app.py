@@ -14,14 +14,14 @@ from pathlib import Path
 from tkinter import font as tkfont
 from tkinter import ttk
 
-from PIL import Image, ImageTk
+from PIL import Image, ImageOps, ImageTk
 
 from ..anim.config import Config
 from . import clip as clipmod
 from .cattura import Cattura, Microfono, Riproduttore
 from .compositing import maschera_riquadro
 from .ffmpeg import ffprobe
-from .model import Reel
+from .model import PIENO, Reel
 from .registra import (PRESE, Karaoke, Presa, Timeline, carica_inquadratura, comando_cattura, comando_riproduzione,
                        dimensioni_pipe, karaoke, limita_inquadratura, nuova_presa, prossima_presa, riquadro_in_scala,
                        salva_dispositivi_scelti, salva_inquadratura, snap_fotogramma, spezza)
@@ -516,6 +516,9 @@ class AppRegistra:
 
     def _componi(self, reel_rgb: bytes, webcam_rgb: bytes | None, scena) -> Image.Image:
         im = Image.frombytes("RGB", self.dim_reel, reel_rgb)
+        if webcam_rgb and scena and scena.riquadro == PIENO:
+            # a volto pieno la tela è lui: la webcam intera, riempita e ritagliata al centro, come farà il montaggio
+            return ImageOps.fit(Image.frombytes("RGB", self.dim_webcam, webcam_rgb), self.dim_reel, Image.BILINEAR)
         if webcam_rgb and scena and scena.riquadro != "no":
             x, y, lato = riquadro_in_scala(self.cfg, scena.riquadro, self.scala)
             w = Image.frombytes("RGB", self.dim_webcam, webcam_rgb)

@@ -130,6 +130,8 @@ def anima(r: Reel, diag: list[Diagnostica], out: Path, qualita: str = "l", solo:
         try:
             cls = classe_scena(mod, s.n)
         except AnimazioneMancante as e:
+            if s.a_volto_pieno:    # l'apertura a volto pieno è lui e basta: non c'è niente da animare (2026-09-21)
+                continue
             diag.append(errore(str(e), s.riga, s.n))
             info.append({**base, "errore": str(e), "traceback": ""})
             continue
@@ -254,20 +256,28 @@ def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None 
         try:
             cls = classe_scena(mod, s.n)
         except AnimazioneMancante as e:
-            diag.append(errore(str(e), s.riga, s.n))
-            continue
+            # una scena a volto pieno può non avere grafica: è lui e basta (l'apertura, dal 2026-09-21)
+            if not s.a_volto_pieno:
+                diag.append(errore(str(e), s.riga, s.n))
+                continue
+            cls = None
         schermo = (clipmod.cartella(r.slug) / s.schermo) if s.schermo else None
+        riq = s.riquadro_effettivo()
+        # la grafica va sopra un video (b-roll nella finestra, o il presentatore a tutta tela): serve l'alpha
+        sopra_video = bool(schermo) or s.a_volto_pieno
         dati = dati_scena(s, t)
-        chiave = f"{firma}:{cls.__name__}:{t.durata_s}:{qualita}:{bool(schermo)}:{json.dumps(dati, sort_keys=True)}"
+        chiave = f"{firma}:{cls.__name__ if cls else '-'}:{t.durata_s}:{qualita}:{sopra_video}:{json.dumps(dati, sort_keys=True)}"
         voce_cache = cache.get(f"{s.n:02d}")
         t1 = time.time()
-        if (isinstance(voce_cache, dict) and voce_cache.get("chiave") == chiave and voce_cache.get("grafica")
+        if cls is None:
+            grafica, avvisi_tempi, controlli = None, [], []
+        elif (isinstance(voce_cache, dict) and voce_cache.get("chiave") == chiave and voce_cache.get("grafica")
                 and (out / voce_cache["grafica"]).exists()):
             grafica = out / voce_cache["grafica"]
             avvisi_tempi, controlli = list(voce_cache.get("avvisi", [])), list(voce_cache.get("controlli", []))
         else:
             try:
-                res = renderizza(cls, t.durata_s, dati, out / "_manim", f"scena-{s.n:02d}", qualita, trasparente=bool(schermo), cfg=cfg)
+                res = renderizza(cls, t.durata_s, dati, out / "_manim", f"scena-{s.n:02d}", qualita, trasparente=sopra_video, cfg=cfg)
             except Exception as e:  # noqa: BLE001 — l'errore di una scena non deve fermare le altre
                 diag.append(errore(f"render fallito: {type(e).__name__}: {e}", s.riga, s.n))
                 continue
@@ -280,7 +290,6 @@ def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None 
         tm = time.time() - t1
         tempi["manim"] += tm
         t2 = time.time()
-        riq = s.riquadro_effettivo()
         c = clipmod.trova(r.slug, s.n) if t.origine == "clip" else None
         cap, cap_xy, cap_report = _caption(r, s, t, out, cfg)
         src = compositing.Sorgenti(grafica=grafica, durata_s=t.durata_s, riquadro=riq, video_presentatore=c,
@@ -296,7 +305,8 @@ def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None 
                          "origine_durata": t.origine, "inizi_frasi_s": t.inizi_frasi_s, "origine_tempi": t.origine_tempi,
                          "avvisi_tempi": avvisi_tempi, "controlli": controlli, "riquadro": riq, "schermo": s.schermo,
                          "caption": cap_report,
-                         "filmstrip": str(fs.relative_to(out)), "grafica": str(grafica.relative_to(out)),
+                         "filmstrip": str(fs.relative_to(out)),
+                         "grafica": str(grafica.relative_to(out)) if grafica else "",
                          "video": str(dest.relative_to(out)), "tempo_manim_s": round(tm, 1), "tempo_ffmpeg_s": round(tc, 1)})
         pezzi.append((dest, t.durata_s))
 
@@ -321,7 +331,8 @@ def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None 
             e["t_fine_s"] = round(e["t_inizio_s"] + e["durata_s"], 2)
         fs = fotogrammi.filmstrip(finale, fotogrammi.tempi_campione(durata_tot, 10), out / "fotogrammi" / "reel-filmstrip.png", 220)
         hook = elementi[0]
-        s_hook = r.hook if r.hook is not None and hook.get("filmato") else None   # a filmato il titolo non è a schermo
+        # a filmato e a volto pieno il titolo non è a schermo: la copertina ce lo mette sopra (vive solo lì)
+        s_hook = r.hook if r.hook is not None and (hook.get("filmato") or r.hook.a_volto_pieno) else None
         video_cop = _hook_senza_caption(r, hook, out, avatar, args, cfg)
         cop, cop45 = fotogrammi.cover(video_cop, hook["durata_s"], out, cfg,
                                       titolo=s_hook.titolo if s_hook else None,
@@ -347,7 +358,9 @@ def _hook_senza_caption(r: Reel, hook: dict, out: Path, avatar: Path, args, cfg:
         return video
     riq = s.riquadro_effettivo()
     c = clipmod.trova(r.slug, s.n) if hook.get("origine_durata") == "clip" else None
-    sorgente = (clipmod.cartella(r.slug) / s.schermo) if s.a_filmato else (out / hook["grafica"])
+    # l'apertura a volto pieno senza classe non ha grafica: la copertina è lui, col titolo che ci mette sopra `copertina`
+    sorgente = ((clipmod.cartella(r.slug) / s.schermo) if s.a_filmato
+                else (out / hook["grafica"]) if hook.get("grafica") else None)
     src = compositing.Sorgenti(grafica=sorgente, durata_s=hook["durata_s"], riquadro=riq, video_presentatore=c,
                                avatar=avatar if (c is None and riq != "no" and avatar.exists()) else None,
                                filmato=bool(s.a_filmato))

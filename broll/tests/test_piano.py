@@ -31,7 +31,22 @@ def test_controlla_segnala_filmati_adiacenti():
     ])
     msg = " ".join(str(d) for d in controlla(p))
     assert "entrambe a filmato" in msg
-    assert "più della metà" in msg
+
+
+def _scene_broll(n: int, filmati: set[int]) -> list[ScenaBroll]:
+    return [ScenaBroll(n=k, tipo="spiegazione", durata_s=5, origine_durata="stima",
+                       registro="filmato" if k in filmati else "animazione",
+                       query=["a"] if k in filmati else []) for k in range(1, n + 1)]
+
+
+def test_controlla_equilibrio_fra_i_due_registri():
+    """Regola del presentatore (2026-09-21): metà delle scene a filmato, ± una."""
+    in_equilibrio = Piano(slug="x", sorgente="", hash_md="", scene=_scene_broll(8, {2, 4, 6, 8}))
+    assert "metà ± una" not in " ".join(str(d) for d in controlla(in_equilibrio))
+    troppi = Piano(slug="x", sorgente="", hash_md="", scene=_scene_broll(8, {1, 2, 3, 4, 5, 6}))
+    assert "troppo materiale esterno" in " ".join(str(d) for d in controlla(troppi))
+    pochi = Piano(slug="x", sorgente="", hash_md="", scene=_scene_broll(8, {2}))
+    assert "troppo poche" in " ".join(str(d) for d in controlla(pochi))
 
 
 def test_controlla_senza_filmati():
@@ -115,10 +130,37 @@ def test_i_tempi_dei_brief_non_sono_quantita():
     assert _marcatori(quantita) == ["una quantità"]
 
 
-def test_proponi_l_hook_a_filmato_se_il_brief_descrive_un_immagine():
-    """I primi secondi: il presentatore pone il problema, dietro una clip. Il titolo vive in copertina."""
+def test_l_hook_non_va_mai_a_filmato():
+    """Dal 2026-09-21 l'apertura è il presentatore a tutta tela: non si propone, nemmeno con un brief filmabile."""
     scene = _scene(["hook", "spiegazione", "spiegazione", "spiegazione", "spiegazione", "chiusura"])
     scene[0].animazione = ["Una persona apre la posta il lunedì mattina, la casella è piena."]
-    assert _proponi(scene) == {1, 3, 5}                 # l'hook per primo, e la scena 2 resta animata: si alterna
-    scene[0].animazione = ["Il titolo è già in scena al primo fotogramma e sale appena."]
-    assert _proponi(scene) == {2, 4}                    # un hook tipografico resta a Manim
+    assert _proponi(scene) == {2, 4}                    # solo le scene in mezzo, alternate
+
+
+def test_una_quantita_a_lettere_nel_brief_non_rende_tecnica_la_scena():
+    """«A metà pagina» nel brief descrive l'immagine; «metà» nella VOCE è una quantità da mostrare (2026-09-21)."""
+    scene = _scene(["hook", "spiegazione", "spiegazione", "chiusura"])
+    scene[1].animazione = ["Un uomo rilegge un foglio stampato, si ferma a metà pagina e ci tiene sopra il dito."]
+    assert _proponi(scene) == {2}
+    scene[1].voce = ["E di quei sei, metà potrebbe risentirne."]
+    assert 2 not in _proponi(scene)
+
+
+def test_le_durate_del_report_valgono_solo_per_la_stessa_voce(tmp_path, monkeypatch):
+    """Dopo una ristrutturazione la «scena 3» del montaggio di prima è un'altra scena (2026-09-21)."""
+    import json as _json
+    import broll.piano as piano
+    md = tmp_path / "s.md"
+    md.write_text("---\ntitolo: T\nslug: prova-durate\nformato: reel\nmessaggio_centrale: M\n---\n\n"
+                  "## Scena 1 [hook]\nTITOLO: T\nVOCE: ti apro con una domanda?\n\n"
+                  "## Scena 2 [spiegazione]\nVOCE: una frase qui.\nVOCE: e poi un'altra.\nANIMAZIONE: a\nFIGURA: f\n\n"
+                  "## Scena 3 [chiusura]\nMESSAGGIO: M\nCTA: c\nVOCE: chiudo.\n", encoding="utf-8")
+    monkeypatch.setattr(piano, "RADICE", tmp_path)
+    out = tmp_path / "contenuti" / "render" / "prova-durate"
+    out.mkdir(parents=True)
+    elementi = [{"scena": 2, "durata_s": 14.2, "inizi_frasi_s": [0.0, 1.0], "parole_voce": 6},    # stessa voce
+                {"scena": 3, "durata_s": 99.0, "inizi_frasi_s": [0.0, 1.0, 2.0], "parole_voce": 30}]  # un'altra
+    (out / "report.json").write_text(_json.dumps({"elementi": elementi}), encoding="utf-8")
+    p, _ = piano.da_sceneggiatura(md)
+    assert p.scena(2).origine_durata == "report" and p.scena(2).durata_s == 14.2
+    assert p.scena(3).origine_durata == "stima" and p.scena(3).durata_s != 99.0

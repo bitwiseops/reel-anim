@@ -45,6 +45,12 @@ fuori da git. Nessun comando stampa mai il valore di una chiave.
 il filmato tiene l'attenzione. In una scena di filmato si vede il filmato a tutto schermo (1080×1920) e
 il riquadro del presentatore sopra, niente altro — nessun testo, nessuna grafica generata.
 
+**I due registri stanno a metà** (regola del presentatore, 2026-09-21): circa metà delle scene va a
+filmato, ± una, e `piano` avvisa anche quando sono troppo poche. La divisione vale anche per il parlato:
+sulle clip la voce dice le cose generiche, nelle animazioni va la spiegazione complessa. Per questo una
+scena con numeri o termini tecnici resta animata: se ne restano troppe, è la sceneggiatura che non sta
+dividendo i registri.
+
 C'è un terzo registro, **immagini composte**, per quando non esiste né una clip filmata né una animata:
 immagini trovate fuori o generate con Meshy, montate **una per frase** sugli `inizi_frasi_s` che
 `report.json` già calcola esatti, così quello che si vede richiama quello che il presentatore sta dicendo
@@ -103,6 +109,6 @@ un'impalcatura e un'auto; con il solo brief i candidati sono tutti pertinenti.
 
 `broll piano` decide con un'euristica: una scena che nomina un meccanismo, una quantità o una figura
 della libreria ha qualcosa da disegnare e resta animata; le altre sono scene d'attenzione e vanno a
-filmato, alternate e mai più di metà del reel. Le query di ricerca sono le parole piene del brief
+filmato, alternate e al massimo metà del reel (il bersaglio è proprio metà: sotto metà − una avvisa). Le query di ricerca sono le parole piene del brief
 `ANIMAZIONE:` e della `VOCE:`. Dalla M5 decide e scrive l'agente, che legge la scena invece di cercarci
 dentro delle parole; questa resta il ripiego.

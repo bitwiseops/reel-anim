@@ -20,14 +20,14 @@ def test_esempio_completo():
     assert [s.tipo for s in r.scene] == ["hook"] + ["spiegazione"] * 4 + ["schermo", "chiusura"]
     hook, s2, s6, fine = r.scene[0], r.scene[1], r.scene[5], r.scene[6]
     assert hook.titolo == "Generativa non vuol dire creativa" and hook.sottotitolo == "Vuol dire ==probabile=="
-    assert hook.riquadro_effettivo() == "no"
+    assert hook.riquadro_effettivo() == "no"         # l'esempio dichiara `RIQUADRO: no`: hook animato, variante
     assert len(s2.voce) == 3 and len(s2.animazione) == 3 and s2.testo == ["esempio"]
     assert s2.figura and s2.caption_effettiva() == "si"           # i sottotitoli stanno in fondo
     s6 = r.scena(6)
     assert s6.caption == "alto" and s6.caption_effettiva() == "alto"   # la deroga: lì il testo è il contenuto
-    assert r.chiusura.caption_effettiva() == "no"                 # nella chiusura il MESSAGGIO è già la frase detta
+    assert r.chiusura.caption_effettiva() == "si"                 # chiusura a volto pieno: il parlato si legge
     assert s6.schermo == "chat-fotocopiatrice.png" and s6.riquadro_effettivo() == "alto-destra"
-    assert fine.messaggio.startswith("Non chiederle") and fine.cta and fine.riquadro_effettivo() == "si"
+    assert fine.messaggio.startswith("Non chiederle") and fine.cta and fine.riquadro_effettivo() == "pieno"
 
 
 def test_attributi_commenti_e_righe_ripetibili():

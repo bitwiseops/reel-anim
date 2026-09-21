@@ -2,7 +2,7 @@
 titolo: "L'IA e il tuo lavoro: meno paura, più controllo"
 slug: ia-e-lavoro
 data_creazione: 2026-09-20
-stato: rivisto
+stato: animato
 formato: reel
 tipo: pillola
 pilastro: come funziona davvero
@@ -25,18 +25,25 @@ ogni scena animata ha la sua riga FIGURA. Le didascalie di onestà lunghe sono u
 caption del post (elencate nelle Note di produzione); a schermo, accanto a ogni numero grande, restano due sole
 etichette corte: cosa misura e da dove viene (terza revisione, ❌ 1).
 
-Hook a filmato: nella Scena 1 non c'è titolo a schermo, il TITOLO vive in copertina. La Scena 4 è scritta per
-andare a filmato (una riga di brief, nessun TESTO). Il tipo [broll] e la riga SCHERMO: li scrive `broll scrivi`
-alla tappa T2b. Nessun testo attribuito a un modello: la tappa T0b è saltata (decisione del presentatore).
+STRUTTURA RIFATTA (2026-09-21, regola del presentatore «i due registri stanno a metà»): nove scene. Apertura (1)
+e chiusura (9) sono del presentatore a tutto schermo (RIQUADRO: pieno, default di hook e chiusura); il corpo (2-8)
+alterna tre scene scritte per il filmato (3, 5, 8) e quattro animate (2, 4, 6, 7). Nelle scene a filmato sta la voce
+generica (il problema, l'esperienza riconosciuta, la presa di posizione, la cautela), nelle animate la spiegazione
+con i numeri. Nessuna parola della VOCE è cambiata: il monologo approvato è solo tagliato in punti diversi e
+ridistribuito (l'elenco preciso è nelle Note di produzione). Le scene a filmato sono scritte come [spiegazione] con
+una sola riga di brief e nessun TESTO: il tipo [broll] e la riga SCHERMO: li scrive `broll scrivi` alla tappa T2b,
+e le due clip già rese restano valide come materiale, da rirendere sulle durate nuove.
+
+Apertura e chiusura a volto pieno (seconda regola del 2026-09-21): nella Scena 1 non c'è grafica né filmato, il
+TITOLO vive in copertina; nella Scena 9 il messaggio grande arriva in coda, sopra di lui, nella metà alta. Nessun testo attribuito a un
+modello: la tappa T0b è saltata (decisione del presentatore).
 -->
 
 ## Scena 1 [hook]
-SCHERMO: broll-scena-01.mp4
 TITOLO: L'IA e il tuo lavoro: meno paura, più controllo
 SOTTOTITOLO: Esposto non vuol dire ==perso==
 VOCE: Hai paura che l'IA ti tolga il lavoro?
 VOCE: I numeri che girano sono veri, ma dicono un'altra cosa.
-ANIMAZIONE: Un open space la sera, con le file di scrivanie vuote e gli schermi ancora accesi, e una sola persona seduta che guarda il monitor; camera ferma o lenta carrellata lungo le scrivanie, luce fredda da ufficio, nessuno che parla.
 
 ## Scena 2 [spiegazione]
 VOCE: Guarda, dieci posti di lavoro in un paese avanzato.
@@ -50,20 +57,25 @@ ANIMAZIONE: GRANDE (tipografia cinetica): il punto interrogativo esce, sei figur
 FIGURA: dieci figure uguali e spente; dopo un'attesa se ne accendono sei, e il numero arriva grande.
 TESTO: 6 su 10
 
-## Scena 3 [spiegazione]
+## Scena 3 [broll]
+SCHERMO: broll-scena-03.mp4
 VOCE: E l'hai letto come posti persi.
 VOCE: Ma un lavoro è fatto di compiti, e alcuni l'IA li sa fare.
+ANIMAZIONE: Una persona al lavoro che passa da un compito all'altro nello stesso posto: risponde al telefono, impila e firma dei fogli, digita al computer, sposta una cassetta di documenti; piano medio, gesti diversi uno dopo l'altro, luce naturale, nessuno che parla e niente di leggibile sullo schermo.
+FIGURA: una persona fa un gesto di lavoro dopo l'altro: il lavoro è fatto di tanti compiti diversi.
+
+## Scena 4 [spiegazione]
 VOCE: Ecco, esposto vuol dire questo.
-VOCE: E di quei sei, ==metà== potrebbe risentirne e metà trarne vantaggio. Lo dicono loro, non io.
-ANIMAZIONE: Il numero si rimpicciolisce e torna nel suo slot con sotto le sue due etichette, che lo seguono senza staccarsi; sulle sei figure accese cade una barra obliqua ciascuna, il colore se ne va e tutte e sei scivolano giù di poco, come se uscissero dalla fila. Questo stato sbarrato dura poco, meno di quanto durerà la correzione che segue.
-ANIMAZIONE: GRANDE (metamorfosi): la barratura si disfa a vista e in fretta, prima di tutto il resto, le sei barre si scancellano come cancellate all'indietro, il colore torna sulle sei figure e tutte e sei risalgono nella fila al loro posto di prima. Poi una delle sei si stacca, vola al centro crescendo e diventa una tessera che si apre a ventaglio in cinque pezzi, ognuno con la sola icona di un compito; due pezzi non contigui si accendono uno alla volta, gli altri tre restano spenti. Sotto, piccola, l'etichetta di esempio.
-ANIMAZIONE: Un anello in accento si disegna attorno ai soli due pezzi accesi, non attorno alla tessera intera; i pezzi spenti si attenuano ancora, così si vede che la parte toccata è una parte piccola e non il tutto. Nessun numero e nessun conteggio accanto alla tessera.
-ANIMAZIONE: La tessera si richiude e rientra nella fila; le quattro figure non esposte scivolano al centro, si attenuano e restano lì come sfondo fuori dal conto, ben staccate dai due gruppi che si formano. Le sei accese si aprono in due gruppi da tre che vanno ai lati, in due colori pari della palette, nessuno dei due più cupo o più spento dell'altro; sopra ciascun gruppo una freccia tratteggiata, una che punta in giù e una in su. I tre sotto la freccia in giù restano accesi, interi e dentro la fila: niente barre, niente colore che se ne va, nessuna uscita di scena. Il numero resta nello slot con le sue due etichette.
-FIGURA: le sei si sbarrano; poi una si apre in pezzi, alcuni accesi; infine si dividono tre e tre.
+VOCE: E di quei sei, ==metà== potrebbe risentirne e metà trarne vantaggio.
+VOCE: Lo dicono loro, non io.
+ANIMAZIONE: GRANDE (metamorfosi): al primo fotogramma la scena è già com'era alla fine della Scena 2, le dieci figure con le sei accese e il numero nel suo slot con sotto le sue due etichette; poi una delle sei si stacca, vola al centro crescendo e diventa una tessera che si apre a ventaglio in cinque pezzi, ognuno con la sola icona di un compito; due pezzi non contigui si accendono uno alla volta, gli altri tre restano spenti. Sotto, piccola, l'etichetta di esempio.
+ANIMAZIONE: Un anello in accento si disegna attorno ai soli due pezzi accesi, non attorno alla tessera intera, ed entra la pillola «esposto»; i due accesi restano della stessa misura degli altri e in accento pieno, i tre spenti si attenuano ma non spariscono, così si legge «una parte del tutto» e non «una cosa da niente». Nessun numero e nessun conteggio accanto alla tessera. Poi la tessera si richiude e rientra nella fila; le quattro figure non esposte scivolano al centro, si attenuano e restano lì come sfondo fuori dal conto, ben staccate dai due gruppi che si formano, e le sei accese si aprono in due gruppi da tre che vanno ai lati, in due colori pari della palette, nessuno dei due più cupo o più spento dell'altro.
+ANIMAZIONE: Sopra ciascun gruppo si disegna una freccia tratteggiata, una che punta in giù e una in su. I tre sotto la freccia in giù restano accesi, interi e dentro la fila: niente barre, niente colore che se ne va, nessuna uscita di scena. Il numero resta nello slot con le sue due etichette.
+FIGURA: una figura si apre in cinque pezzi e due si accendono; poi le sei si dividono tre e tre.
 TESTO: esposto
 
-## Scena 4 [broll]
-SCHERMO: broll-scena-04.mp4
+## Scena 5 [broll]
+SCHERMO: broll-scena-05.mp4
 VOCE: Questa invece la dico io.
 VOCE: Di quello che non conosci hai più paura.
 VOCE: Una strada è starne fuori, ed è una scelta seria.
@@ -71,7 +83,7 @@ VOCE: Solo che in ufficio l'IA prima o poi entra.
 ANIMAZIONE: Una persona chiude il portatile, lo spinge da parte e si mette a scrivere a mano su un quaderno, a un tavolo di legno, con calma; piano medio o dettaglio sulle mani, luce naturale da finestra, nessuna caricatura.
 FIGURA: una persona chiude il portatile e prende carta e penna: è una scelta, non una resa.
 
-## Scena 5 [spiegazione]
+## Scena 6 [spiegazione]
 VOCE: L'altra strada è andarle incontro.
 VOCE: A Harvard hanno diviso settecentocinquanta consulenti, con l'IA e senza.
 VOCE: Nei compiti alla sua portata la qualità è salita di oltre il trenta per cento.
@@ -86,677 +98,189 @@ FIGURA: dentro un bordo frastagliato chi aveva l'IA fa la barra più alta; fuori
 TESTO: +32%
 TESTO: −19 punti
 
-## Scena 6 [spiegazione]
+## Scena 7 [spiegazione]
 VOCE: Prendi il resoconto del mese per il tuo capo e spezzalo in quattro.
 VOCE: La bozza e l'ordine glieli dai.
 VOCE: I numeri e la conclusione te li tieni, e la bozza la ricontrolli.
-VOCE: Il posto non te lo garantisce nessuno. Però qui vedi come funziona e dove sbaglia.
 ANIMAZIONE: GRANDE (contrasto di scala): il bordo e la fila escono; al centro una tessera piccola come quelle di prima cresce fino a riempire l'area e si spezza in quattro pezzi che si aprono a ventaglio, senza nessuna parola dentro. I quattro devono distinguersi a colpo d'occhio anche da fermi, in un fotogramma qualunque e senza il movimento che li separa, quindi hanno quattro forme diverse e non varianti della stessa: (a) un blocco di cifre fitto, a griglia, con una colonna più scura; (b) un foglio pieno di righe-sagoma corte e ravvicinate, con l'angolo in basso piegato, cioè un testo scritto; (c) una scaletta di tre blocchetti staccati, di lunghezze diverse e con un pallino davanti a ciascuno, disposti a gradini, cioè una sequenza e non un testo; (d) una lampadina accesa, l'unica figura tonda. Se in anteprima (b) e (c) si confondono da fermi, si passa alle quattro immagini Meshy delle Note di produzione, mai alle parole. In fondo resta piccola l'etichetta di esempio.
 ANIMAZIONE: A destra entra l'icona della macchina; il foglio di righe-sagoma e la scaletta a gradini scivolano da soli verso di lei e si posano sotto, mentre il blocco di cifre e la lampadina restano fermi dove sono.
-ANIMAZIONE: A sinistra entra la sagoma di una persona e sotto di lei si stringono il blocco di cifre e la lampadina; poi il solo foglio di righe-sagoma torna indietro dalla macchina, mentre la scaletta resta sotto di lei, e una lente percorre il foglio, si ferma sul blocco di cifre e lo accende in accento.
-ANIMAZIONE: Lente e pezzi si attenuano e si stringono in basso; in alto tornano piccole le dieci figure con le sei ancora accese, identiche a prima, e accanto a loro il bordo frastagliato si ridisegna piccolo, con una spunta dentro e una croce fuori.
+ANIMAZIONE: A sinistra entra la sagoma di una persona e sotto di lei si stringono il blocco di cifre e la lampadina; poi il solo foglio di righe-sagoma torna indietro dalla macchina, mentre la scaletta resta sotto di lei, e una lente percorre il foglio, si ferma sul blocco di cifre e lo accende in accento. In coda allo stesso beat tutto si stringe in basso e si attenua e in alto tornano piccole le dieci figure con le sei ancora accese, identiche a prima, nessuna spenta e nessuna cambiata di colore, e accanto a loro il bordo frastagliato si ridisegna piccolo, con una spunta dentro e una croce fuori: è l'ultimo fotogramma animato del reel e l'ultima volta che si vedono i sei, quindi non si taglia; se il beat è stretto si accorcia il percorso della lente.
 FIGURA: un documento si spezza in quattro; due pezzi vanno alla macchina, due restano a te, e una lente ricontrolla.
 TESTO: ==decidi tu==
 
-## Scena 7 [chiusura]
+## Scena 8 [broll]
+SCHERMO: broll-scena-08.mp4
+VOCE: Il posto non te lo garantisce nessuno. Però qui vedi come funziona e dove sbaglia.
+ANIMAZIONE: Una persona seduta al computer si avvicina allo schermo e lo guarda da vicino, poi indica una riga con il dito e torna indietro sulla sedia; piano medio o dettaglio, luce di ufficio, nessuno che parla e niente di leggibile sullo schermo.
+FIGURA: una persona guarda da vicino quello che ha davanti, invece di fidarsi e basta.
+
+## Scena 9 [chiusura]
 MESSAGGIO: Esposto non vuol dire perso. ==Saperla usare== lo scegli tu.
 CTA: Mandalo a chi ha paura che l'IA gli tolga il lavoro
 VOCE: Quei sei restano esposti, e quello non cambia.
 VOCE: Ma una cosa è subirla, un'altra è saperla usare.
-ANIMAZIONE: Esce tutto; le dieci figure tornano al centro nella posizione e nella scala della Scena 2, con le sei accese; nessuna si spegne e nessuna cambia colore, perché non cambia niente.
-ANIMAZIONE: GRANDE (tipografia cinetica): una delle sei si stacca dalla fila e fa un passo avanti verso il bordo frastagliato, che rientra piccolo davanti a lei. Nel passo avanti resta identica alle altre cinque: stesso colore, stessa dimensione, stessa intensità, nessun alone e nessun accento addosso, e resta dentro il gruppo dei sei, davanti ma non fuori, perché una figura che si distingue direbbe «lei si è salvata». La fila resta dietro, attenuata, e il messaggio arriva grande, con «Saperla usare» in accento; in fondo la CTA a pillola. L'ultimo fotogramma resta pulito.
-FIGURA: tornano le dieci figure con le sei accese; una si stacca e fa un passo avanti.
+<!-- A volto pieno con le sole caption (presentatore, 2026-09-21: «togli il messaggio finale, solo caption»):
+niente grafica né classe Manim. MESSAGGIO e CTA non vanno a schermo, sono il testo per la caption del post. -->
 
 ## Note di produzione
 
-**Correzioni della terza revisione tecnica, applicate il 2026-09-20** (nessuna riga `VOCE:`, `TITOLO:`,
-`SOTTOTITOLO:`, `MESSAGGIO:` o `CTA:` è cambiata: sono identiche parola per parola alla stesura approvata). Tutte le
-condizioni del revisore sono state **portate dentro i brief**, così l'animatore legge un documento solo.
-- **❌ 1, chiuso con la modifica del presentatore**: due etichette per ogni numero, la prima è solo «esposti» (il
-  «· stima» è stato tolto). Regola e conseguenze qui sotto, punto 1.
-- **⚠️ A** Scena 5, pile non contabili · **⚠️ B** croce e spunta legate al numero · **⚠️ C** barre da zero ·
-  **⚠️ D** il «+32%» esce prima del «−19 punti» · **⚠️ E** due pezzi accesi su cinque (scelta del presentatore),
-  l'anello resta · **⚠️ F** la barratura si disfa a vista · **⚠️ G** i tre in giù restano interi e nella fila ·
-  **⚠️ H** riga `FIGURA:` della Scena 3 riscritta come proposta dal revisore · **⚠️ I** quattro pezzi distinguibili
-  anche da fermi · **⚠️ J** la figura che si stacca non si distingue in niente · **⚠️ K** cautela «stima» solo in
-  voce e caption, scelta consapevole · **⚠️ L** non si taglia, il reel resta a 90 s stimati · **⚠️ M** filmato
-  dell'hook già scelto e reso, brief non toccato.
-
-**Che cos'è cambiato rispetto alla stesura archiviata** (`contenuti/archivio/ia-e-lavoro/sceneggiatura.md`,
-regime vecchio, approvata tecnicamente il 2026-09-20).
-- **La VOCE non è cambiata: nessuna parola, in nessuna scena.** Restano com'erano i claim verificati dal revisore
-  nelle due passate (il «+32 %» di *Organization Science*, i due bracci 385/373, «settecentocinquanta … con l'IA e
-  senza», «prima o poi entra», «il posto non te lo garantisce nessuno», la chiusura su «saperla usare»).
-- **I brief `ANIMAZIONE:` sono rifatti da zero** e ogni scena animata ha la riga `FIGURA:`. Le differenze che il
-  revisore deve guardare, perché toccano le sue condizioni:
-  1. **Le didascalie di onestà escono da schermo** (regola del presentatore sul testo denso + reel muti). Non
-     compaiono più: «dieci posti di lavoro in un paese avanzato, per far vedere una proporzione» (Scena 2),
-     «stime, non previsioni» (Scena 3), «qualità votata da umani, contro chi non l'aveva · 18 compiti» e «risposte
-     corrette, un compito solo» (Scena 5), «nessuna garanzia sul posto» e «come funziona e dove sbaglia» (Scena 6),
-     «esposti · economie avanzate» (Scene 2, 3 e 7). **Vanno tutte nella caption del post**, elenco qui sotto. A
-     schermo restano due sole cose scritte oltre ai numeri: **le due etichette corte di ogni numero** (regola qui
-     sotto) e l'etichetta «esempio» dove serve. Le condizioni 4, 5 e «nessun numero grande senza etichetta» della
-     prima passata restano in piedi nella forma delle etichette; tutto il resto lo dice la caption bruciata del
-     parlato, che in quel momento sta dicendo esattamente quelle parole.
-     **Regola dei numeri (terza passata, ❌ 1 chiuso): un numero grande porta sempre con sé due etichette corte,
-     cosa misura e da dove viene, ed escono insieme.** Sono `componenti.etichetta()` descritte nel brief, non
-     `TESTO:`, quindi non toccano i limiti di `TESTO:` e il controllo `parole-leggibili` non le conta. Le tre
-     coppie: «6 su 10» → **esposti** · Fondo Monetario, 2024 (Scene 2-3); «+32%» → **qualità** · Harvard, 2023
-     (Scena 5); «−19 punti» → **un compito** · Harvard, 2023 (Scena 5). Numero ed etichette entrano nella stessa
-     animazione, si muovono insieme ed escono insieme: non esiste un fotogramma con il numero senza le sue due
-     etichette, e finché non c'è niente da contare lo slot è vuoto e sotto non c'è nessuna etichetta.
-     La prima etichetta è **«esposti» e basta**: il presentatore ha tolto il «· stima» proposto dal revisore, per
-     non affollare la fascia. **Conseguenza da non riaprire (⚠️ K della terza passata):** la cautela «stime, non
-     previsioni» vive quindi **solo nel parlato della Scena 2** («ha stimato», più «in un paese avanzato») e nella
-     caption del post. È una scelta consapevole del presentatore: il reel porta a casa «esposto non vuol dire
-     perso» e lascia alla caption «stima, non previsione».
-  2. **Scena 5, il «+32 %» non è più un contatore che sale**: sono **due barre che crescono insieme**, una per
-     braccio, e quella di chi aveva l'IA si ferma un terzo più in alto. Il ⚠️ A della seconda passata (il contatore
-     che afferma un prima/dopo) è risolto **nella forma** e non più con un'etichetta. **Le due barre partono da
-     zero, stessa base e stessa larghezza, nessun asse tagliato e nessun piedistallo** (⚠️ C della terza passata):
-     il +32 % è il rapporto fra due medie di voto (4,37 contro ~5,77) e il numero sulla cima si deve leggere come
-     «tanto più dell'altra», mai come il valore di quella barra.
-  3. **Scena 5, i 19 punti** non sono più un numero accanto a una tessera: sono **una spunta e una croce** sopra le
-     due pile (chi non l'aveva ha fatto meglio), con il numero al centro. Stessa cosa detta con un verdetto.
-     **Croce e spunta non vivono mai da sole** (⚠️ B della terza passata): entrano nella stessa animazione del
-     numero e della sua etichetta «un compito», restano con loro e ci sono ancora nell'ultimo fotogramma della
-     scena. Il verdetto è comparativo, non assoluto: senza IA il compito fuori dalla frontiera andava giusto
-     l'84,5 % delle volte, con l'IA il 60 % e il 70,6 %, quindi nessuno dei due gruppi «azzecca» o «sbaglia».
-  4. **Scena 6, i quattro pezzi non hanno più le due parole ciascuno** («i numeri», «la bozza», «l'ordine», «la
-     conclusione»: otto parole leggibili a schermo insieme, oggi vietate). Si riconoscono dalla figura, e dalla
-     terza passata sono **quattro forme diverse fra loro, non varianti della stessa** (⚠️ I): un blocco di cifre a
-     griglia, un foglio pieno di righe-sagoma con l'angolo piegato (la bozza), una scaletta di tre blocchetti
-     staccati a gradini con un pallino davanti (l'ordine), una lampadina. Prima la bozza e l'ordine erano lo stesso
-     oggetto con un'aggiunta (le stesse righe più due frecce) e si confondevano proprio nel momento in cui uno
-     torna indietro dalla macchina e l'altro no. **La prova è a scena ferma**: in un fotogramma qualunque, senza il
-     movimento, i quattro devono restare distinguibili. **È il punto più fragile del reel: vedi «Domande aperte»,
-     n. 1** — se in anteprima non regge, il ripiego dichiarato è Meshy, mai le parole.
-  5. **Scena 7, lo scambio di parole «SUBIRLA» → «SAPERLA USARE» non c'è più**: al suo posto una figura (una delle
-     sei si stacca e fa un passo avanti verso il bordo frastagliato). Il ⚠️ B della seconda passata decade con
-     l'oggetto che lo motivava; la scena guadagna i secondi che all'animatore erano mancati per far entrare il
-     MESSAGGIO per intero.
-  6. **`TESTO:` ridotto ai limiti nuovi** (massimo due per scena, massimo due parole): via «Fondo Monetario, 2024»,
-     «metà e metà», «stime, non previsioni», «19 punti in meno», «+32% di qualità», «Harvard, 2023», «==decidi
-     tu== i pezzi». Le due etichette di ogni numero (cosa misura e da dove viene) restano a schermo ma vivono nel
-     brief, come etichette (`componenti.etichetta`), non come `TESTO:`.
-- **Nessuna deroga `CAPTION: alto`**: zero scene su due disponibili. Nel reel non c'è nessun documento da leggere,
-  nessuna richiesta e nessuna uscita di un modello.
-
-**Struttura narrativa** (schema @gabrysolution · r0045, adattato nell'idea). Mappa schema → scene: [notizia in
-cifre] → 1-2 · [tutti pensano / io invece] → 3 · [passo indietro: cosa vuol dire] → 3 · [il dato nascosto, stessa
-fonte] → 3 · [mossa attesa / mossa opposta] → 4-5 · [terza prova con fonte] → 5 · [riformulazione] → 6 ·
-[cautela] → 6 · [ritorno alla cifra + battuta] → 7.
-- Scena 1 — [notizia negativa in cifre], rovesciata: la cifra non c'è, c'è il problema di chi guarda. Tag: nessuno
-  dello schema; l'hook è a filmato e `gancio-cifra` resta escluso (lo dice l'idea), sennò la scommessa della 2 muore.
-- Scena 2 — [la cifra come la leggono tutti] + il momento di prova (`docs/linguaggio-reel.md` §3: «Pensa un
-  numero»). Tag: `numeri-come-prova`, `formula-ripetuta` (prima volta: «lo dicono loro, non io»).
-- Scena 3 — [tutti pensano, io invece] + [passo indietro] + [il dato nascosto della stessa fonte]. Tag:
-  `contro-narrazione`, `formula-ripetuta` (seconda volta, stesse parole).
-- Scena 4 — [cosa fa chi crede di aver sbagliato: la mossa attesa]. Tag: `formula-ripetuta` rovesciata («questa
-  invece la dico io»). Scena d'attenzione, scritta per il filmato: non c'è nessun meccanismo da disegnare.
-- Scena 5 — [la mossa opposta] + [terza prova con fonte]. Tag: `numeri-come-prova`, e un secondo piccolo momento
-  di prova («meglio o peggio?»).
-- Scena 6 — [quindi non è X, è Y: la riformulazione] + [cautela] + la promessa del canale in una frase sola.
-- Scena 7 — [ritorno alla cifra d'apertura] + battuta. Tag: `struttura-ad-anello`, `battuta-finale`.
-- Vince il repo su: niente `sommario-scaletta`, niente `elenco` letto a camera, niente tricolon finale, nessuna
-  `citazione-diretta` degli studi, una sola CTA. Dello schema si prende l'ossatura, non il registro.
-
-**Trascrizioni.** La VOCE viene dalla stesura archiviata, dove erano state lette per intero (cinque account): r0045
-(@gabrysolution, con `analisi/r0045.md`) solo per l'ordine delle mosse, r0040 e r0043 (@ingegneria.italia), r0037
-(@marcocamisanicalzolari), r0017 (@yousciences), r0024 (@inregola.it). In questa stesura ho riletto **r0040** e
-**r0037** prima di ricontrollare la VOCE riga per riga. Le tre mosse del parlato che reggono il monologo, con la
-riga da cui vengono:
-1. **La domanda da profano e la risposta che riparte con una parola sola** — r0040: «Ma lo zucchero può davvero
-   causare un'esplosione in azienda? / Sì, ed è per questo che le polveri vanno gestite correttamente…» → Scena 5:
-   «Un compito fuori dalla sua portata. Meglio o peggio? / Peggio, diciannove punti di risposte giuste in meno.»
-2. **La dislocazione, l'oggetto in testa ripreso dal pronome** — r0019: «Il problema è che molti di questi valori
-   non li conosciamo.» e r0037: «E quella risposta si controlla con qualcuno che quel sentiero lo ha fatto
-   davvero.» → Scena 4 «Di quello che non conosci hai più paura.» e Scena 6 «I numeri e la conclusione te li
-   tieni».
-3. **Il numero preciso al posto dell'aggettivo, e la parola chiave che torna** — r0016: «per i primi 8 minuti e 20
-   secondi» ripetuto; r0023: «costa ben 1500 euro» → «sei» torna in tre scene (2, 3, 7) e «esposto» in tre (2, 3 e
-   a schermo).
-Il registro di r0045 resta **controesempio** (`docs/stile-parlato.md`): qui ogni frase ha il verbo e le lunghezze
-saltano (6, 13, 5, 16 parole nella Scena 3).
-
-**Filo visivo** (tre oggetti che tornano; nessun documento a schermo, nessuna frase da leggere).
-1. **Le dieci figure umane**: spente e pulsanti (2), sei accese (2), sbarrate e poi tre e tre (3), attenuate in alto
-   (5-6), di nuovo al centro come nella 2 (7). È l'oggetto del loop, e **una figura = un posto di lavoro** per tutto
-   il reel: per questo i consulenti della Scena 5 sono **sagome minuscole di un'altra forma** e i compiti sono
-   tessere (condizione ⚠️ C del revisore, rispettata nel brief).
-2. **Lo slot del numero, sempre nello stesso punto**, con sotto le **due etichette corte** del numero (cosa misura,
-   da dove viene): trattino a slot vuoto e senza etichette, poi «?», poi «6 su 10» con «esposti · Fondo Monetario,
-   2024» (2-3); poi «+32%» con «qualità · Harvard, 2023» e «−19 punti» con «un compito · Harvard, 2023» (5).
-   **Mai due numeri insieme a schermo**: nella Scena 5 il «+32%» esce con le barre, nella stessa animazione, e solo
-   dopo comincia il punch che porta il «−19 punti» (⚠️ D della terza passata).
-3. **La tessera che si spezza**: il lavoro in cinque pezzi-compito (3) e il resoconto del mese in quattro pezzi (6).
-   Il **bordo frastagliato** nasce nella 5 e torna piccolo nella 6 e nella 7: è il quarto oggetto, quello che porta
-   la tesi («il bordo è irregolare e non si vede da fuori»).
-Mosse wow, una per scena e mai uguale fra scene vicine: tipografia cinetica (2), metamorfosi (3), filmato (4),
-punch (5), contrasto di scala (6), tipografia cinetica (7).
-
-**Da chiedere alla libreria.** Il **bordo frastagliato** della Scena 5 non è un componente: si disegna con `Create`
-su una polilinea irregolare (nella stesura archiviata l'animatore l'aveva già fatto, 30 vertici). Tutto il resto sta
-in libreria: `Fila` (le dieci figure), `Sagome` (le righe della bozza e i tre blocchetti della scaletta, che è
-sagome corte a gradini con un pallino davanti: nessuna parola vera dentro), `Barra` (le due barre di qualità),
-`Spunta`/`Croce` (i verdetti), `Lente` (il ricontrollo), `Indice` (se serve il gesto che sposta i pezzi), `Icona`
-(`bot`, `user`, `file-text`, `lightbulb`), `Punch` (la parola della Scena 5), `Messaggio`, `Etichetta`.
-
-**Scene a filmato: query in inglese per `broll piano`.**
-- Scena 1 (hook): **chiusa, il filmato è già scelto e reso** — `pexels:7706815`
-  (`contenuti/media/ia-e-lavoro/broll-scena-01.mp4`), persona sola alla scrivania la sera, luce fredda: si legge
-  come «lavoro fino a tardi», non come ufficio svuotato dai licenziamenti, e non c'è nessuna scatola di cartone
-  (⚠️ M della terza passata, soddisfatto). Il brief della Scena 1 non si tocca più. Le query che l'avevano trovato,
-  se servisse rifare la ricerca: `empty office desks evening`, `lone employee working late open space`,
-  `office worker looking at screen at night`.
-- Scena 4: `person closing laptop writing in notebook`, `writing by hand wooden desk natural light`, `hands writing
-  notebook closed laptop`. Riserva: `man walking alone mountain trail`. Niente eremiti e niente caricature.
-- Con hook e Scena 4 i filmati sono 2 su 7 e non sono adiacenti. Nota per T2b: la Scena 4 qui è scritta
-  `[spiegazione]` con **una sola riga di brief e nessun `TESTO:`**, quindi `broll scrivi` la converte senza
-  toccare niente; la riga `FIGURA:` resta nel blocco e non disturba (serve solo a `valida` finché la scena è
-  animata).
-
-**Numeri detti a voce: tre, da due fonti ufficiali.**
-1. «Sei su dieci esposti» e «metà potrebbe risentirne, metà trarne vantaggio»: Fondo Monetario Internazionale,
-   *Gen-AI: Artificial Intelligence and the Future of Work*, Staff Discussion Note SDN/2024/001, gennaio 2024.
-   Misura la quota di occupati delle **economie avanzate** in mestieri ad alta **esposizione** (sovrapposizione fra
-   le abilità del mestiere e ciò che l'IA sa fare), divisa per complementarità potenziale. È una **stima senza
-   orizzonte temporale**, non un conto di posti persi o creati, e il 60 % è l'aggregato delle economie avanzate,
-   **non un dato sull'Italia**: la VOCE dice «in un paese avanzato» e «ha stimato». Nota dello staff, con la
-   clausola che non rappresenta le posizioni del Fondo: la clausola va in caption.
-2. «Oltre il trenta per cento» di qualità e «diciannove punti di risposte giuste in meno»: Dell'Acqua e altri,
-   *Navigating the Jagged Technological Frontier*, **Organization Science, online 11 marzo 2026** (doi
-   10.1287/orsc.2025.21838; prima working paper HBS 24-013, settembre 2023), esperimento con Boston Consulting
-   Group. 758 consulenti di **una** società, **GPT-4** (2023), sorteggiati in **tre condizioni** (senza IA, con IA,
-   con IA più una spiegazione su come si scrive una richiesta) e divisi in **due bracci senza sovrapposizione**:
-   385 sui 18 compiti dentro la frontiera (qualità = voto di valutatori umani, **+32 %** rispetto a chi non
-   l'aveva) e 373 su **un solo** compito scelto apposta fuori (**19 punti percentuali** di soluzioni corrette in
-   meno). Il «oltre il 40 %» che gira è il numero del working paper 2023, superato dalla versione pubblicata: si
-   usa **+32 %**, a voce e a schermo. Non misura posti di lavoro.
-Il **perché** chi ha l'IA sbaglia di più fuori dalla frontiera non si dice: la VOCE dice solo che hanno fatto peggio.
-
-**Esempio dichiarato.** Le dieci figure sono una proporzione disegnata, non dieci persone. I cinque pezzi della
-Scena 3 e i quattro pezzi del resoconto del mese nella Scena 6 sono **un esempio nostro**: a schermo resta
-l'etichetta «esempio», e in caption va detto per esteso. Nessun testo a schermo è attribuito a un modello (T0b
-saltata per decisione del presentatore).
-
-**Le condizioni del revisore, dove vivono adesso.** Le ripeto perché in un reel muto la parola scritta non c'è più
-e il peso si sposta sulla caption bruciata del parlato, che in quei secondi dice esattamente la cosa giusta.
-- *Il 60 % è l'aggregato delle economie avanzate* → lo dice la VOCE al primo beat della Scena 2 («in un paese
-  avanzato»), e la caption bruciata lo mostra scritto nello stesso momento. A schermo resta «6 su 10» con le sue
-  due etichette.
-- *Le proporzioni della tessera non devono leggersi come un conto* → dalla terza passata sono **due pezzi accesi
-  su cinque** (scelta del presentatore sul ⚠️ E), **non contigui**, accesi uno alla volta, con l'etichetta
-  «esempio»; l'anello resta, ma attorno a due pezzi si legge «una parte» e non «più di metà del tuo lavoro».
-  Nessun numero e nessun «2 su 5» accanto.
-- *«Persi» non deve stare a schermo insieme a «esposto»* → la parola «persi» non c'è più: la lettura sbagliata la
-  porta la figura (le sei sbarrate che scivolano fuori) e la corregge la tessera che si apre. **La barratura si
-  disfa a vista** (⚠️ F): barre scancellate, colore che torna, le sei che risalgono nella fila, e lo stato sbarrato
-  dura meno della correzione che segue.
-- *«Potrebbe»* → le due frecce della Scena 3 sono **tratteggiate**, e la condizionalità la dicono la voce e la
-  caption («potrebbe risentirne», «potrebbe trarne vantaggio»). **I tre sotto la freccia in giù non si spengono,
-  non si sbarrano e non escono dalla fila** (⚠️ G): «risentirne» nella fonte vuol dire anche meno domanda, meno
-  assunzioni, salari più bassi, non il posto perso. I due colori sono varianti pari, nessuno più cupo dell'altro, e
-  le quattro non esposte restano visibilmente fuori dal conto, sennò il quadro si legge a tre gruppi.
-- *Le diciotto tessere sono compiti, non persone* → tessere con l'icona del foglio; le figure umane restano i dieci
-  posti, i consulenti sono sagome minuscole di un'altra forma. **Le due pile sono mucchi indistinti e non
-  contabili, senza nessun numero di persone accanto** (⚠️ A): la figura deve dire «due gruppi», come la voce, e mai
-  «metà e metà», perché le condizioni vere erano tre terzi quasi uguali (126/129/130 e 125/118/129), cioè due terzi
-  con l'IA e un terzo senza. Per il resto la figura a due pile resta: è la lettura onesta, ed è l'aggregazione che
-  fa la fonte stessa quando calcola i due numeri.
-- *Nessun numero grande senza la sua fonte* → dalla terza passata la regola è più forte: **due etichette, cosa
-  misura e da dove viene, che entrano ed escono con il numero** (❌ 1 chiuso). Il resto lo dice la caption bruciata,
-  e per esteso la caption del post.
-- *La figura che si stacca nella Scena 7* (⚠️ J) → fa un passo avanti e basta: non cambia colore, non cresce, non
-  si accende di più, non esce dai sei. Se si distinguesse direbbe «lei si è salvata», che è proprio ciò che «Il
-  posto non te lo garantisce nessuno» nega.
-
-**Per la caption del post** (la scrive il social-strategist; questi sono i pezzi obbligatori, e da oggi ci sono
-dentro anche le didascalie uscite da schermo).
-- «I dieci omini sono una proporzione disegnata, non dieci persone: dieci posti di lavoro in un paese avanzato.»
-- «Sono stime su ciò che la tecnologia potrebbe toccare, non previsioni su ciò che accadrà, e non hanno un
-  orizzonte temporale.»
-- «Il 60 % è l'aggregato delle **economie avanzate** (nel mondo 40 %, nei paesi a basso reddito 26 %), non un dato
-  sull'Italia.»
-- «Il +32 % è la qualità votata da valutatori umani, contro il gruppo che non aveva l'IA, su 18 compiti dentro la
-  frontiera.» · «I 19 punti sono punti percentuali di soluzioni corrette su **un solo** compito scelto apposta
-  fuori dalla frontiera.»
-- «Saperla usare non ti garantisce il posto: gli studi misurano produttività e qualità di chi la usa, non chi tiene
-  il lavoro.»
-- «I quattro pezzi del resoconto del mese sono un esempio nostro»; il modo di dividersi il lavoro con l'IA è quello
-  che i ricercatori di Harvard hanno osservato e chiamato «centauri».
-- «La frase su che cosa fa paura è la posizione del presentatore, non un risultato di ricerca», e il «controllo» del
-  titolo è su **come la usi e cosa le deleghi**, mai sul mercato del lavoro.
-- Le due fonti per esteso: FMI (titolo, autori, SDN/2024/001, gennaio 2024, clausola dello staff) e Dell'Acqua,
-  McFowland III, Mollick, Lifshitz-Assaf, Kellogg, Rajendran, Krayer, Candelon, Lakhani, *Navigating the Jagged
-  Technological Frontier*, *Organization Science*, online 11 marzo 2026 (doi 10.1287/orsc.2025.21838, open access;
-  working paper HBS 24-013, settembre 2023), con Boston Consulting Group, 758 consulenti, GPT-4, tre condizioni,
-  due bracci 385/373, una sola azienda, e la frontiera che si sposta a ogni modello (il working paper diceva «oltre
-  il 40 %»).
-- I numeri **non** usati, con cosa misurano: WEF 2025 (92 milioni spostati e 170 creati: attese dei datori di
-  lavoro su tutte le tendenze, non la sola IA), ILO 2025 (un lavoratore su quattro con qualche esposizione alla
-  generativa, 3,3 % nella fascia più alta), Stanford Digital Economy Lab (agosto 2026: una sostituzione diffusa nei
-  dati non si vede, ma per i 22-25enni nei mestieri più esposti il divario è di circa il 19 % — **da tenere lontano
-  dai «19 punti» di Harvard, sono cose diverse**), Banca d'Italia 2024 (circa 9 milioni di lavoratori altamente
-  esposti, oltre la metà in mansioni complementari), Brynjolfsson e altri 2025 (+15 % di pratiche risolte all'ora),
-  Istat 2025 (imprese con almeno 10 addetti che usano l'IA: dall'8,2 % al 16,4 % in un anno).
-- Istat 2025 va **dichiarato come attesa**, non come fatto: è il sostegno della frase «in ufficio l'IA prima o poi
-  entra» (Scena 4).
-- Il criterio, che nel reel non entra: ha funzionato se, quando il lavoro esce, sai dire di ogni pezzo chi l'ha
-  fatto e chi l'ha controllato.
-
-**Per il presentatore (tono e pause).** Scena 2: la domanda «Quanti, secondo te?» va detta a camera, poi **una pausa
-vera di circa un secondo** prima di «Pensa un numero»; «Sono sei» si dice piano, senza trionfo. Scena 4: è l'unico
-blocco in prima persona, si guarda in camera dall'inizio alla fine e «Questa invece la dico io» va staccata da
-quello che viene prima. Scena 5: «Meglio o peggio?» con lo stesso tempo di attesa della Scena 2. Scena 7: la
-battuta si dice senza alzare la voce, il riquadro è grande.
-
-**Durata.** `reel valida`: **90 s stimati**, 236 parole (18 · 35 · 40 · 32 · 47 · 47 · 17), zero errori e zero
-avvisi. È il tetto dei limiti, con margine zero sulla stima a parole: nelle due corse precedenti la voce vera è
-andata più corta (74,6 s su 86 stimati) e l'anteprima sintetica di questo reel, nel regime vecchio, aveva dato
-82 s. Non comprimo il parlato da solo. **Decisione del presentatore sul ⚠️ L della terza passata: non si taglia.**
-Il reel resta a 90 s stimati e la durata si misura sulla presa vera; i tagli qui sotto restano scritti come riserva
-e **non sono applicati** — nessuna riga di VOCE è stata toccata. **Tagli pronti, non applicati, in ordine**: (1)
-Scena 5, «L'altra strada è andarle incontro» (la strada la dice già l'animazione, −5 parole); (2) Scena 3, «E l'hai
-letto come posti persi» → «E l'hai letto come persi» (−1); (3) Scena 6, la promessa del canale ridotta a «però qui
-vedi come funziona» (−3); (4) Scena 4, «ed è una scelta seria» (−5, ma si perde il rispetto per chi sceglie di
-starne fuori); (5) Scena 2, «Quanti, secondo te?» (si perde metà del momento di prova: sconsigliato). Con i primi
-tre si scende a ~87 s.
-
-**Domande aperte per il presentatore.**
-1. **I quattro pezzi della Scena 6 senza parole.** Senza le etichette («i numeri», «la bozza», «l'ordine», «la
-   conclusione») i pezzi devono farsi riconoscere da soli mentre la caption li nomina. Dopo il ⚠️ I della terza
-   passata le quattro figure sono **diverse fra loro anche da ferme**, non varianti della stessa: blocco di cifre a
-   griglia, foglio di righe-sagoma con l'angolo piegato (bozza), scaletta di tre blocchetti a gradini con il
-   pallino davanti (ordine), lampadina. La prova si fa su un fotogramma fermo, non sul movimento. Se in anteprima
-   due si confondono lo stesso, **il ripiego non è rimettere le parole**: è una serie di **quattro immagini
-   generate con Meshy**, una per pezzo, stesso stile e stesso fondo, messe in `contenuti/media/ia-e-lavoro/` e
-   richiamate con `SCHERMO:`. Brief per Meshy: «quattro oggetti da scrivania in stile illustrazione piatta, su
-   fondo neutro, stessa inquadratura e stessa luce: un foglio di tabella con numeri, un foglio fitto di righe di
-   testo sfocate con l'angolo piegato, una lista puntata di tre voci di lunghezza diversa, una lampadina accesa».
-2. **Il bordo frastagliato**: chiuso in terza passata (✅ 7). Si disegna a mano, polilinea irregolare, perché
-   l'irregolarità è la tesi e un confronto a due colonne la perderebbe.
-3. **La Scena 4 resta quella a filmato** (la seconda dopo l'hook), come nell'idea e nella stesura archiviata.
-
-**Frasi di cui sono meno sicuro** (per il revisore): «A Harvard hanno diviso settecentocinquanta consulenti, con
-l'IA e senza» (le condizioni erano tre: la terza, con la spiegazione su come si scrive una richiesta, è una
-variante del «con l'IA» e resta in caption — **chiusa dal revisore in terza passata, ⚠️ A**: le due pile sono la
-lettura onesta, a patto che restino mucchi non contabili, ed è l'aggregazione che fa la fonte stessa); «Nei compiti
-alla sua portata la qualità è salita di oltre
-il trenta per cento» («salita» può ancora suonare come un prima/dopo, anche se ora le due barre crescono insieme e
-il confronto è fra loro); «Il posto non te lo garantisce nessuno. Però qui vedi come funziona e dove sbaglia» (due
-cose in una riga: la cautela e la promessa del canale, e ora la seconda non ha più nessuna parola a schermo che la
-sostenga, solo il bordo frastagliato che ritorna).
-
-## Revisione tecnica
-
-**Terza passata · 2026-09-20 · regime nuovo («il reel si guarda muto») · DA CORREGGERE** (1 ❌).
-Conteggio della passata: **25 ✅ · 13 ⚠️ · 1 ❌**.
-
-**Cosa ho guardato.** La `VOCE:` è **identica parola per parola** alla stesura archiviata: confronto riga per riga di
-`VOCE:`, `TITOLO:`, `SOTTOTITOLO:`, `MESSAGGIO:` e `CTA:` fra i due file, **nessuna differenza**. I claim detti restano
-quelli chiusi nelle due passate precedenti (`contenuti/archivio/ia-e-lavoro/sceneggiatura.md`, sezione «Revisione
-tecnica») e non li rifaccio da capo. Questa passata guarda **quello che afferma la figura**: righe `ANIMAZIONE:`,
-`FIGURA:`, `TESTO:` e le Note di produzione, ora che le didascalie di onestà sono uscite da schermo.
-
-**Fonti riaperte alla pagina in questa passata** (non lettura mediata).
-- **Dell'Acqua e altri**, *Navigating the Jagged Technological Frontier*, *Organization Science*, Articles in Advance,
-  © 2026 (PDF open access su hbs.edu, scaricato e letto per intero, ~16.800 parole). Alla lettera: «randomly assigned
-  to one of **three conditions**: no AI access, GPT-4 AI access, or GPT-4 AI access with a prompt engineering
-  overview… with these conditions **kept consistent across both arms**»; «randomly assigned to one of **two distinct
-  arms**… **no overlap** between the groups. Approximately half of the participants (**385 subjects**)… The other half
-  (**373 subjects**)…»; «it also enhanced the quality of the responses by an average of **32%**» (dettaglio: «GPT +
-  overview leads to a 1.48 increase in scores over the control mean of **4.37**, representing a **33.9%** increase,
-  with GPT only producing a 1.31 (or **29.9%**) increase», voti di valutatori umani); «**18** realistic knowledge tasks
-  within the frontier»; «Subjects in the control group were correct about this exercise about **84.5%** of the time,
-  but the AI conditions scored at **60%** and **70.6%** (an average decrease of **19 percentage points** when
-  **combining the AI treatment conditions and comparing them with the control condition**)»; e, novità utile alla
-  Scena 5, la **Tabella 1**, che dà la numerosità delle tre condizioni: **126 / 129 / 130** nel braccio dentro la
-  frontiera e **125 / 118 / 129** in quello fuori (tre terzi quasi uguali). Nota anche: «Initially, participants
-  undertook a task without the aid of AI, establishing a baseline» — il baseline c'è, ma il +32 % resta un confronto
-  **fra gruppi**.
-- **Fondo Monetario Internazionale**, SDN/2024/001, gennaio 2024, letto sull'elibrary ufficiale
-  (https://www.elibrary.imf.org/view/journals/006/2024/001/article-A001-en.xml): «In advanced economies, about
-  **60 percent** of jobs are exposed to AI… of these, **about half may be negatively affected** by AI, while the rest
-  could benefit… Overall exposure is 40 percent in emerging market economies and 26 percent in low-income countries.»
-  (Il PDF su `imf.org` e la pagina della pubblicazione rispondono **403** agli strumenti: vale l'elibrary.)
-
-### ❌ Da correggere
-
-**❌ 1 · I tre numeri grandi restano a schermo senza dire *cosa misurano*.** Nel regime nuovo il numero è la cosa che
-resta più a lungo di tutte, e la caption bruciata che lo spiega scorre via con la voce. Qui i brief tengono sotto il
-numero **solo la fonte** («Fondo Monetario, 2024», «Harvard, 2023»), cioè *da dove viene* e non *cosa misura*. Le tre
-conseguenze, muto:
-
-- **Scene 2-3, «6 su 10»** sotto dieci figure umane di cui sei accese, in un reel che si apre con «hai paura che l'IA
-  ti tolga il lavoro?»: senza la parola che dice **esposti**, la figura afferma «sei posti su dieci se li prende
-  l'IA». È esattamente la lettura che il reel esiste per smontare, e chi scorre via dopo dodici secondi si porta a
-  casa quella. La parola «esposto» arriva sì a schermo, ma **nella scena dopo** e staccata dal numero.
-- **Scena 5, «+32%»** senza «qualità»: un +32 % accanto a due gruppi di persone in un reel sul lavoro si legge come
-  produttività, o peggio come «il 32 % in più di probabilità di tenersi il posto».
-- **Scena 5, «−19 punti»** senza «un compito»: è il numero più delicato del reel (punti percentuali di risposte
-  corrette su **un solo** compito scelto apposta fuori dalla frontiera, «representing a key limitation of our study»
-  dicono gli autori). Da solo, con una croce sopra la pila della macchina, diventa una legge generale: «fuori dalla
-  sua portata l'IA ti fa sbagliare di 19 punti».
-
-Non è un ❌ di stile: è la condizione su cui si reggeva l'approvazione delle passate precedenti (punto 4 e «nessun
-numero grande senza etichetta»), e **il regime nuovo non la vieta**. La libreria la prevede alla lettera:
-`componenti.etichetta()` serve, testuale, «a mano, su una didascalia di onestà che deve restare per intero», e il
-controllo `parole-leggibili` non conta le etichette marcate. Costo della correzione: **una parola per numero**.
-
-**Proposta** (tocca solo i brief `ANIMAZIONE:`; nessuna `VOCE:` cambia, nessun limite di `TESTO:` si muove, perché
-sono etichette e non `TESTO:`).
-- Scene 2 e 3, sotto «6 su 10», due righe piccole marcate come etichette: **«esposti · stima»** e, sotto,
-  **«Fondo Monetario, 2024»**. Due parole per la prima riga: dicono *cosa misura* e insieme che è una stima (vedi
-  ⚠️ K). Se il presentatore vuole anche il perimetro, la seconda riga diventa «economie avanzate · Fondo Monetario,
-  2024».
-- Scena 5, con «+32%»: **«qualità»** sopra o sotto il numero, più «Harvard, 2023». Il «contro chi non l'aveva» qui non
-  serve scritto, lo dicono le due barre che crescono affiancate.
-- Scena 5, con «−19 punti»: **«un compito»**, più «Harvard, 2023». È l'unica etichetta che non si può lasciare alla
-  sola caption, perché è quella che impedisce di generalizzare.
-- Regola da riscrivere nelle Note di produzione al posto di «a schermo resta solo l'etichetta corta della fonte»:
-  **un numero grande porta sempre con sé due etichette corte, cosa misura e da dove viene, e le tre escono insieme.**
-
-### ⚠️ Semplificazioni accettabili, con le loro condizioni
-
-**⚠️ A · Scena 5, le due pile contro le tre condizioni dello studio** (la domanda posta al revisore). **La figura non
-va cambiata nella sostanza: due pile sono la lettura onesta.** Tre ragioni, tutte sul testo pubblicato: (1) i 758
-sono stati sorteggiati fra tre condizioni **in tutti e due i bracci**, e una è «no AI access», quindi «diviso, con
-l'IA e senza» è vero dell'intero campione; (2) i due numeri che il reel mostra sono **proprio** quelli che la fonte
-calcola accorpando le condizioni con IA contro il controllo («combining the AI treatment conditions and comparing
-them with the control condition»; il 32 % è la media fra 33,9 % e 29,9 %): il reel aggrega come aggrega la fonte;
-(3) la terza condizione è una **variante** del «con l'IA» (stesso strumento più una spiegazione), non un terzo modo
-di stare, e in caption c'è. **Ma la figura afferma una cosa in più della voce: quanti stanno di qua e quanti di là.**
-Le tre condizioni sono terzi quasi uguali (126/129/130 e 125/118/129), quindi il campione è **due terzi con l'IA e un
-terzo senza**, non metà e metà. **Condizione per l'animatore:** le sagome delle due pile **non devono essere
-contabili** (mucchio indistinto, non una griglia che si conta) e le due pile non devono leggersi come due metà
-misurate; nessun numero di persone accanto. Così la figura dice «due gruppi», che è quello che dice la voce, e non
-«375 e 375», che nessuno ha detto.
-
-**⚠️ B · Scena 5, la croce e la spunta sono un verdetto binario.** Sul compito fuori dalla frontiera il gruppo senza
-IA ha risposto giusto l'**84,5 %** delle volte e i gruppi con IA il **60 %** e il **70,6 %**: nessuno dei due è
-«giusto» e nessuno «sbagliato», c'è una differenza di 19 punti. Muto, una croce sopra la pila con la macchina e una
-spunta sopra l'altra dicono «con l'IA si sbaglia, senza si azzecca». Non è ❌ — la fonte confronta davvero i due
-gruppi su un compito a risposta giusta o sbagliata, e il verdetto è comparativo — ma va vincolato. **Condizione:**
-croce e spunta entrano **insieme** al numero e alla sua etichetta «un compito» (❌ 1), restano insieme a loro e non
-sopravvivono da sole nell'ultimo fotogramma della scena; se una delle due deve pesare di più, è la croce **con** il
-numero accanto, mai la spunta da sola.
-
-**⚠️ C · Scena 5, «un terzo più in alto» regge solo con le barre da zero.** Il +32 % è un rapporto fra due medie di
-voto (4,37 contro ~5,77): disegnato come due barre **che partono dalla stessa base a zero**, una un terzo più alta,
-è corretto e onesto. Se l'animatore taglia l'asse o fa partire le barre da un piedistallo, la differenza disegnata
-non è più il numero detto. **Condizione:** stessa base, stessa larghezza, nessun asse tagliato; e il numero sulla
-cima della barra alta si deve leggere come «tanto più dell'altra», mai come il valore di quella barra.
-
-**⚠️ D · Scena 5, «+32%» deve uscire prima che entri «−19 punti».** Il brief del quarto beat dice «Tessere e barre
-escono» e non nomina il numero, mentre le Note di produzione promettono «mai due numeri insieme a schermo».
-**Condizione:** il numero e le sue etichette escono **nella stessa animazione** delle barre, e solo dopo comincia il
-punch.
-
-**⚠️ E · Scena 3, tre pezzi accesi su cinque, con l'anello intorno.** Nessuna fonte misura quanta parte di un lavoro
-sia alla portata dell'IA: la proporzione disegnata è nostra, e la condizione della prima passata («due o tre accesi
-su cinque, con l'etichetta *esempio* accanto») è rispettata alla lettera, l'etichetta c'è. Però l'anello che
-raggruppa proprio i tre accesi fa un quadro contabile con dentro una **maggioranza**: muto si legge «più di metà del
-tuo lavoro lo fa lei», che gonfia la paura invece di scioglierla, e non lo dice nessuno. **Consiglio (scelta del
-presentatore): due pezzi accesi su cinque** — l'anello attorno a due si legge «una parte» molto meglio — oppure tre
-accesi ma senza anello che li raggruppi, con i pezzi che si accendono uno alla volta senza fermarsi in un quadro
-finale.
-
-**⚠️ F · Scena 3, le sei sbarrate affermano «persi»: sì, ed è voluto.** È la lettura sbagliata mostrata per essere
-corretta, e la caption bruciata in quel beat dice «E l'hai letto come posti persi», cioè la attribuisce a chi guarda:
-va bene. Il brief però non riporta mai le sei **dentro la fila**: al beat 1 perdono il colore, prendono la barra e
-scivolano fuori; al beat 2 «le barre si tolgono», ma il colore tolto e l'uscita dalla fila non hanno un annullamento
-dichiarato (al beat 4 le sei sono di nuovo «accese», senza che si sia visto quando). **Condizione** (è il punto 6
-della prima passata nella forma nuova): la barratura **si disfa a vista** — le barre si scancellano, il colore torna,
-le sei risalgono nella fila — e lo stato sbarrato dura **meno** dello stato corretto.
-
-**⚠️ G · Scena 3, le due frecce tratteggiate.** Giù = «potrebbe risentirne», su = «potrebbe trarne vantaggio»: il
-tratteggio è la scelta giusta per il condizionale e la caption dice «potrebbe». **Condizione:** i tre sotto la freccia
-in giù **non si spengono, non si sbarrano e non escono dalla fila** — sarebbe la figura di «persi» rimessa in scena
-un minuto dopo averla smentita, e «risentirne» nella fonte vuol dire anche meno domanda, meno assunzioni, salari più
-bassi. I due colori sono due varianti pari, non «acceso» contro «spento». E i quattro non esposti che scivolano al
-centro devono restare visibilmente **fuori dal conto**, sennò il quadro si legge a tre gruppi.
-
-**⚠️ H · Scena 3, la riga `FIGURA:` dice meno della scena.** «le sei figure vengono sbarrate; poi una si apre in pezzi
-e solo alcuni si accendono» lascia fuori il **tre e tre**, che è il dato nascosto della stessa fonte e il payoff della
-scena: letta così, la figura che resta della Scena 3 è «sbarrate». Proposta, 18 parole:
-`FIGURA: le sei si sbarrano; poi una si apre in pezzi, alcuni accesi; infine si dividono tre e tre.`
-
-**⚠️ I · Scena 6, «la bozza» e «l'ordine» sono lo stesso oggetto con un'aggiunta.** Tre righe-sagoma, e le stesse
-righe con due frecce: si somigliano proprio nel momento in cui uno dei due torna indietro dalla macchina e l'altro
-no, che è il gesto della mossa. Il ripiego dichiarato (quattro immagini Meshy, mai le parole) è giusto e lo confermo.
-**Condizione:** i quattro pezzi si devono distinguere **anche fermi**, senza il movimento che li separa; se in
-anteprima due si confondono, si passa a Meshy senza tentare le etichette.
-
-**⚠️ J · Scena 7, la figura che fa un passo avanti.** **Condizione:** dopo che si è staccata non cambia colore, non
-cresce, non si accende di più e non esce dai sei. Se si distingue dalle altre cinque, la figura dice «lei si è
-salvata», che è precisamente ciò che «Il posto non te lo garantisce nessuno» nega. Il brief lo dice già della fila
-(«nessuna si spegne e nessuna cambia colore»): va esteso a quella che si stacca.
-
-**⚠️ K · «stime, non previsioni» è uscito da schermo.** È uno dei due insegnamenti del file idea («stima o fatto?»),
-e in tutto il reel ne resta solo il verbo «ha stimato», dentro una riga di caption che scorre via. La proposta del
-❌ 1 lo rimette al costo di una parola («esposti · stima»); in alternativa resta solo in caption, ma allora il reel
-porta a casa un insegnamento su due.
-
-**⚠️ L · Il reel è stimato 90 s esatti**, il tetto dei limiti, con margine zero sulla stima a parole (⚠️ D della
-seconda passata, ancora in piedi). I tagli pronti nelle Note di produzione bastano; la decisione è del presentatore.
-
-**⚠️ M · Scena 1, il filmato** (condizione della prima passata, ancora valida): fra i provini va scelto quello che si
-legge come **sera / lavoro fino a tardi**, non come ufficio svuotato dai licenziamenti, e resta fuori la scatola di
-cartone. Altrimenti l'immagine afferma da sola quello che il reel passa novanta secondi a smentire.
-
-### ✅ Verificati (solo figure, animazioni e note: la VOCE è quella già approvata)
-
-1. **Scena 2, dieci figure di cui sei si accendono** ✅ è la fonte alla lettera: «about 60 percent of jobs are exposed
-   to AI» nelle economie avanzate. La proporzione disegnata è misurata, quindi si può disegnare.
-2. **Lo slot del numero: trattino → «?» → numero** ✅ non afferma niente prima del tempo; e il «?» sopra dieci figure
-   **spente** dice «non lo sai ancora», non «zero effetto», perché nello stesso momento non c'è nessuna figura accesa
-   da confrontare.
-3. **Le dieci figure come proporzione, non come dieci persone** ✅ nessun brief le tratta mai come individui.
-4. **Scena 3, la figura che si apre in pezzi-compito** ✅ è il modello della fonte: il mestiere come «a bundle of
-   tasks» e l'esposizione come sovrapposizione fra le abilità richieste e ciò che l'IA sa fare.
-5. **Scena 3, la divisione tre e tre** ✅ «about half may be negatively affected… while the rest could benefit». Nella
-   media delle economie avanzate il taglio vero è 33 % contro 27 %, quindi il tre e tre semmai **arrotonda per
-   difetto** il lato negativo: non nasconde niente.
-6. **L'anello attorno ai soli pezzi accesi, non attorno alla tessera intera** ✅ dice «una parte», che è la tesi
-   (vedi però ⚠️ E sulla quantità).
-7. **Scena 5, il bordo frastagliato** ✅ è la tesi della fonte (*jagged frontier*) resa come figura, non come parola, e
-   l'irregolarità **si deve vedere**: confermo il disegno a mano su polilinea irregolare (risposta alla Domanda
-   aperta n. 2), un confronto a due colonne perderebbe proprio la cosa che conta.
-8. **Le diciotto tessere dentro il bordo** ✅ «a set of 18 realistic knowledge tasks within the frontier».
-9. **Le diciotto tessere e la tessera fuori non stanno mai insieme in un fotogramma** ✅ (il brief le fa uscire prima
-   che si accenda quella fuori): così la figura **non** afferma «diciotto dentro e una fuori» come proporzione del
-   mondo, che sarebbe un conto che nessuno ha fatto. Resta una condizione da non perdere in animazione.
-10. **Le pile di consulenti sono sagome di un'altra forma e più piccole delle dieci figure, e i compiti sono tessere**
-    ✅ il ⚠️ C della seconda passata è rispettato nel brief: una figura umana = un posto di lavoro per tutto il reel.
-11. **Due barre che crescono insieme al posto del contatore che sale** ✅ è un miglioramento vero: risolve nella forma
-    il ⚠️ A della seconda passata (un contatore afferma un prima/dopo, due barre affiancate affermano un confronto
-    fra gruppi, che è quello che misura lo studio). Vale anche sapendo che nello studio c'era un compito iniziale
-    senza IA per tutti: il 32 % resta un confronto fra gruppi, ed è così che lo disegna la scena.
-12. **«+32%»** ✅ versione pubblicata, «an average of 32%», voti di valutatori umani, 18 compiti dentro la frontiera.
-13. **«−19 punti»** ✅ punti percentuali di risposte corrette, un solo compito fuori dalla frontiera, aggregando le
-    due condizioni con IA contro il controllo.
-14. **Scena 6, la mossa** ✅ corretta, applicabile oggi con qualunque assistente, ed è **nella VOCE** (è «Cosa impara
-    chi guarda» n. 2): dai bozza e ordine, tieni numeri e conclusione, ricontrolla la bozza quando torna.
-15. **La lente** ✅ è un gesto di verifica, non una diagnosi: il reel non dice mai «l'IA sbaglia i numeri».
-16. **Scena 6, il bordo piccolo che torna con una spunta dentro e una croce fuori** ✅ è il modello mentale giusto
-    della frontiera, ed è la figura che regge la promessa del canale ora che non ha più parole a schermo.
-17. **Scena 7, le dieci figure tornano identiche e nessuna si spegne** ✅ è la figura onesta di «Quei sei restano
-    esposti, e quello non cambia»: la chiusura non promette niente che il reel non abbia mostrato.
-18. **Scena 4** ✅ la riga `FIGURA:` («è una scelta, non una resa») tiene il rispetto per chi sceglie di starne fuori,
-    e il brief esclude le caricature. Resta `[spiegazione]` con una sola riga di brief e nessun `TESTO:`, quindi
-    `broll scrivi` la converte senza toccare nulla.
-19. **Le etichette «esempio»** ✅ restano a schermo nelle Scene 3 e 6, dove la proporzione e i quattro pezzi sono
-    roba nostra.
-20. **Regole del presentatore** ✅ nessuna persona nominata (nemmeno gli autori), nessuna opinione di terzi usata come
-    autorità, due sole fonti ufficiali a schermo e solo perché reggono un numero, nessun testo attribuito a un
-    modello, nessun richiamo ad altri reel, nessuna azienda inventata. La posizione del presentatore resta dichiarata
-    («Questa invece la dico io») e nessuna figura la presenta come un risultato di ricerca.
-21. **Potenziale e limite** ✅ ci sono tutti e due, e adesso anche **nelle figure**: la barra più alta dentro il bordo
-    e la croce fuori, più «Il posto non te lo garantisce nessuno» in voce.
-22. **`TESTO:` ai limiti nuovi** ✅ al massimo due per scena, al massimo due parole, nessuna frase.
-23. **Nessuna deroga `CAPTION: alto`** ✅ zero scene su due disponibili, ed è giusto: nel reel non c'è niente da
-    leggere.
-24. **Le Note di produzione** ✅ riferimenti, tre condizioni, due bracci 385/373, +32 %, 19 punti percentuali, un solo
-    compito, una sola azienda, GPT-4 del 2023, «oltre il 40 %» del working paper: tutto ricontrollato sul PDF
-    pubblicato in questa passata, compresa la numerosità delle condizioni.
-25. **Nessuna figura introduce un numero nuovo** ✅ i numeri a schermo restano tre, tutti detti in voce, tutti da due
-    fonti ufficiali.
-
-### Incoerenza dell'idea, corretta in questa passata
-
-Il file idea (`contenuti/idee/2026-09-20-ia-e-lavoro.md`) diceva ancora **«+40 %»** nel `## Concetto AI illustrato` e
-in altri cinque punti, mentre la VOCE dice «oltre il trenta per cento» (**+32 %**, il numero della versione
-pubblicata). **Confermo il 32 %** sul PDF di *Organization Science* letto oggi e ho corretto l'idea, lasciando in
-`## Fonte` il «più del 40 %» come **numero del working paper 2023, superato**. Le occorrenze toccate: `## Concetto AI
-illustrato`, `## Situazione` (due), `## Pilastro`, il percorso della scena 5 in «Note per il reel», «Numeri» e «Claim
-per il revisore».
-
-### `reel valida` (rifatto in questa passata)
-
-`uv run reel valida contenuti/sceneggiature/2026-09-20-ia-e-lavoro.md` → **[OK] reel stimato 90s · 7 scene (1 hook,
-5 spiegazione, 1 chiusura) · 236 parole di voce**; per scena 18 → ~7s · 35 → ~13s · 40 → ~15s · 32 → ~12s · 47 →
-~18s · 47 → ~18s · 17 → ~7s. **0 errori, 0 avvisi.**
-
-**DA CORREGGERE** — 2026-09-20. Un solo ❌: i tre numeri grandi restano a schermo con la sola fonte e senza dire
-**cosa misurano** («6 su 10» senza «esposti», «+32%» senza «qualità», «−19 punti» senza «un compito»), e muto il
-primo afferma proprio la lettura che il reel smonta. Si chiude con una parola per numero, marcata come etichetta:
-nessuna `VOCE:` si tocca e nessun limite si muove. Restano tredici condizioni per chi anima (⚠️ A-M) e i pezzi
-obbligatori della caption. `stato` resta `sceneggiatura`.
-
-
-### Quarta passata, 2026-09-20 (solo quello che è cambiato)
-
-**APPROVATO TECNICAMENTE.** Conteggio della passata: **19 ✅ · 3 ⚠️ · 0 ❌**.
-
-Ho guardato **solo** ciò che è cambiato dopo la terza passata: le righe `ANIMAZIONE:` e `FIGURA:` riscritte, le
-Note di produzione nuove e le decisioni del presentatore, più le aggiunte oltre la lettera delle correzioni. Ho
-rifatto anche il confronto riga per riga con l'archiviata: `VOCE:`, `TITOLO:`, `SOTTOTITOLO:`, `MESSAGGIO:` e `CTA:`
-**sono ancora identiche parola per parola** (nel diff cambiano solo le righe `FIGURA:` e `TESTO:`, come deve essere).
-Nessuna fonte nuova da riaprire: non è entrato nessun numero e nessun fatto nuovo, e i dati aggiunti nelle Note
-(84,5 % · 60 % · 70,6 %; le medie 4,37 → ~5,77; 126/129/130 e 125/118/129) sono quelli già letti sul PDF pubblicato
-di *Organization Science* nella terza passata.
-
-#### Il ❌ è chiuso
-
-**❌ 1 → ✅ chiuso, in tutte e tre le occorrenze**, con la modifica del presentatore. «6 su 10» → **esposti** ·
-Fondo Monetario, 2024; «+32%» → **qualità** · Harvard, 2023; «−19 punti» → **un compito** · Harvard, 2023. Tre cose
-lo chiudono davvero, e sono tutte scritte nei brief e non solo nelle Note: le etichette entrano **nella stessa
-animazione** del numero («mai dopo»), lo seguono quando si rimpicciolisce e rientra nello slot (Scena 3) ed escono
-con lui (Scene 5 e 6); non esiste un fotogramma con il numero senza le sue due etichette; e finché non c'è niente da
-contare **lo slot è vuoto e sotto non c'è nessuna etichetta**, che è la forma onesta della scommessa (Scena 2, beat
-2 e 3). ✅ Segnalo anche una cosa che rende la correzione gratuita: le sei etichette sono di **una o due parole più
-l'anno** («esposti», «qualità», «un compito», «Fondo Monetario, 2024», «Harvard, 2023»), quindi stanno dentro la
-regola del §0 di `docs/sceneggiatura.md` senza nemmeno aver bisogno dell'esenzione di `componenti.etichetta()`: il
-controllo `parole-leggibili` non ha niente da contare.
-
-**⚠️ K, presa d'atto.** Il «· stima» è stato tolto e la cautela «stime, non previsioni» resta nel parlato della
-Scena 2 («ha stimato», «in un paese avanzato») e nella caption del post, dove l'ho ritrovata nell'elenco dei pezzi
-obbligatori («Sono stime su ciò che la tecnologia potrebbe toccare, non previsioni su ciò che accadrà…»). È una
-decisione dichiarata del presentatore, scritta nelle Note perché non si riapra: **non la conto come ❌** e non la
-riapro. Resta vero che di quell'insegnamento il video muto porta a casa metà, e la caption del post l'altra metà.
-
-#### Le nove condizioni portate dentro i brief: verificate una per una
-
-1. ✅ **⚠️ A — le due pile.** «mucchi indistinti e non contabili, sagome sovrapposte e sfalsate che si toccano, mai
-   una griglia o una fila che si possa contare a occhio, mai due blocchi di uguale misura che si leggano come due
-   metà; nessun numero di persone accanto»: è la condizione, alla lettera, e nelle Note c'è anche il perché (tre
-   condizioni quasi uguali, due terzi con l'IA e un terzo senza). Aggiunta minima: ⚠️ O qui sotto.
-2. ✅ **⚠️ B — croce e spunta.** Entrano «in una sola animazione» con il numero e con «un compito», restano insieme
-   fino alla fine della scena e non si trovano mai sole nell'ultimo fotogramma; se una pesa di più è la croce, con
-   il numero accanto. Le Note aggiungono l'84,5 % contro 60 % e 70,6 % e dicono esplicitamente che il verdetto è
-   comparativo: è la cosa giusta scritta nel posto giusto.
-3. ✅ **⚠️ C — le barre.** «stessa larghezza e stessa base, tutte e due partendo da zero, con nessun asse tagliato e
-   nessun piedistallo sotto»: così «un terzo più in alto» *è* il +32 %.
-4. ✅ **⚠️ D — mai due numeri insieme.** «Tessere, barre e, nella stessa animazione, il numero con le sue due
-   etichette escono tutti insieme: a schermo non resta nessun numero. Solo dopo…»: il buco fra i due numeri adesso
-   è esplicito.
-5. ✅ **⚠️ E — due pezzi accesi su cinque** (scelta del presentatore), non contigui, accesi uno alla volta, anello
-   attorno ai soli due, nessun conteggio accanto, etichetta «esempio». La proporzione disegnata non fa più una
-   maggioranza. Vedi però ⚠️ N.
-6. ✅ **⚠️ F — la barratura si disfa a vista.** Le barre «si scancellano come cancellate all'indietro», il colore
-   torna, le sei **risalgono nella fila al loro posto di prima**, e il beat 1 dice che lo stato sbarrato «dura poco,
-   meno di quanto durerà la correzione». Era il punto che nel regime nuovo regge da solo il «persi → esposto»,
-   senza più la parola: ora l'annullamento si vede.
-7. ✅ **⚠️ G — le frecce tratteggiate.** «I tre sotto la freccia in giù restano accesi, interi e dentro la fila:
-   niente barre, niente colore che se ne va, nessuna uscita di scena», due colori pari «nessuno dei due più cupo o
-   più spento dell'altro», e le quattro non esposte «restano lì come sfondo fuori dal conto, ben staccate». Il
-   quadro non si legge più a tre gruppi e «risentirne» non diventa «perso».
-8. ✅ **⚠️ H — la riga `FIGURA:` della Scena 3** è quella proposta, 18 parole, e ora contiene il tre e tre, cioè il
-   payoff della scena.
-9. ✅ **⚠️ J — la Scena 7.** «resta identica alle altre cinque: stesso colore, stessa dimensione, stessa intensità,
-   nessun alone e nessun accento addosso, e resta dentro il gruppo dei sei, davanti ma non fuori». La chiusura non
-   promette la salvezza a nessuno.
-
-#### Le due riscritture, guardate a parte
-
-✅ **Scena 6, i quattro pezzi (domanda 1 del coordinatore): non cambia niente per i claim, e la figura migliora.**
-Le quattro forme sono ora quattro oggetti diversi e non varianti dello stesso (blocco di cifre a griglia · foglio
-fitto di righe-sagoma con l'angolo piegato · scaletta di tre blocchetti a gradini con il pallino davanti ·
-lampadina, l'unica tonda), e il ⚠️ I nasceva proprio dal fatto che bozza e ordine si somigliavano **nel momento in
-cui uno torna indietro dalla macchina e l'altro no**: il beat 3 adesso lo dice alla lettera («il solo foglio di
-righe-sagoma torna indietro… mentre la scaletta resta sotto di lei»), quindi il gesto della mossa resta leggibile.
-Tre controlli fatti e passati: (a) le sagome non sono testo, quindi nessuna parola nuova entra a schermo; (b) la
-divisione resta quella della VOCE — bozza e ordine alla macchina, cifre e lampadina a te, e la lente sul foglio che
-torna, ferma sulle cifre — e la riga `FIGURA:` («due pezzi vanno alla macchina, due restano a te») continua a
-dire il vero; (c) la lampadina per «la conclusione» resta una convenzione da esempio, coperta dall'etichetta
-«esempio» e dalla caption del post che nomina i quattro pezzi. La prova richiesta è quella giusta: **a scena
-ferma**, non sul movimento; e il ripiego dichiarato resta Meshy, mai le parole.
-
-✅ **Scena 5, il «+32%» a cavallo fra le due cime (domanda 2 del coordinatore): nessuna affermazione nuova, anzi.**
-Il numero ancorato al divario fra le due cime dice «la differenza fra i due gruppi è tanto così», che è esattamente
-quello che misura la fonte (il 32 % è la media dell'aumento rispetto alla media del gruppo di controllo, 4,37):
-toglie l'ultimo residuo del prima/dopo che la seconda passata aveva segnalato, e non introduce nessun altro claim.
-Va solo tolta un'ambiguità del brief → ⚠️ P.
-
-#### ⚠️ di questa passata (tre condizioni per l'animatore, nessuna blocca)
-
-**⚠️ N · Scena 3, «una parte piccola» non deve diventare «una cosa da niente».** Passando da tre a due pezzi accesi
-su cinque il rischio si è spostato dall'altra parte: prima la figura diceva «più di metà del tuo lavoro lo fa lei»,
-ora potrebbe dire «quasi niente», e nemmeno questo lo misura nessuno — nella fonte un mestiere è «esposto» proprio
-quando una quota **rilevante** dei suoi compiti è alla portata dell'IA. **Condizione:** i due pezzi accesi restano
-alla stessa dimensione degli altri tre e in accento pieno, ben visibili; l'attenuazione dei tre spenti non va spinta
-fino a farli sparire, e «piccola» nel brief va letto come «una parte del tutto», non come «trascurabile».
-
-**⚠️ O · Scena 5, se le due pile hanno masse diverse, quella con la macchina non è la più piccola.** Il brief vieta
-giustamente «due blocchi di uguale misura», ma una differenza visibile è a sua volta un'affermazione: nello studio
-il gruppo con l'IA era il **più numeroso** (due condizioni su tre, circa due terzi del campione). **Condizione:** la
-differenza fra i due mucchi resta appena percettibile e organica — roba da mucchio, non da grafico — e comunque mai
-con la pila della macchina più piccola dell'altra.
-
-**⚠️ P · Scena 5, dove sta esattamente il «+32%».** Il brief dà due ancoraggi diversi nella stessa frase («Sulla
-cima della barra alta» e «a cavallo fra le due cime»). **Regola per l'animatore:** vince il divario. Il numero si
-ancora verticalmente **fra il livello della cima bassa e quello della cima alta** e orizzontalmente fra le due barre
-o appena di lato, meglio se un trattino sottile o una graffa unisce le due cime; **mai centrato sulla sola cima
-alta**, che lo farebbe tornare il valore di quella barra. La graffa è una linea, non aggiunge testo a schermo.
-
-#### Note pratiche, non bloccanti
-
-- **Filmati.** `contenuti/media/ia-e-lavoro/` contiene già `broll-scena-01.mp4` e `broll-scena-04.mp4`. Il ⚠️ M è
-  chiuso dal presentatore, che ha guardato i fotogrammi: io i video non li vedo, e non riapro la scelta. Promemoria
-  per il montaggio: i filmati sono resi sulla durata di adesso, quindi se la presa vera allunga la Scena 1 o la 4
-  vanno rifatti con `broll piano` + `broll rendi` (le scelte restano).
-- **Durata (⚠️ L, deciso: non si taglia).** Il reel resta a 90 s stimati, cioè il tetto, con margine zero sulla
-  stima a parole; i cinque tagli restano elencati e non applicati. Se la presa vera sfora, si prende il primo della
-  lista, non si comprime il parlato in sala.
-- **Per la caption del post** restano obbligatori tutti i pezzi già elencati nelle Note, e in più — ora che dallo
-  schermo sono usciti — «stime, non previsioni», «economie avanzate», «qualità votata da valutatori umani, contro
-  chi non l'aveva, su 18 compiti», «19 punti percentuali su un solo compito», la clausola dello staff del Fondo, e
-  la separazione fra il «19 %» di Stanford e i «19 punti» di Harvard.
-
-#### `reel valida` (rifatto in questa passata)
-
-`uv run reel valida contenuti/sceneggiature/2026-09-20-ia-e-lavoro.md` → **[OK] reel stimato 90s · 7 scene (1 hook,
-5 spiegazione, 1 chiusura) · 236 parole di voce**. **0 errori, 0 avvisi.**
-
-**APPROVATO TECNICAMENTE** — 2026-09-20. Il ❌ della terza passata è chiuso nei brief e non solo nelle Note; le nove
-condizioni ⚠️ A-J sono entrate una per una nelle righe `ANIMAZIONE:` e `FIGURA:`, e le due riscritture (i quattro
-pezzi della Scena 6 e il numero a cavallo delle cime nella Scena 5) non creano nessuna affermazione nuova: la prima
-chiude il punto più fragile del reel, la seconda toglie l'ultimo residuo del prima/dopo. Restano tre condizioni
-minori per chi anima (⚠️ N, O, P) e i pezzi obbligatori della caption. `stato: rivisto`.
-
-## Note di animazione
-<!-- Compilate dall'animatore: beat scelti, tempi Manim, cose che non stanno. -->
+**STRUTTURA RIFATTA IL 2026-09-21 (regola del presentatore: i due registri stanno a metà).** Il reel passa da
+7 scene con 2 a filmato a **9 scene**: apertura (1) e chiusura (9) sono **il presentatore a tutto schermo** (seconda
+regola del 2026-09-21, `RIQUADRO: pieno` di default), e il corpo (2-8) alterna **3 scene a filmato** (3, 5, 8) e **4
+animate** (2, 4, 6, 7).
+**Nessuna parola della VOCE è cambiata**: il monologo approvato è stato tagliato in punti diversi e i pezzi generici
+(senza numeri e senza termini tecnici) sono passati alle scene a filmato. Da qui in poi, in queste Note e nelle
+sceneggiature, valgono i numeri nuovi. La mappa vecchio → nuovo, che serve a rileggere la `## Revisione tecnica` e
+le `## Note di animazione
+
+Rifatte il 2026-09-21 sulla struttura a nove scene (numerazione **nuova** in tutta la sezione). File:
+`contenuti/animazioni/ia-e-lavoro.py`, classi `Scena02 04 06 07 09`. Le scene 1 (apertura a volto pieno) e 3, 5, 8
+(`[broll]`) **non hanno classe**. `uv run reel anima … --json` (tre giri): **0 avvisi di tempo, 0 controlli** sulle
+cinque scene animate. L'unico errore è quello della scena 1: `anima` pretende una classe anche per l'apertura a
+volto pieno (difetto di libreria, qui sotto). `uv run reel monta … --prova --anteprima`: tutte le `_scene` e
+`reel-9x16.mp4` sono fatte, **reel 82,9 s**. `monta` però si ferma subito dopo il concat, sulla copertina (secondo
+difetto di libreria, qui sotto), quindi di questa corsa mancano `report.json`, `contact-sheet.png` e copertina: quelli
+in cartella sono di stamattina.
+
+### Storyboard e mossa wow, scena per scena
+
+| Scena | Mossa (§11bis) | Su quale frase | Fotogrammi chiave |
+|---|---|---|---|
+| 2 | **tipografia cinetica** | beat 3, «Sono sei, e lo dicono loro, non io.» | dieci figure spente · slot vuoto con «?» · il numero arriva a 2,1× e spinge la fila in alto |
+| 4 | **metamorfosi** | beat 0, «Ecco, esposto vuol dire questo.» | lo stato finale della 2 · una delle sei vola al centro e diventa una tessera a ventaglio in cinque pezzi, anello su due · tre e tre con le frecce tratteggiate |
+| 6 | **punch** | beat 4, «Peggio.» | il bordo frastagliato disegnato a tratto · le due barre con il «+32%» sul divario · PEGGIO a tutto schermo, poi croce, spunta e «−19 punti» |
+| 7 | **contrasto di scala** | beat 0, «…spezzalo in quattro.» | una tessera di 72 px · la carta che riempie l'area (~8×) e si spezza in quattro · due pezzi alla macchina, due a te, la lente, e il richiamo |
+| 9 | **tipografia cinetica** | beat 1, «Ma una cosa è subirla, un'altra è saperla usare.» | la faccia e le caption, nient'altro · l'appoggio scuro e il messaggio, «SAPERLA USARE» che cresce con un rimbalzo · la CTA |
+
+Nessuna mossa si ripete fra scene animate vicine: la 2 e la 9 hanno in comune la tipografia cinetica, ma fra loro ci
+sono sei scene. `punch` è usato una volta sola.
+
+### Beat: cosa entra su ciascuno
+
+**Scena 2** (13,91 s · beat a 0 / 3,58 / 8,22 / 11,05 s), identica a stamattina: (0) le dieci sono già in scena al
+fotogramma 0 (stacco dalla faccia) e il conteggio le attraversa da sinistra; (1) lo slot si disegna vuoto con il
+trattino, sotto niente; (2) il «?» pulsa per 1 s, nessuna figura accesa; (3) sei si accendono sfalsate e il numero
+arriva a 2,1× con le due etichette **nella stessa** `play`.
+
+**Scena 4** (8,49 s · beat a 0 / 2,50 / 6,47 s), riscritta dalla vecchia 3. Il fotogramma 0 è **l'ultimo della 2**
+(`stato_fine_2`): dopo il filmato si entra con un taglio su uno stato che chi guarda riconosce. (0) Il numero rientra
+nel suo slot, con le etichette appresso, mentre la terza figura vola al centro; poi diventa tessera, si apre a
+ventaglio in cinque pezzi (sotto, «esempio») e due pezzi non contigui si accendono uno dopo l'altro. **In coda al
+beat** (≈1,8-2,3 s) arrivano i due anelli attorno ai soli due pezzi accesi, i tre spenti si attenuano ed entra
+«esposto». (1) Il fotogramma resta fermo **1,1 s**, poi la tessera si richiude e rientra nella fila, le quattro non
+esposte scivolano al centro attenuate e i sei si aprono in due terzetti (secondario e terziario). (2) Le due frecce
+tratteggiate; il numero resta nello slot con le sue etichette.
+
+**Scena 6** (18,16 s · beat a 0 / 2,25 / 6,88 / 11,26 / 14,67 s). Il brief è lo stesso di stamattina, cambia solo
+l'attacco: il fotogramma 0 è **l'ultimo della 4** (`stato_fine_4`: tre e tre, frecce, numero piccolo), non più la fila
+intera. Nel beat 0 i due terzetti e le quattro risalgono in una fila piccola in alto e riprendono i colori dei sei,
+mentre frecce e numero escono nella stessa `play`. Tutto il resto è com'era (mucchio che si divide, 18 tessere, barre
+da zero, «+32%» sul divario, «?» fuori dal bordo, punch, croce, spunta e «−19 punti» insieme fino alla fine).
+
+**Scena 7** (9,67 s · beat a 0 / 3,81 / 5,67 s). I beat 0 e 1 sono quelli di stamattina. Il **beat 2** porta ora anche
+il richiamo obbligatorio, in 4 s. (a) In **una** `play` a finestre (1,07 s): la persona entra in alto a sinistra;
+cifre e lampadina si stringono sotto di lei insieme (percorsi separati: le cifre restano sulla riga alta e vanno a
+sinistra, la lampadina resta in basso); poi il **solo** foglio torna indietro lungo la riga alta; la scaletta sale
+sotto la macchina, nel posto che il foglio ha liberato; infine entrano la lente, sul foglio appena tornato, e
+«decidi tu». (b) La lente va dal foglio alle cifre, che si accendono (0,47 s: il percorso corto previsto dal brief).
+(c) Il richiamo (0,93 s): tutto si stringe in basso e si attenua; in alto a sinistra torna la fila piccola, con le sei
+accese; a destra si ridisegna il bordo piccolo, con la spunta dentro e la croce fuori. Il richiamo è completo a
+**7,9 s** e resta fermo fino a 9,67 s (**1,75 s**).
+
+**Scena 9** (6,46 s · beat a 0 / 3,09 s), chiusura a volto pieno. (0) Per tutta la prima frase nulla: la faccia e le
+caption. (1) Un solo passaggio di 1,4 s, a inizio frase. Entra l'appoggio (`sfondo` a 0,75, angoli di 28 px, tinta
+unita) e le righe del messaggio salgono. «SAPERLA USARE», la riga in accento, cresce da sola con un rimbalzo del 6 %
+dentro la sua riga. Per ultima entra la CTA a pillola. L'ultimo fotogramma resta fermo **~2 s**. Fondo trasparente nel
+montaggio: nessuna figura, nessun bordo, nessuna ricostruzione della 7.
+
+### Le condizioni del revisore
+
+- **⚠️ R (scena 4)**: rispettata. Anello e pillola «esposto» entrano **dentro il beat 0**, in coda, finiti a ~2,3 s
+  (la frase dura fino a 2,5 s). Restano fermi **1,1 s** (il codice aspetta `fermo_da + 1,1`) prima che la tessera si
+  richiuda. Il beat 1 fa solo la richiusura e il tre e tre. «Sulla parola» alla lettera (0,4 s) non si poteva: prima
+  deve esserci la tessera aperta attorno a cui disegnare l'anello, cioè la metamorfosi (1,8 s). È la lettura «in coda
+  al beat 1» della condizione.
+- **⚠️ S (scena 7)**: rispettata. Fila piccola con le sei accese in accento, nessuna spenta, nessuna cambiata di
+  colore. Spunta dentro il bordo e croce fuori, **stessa misura** (52 px tutte e due: stamattina erano 54 e 46).
+  Fra il bordo destro della fila e la spunta ci sono **~320 px** e il bordo stesso; la croce è la cosa più lontana
+  dai sei, all'estremo destro. Fermo **1,75 s** (≥ 1,5). Il richiamo non è stato tagliato: per fargli posto la lente
+  fa il tragitto corto (dal foglio tornato alle cifre accanto) e i quattro spostamenti stanno in una `play` sola.
+- **⚠️ N, O, P**: invariate e verificate come stamattina. (N) I due pezzi accesi hanno la stessa misura degli altri
+  tre, i tre spenti sono a 0,5 con la cornice opaca. (O) Il mucchio unico si divide, e la metà con la macchina è la
+  più grande (46 contro 41). (P) Il «+32%» è ancorato a metà del divario, con graffa e guida.
+- **Etichette accanto ai numeri grandi**: «6 su 10» · esposti · Fondo Monetario, 2024 (2, 4, attacco della 6);
+  «+32%» · qualità · Harvard, 2023; «−19 punti» · un compito · Harvard, 2023. Entrano, si muovono ed escono sempre
+  nella stessa animazione del numero.
+- **Il punto fragile, i quattro pezzi della 7**: reggono a scena ferma anche nella disposizione nuova. Blocco di cifre
+  a griglia, foglio fitto con l'angolo piegato, scaletta di tre voci a gradini con il pallino, lampadina tonda. Bozza
+  e ordine restano distinguibili anche a 0,55×, e nel fotogramma in cui uno torna e l'altro no stanno su righe
+  diverse (foglio in alto a sinistra, scaletta in alto a destra). Niente Meshy.
+- **⚠️ F e ⚠️ J** decadute: nel file non c'è più né la barratura né il passo avanti.
+
+### Parole leggibili a schermo
+
+Controllo `parole-leggibili` a zero. A fine di ogni beat, escluse le etichette marcate, le scene 2, 4, 6 e 7 hanno
+**zero parole**: a schermo ci sono solo i tre numeri, le sei etichette di una-due parole più l'anno, «esposto»,
+«decidi tu» ed «esempio». Nella **scena 9** il MESSAGGIO (9 parole) e la CTA (11) stanno a schermo **~2 s**, a fine
+reel, sopra le caption che dicono la stessa conclusione a voce. Sono marcati come etichette (`Messaggio`,
+`Etichetta`) ed è il testo previsto dalla chiusura.
+
+### Che cosa ho cambiato rispetto a stamattina, e perché
+
+1. Rinumerazione: `Scena03 → Scena04` (riscritta), `Scena05 → Scena06`, `Scena06 → Scena07`, `Scena07 → Scena09`
+   (riscritta). Via le classi 3 e 5 della numerazione vecchia, via `cluster_6`, `stato_fine_6` vecchio,
+   `area_con_caption` (il raccordo a pixel con la chiusura non serve più) e l'import di `aree`.
+2. Scena 4: via la barratura (beat 0 e metà del beat 1 vecchi), fotogramma 0 da `stato_fine_2`, tre beat. La
+   metamorfosi è compressa (0,6 + 0,27 + 0,47 + 0,47 s invece di 3,1 s), così anello ed «esposto» cadono nel beat 0.
+3. Scena 6: attacco da `stato_fine_4`. Stamattina ripartiva dalla fila intera, che non era l'ultimo fotogramma della
+   vecchia 3. Il tre e tre ha un solo posto dove si calcola (`bersagli_tre_e_tre`, `frecce_tre_e_tre`), usato sia dalla
+   4 sia dalla 6.
+4. Scena 7: nuova disposizione dei pezzi alla persona (cifre in alto a sinistra, foglio in alto al centro, lampadina
+   sotto). Così cifre e lampadina si muovono insieme senza incrociarsi e il foglio torna in orizzontale lungo una riga
+   libera: con la disposizione di stamattina servivano quattro finestre in fila, cioè 1,8 s. Il richiamo è nella
+   funzione `richiamo()`, con fila e bordo più distanti (fila a −290, bordo a +150).
+5. Scena 9: rifatta da zero. Il messaggio è scalato a 0,7 (59 px) e l'appoggio va da 232 a 714 px della tela. A
+   0,8 scendeva fino a ~790 px e copriva la parte alta della «P» del segnaposto, cioè la fronte.
+
+### Tempi Manim e durate (voce di prova)
+
+| Scena | Tipo | Durata | Inizi dei beat (s) |
+|---|---|---|---|
+| 1 | hook, volto pieno | 5,68 s | 0 / 2,09 |
+| 2 | spiegazione | 13,91 s | 0 / 3,58 / 8,22 / 11,05 |
+| 3 | broll | 6,00 s | — |
+| 4 | spiegazione | 8,49 s | 0 / 2,50 / 6,47 |
+| 5 | broll | 9,83 s | — |
+| 6 | spiegazione | 18,16 s | 0 / 2,25 / 6,88 / 11,26 / 14,67 |
+| 7 | spiegazione | 9,67 s | 0 / 3,81 / 5,67 |
+| 8 | broll | 5,11 s | — |
+| 9 | chiusura, volto pieno | 6,46 s | 0 / 3,09 |
+
+**Reel 82,9 s** (`ffprobe` su `reel-9x16.mp4`), dentro i 90: i 92 s della stima a parole non si materializzano, come
+stamattina. `origine_tempi: voce-sintetica` ovunque. Le durate delle scene a filmato vengono dai `_scene` montati.
+
+### Difetti di libreria trovati (non corretti: `tools/` non si tocca)
+
+1. **`reel anima` e l'apertura senza classe**: `anima` salta le scene `a_filmato` ma non quelle a volto pieno senza
+   grafica. Così la scena 1, che per regola non ha classe, esce come errore «manca la classe Scena01» (`ok: false`
+   nel JSON). `monta` invece la gestisce (`tools/reel/monta.py`, `except AnimazioneMancante` con `a_volto_pieno`); ad
+   `anima` (riga ~130) manca lo stesso ramo.
+2. **`reel monta` si rompe sulla copertina di un'apertura a volto pieno**: `_hook_senza_caption`
+   (`tools/reel/monta.py` ~352) usa `out / hook["grafica"]`, e per un'apertura senza grafica quel valore è vuoto:
+   ffmpeg riceve la cartella del render come input («Is a directory»). Arriva dopo il concat, quindi scene e reel
+   vengono fatti, ma mancano copertina, `report.json` e `contact-sheet.png`. Per un'apertura a volto pieno dovrebbe
+   passare `grafica=None`, con l'avatar o la clip come base.
+
+### Cose che non stanno / per il presentatore
+
+- **La metà alta dell'area e la faccia non combaciano del tutto**. La metà alta dell'area contenuto a volto pieno
+  arriva a 788 px, mentre sul segnaposto il volto comincia a ~700. Ho tenuto l'appoggio sopra i 714 px rimpicciolendo
+  il messaggio: se la presa vera ha la testa più in alto, il messaggio va scalato ancora (0,6 = 50 px), oppure la CTA
+  esce dall'appoggio.
+- **La 4 è stretta**: nel beat 0 la metamorfosi sta in 1,8 s. Con la presa vera, se «Ecco, esposto vuol dire questo»
+  si accorcia sotto i 2,3 s, anello ed «esposto» scivolano all'inizio del beat 1 (resterebbero comunque fermi 1,1 s).
+- Nel tre e tre della 4 (e nella risalita all'inizio della 6) una figura passa sopra le vicine per due o tre
+  fotogrammi. Sono figure e non testi, ed era così anche stamattina.
 
 ## Pacchetto social
 **Caption Reel:**

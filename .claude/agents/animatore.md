@@ -73,6 +73,44 @@ Prima di scrivere codice leggi OBBLIGATORIAMENTE:
    Porta il frontmatter a `stato: animato`.
 
 ## Lezioni dalle sessioni
+- **2026-09-21, REGOLA DEL PRESENTATORE: apertura e chiusura a volto pieno** (`docs/animazioni.md` §5):
+  - l'**apertura non ha classe Manim**: non scriverla, il montaggio la compone con lui a tutta tela e le caption;
+  - **nemmeno la chiusura ha classe** (stessa sera, dopo la prima anteprima: il presentatore ha tolto il messaggio
+    finale, «solo caption»). L'ultima figura del reel è l'ultimo fotogramma dell'ultima scena animata: curala come
+    un finale. Nel `--prova` la faccia è l'avatar segnaposto a tutto schermo;
+  - le scene subito dopo l'apertura e subito prima della chiusura partono o finiscono su uno stacco: niente raccordo.
+- **2026-09-21 sera, `ia-e-lavoro` rinumerato a 9 scene (primo montaggio con apertura e chiusura a volto pieno)**:
+  - `anima` dà ancora errore «manca la classe Scena01» per l'apertura a volto pieno, e `monta` si rompe sulla
+    copertina (`_hook_senza_caption`, «Is a directory») **dopo** il concat: `_scene/` e `reel-9x16.mp4` ci sono, ma
+    `report.json` e `contact-sheet.png` restano quelli vecchi. Controlla la data dei file prima di leggerli, e misura
+    la durata con `ffprobe`.
+  - La scena animata che viene dopo un `[broll]` riparte dall'**ultimo fotogramma della scena animata prima**
+    (`stato_fine_N`), non da una versione «pulita» dello stato: dopo il filmato chi guarda riconosce quello che ha
+    lasciato. Il posto da cui si calcolano le posizioni è uno solo (`bersagli_…`), usato da tutte e due le scene.
+  - Un richiamo che deve restare fermo ≥ 1,5 s in un beat stretto: scegli le posizioni d'arrivo in modo che due
+    pezzi possano muoversi **insieme** senza incrociarsi (uno resta sulla sua riga, l'altro sulla sua), invece di
+    mettere quattro finestre in fila. Poi una sola `play` a finestre.
+  - Chiusura a volto pieno: la «metà alta dell'area» (fino a 788 px) scende sulla fronte del segnaposto (~700 px).
+    Guarda il montato: il messaggio a 0,7 (59 px) con la CTA sotto sta fra 232 e 714 px.
+  - Una riga in accento che entra `FadeIn(scale=1.9)` copre per due fotogrammi le righe vicine: falla crescere da
+    piccola (`scale=0.4`) con un rimbalzo corto.
+- **2026-09-21, `ia-e-lavoro` (regime muto, raccordo con la chiusura)**:
+  - La **chiusura non ha la fascia caption**: la sua area contenuto arriva 224 px più in basso. Ricostruire lì
+    l'ultimo fotogramma della scena precedente con `self.area.contenuto` sposta in giù tutto ciò che è ancorato al
+    fondo e fa un salto alla giunzione. Ricostruisci con l'area delle scene **con** caption, e verifica il raccordo
+    **a pixel** (ultimo fotogramma della scena prima ↔ primo della chiusura: solo antialias, poche decine di pixel).
+    Nessun controllo lo vede (manuale §10).
+  - Le icone vanno tenute **fuori dall'ingombro delle carte opache**: un'icona disegnata sopra una carta piena
+    sparisce per un secondo e i controlli, che girano a scena ferma, non se ne accorgono. Riserva una fascia alta
+    alle icone e abbassa il blocco.
+  - Due carte che arrivano **sulla stessa riga** vanno mosse a finestre non accavallate (o su righe diverse):
+    a 8 fps si vede l'una coprire l'altra per mezzo secondo.
+  - Un beat di 4-5 secondi con un oggetto fermo è tempo morto: fai **entrare un mucchio solo che si divide** invece
+    di far entrare due pile già fatte — costa niente e dice il verbo della voce.
+  - Per attenuare, abbassa l'intensità del colore: `set_opacity` su un'icona SVG accende un riempimento fuori
+    palette e fa scattare il controllo `colore`.
+  - Una forma irregolare (un bordo frastagliato) si disegna **una volta sola e si scala**: stessa silhouette in tutte
+    le scene, col tratto non scalato.
 - **2026-09-13, primo reel** (`contenuti/archivio/generativa-non-creativa/animazioni.py`: archiviato, da leggere come esempio, non da lanciare):
   - Al presentatore è piaciuto molto il flusso: pochi oggetti che ritornano e ogni scena che parte dall'ultimo
     fotogramma della precedente (manuale §5, «Filo visivo e continuità»). È lo standard.

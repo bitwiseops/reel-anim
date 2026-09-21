@@ -80,9 +80,18 @@ Altrimenti prosegui con T3.
 fra scene e non stanno mai insieme (`docs/sceneggiatura.md` §2, `broll/README.md`): l'apertura e le scene d'attenzione
 vanno a filmato, e va deciso **prima di animare**, perché una scena a filmato non ha una classe Manim e la scena dopo
 parte da uno stacco. La VOCE a questo punto è congelata.
-1. `uv run --project broll broll piano <file>`: riporta quali scene propone a filmato e con quali query. Se l'hook non
-   è fra quelle, dillo: vuol dire che il suo brief parla del titolo o manca, e l'apertura con la clip (nota del
-   presentatore del 2026-09-19) non c'è. **Le query del piano sono parole italiane del brief e Pexels le capisce male**
+1. `uv run --project broll broll piano <file>`: riporta quali scene propone a filmato e con quali query. L'hook e la
+   chiusura non ci sono mai: dal 2026-09-21 sono il presentatore a tutto schermo (se l'hook risulta a filmato, qualcuno
+   ha scritto `SCHERMO:` a mano: segnalalo). **Guarda l'equilibrio** (regola del 2026-09-21): le scene a filmato devono
+   essere circa metà delle scene **in mezzo** (senza apertura e chiusura), ± una. Se `piano` ne propone meno (avviso «troppo poche»), non scegliere filmati a caso:
+   la sceneggiatura non sta dividendo i registri — le scene «generiche» hanno dentro numeri o termini tecnici che le
+   fanno restare a Manim. Rimanda allo sceneggiatore con l'elenco delle scene rimaste animate, e riparti da qui.
+   **Ma prima guarda perché** (la colonna `note` di `piano.json`, «animata: …»): l'euristica cerca parole, e sbaglia.
+   Il 2026-09-21 ha tenuto animata una scena perché la VOCE diceva «qui vedi come **funziona**» (la promessa del
+   canale, non un meccanismo); «a metà pagina» nel brief è già stato corretto nel codice. Se la scena è stata scritta
+   per il filmato e il marcatore è un falso positivo, mettila a filmato tu in `piano.json` (`registro`, `file`, una
+   `note` che dice perché) prima di `cerca`, e **non rilanciare `piano` fino a `broll scrivi`**: lo rifarebbe
+   animato. Dopo `scrivi` la scena è `[broll]` nel `.md` e `piano` la rispetta. **Le query del piano sono parole italiane del brief e Pexels le capisce male**
    (2026-09-20: «piedi» → otto filmati di piedi nudi): prima di `cerca` riscrivi `query` in `piano.json` con 2-3 query in
    inglese per scena (quelle dell'idea o delle Note della sceneggiatura), poi `cerca --max 12`. Se le query sono parole vaghe, il brief non descrive un'immagine: si rimanda
    allo sceneggiatore, non si cerca a caso. Zero scene a filmato: scrivilo nel report e prosegui con T3.

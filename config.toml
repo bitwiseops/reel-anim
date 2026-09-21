@@ -77,7 +77,9 @@ filmato = "taglio"        # taglio | dissolvenza: le giunzioni che toccano una s
 [registrazione]           # `uv run reel registra`: presa unica sull'anteprima --prova (i default sono in tools/reel/registra.py)
 video = 0                 # fotocamera avfoundation: indice o parte del nome (`uv run reel registra --dispositivi`)
 # audio = "MacBook"       # microfono PortAudio (indice o parte del nome); assente = il microfono predefinito di sistema
-risoluzione = "1920x1080" # l'inquadratura scelta nell'app finisce in un quadrato di 360 px: mai sotto 360 px
+risoluzione = "1080x1920" # verticale nativa (la fotocamera la offre, 2026-09-21): apertura e chiusura a volto pieno
+                          # usano il fotogramma intero senza ingrandire; le altre scene ne ritagliano il quadrato
+                          # dell'inquadratura, che finisce nel riquadro da 360 px (mai sotto 360 px)
 fps = 30
 preroll_s = 2.0           # il reel parte questi secondi prima della scena scelta
 conto_alla_rovescia_s = 3

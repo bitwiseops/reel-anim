@@ -11,6 +11,10 @@ TIPI_SCENA = ("hook", "spiegazione", "schermo", "broll", "chiusura")
 CON_FILE = ("schermo", "broll")         # i tipi che senza SCHERMO: <file> non hanno niente da mostrare
 TRANSIZIONI = ("taglio", "dissolvenza")
 POSIZIONI_RIQUADRO = ("basso-destra", "basso-sinistra", "alto-destra", "alto-sinistra")
+# RIQUADRO: pieno = il presentatore a tutta tela, con la grafica Manim (trasparente) sopra di lui. Dal 2026-09-21 è
+# il default di [hook] e [chiusura]: lui che parla guardando in camera, con le caption e nient'altro (il MESSAGGIO
+# della chiusura non va a schermo: è il testo per la caption del post).
+PIENO = "pieno"
 # CAPTION: i sottotitoli seguono la voce e si bruciano nel montaggio (tools/reel/caption.py). "no" li sospende
 # dove la parola detta è già grande a schermo (punch, MESSAGGIO); "alto" sposta la fascia in cima, per la deroga
 # delle scene in cui il testo *è* il contenuto.
@@ -61,7 +65,7 @@ class Scena:
     cta: str | None = None                               # chiusura
     schermo: str | None = None                           # file b-roll (relativo a contenuti/media/<slug>/)
                                                          # in [schermo] sta nella finestra, in [broll] è tutta la tela
-    riquadro: str | None = None                          # None = default per tipo; "no" | "si" | posizione
+    riquadro: str | None = None                          # None = default per tipo; "no" | "si" | "pieno" | posizione
     caption: str | None = None                           # None = dal config; "no" | "alto" | "basso"
     durata_min_s: float | None = None
     transizione: str | None = None
@@ -89,16 +93,33 @@ class Scena:
         return self.tipo == "broll" or (self.tipo == "hook" and bool(self.schermo))
 
     def riquadro_effettivo(self) -> str:
+        """Dove sta il presentatore. Dal 2026-09-21 **i due estremi del reel sono suoi, a tutta tela**: l'apertura
+        (pone il problema guardando in camera) e la chiusura (dice la conclusione). In mezzo sta nel riquadro, e
+        sopra un filmato `[broll]` pure. `RIQUADRO: si` riporta una di quelle due al riquadro di prima, `no` lo
+        toglie del tutto."""
         if self.riquadro is not None:
             return self.riquadro
-        return "no" if self.tipo == "hook" and not self.a_filmato else "si"
+        if self.tipo == "chiusura":
+            return PIENO
+        if self.tipo == "hook":
+            return "si" if self.a_filmato else PIENO      # con SCHERMO: resta l'hook a filmato, col riquadro sopra
+        return "si"
+
+    @property
+    def a_volto_pieno(self) -> bool:
+        """Il presentatore riempie la tela: la grafica Manim gli va sopra, trasparente."""
+        return self.riquadro_effettivo() == PIENO
 
     def caption_effettiva(self) -> str:
-        """Dove stanno i sottotitoli in questa scena. Nella [chiusura] non ci sono: il MESSAGGIO è già la frase
-        detta, scritta grande, e una caption sotto direbbe le stesse parole una seconda volta."""
+        """Dove stanno i sottotitoli in questa scena. Nella [chiusura] **a volto pieno** ci sono: c'è solo una faccia
+        che parla, e senza sottotitoli chi guarda muto non legge la conclusione. In una chiusura riportata al riquadro
+        (`RIQUADRO: si`) non ci sono: lì il MESSAGGIO è la frase detta scritta grande, e una caption sotto direbbe le
+        stesse parole una seconda volta."""
         if self.caption is not None:
             return self.caption
-        return "no" if self.tipo == "chiusura" else "si"
+        if self.tipo == "chiusura":
+            return "si" if self.a_volto_pieno else "no"
+        return "si"
 
     def to_dict(self) -> dict:
         return {"n": self.n, "tipo": self.tipo, "voce": self.voce, "animazione": self.animazione, "figura": self.figura,

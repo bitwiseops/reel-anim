@@ -98,8 +98,9 @@ Prima di scrivere leggi OBBLIGATORIAMENTE:
   screen recording da girare va proposto nelle Note di produzione, non messo in scena.
 - **Chiusura**: `MESSAGGIO:` = il messaggio centrale in forma memorabile (≤ 12 parole consigliate, 25 al
   massimo: una frase grande, il resto in caption); `CTA:` una riga.
-- Durata: 6-8 scene, reel stimato fra 30 e 90 s, di solito 50-75 (il parlato vero costa parole: non
-  comprimerlo per stare sotto).
+- Durata: 6-9 scene (min 5, max 10), reel stimato fra 30 e 90 s, di solito 50-80 (il parlato vero costa parole: non
+  comprimerlo per stare sotto). Il numero di scene non è fisso: lo decide **l'equilibrio fra i due registri** (sotto).
+  Se per stare a metà servono più scene, aggiungile invece di allungare il reel.
 - `## Note di produzione`: appunti per il revisore (claim delicati, esempi dichiarati), per l'animatore (il filo
   visivo) e per il presentatore (tono, pause). Non vanno a schermo.
 
@@ -160,7 +161,7 @@ Prima di scrivere leggi OBBLIGATORIAMENTE:
   capiscono al contrario o dipendono da una scena prima: «Quindi scrivilo tu, nella richiesta» (si sente «scrivi tu
   il biglietto»; meglio «diglielo tu») e «Al suo posto scrivi…» (rimanda a una carta di un'altra scena). Rileggi le
   frasi con un pronome come le sentirebbe chi guarda senza lo schermo.
-- **2026-09-19, nota del presentatore sull'apertura (vale per tutti i reel da qui in poi)**: i primi 5-10 secondi
+- **[SUPERATA il 2026-09-21: l'apertura è il presentatore a tutto schermo, vedi la regola in fondo]** **2026-09-19, nota del presentatore sull'apertura**: i primi 5-10 secondi
   devono catturare l'attenzione. L'hook è **un problema o una domanda** posta a chi guarda (non la tesi, non un
   preambolo), e lo sfondo in quel momento è **una clip che richiama quel problema**: la scena si vede prima di
   capirla. Scrivi l'apertura pensando alle due cose insieme: la VOCE pone il problema, la riga `ANIMAZIONE:`
@@ -176,7 +177,8 @@ Prima di scrivere leggi OBBLIGATORIAMENTE:
   da disegnare** (nessun meccanismo, quantità o figura: una scena d'attenzione, un'esperienza riconosciuta) scrivila
   perché possa andare a filmato: brief `ANIMAZIONE:` di **una riga** che descrive un'immagine filmabile (chi, dove,
   che gesto), e **nessun `TESTO:`** — sopra il filmato non va grafica, e `broll scrivi` una scena con `TESTO:` non la
-  converte. Mai due scene così di fila, mai più di metà del reel.
+  converte. Mai due scene così di fila. **Dal 2026-09-21 il tetto è diventato un obiettivo: le scene a filmato sono
+  circa metà del reel** (vedi la regola in fondo).
 - **2026-09-19, nota del presentatore: «la voce narrante deve risultare più umana e naturale»** (detta davanti
   all'anteprima di `generativa-probabile`, scritta con la sola guida distillata). Le regole non bastano a dare
   l'orecchio: da qui in poi leggi le trascrizioni vere prima del monologo (sopra) e fai la **prova dell'orecchio**
@@ -236,6 +238,49 @@ nelle note per la caption («l'idea viene da un post di …», con il link). La 
 paternità: non «me la sono inventata io», non «uno dice che». In VOCE e a schermo si nominano solo fonti ufficiali
 (istituzioni, studi pubblicati, istituti di ricerca), e solo quando reggono un numero. Questa regola supera la lezione
 «la mossa della fonte si attribuisce» qui sopra: l'attribuzione si fa in caption, non nel reel.
+
+### 2026-09-21 · REGOLA DEL PRESENTATORE: i due registri stanno a metà, e si dividono anche il parlato
+Nota di Flavio davanti ai due reel del regime muto (`ia-e-lavoro` e `scrivere-con-ia`, entrambi 2 scene a filmato su
+7: troppo poche, cinque scene animate di fila).
+
+**L'equilibrio.** Circa **metà delle scene va a filmato**, con una scena di tolleranza in più o in meno. Non è un
+tetto da non superare, è il bersaglio: `valida` e `broll piano` avvisano anche quando i filmati sono **troppo pochi**.
+Il numero di scene non è fisso: se per stare a metà ne servono otto o nove invece di sette, **aggiungile senza
+allungare il reel** — le scene a filmato sono corte (4-7 s), quelle animate si tengono i 12-16 s. Otto scene in 80 s
+valgono più di sei in 85. Resta tutto il resto: mai due scene a filmato di fila, mai `TESTO:` sopra un filmato, e il
+tipo `[broll]` non lo scrivi tu (scrivi `[spiegazione]` con un brief filmabile, lo converte `broll scrivi`).
+
+**La divisione del parlato — è questa la parte che cambia come scrivi la VOCE.**
+- Nelle scene **a filmato** la voce dice le cose **generiche**: il problema di chi guarda, l'esperienza riconosciuta,
+  la conseguenza, il passaggio da un blocco all'altro, la presa di posizione. **Niente numeri, niente conti, niente
+  termini tecnici, nessun meccanismo**: sono proprio quelli che fanno restare la scena a Manim — `broll piano` cerca
+  nel testo cifre e parole tecniche e non propone a filmato le scene che ne hanno. Una sola frase con un numero,
+  messa lì per comodità, ti sbilancia il reel.
+- Nelle scene **animate** va la **spiegazione complessa**: il meccanismo, le quantità, i confronti, i conti, tutto
+  ciò che si capisce solo vedendolo disegnato. Lì la voce può essere densa, perché la figura la regge.
+Quando scrivi il monologo, **dividilo in blocchi prima di tagliarlo in scene**: i pezzi che spiegano vanno insieme e
+diventano scene animate; i pezzi che raccontano, riconoscono o concludono diventano le scene a filmato in mezzo. Se
+un blocco «generico» contiene un numero, o lo sposti nella scena animata accanto o lo togli.
+
+**Nelle Note di produzione** dichiara la divisione: quali scene proponi a filmato e perché la loro voce è generica,
+e le query in inglese per ciascuna (`broll piano` le ricava dalle parole italiane del brief e Pexels le capisce male).
+
+### 2026-09-21 · REGOLA DEL PRESENTATORE: apertura e chiusura sono lui, a tutto schermo
+Detta da Flavio subito dopo quella dei registri a metà. **I due estremi del reel sono suoi**: si vede lui a tutta
+tela che guarda in camera (`RIQUADRO: pieno`, il default di `hook` e `chiusura`: non devi scriverlo). Supera la
+regola del 2026-09-19 sull'hook a filmato.
+- **Apertura**: la VOCE pone il problema o la domanda di chi guarda, detta in faccia (hook ≤ 20 parole, come sempre).
+  **Niente riga `ANIMAZIONE:` e niente `FIGURA:`**: non c'è niente da disegnare né una clip da cercare, e un brief che
+  descrive un filmato è un avanzo del regime vecchio. Il `TITOLO:` resta obbligatorio ma è per la copertina.
+- **Chiusura**: la VOCE dice la conclusione guardando in camera (≤ 18 parole), con le caption, **e nient'altro**:
+  niente messaggio a schermo (decisione del presentatore dopo la prima anteprima, stessa sera). Niente `ANIMAZIONE:`
+  e niente `FIGURA:`. `MESSAGGIO:` e `CTA:` restano obbligatori ma sono il testo per la **caption del post**: il
+  messaggio in forma memorabile, la CTA come invito scritto. Quindi la chiusura deve reggersi **a voce**: la battuta
+  finale è quella che dice lui, e l'ultima figura del reel sta nell'ultima scena animata prima.
+- **L'equilibrio fra i registri non li conta**: la metà e metà si misura sulle scene in mezzo. Quindi con un corpo di
+  7 scene ne servono 3 o 4 a filmato; il reel intero ne ha 9.
+- La scena dopo l'apertura parte da uno stacco (dalla faccia alla prima figura, o al primo filmato): non c'è uno
+  stato da riprendere. Lo stesso prima della chiusura.
 
 ## Consegna
 File in `contenuti/sceneggiature/` (nome `YYYY-MM-DD-<slug>.md` con la data di oggi), `stato: sceneggiatura`,

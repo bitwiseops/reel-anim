@@ -21,8 +21,15 @@ mano (§4); in quel caso il gobbo è `uv run reel gobbo <file> --scrivi` → `co
   per lo zoom, `W A S D` per spostarlo, `0` per tornare al quadrato centrale): la scelta resta in
   `contenuti/media/<slug>/inquadratura.json` e vale per le prese successive. Non si può scendere sotto 360 px di
   lato: il riquadro non ingrandisce mai i pixel. Con clip esterne il montaggio prende il quadrato centrale.
-- Verticale (9:16) od orizzontale (16:9) vanno bene tutte e due: il montaggio porta il lato corto a 360 px e prende il
-  quadrato centrale. Meglio almeno 720 px sul lato corto (l'app registra a 1920×1080).
+- **L'app registra in verticale, 1080×1920** (dal 2026-09-21: la fotocamera integrata la offre nativa). Serve per
+  **apertura e chiusura, che sono a volto pieno**: lì si usa il fotogramma intero, senza ingrandire niente, e nella
+  clip `scena-NN.mov` non c'è ritaglio. Nelle altre scene il montaggio ne prende il quadrato dell'inquadratura per il
+  cerchio. Quindi inquadrati pensando a tutti e due: **nel fotogramma intero** (testa e spalle, spazio sopra la
+  testa, niente di disordinato alle spalle, perché nell'apertura e nella chiusura si vede tutto) e **nel cerchio**.
+  Nell'app, durante le scene a volto pieno il pannello del reel mostra la webcam a tutto schermo.
+- Con clip esterne vanno bene verticale e orizzontale: il montaggio riempie la tela e ritaglia al centro, e per il
+  cerchio porta il lato corto a 360 px. Un'orizzontale a volto pieno però va ingrandita di quasi il doppio: meglio
+  girarle in verticale.
 - Luce frontale e morbida, sfondo semplice, sguardo in camera. **Con poca luce la fotocamera scende a 15 fps**: il video
   della presa va a scatti (l'audio no).
 - iPhone: HEVC e video ruotati vanno bene, il montaggio li ricodifica e li raddrizza.

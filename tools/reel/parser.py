@@ -7,7 +7,7 @@ from pathlib import Path
 
 import yaml
 
-from .model import (CAPTION, CON_FILE, POSIZIONI_RIQUADRO, TIPI_SCENA, TRANSIZIONI, Diagnostica, Reel, Scena,
+from .model import (CAPTION, CON_FILE, PIENO, POSIZIONI_RIQUADRO, TIPI_SCENA, TRANSIZIONI, Diagnostica, Reel, Scena,
                     avviso, errore)
 
 
@@ -152,12 +152,13 @@ def parse_testo(testo: str, sorgente: Path | None = None) -> tuple[Reel, list[Di
                 continue
             if campo == "RIQUADRO":
                 v = contenuto.lower()
-                if v in ("si", "sì", "no") or v in POSIZIONI_RIQUADRO:
+                if v in ("si", "sì", "no", PIENO) or v in POSIZIONI_RIQUADRO:
                     if corrente.riquadro is not None:
                         errori.append(errore("secondo RIQUADRO nella stessa scena", n_riga, n))
                     corrente.riquadro = "si" if v == "sì" else v
                 else:
-                    errori.append(errore(f"RIQUADRO '{contenuto}' non valido (no | si | {' | '.join(POSIZIONI_RIQUADRO)})", n_riga, n))
+                    errori.append(errore(f"RIQUADRO '{contenuto}' non valido "
+                                         f"(no | si | {PIENO} | {' | '.join(POSIZIONI_RIQUADRO)})", n_riga, n))
                 continue
             if campo in DOVE and tipo not in DOVE[campo]:
                 errori.append(errore(f"{campo} ammesso solo in una scena [{' | '.join(DOVE[campo])}]", n_riga, n))

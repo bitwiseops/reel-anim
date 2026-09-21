@@ -59,13 +59,16 @@ voce, testo e immagine insieme, dal primo fotogramma.
 - **Animatore**: il fotogramma 0 è già pieno e leggibile (niente nero, niente parola sola), con un movimento entro
   0,5 s.
 
-**I primi 5-10 secondi (nota del presentatore, 2026-09-19).** L'apertura deve catturare l'attenzione prima di
-spiegare qualcosa. L'hook porta **un problema o una domanda**, e lo sfondo in quel momento mostra **una clip che
-richiama quel problema**: materiale filmato scelto con `broll`, non una carta animata. Manim spiega, il filmato
-tiene l'attenzione — e l'attenzione si gioca qui. La spiegazione animata parte dopo.
-Il presentatore è nel riquadro sopra la clip e il problema lo pone lui, a voce: **a schermo non c'è titolo**. Il
-`TITOLO:` della sceneggiatura vive solo in copertina (`docs/sceneggiatura.md` §2, «L'hook a filmato»). La regola
-dell'animatore qui sopra vale per gli hook che restano animati.
+**I primi 5-10 secondi (note del presentatore, 2026-09-19 e 2026-09-21).** L'apertura deve catturare l'attenzione
+prima di spiegare qualcosa. L'hook porta **un problema o una domanda**, e **lo pone il presentatore a tutto schermo,
+guardando in camera** (`RIQUADRO: pieno`, il default dal 2026-09-21): è la faccia di una persona che ti parla, non una
+carta animata e non più una clip di repertorio. **A schermo non c'è titolo**, ci sono lui e le caption del parlato; il
+`TITOLO:` vive solo in copertina (`docs/sceneggiatura.md` §2, «I due estremi sono del presentatore»). La spiegazione,
+animata e filmata, parte dopo. Lo stesso vale per la **chiusura**: la conclusione la dice lui a tutto schermo, e il
+chiusura è lui con le sole caption, senza messaggio a schermo (il MESSAGGIO va nella caption del post). La regola
+dell'animatore qui sopra vale solo per un hook dichiarato animato.
+*(Dal 2026-09-19 al 2026-09-21 l'apertura era a filmato: il presentatore nel riquadro sopra una clip che richiamava
+il problema. Superata.)*
 
 ### 2. Parla a una persona
 Tu e io, domande, gesti che chi guarda ha già fatto. Frasi **come le dici** (6-18 parole, con il verbo e i
@@ -161,7 +164,7 @@ Un reel si manda quando fa pensare a una persona precisa («è Marco!»), fa rid
 
 | # | Proposta | Cosa | Dove |
 |---|---|---|---|
-| 1 | **Presentatore dinamico** | `RIQUADRO:` per beat, con due valori nuovi: `grande` (~600 px) e `pieno` (clip a tutto schermo, grafica sopra); il riquadro si scala e si sposta fra i beat. Hook e chiusura con il volto | `compositing` (overlay con scala e posizione per intervallo), `validate`, `ScenaReel.area` per beat |
+| 1 | **Presentatore dinamico** (in parte ✅) | fatto il 2026-09-21: `RIQUADRO: pieno` per scena (clip a tutto schermo, grafica Manim trasparente sopra), default di hook e chiusura; registrazione verticale 1080×1920. Resta da fare: `grande` (~600 px) e il riquadro che cambia **fra i beat** della stessa scena | `compositing` (overlay con scala e posizione per intervallo), `validate`, `ScenaReel.area` per beat |
 | 2 | **Parola punch** ✅ | fatto il 2026-09-13: `Punch(s, area)` e `ScenaReel.punch(s, tenuta_s)`, taglio secco alla battuta e ritorno alla scena com'era. La riga `PUNCH:` non c'è: la battuta si scrive nel brief con `GRANDE:` | `componenti`, `base` |
 | 3 | **Controlli di linguaggio** ✅ | fatto il 2026-09-13: primo fotogramma dell'hook vuoto (controllo `fotogramma-vuoto`), hook senza «tu» o domanda, MESSAGGIO > 12 parole, VOCE della chiusura > 18 parole (avvisi di `valida`; era 25 fino al 2026-09-14). Dal 2026-09-15 anche la lingua parlata: frasi da titolo in fila (≤ 4 parole senza «tu» né «io»; più di una nel reel fuori dalla chiusura), schema «X, sì. Y, no.», due punti come snodo. Sono euristiche (gli imperativi si riconoscono da una lista di verbi) | `validate`, `controlli` |
 | 4 | **Zoom di camera** ✅ | fatto il 2026-09-13: `self.zoom_su(mob, fattore)` / `self.torna()` / `self.zoom`; i controlli misurano quello che si vede sullo schermo | `base` (MovingCamera) |

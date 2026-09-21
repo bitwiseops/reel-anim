@@ -84,8 +84,12 @@ completa senza il presentatore, **non pubblicabile**.
 `## Scena N [hook|spiegazione|schermo|broll|chiusura, durata=Ns, transizione=…]` con righe `VOCE:` (una riga =
 un beat = un pezzo di parlato), `ANIMAZIONE:` (brief per l'animatore), `TESTO:`, `TITOLO:/SOTTOTITOLO:` (hook), `MESSAGGIO:/CTA:`
 (chiusura), `SCHERMO: file`, `RIQUADRO: no|si|posizione`; `[broll]` = filmato a tutto schermo col riquadro sopra, senza
-grafica né `TESTO:` né classe Manim (lo scrive `broll scrivi`, `docs/sceneggiatura.md` §2); inline `==evidenzia==`, `**grassetto**`.
-Limiti in `tools/reel/validate.py::LIMITI`: 6-8 scene (5-9), VOCE ≤ 50 parole/scena (hook ≤ 20, chiusura ≤ 18), scena 2,5-19 s,
+grafica né `TESTO:` né classe Manim (lo scrive `broll scrivi`, `docs/sceneggiatura.md` §2); dal 2026-09-21 **i due
+registri stanno a metà** (± una scena, contate fra le scene in mezzo): sulle clip la voce dice le cose generiche,
+nelle animazioni la spiegazione complessa, e per stare a metà si aggiungono scene invece di allungare il reel;
+**apertura e chiusura sono il presentatore a tutto schermo** (`RIQUADRO: pieno`, loro default; apertura senza classe
+Manim, e nemmeno la chiusura: lui e le caption, MESSAGGIO e CTA solo per il post; registrazione verticale 1080×1920); inline `==evidenzia==`, `**grassetto**`.
+Limiti in `tools/reel/validate.py::LIMITI`: 6-9 scene (5-10), VOCE ≤ 50 parole/scena (hook ≤ 20, chiusura ≤ 18), scena 2,5-19 s,
 reel 30-90 s (dal 2026-09-15: la VOCE è parlato vero, «prima il monologo, poi i beat», `docs/sceneggiatura.md` §5;
 `valida` avvisa su frasi da titolo in fila, «X, sì. Y, no.», due punti come snodo). La durata reale di ogni scena la
 decide la clip registrata; senza clip vale la stima (2,8 parole/s).

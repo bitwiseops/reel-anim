@@ -72,7 +72,8 @@ def test_scena_broll_il_filmato_riempie_la_tela_senza_cornice():
     assert "-stream_loop" not in cmd                                  # un filmato corto non si ripete: lo dice `monta`
     # un'immagine ferma (immagini composte messe a mano) va tenuta aperta per tutta la scena
     ferma = comando_scena(Sorgenti(Path("/tmp/foto.png"), 9.0, "no", filmato=True), DEST)
-    assert ferma[ferma.index("/tmp/foto.png") - 2: ferma.index("/tmp/foto.png")] == ["1", "-i"]
+    i = ferma.index("/tmp/foto.png")
+    assert ferma[i - 5: i] == ["-loop", "1", "-t", "9.000", "-i"]   # un'immagine ferma: in loop, ma finita
 
 
 def test_concat_con_un_taglio_verso_il_filmato_dentro_una_dissolvenza():
@@ -104,3 +105,35 @@ def test_copertina_dell_hook_a_filmato_porta_il_titolo(tmp_path):
     assert max(x for x, _ in scritti) < cfg.larghezza - 60                           # e dentro il margine destro
     accento = tuple(int(cfg.palette.accento[i:i + 2], 16) for i in (1, 3, 5))
     assert any(im.getpixel(p) == accento for p in scritti)                           # il sottotitolo in accento
+
+
+def test_volto_pieno_il_presentatore_e_la_tela():
+    """Apertura e chiusura (dal 2026-09-21): la clip riempie 1080×1920 e la grafica, trasparente, gli va sopra."""
+    clip = Path("/tmp/scena-09.mov")
+    f = _filtri(comando_scena(Sorgenti(Path("/tmp/grafica.mov"), 6.0, "pieno", video_presentatore=clip), DEST))
+    assert "scale=1080:1920:force_original_aspect_ratio=increase" in f and "crop=1080:1920" in f
+    assert "[volto][gr]overlay=0:0" in f and "alphamerge" not in f     # niente cerchio: non c'è riquadro
+    assert "loudnorm" in f                                              # l'audio resta quello della clip
+    solo = _filtri(comando_scena(Sorgenti(None, 5.0, "pieno", video_presentatore=clip), DEST))
+    assert "[volto]null[v0]" in solo and "[gr]" not in solo            # l'apertura: lui e basta
+
+
+def test_ogni_immagine_in_loop_ha_una_durata():
+    """Senza `-t` un `-loop 1` è infinito e ffmpeg 8.1 a volte non chiude (2026-09-21)."""
+    cmd = comando_scena(Sorgenti(GRAFICA, 5.0, "si", avatar=Path("/tmp/avatar.png"),
+                                 caption=((Path("/tmp/c0.png"), 0.0, 2.0),), caption_xy=(0, 1500)), DEST)
+    loop = [i for i, a in enumerate(cmd) if a == "-loop"]
+    assert loop and all(cmd[i + 2: i + 4] == ["-t", "5.000"] for i in loop)
+
+
+def test_le_caption_entrano_come_fotogramma_singolo():
+    """Una caption per blocco, in loop, portava una scena lunga a 13 ingressi infiniti e ffmpeg 8.1 andava in stallo
+    (2026-09-21): ora ognuna è un fotogramma solo che l'overlay ripete."""
+    caps = tuple((Path(f"/tmp/c{k}.png"), k * 1.0, k * 1.0 + 0.9) for k in range(11))
+    cmd = comando_scena(Sorgenti(GRAFICA, 12.0, "si", avatar=Path("/tmp/avatar.png"), caption=caps, caption_xy=(0, 1500)),
+                        DEST)
+    for png, _, _ in caps:
+        i = cmd.index(str(png))
+        assert cmd[i - 1] == "-i" and cmd[i - 2] != "18.0" and "-loop" not in cmd[i - 5: i]
+    assert _filtri(cmd).count("eof_action=repeat") == 11
+    assert cmd.count("-loop") == 2                      # restano solo avatar e maschera del cerchio

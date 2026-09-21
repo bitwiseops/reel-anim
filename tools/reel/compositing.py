@@ -8,6 +8,7 @@ from PIL import Image, ImageDraw
 
 from ..anim.config import Config, carica
 from .ffmpeg import esegui, trova_ffmpeg
+from .model import PIENO
 
 RADICE = Path(__file__).resolve().parents[2]
 MASCHERE = RADICE / "assets" / "presentatore"
@@ -15,9 +16,10 @@ MASCHERE = RADICE / "assets" / "presentatore"
 
 @dataclass
 class Sorgenti:
-    grafica: Path                 # Manim: mp4 opaco, o mov con alpha se c'è b-roll sotto
+    grafica: Path | None          # Manim: mp4 opaco, o mov con alpha se sotto c'è un video (b-roll o volto pieno);
+                                  # None solo a volto pieno: la scena è lui e basta (l'apertura)
     durata_s: float
-    riquadro: str                 # "no" | "si" | posizione
+    riquadro: str                 # "no" | "si" | "pieno" (presentatore a tutta tela) | posizione
     video_presentatore: Path | None = None   # clip con volto (video+audio) ...
     avatar: Path | None = None               # ... oppure immagine statica (modalità prova)
     audio: Path | None = None                # audio separato (voce sintetica); se None usa quello della clip
@@ -73,6 +75,10 @@ def comando_scena(src: Sorgenti, dest: Path, cfg: Config | None = None, anteprim
     cfg = cfg or carica()
     ff, _ = trova_ffmpeg()
     W, H, fps = cfg.larghezza, cfg.altezza, cfg.fps
+    # ogni immagine letta in loop (avatar, maschere, caption, uno SCHERMO fisso) porta la durata della scena: senza
+    # `-t` è un ingresso infinito, e ffmpeg 8.1 a volte resta appeso a CPU piena invece di chiudere con gli altri
+    # (visto il 2026-09-21 su scrivere-con-ia: 3 volte su 3 senza, 4 su 4 con)
+    d_img = f"{src.durata_s:.3f}"
     inputs: list[str] = []
     filtri: list[str] = []
     n = 0
@@ -84,12 +90,26 @@ def comando_scena(src: Sorgenti, dest: Path, cfg: Config | None = None, anteprim
         n += 1
         return i
 
+    # base: il presentatore a tutta tela, con la grafica Manim (trasparente) sopra di lui. È la chiusura dal
+    # 2026-09-21: la conclusione la dice lui guardando in camera, il MESSAGGIO arriva grande in coda.
+    i_pres_base = None
+    if src.riquadro == PIENO and (src.video_presentatore or src.avatar):
+        i_pres_base = aggiungi("-i", str(src.video_presentatore)) if src.video_presentatore \
+            else aggiungi("-loop", "1", "-t", d_img, "-i", str(src.avatar))
+        filtri.append(f"[{i_pres_base}:v]scale={W}:{H}:force_original_aspect_ratio=increase:flags=lanczos,"
+                      f"crop={W}:{H},fps={fps},setsar=1[volto]")
+        if src.grafica is None:
+            filtri.append("[volto]null[v0]")     # l'apertura: solo lui, le caption arrivano sopra
+        else:
+            i_gr = aggiungi("-i", str(src.grafica))
+            filtri.append(f"[{i_gr}:v]scale={W}:{H}:flags=lanczos,format=rgba[gr]")
+            filtri.append("[volto][gr]overlay=0:0:format=auto[v0]")
     # base: sfondo pieno + b-roll nella cornice, oppure direttamente la grafica opaca
-    if src.schermo:
+    elif src.schermo:
         i_base = aggiungi("-f", "lavfi", "-i", f"color=c={cfg.palette.sfondo}:s={W}x{H}:r={fps}:d={src.durata_s:.3f}")
         i_br = aggiungi("-stream_loop", "-1", "-i", str(src.schermo)) if src.schermo.suffix.lower() in (".mp4", ".mov", ".webm", ".m4v") \
-            else aggiungi("-loop", "1", "-i", str(src.schermo))
-        i_msk_s = aggiungi("-loop", "1", "-i", str(maschera_schermo(cfg)))
+            else aggiungi("-loop", "1", "-t", d_img, "-i", str(src.schermo))
+        i_msk_s = aggiungi("-loop", "1", "-t", d_img, "-i", str(maschera_schermo(cfg)))
         sc = cfg.dati["schermo"]
         sw, sh = int(sc["larghezza"]), int(sc["altezza"])
         filtri.append(f"[{i_br}:v]scale={sw}:{sh}:force_original_aspect_ratio=increase,crop={sw}:{sh},setsar=1,format=rgba[br]")
@@ -103,26 +123,26 @@ def comando_scena(src: Sorgenti, dest: Path, cfg: Config | None = None, anteprim
         # `broll rendi` consegna già 1080×1920 a fps giusti; un file messo a mano no, e stirarlo lo deformerebbe:
         # si riempie la tela e si ritaglia al centro. Niente ripetizione: se è corto lo dice `monta`.
         i_gr = aggiungi("-i", str(src.grafica)) if src.grafica.suffix.lower() in (".mp4", ".mov", ".webm", ".m4v") \
-            else aggiungi("-loop", "1", "-i", str(src.grafica))
+            else aggiungi("-loop", "1", "-t", d_img, "-i", str(src.grafica))
         filtri.append(f"[{i_gr}:v]scale={W}:{H}:force_original_aspect_ratio=increase:flags=lanczos,crop={W}:{H},"
                       f"fps={fps},setsar=1[v0]")
     else:
         i_gr = aggiungi("-i", str(src.grafica))
         filtri.append(f"[{i_gr}:v]scale={W}:{H}:flags=lanczos,setsar=1[v0]")
 
-    # riquadro del presentatore
+    # riquadro del presentatore (non nelle scene a volto pieno: lì è già la base)
     ultimo = "v0"
-    i_pres = None
-    if src.riquadro != "no" and (src.video_presentatore or src.avatar):
+    i_pres = i_pres_base
+    if src.riquadro not in ("no", PIENO) and (src.video_presentatore or src.avatar):
         x, y, d = posizione_riquadro(cfg, src.riquadro)
-        i_pres = aggiungi("-i", str(src.video_presentatore)) if src.video_presentatore else aggiungi("-loop", "1", "-i", str(src.avatar))
-        i_msk = aggiungi("-loop", "1", "-i", str(maschera_riquadro(cfg)))
+        i_pres = aggiungi("-i", str(src.video_presentatore)) if src.video_presentatore else aggiungi("-loop", "1", "-t", d_img, "-i", str(src.avatar))
+        i_msk = aggiungi("-loop", "1", "-t", d_img, "-i", str(maschera_riquadro(cfg)))
         filtri.append(f"[{i_pres}:v]scale=w='if(gte(iw/ih,1),-2,{d})':h='if(gte(iw/ih,1),{d},-2)',crop={d}:{d},setsar=1,format=rgba[pip]")
         filtri.append(f"[{i_msk}:v]format=gray[msk]")
         filtri.append("[pip][msk]alphamerge[pipA]")
         filtri.append(f"[v0][pipA]overlay=x={x}:y={y}:shortest=0[v1]")
         ultimo = "v1"
-    elif src.video_presentatore:
+    elif src.video_presentatore and i_pres is None:
         i_pres = aggiungi("-i", str(src.video_presentatore))  # solo per l'audio
 
     # caption: sopra tutto il resto, una per blocco, accesa nella sua finestra. Sono PNG perché questo ffmpeg non ha
@@ -130,10 +150,12 @@ def comando_scena(src: Sorgenti, dest: Path, cfg: Config | None = None, anteprim
     if src.caption:
         cx, cy = src.caption_xy or (0, 0)
         for k, (png, t0, t1) in enumerate(src.caption):
-            i_cap = aggiungi("-loop", "1", "-i", str(png))
-            filtri.append(f"[{i_cap}:v]format=rgba,setpts=PTS-STARTPTS[cap{k}]")
+            # un fotogramma solo, che l'overlay ripete (`eof_action=repeat`): con una caption in loop per blocco una
+            # scena lunga arrivava a 13 ingressi infiniti, e ffmpeg 8.1 restava in stallo a CPU zero (2026-09-21)
+            i_cap = aggiungi("-i", str(png))
+            filtri.append(f"[{i_cap}:v]format=rgba[cap{k}]")
             prossimo = f"c{k}"
-            filtri.append(f"[{ultimo}][cap{k}]overlay=x={cx}:y={cy}:shortest=0:"
+            filtri.append(f"[{ultimo}][cap{k}]overlay=x={cx}:y={cy}:shortest=0:eof_action=repeat:"
                           f"enable='between(t,{t0:.3f},{t1:.3f})'[{prossimo}]")
             ultimo = prossimo
     filtri.append(f"[{ultimo}]format=yuv420p[v]")

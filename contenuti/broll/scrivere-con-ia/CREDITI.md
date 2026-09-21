@@ -2,9 +2,10 @@
 
 Materiale esterno usato nel reel, in ordine di scena.
 
-- Scena 1: [https://kaboompics.com/](https://www.pexels.com/@karola-g) · Pexels · https://www.pexels.com/video/woman-reading-on-her-laptop-7307854/ · Pexels License
-- Scena 3: [Eren Li](https://www.pexels.com/@eren-li) · Pexels · https://www.pexels.com/video/a-man-using-a-gadget-on-bed-7240854/ · Pexels License
+- Scena 3: [Tima Miroshnichenko](https://www.pexels.com/@tima-miroshnichenko) · Pexels · https://www.pexels.com/video/man-using-phone-while-having-a-breakfast-6337009/ · Pexels License
+- Scena 5: [Tima Miroshnichenko](https://www.pexels.com/@tima-miroshnichenko) · Pexels · https://www.pexels.com/video/close-up-video-of-a-person-using-a-laptop-5212604/ · Pexels License
+- Scena 7: [Leeloo The First](https://www.pexels.com/@leeloothefirst) · Pexels · https://www.pexels.com/video/a-person-reading-a-braille-book-7417209/ · Pexels License
 
 ## Per la didascalia
 
-Filmati: https://kaboompics.com/, Eren Li (Pexels)
+Filmati: Tima Miroshnichenko, Leeloo The First (Pexels)
