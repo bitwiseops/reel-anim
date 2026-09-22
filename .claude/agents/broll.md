@@ -43,6 +43,9 @@ con l'animatore) e, per `scegli`, se la scelta è **a fermate** (consigli, scegl
    niente volti in primo piano che rubano la scena al presentatore, niente persone che parlano a lungo o sorridono in
    camera; niente stock da catalogo (strette di mano, sorrisi in posa); movimento calmo, leggibile senza audio;
    verticale nativo meglio di un 16:9 ritagliato. Scarta ciò che contraddice la VOCE anche di poco.
+   Un'immagine con **due oggetti in relazione** (telefono vecchio accanto al nuovo) su Pexels quasi non esiste: dopo
+   un giro di query a vuoto, due tagli nella stessa scena (`--aggiungi`) e dillo nel rapporto. Le ricerche di spesa e
+   negozi pescano molte clip con le **mascherine**: scartale a vista, l'euristica non le vede (2026-09-22).
 3. **A fermate**: per ogni scena i **due** candidati che consigli e perché, con i comandi `broll scegli` già pronti.
    Ti fermi qui: sceglie il presentatore. **Provvisoria** (`--tutto`): scegli tu il migliore con
    `broll scegli <slug> --scena N --candidato <fornitore:id> [--da S]` e prosegui; dichiarala provvisoria.

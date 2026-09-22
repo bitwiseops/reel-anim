@@ -166,6 +166,13 @@ Lezioni delle sessioni, per tema, con la data. La cronaca (chi, quale reel, cosa
   richiesta» si sente «scrivi tu il biglietto» (meglio «diglielo tu»); «Al suo posto scrivi…» rimanda a una carta di
   un'altra scena (2026-09-15).
 
+- **Le parole del paper non passano in VOCE**: «brano» (il *passage* del paper) il presentatore stesso non l'ha
+  capito. Usa l'oggetto che chi guarda conosce e che resta fedele alla fonte («paragrafi»: pezzi di Wikipedia di
+  al massimo 100 token) (2026-09-22).
+- **La verifica che dai a chi guarda la fa lui, non il modello**: «chiedile la frase esatta» da sola fa credere che
+  la citazione basti, e un modello può parafrasarla o inventarla; va chiusa con il gesto di controllo («…e cercala
+  nel documento»). Il reel si guarda muto: il criterio intero non può stare solo in caption (2026-09-22).
+
 ### I due registri
 - Tu non scrivi `[broll]`: scrivi `[spiegazione]`, e `broll scrivi` la converte. Una scena scritta per il filmato
   ha un brief `ANIMAZIONE:` di **una riga** che descrive un'immagine filmabile (chi, dove, che gesto), **nessun

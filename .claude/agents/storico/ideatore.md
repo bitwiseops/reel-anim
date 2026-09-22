@@ -105,3 +105,7 @@ nella caption del post). Quindi nelle «Note per il reel»:
 - le immagini filmabili e le query in inglese servono alle **tappe a filmato in mezzo** (regola dei registri a metà,
   qui sopra), che si contano **senza** apertura e chiusura;
 - il TITOLO di copertina resta la tesi.
+
+## 2026-09-22 · perso-nel-mezzo
+- Il criterio proposto nell'idea («chiedile la frase esatta») è finito in un ❌ del revisore alla sceneggiatura: un
+  modello può restituire una frase parafrasata o inventata. Serve il gesto di controllo di chi guarda.

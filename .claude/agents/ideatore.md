@@ -159,6 +159,9 @@ come ci si è arrivati è in `.claude/agents/storico/ideatore.md` (non serve leg
 - Se per una tappa generica non ti viene in mente un'immagine filmabile, la tappa è ancora troppo astratta:
   riscrivila come esperienza concreta, non come concetto.
 
+- **Il criterio per capire se ha funzionato è un gesto di chi guarda**, non una richiesta al modello: «chiedile la
+  frase esatta da cui l'ha presa» non verifica niente se non aggiungi «e cercala nel documento» (2026-09-22).
+
 ### Testi del modello
 - Le uscite le genera `uv run reel uscite <idea>` (tappa T0b, la lancia il coordinatore), che cerca nelle «Note per
   il reel» un titolo in grassetto scritto **esattamente** così, senza virgolette dentro il grassetto:

@@ -224,3 +224,9 @@ regola del 2026-09-19 sull'hook a filmato.
   7 scene ne servono 3 o 4 a filmato; il reel intero ne ha 9.
 - La scena dopo l'apertura parte da uno stacco (dalla faccia alla prima figura, o al primo filmato): non c'è uno
   stato da riprendere. Lo stesso prima della chiusura.
+
+## 2026-09-22 · perso-nel-mezzo
+- Alla revisione Flavio chiede «ma che cos'è il "brano"?»: la parola veniva dal *passage* del paper. Diventa
+  «paragrafo» in VOCE, a schermo e nelle note; la mossa resta «pezzo» perché parla del documento di chi guarda.
+- Il revisore dà ❌ su «Poi chiedile la frase esatta da cui ha preso la risposta»: la citazione sembrava già la
+  verifica. Riformulata in «…da cui l'ha presa, e cercala nel documento», accettata da Flavio.
