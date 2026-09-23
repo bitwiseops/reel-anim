@@ -32,10 +32,13 @@ si alternano fra scene senza mai stare insieme.
 - Nelle **animazioni** va la **spiegazione complessa**: meccanismo, quantità, confronti, conti.
 - Per stare a metà **si aggiungono scene, non secondi**: le scene a filmato sono corte (4-7 s), le animate tengono i
   12-16 s. Mai due scene a filmato di fila, mai `TESTO:` sopra un filmato. Il tipo `[broll]` lo scrive `broll scrivi`.
-- **Almeno una clip generata per reel** (2026-09-22): una delle scene a filmato si fa con **2-3 immagini generate
-  con Meshy**, montate una per beat con una dissolvenza fra l'una e l'altra (`broll genera`, agente `immagini`).
-  Si usa questo registro anche ogni volta che su Pexels non c'è un candidato buono: meglio un'immagine generata che
-  una clip che non c'entra. Le immagini generate si dichiarano in `CREDITI.md` e in caption.
+- **Le clip sono metà da fonte esterna e metà generate** (2026-09-23; prima era «almeno una generata»): delle scene
+  a filmato, metà usa un filmato trovato fuori (Pexels) e metà **2-3 immagini generate con Meshy e animate** — una
+  per beat, con zoom e carrellate su ciascuna e transizioni «wow» fra l'una e l'altra (`broll genera`, agente
+  `immagini`, `[transizioni] immagini` in `config.toml`). **Si fanno con Meshy le scene i cui filmati convincono
+  meno**: prima si cercano i filmati per tutte, poi le più deboli passano a Meshy. Con un numero dispari la scena in
+  più va a Meshy solo se il suo filmato non convince. Le immagini generate si dichiarano in `CREDITI.md` e in
+  caption.
 - **Clip senza volti, con un «wow» tecnologico** (2026-09-22): se la sceneggiatura non chiede espressamente una
   persona, la clip non mostra volti umani (mani e sagome di spalle sì). Si preferisce un'immagine tecnologica che
   colpisce e che serve al racconto: schede e circuiti da vicino, ventole, server che lampeggiano, schermi, macchine

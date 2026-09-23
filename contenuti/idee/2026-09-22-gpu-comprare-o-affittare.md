@@ -4,6 +4,7 @@
 **Tipo:** pillola
 **Fonte:** testo (contenuti/spunti/2026-09-22-gpu-comprare-o-affittare.md)
 **Stato:** sceneggiata
+**Copione:** contenuti/copioni/2026-09-22-gpu-comprare-o-affittare.md
 **Sceneggiatura:** contenuti/sceneggiature/2026-09-22-gpu-comprare-o-affittare.md
 
 Reel a sé stante, fuori dal filone dei paper. Nessun personaggio, nessuna azienda inventata, nessun nome proprio nella
@@ -148,6 +149,26 @@ altre idee in `contenuti/idee/` usa r0039 (usate: r0040, r0018, r0020, r0045, r0
   Nominiamo un fornitore solo come fonte del numero: nessuna promozione (lo diciamo in caption).
 - Lunghezza: r0039 dura 160 s. Qui otto scene e obiettivo ≤ 70 s; se serve tagliare, la scena 3 perde il beat sul
   2028 e la scena 6 si riduce a una frase.
+
+## Tappe del parlato
+<!-- aggiunta il 2026-09-23 dal brief della prova alla cieca (contenuti/prove-parlato/gpu-comprare-o-affittare/brief.md),
+per provare `uv run reel copione`: la sceneggiatura attuale non è stata rifatta da qui -->
+1. (apertura) Una domanda a chi sta pensando di comprare una scheda video per l'IA in casa: quante ore la userà davvero?
+2. (filmato: uno sul divano che scorre annunci) Le schede oggi costano più di quanto ci si ricordava.
+3. (animazione) C'entra la memoria: i produttori la danno prima all'IA e per le schede ne resta poca; le fabbriche
+   nuove, secondo le previsioni (TrendForce), conteranno solo dal 2028. Domanda-ponte: devi proprio comprarla?
+4. (filmato: una che prende un'auto a noleggio) Analogia: la macchina tua costa meno a viaggio più la usi, a noleggio
+   costa sempre uguale.
+5. (animazione, grafico) A noleggio: circa mezzo euro l'ora (0,53 € con IVA), sempre. Comprata: esempio 1.500 euro
+   fra scheda e computer, divisi su tre anni; ogni rata mensile si divide per le ore d'uso, quindi più la usi meno costa
+   l'ora.
+6. (animazione) A casa la corrente la paghi tu a ogni ora; con questi prezzi le due curve si incrociano a circa 110 ore
+   al mese, cioè quasi quattro ore al giorno, tutti i giorni.
+7. (filmato: uno che aspetta davanti al portatile) Il conto non dice tutto: a noleggio paghi anche le ore in cui
+   aspetti; quella tua la puoi rivendere.
+8. (animazione) La mossa: prima guarda se il modello che vuoi entra nella memoria della scheda, se no la affitti; se
+   entra, affittala un mese e leggi in fattura quante ore hai pagato; sotto le 110, comprarla ti costava di più.
+9. (chiusura) La domanda non è quanto costa la scheda, è quante ore la farai lavorare davvero. Battuta finale.
 
 ## Come si mostra
 *Il reel si guarda muto: le caption col parlato sono in fondo, a schermo non c'è niente da leggere. Qui la figura che

@@ -9,13 +9,15 @@ le prese di `reel registra` (`origine_tempi: presa`). Ogni immagine tiene il cam
 successivo, l'ultima fino alla fine della scena.
 
 Un fermo immagine per otto secondi è il «fermo morto» che `docs/animazioni.md` vieta: ogni immagine si
-muove piano, con una carrellata che cambia verso a ogni cambio, in modo che il movimento non sembri un
-metronomo.
+muove, e la mossa cambia a ogni immagine (`MOSSE`: spinta dentro, carrellata, allargamento, diagonale),
+così il movimento non sembra un metronomo. Dal 2026-09-23 metà delle clip del reel sono immagini Meshy, e
+devono reggere il confronto con un filmato: per questo lo zoom (`zoompan` su un'immagine raddoppiata, che
+toglie lo scatto dei pixel interi) e non più la sola carrellata.
 
-Fra un'immagine e l'altra c'è una **dissolvenza** (`xfade`), lunga quanto `config.toml [transizioni]
-durata_s`: fra due immagini generate lo stacco secco somiglia a un errore di montaggio, mentre il reel ha
-già la dissolvenza fra le scene e questa è la stessa grammatica. La dissolvenza comincia **sull'inizio
-frase**, come faceva lo stacco, così il cambio resta ancorato a quello che il presentatore sta dicendo.
+Fra un'immagine e l'altra c'è una **transizione** (`xfade`) presa in giro da `config.toml [transizioni]
+immagini` (zoomin, circleopen…: le «wow» chieste dal presentatore), lunga `immagini_s`; senza la chiave
+resta la dissolvenza del reel. Comincia **sull'inizio frase**, così il cambio resta ancorato a quello che il
+presentatore sta dicendo.
 
 Con `xfade` le durate si sovrappongono — l'uscita dura `offset + durata del secondo ingresso` — quindi le
 lunghezze degli ingressi si ricalcolano (`montaggio`) perché il totale resti esattamente `durata_s`.
@@ -29,7 +31,10 @@ from tools.reel.ffmpeg import esegui, trova_ffmpeg
 
 RADICE = Path(__file__).resolve().parents[2]
 
-SOVRAMISURA = 1.18      # quanto l'immagine è più grande del fotogramma: è lo spazio per la carrellata
+SOVRAMISURA = 1.18      # lo zoom delle carrellate: è lo spazio in cui l'inquadratura scorre
+ZOOM = 0.22             # quanto entra (o esce) la spinta: 1 → 1,22
+MOSSE = ("spinta", "carrellata", "allarga", "diagonale")
+TRANSIZIONI = ("fade",) # ripiego se config.toml non ha [transizioni] immagini
 DURATA_MIN_S = 0.6      # sotto, il cambio è uno sfarfallio invece che uno stacco
 DISSOLVENZA_S = 0.25    # ripiego se config.toml non ha [transizioni] durata_s
 TENUTA_MIN_S = 0.3      # quanto ogni immagine resta ferma e sola: sotto, si vedono solo dissolvenze
@@ -68,7 +73,8 @@ def dissolvenza_s(tenute: list[tuple[float, float]], cfg: Config | None = None) 
     if len(tenute) < 2:
         return 0.0
     cfg = cfg or carica()
-    voluta = float((cfg.dati.get("transizioni") or {}).get("durata_s", DISSOLVENZA_S))
+    tr = cfg.dati.get("transizioni") or {}
+    voluta = float(tr.get("immagini_s", tr.get("durata_s", DISSOLVENZA_S)))
     piu_corta = min(d for _, d in tenute)
     return round(max(0.0, min(voluta, piu_corta - TENUTA_MIN_S)), 3)
 
@@ -89,15 +95,37 @@ def montaggio(tenute: list[tuple[float, float]], dissolvenza: float) -> tuple[li
     return lunghezze, offset
 
 
+def mossa(indice: int) -> str:
+    return MOSSE[indice % len(MOSSE)]
+
+
+def _zoompan(nome: str, n: int) -> tuple[str, str, str]:
+    """(z, x, y) di `zoompan` per la mossa; `on` è il fotogramma, `n` quanti ne dura l'immagine."""
+    p = f"(on/{max(n - 1, 1)})"
+    centro_x, centro_y = "(iw-iw/zoom)/2", "(ih-ih/zoom)/2"
+    if nome == "spinta":
+        return f"1+{ZOOM}*{p}", centro_x, centro_y
+    if nome == "allarga":
+        return f"{1 + ZOOM}-{ZOOM}*{p}", centro_x, centro_y
+    if nome == "carrellata":
+        return f"{SOVRAMISURA}", f"(iw-iw/zoom)*{p}", centro_y
+    return f"{SOVRAMISURA}+0.06*{p}", f"(iw-iw/zoom)*{p}", f"(ih-ih/zoom)*{p}"   # diagonale
+
+
 def _ramo(indice: int, entrata: int, larghezza: int, altezza: int, durata: float, fps: int) -> str:
-    """Una carrellata lenta sull'immagine: verso alternato, così i cambi non sembrano un metronomo."""
-    w, h = int(larghezza * SOVRAMISURA), int(altezza * SOVRAMISURA)
-    avanti = indice % 2 == 0
-    frazione = f"min(t/{max(durata, 0.1):.3f},1)"
-    x = f"(in_w-out_w)*({frazione})" if avanti else f"(in_w-out_w)*(1-({frazione}))"
-    return (f"[{entrata}:v]scale={w}:{h}:force_original_aspect_ratio=increase,crop={w}:{h},"
-            f"crop={larghezza}:{altezza}:x='{x}':y='(in_h-out_h)/2',"
-            f"fps={fps},setpts=PTS-STARTPTS,setsar=1,format=yuv420p[v{indice}]")
+    """L'immagine raddoppiata, poi la mossa con `zoompan` al fotogramma: un fotogramma in ingresso, uno in uscita."""
+    n = max(1, round(durata * fps))
+    z, x, y = _zoompan(mossa(indice), n)
+    return (f"[{entrata}:v]scale={2 * larghezza}:{2 * altezza}:force_original_aspect_ratio=increase,"
+            f"crop={2 * larghezza}:{2 * altezza},"
+            f"zoompan=z='{z}':x='{x}':y='{y}':d=1:s={larghezza}x{altezza}:fps={fps},"
+            f"setpts=PTS-STARTPTS,setsar=1,format=yuv420p[v{indice}]")
+
+
+def transizioni(cfg: Config) -> tuple[str, ...]:
+    """I nomi `xfade` delle transizioni fra un'immagine e l'altra, in giro."""
+    nomi = (cfg.dati.get("transizioni") or {}).get("immagini")
+    return tuple(nomi) if nomi else TRANSIZIONI
 
 
 def comando(immagini: list[Path], tenute: list[tuple[float, float]], dest: Path, cfg: Config,
@@ -110,13 +138,13 @@ def comando(immagini: list[Path], tenute: list[tuple[float, float]], dest: Path,
     filtri: list[str] = []
     for i, lunghezza in enumerate(lunghezze):
         img = immagini[i % len(immagini)]          # meno immagini che beat: si riusano in giro
-        ingressi += ["-loop", "1", "-t", f"{lunghezza:.3f}", "-i", str(img)]
+        ingressi += ["-loop", "1", "-framerate", str(fps), "-t", f"{lunghezza:.3f}", "-i", str(img)]
         filtri.append(_ramo(i, i, W, H, lunghezza, fps))
     if t > 0 and len(lunghezze) > 1:
-        dentro = "v0"
+        dentro, nomi = "v0", transizioni(cfg)
         for i in range(1, len(lunghezze)):
             fuori = "out" if i == len(lunghezze) - 1 else f"x{i}"
-            filtri.append(f"[{dentro}][v{i}]xfade=transition=fade:duration={t:.3f}:"
+            filtri.append(f"[{dentro}][v{i}]xfade=transition={nomi[(i - 1) % len(nomi)]}:duration={t:.3f}:"
                           f"offset={offset[i]:.3f}[{fuori}]")
             dentro = fuori
     else:

@@ -109,3 +109,8 @@ nella caption del post). Quindi nelle «Note per il reel»:
 ## 2026-09-22 · perso-nel-mezzo
 - Il criterio proposto nell'idea («chiedile la frase esatta») è finito in un ❌ del revisore alla sceneggiatura: un
   modello può restituire una frase parafrasata o inventata. Serve il gesto di controllo di chi guarda.
+
+## 2026-09-23 · le tappe del parlato
+Con il copione scritto da un modello esterno prima della sceneggiatura (vedi storico dello sceneggiatore, stessa
+data) serve un brief per scena: l'idea porta `## Tappe del parlato`, nel formato del brief della prova alla cieca
+(`contenuti/prove-parlato/gpu-comprare-o-affittare/brief.md`). Prende il posto del **Percorso** nelle Note per il reel.

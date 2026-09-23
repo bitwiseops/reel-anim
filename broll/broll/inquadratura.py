@@ -108,7 +108,8 @@ def prova_inquadratura(slug: str, filmato: Path, t: float = 1.0, riquadro: str =
         diag.append(avviso("manca assets/presentatore/avatar.png (`uv run reel setup`): "
                            "il riquadro non è disegnato e non si vede cosa copre"))
 
-    dest_dir = render_dir(slug) / "broll"
+    from tools.reel.percorsi import lavoro
+    dest_dir = lavoro(slug) / "broll"   # transitorio, fuori dal progetto
     dest_dir.mkdir(parents=True, exist_ok=True)
     png: list[Path] = []
     for nome, a in ancore.items():

@@ -22,6 +22,7 @@ from .manim_render import (AnimazioneMancante, carica_modulo, classe_scena, file
                            renderizza)
 from .model import PIENO, Diagnostica, Reel, Scena, avviso, errore
 from .stima import CODA_S as CODA_STIMA_S
+from .percorsi import lavoro_per, relativo
 from .stima import durata_stimata_s
 from .voce import CODA_VOCE_S, VoceNonDisponibile, sintetizza_frasi
 
@@ -103,8 +104,9 @@ def anima(r: Reel, diag: list[Diagnostica], out: Path, qualita: str = "l", solo:
           cfg: Config | None = None) -> list[dict]:
     """Solo Manim, per l'animatore: stessi tempi dell'anteprima (voce sintetica in cache se non c'è la clip), controllo
     statico del file, controlli automatici sulle scene, errori di una scena che non fermano le altre.
-    Produce _anima/…/scena-NN.mp4, scene/NN.png e fotogrammi/NN-filmstrip.png."""
+    Produce _anima/…/scena-NN.mp4 nella cartella di lavoro, scene/NN.png e fotogrammi/NN-filmstrip.png nel riepilogo."""
     cfg = cfg or carica()
+    lav = lavoro_per(r.slug, out, cfg)
     path = file_animazione(r.slug)
     mod = carica_modulo(path)
     for n, msg in lint_animazione(path):
@@ -119,7 +121,7 @@ def anima(r: Reel, diag: list[Diagnostica], out: Path, qualita: str = "l", solo:
         t = None
         if con_voce:
             try:
-                t = tempi_scena(r, s, voce=True, out=out, cfg=cfg)
+                t = tempi_scena(r, s, voce=True, out=lav, cfg=cfg)
             except VoceNonDisponibile as e:
                 con_voce = False
                 diag.append(avviso(f"{e}: tempi stimati a parole, diversi da quelli dell'anteprima"))
@@ -137,7 +139,7 @@ def anima(r: Reel, diag: list[Diagnostica], out: Path, qualita: str = "l", solo:
             continue
         t0 = time.time()
         try:
-            res = renderizza(cls, t.durata_s, dati_scena(s, t), out / "_anima", f"scena-{s.n:02d}", qualita, trasparente=False,
+            res = renderizza(cls, t.durata_s, dati_scena(s, t), lav / "_anima", f"scena-{s.n:02d}", qualita, trasparente=False,
                              debug=debug, cfg=cfg)
         except Exception as e:  # noqa: BLE001 — l'errore di una scena non deve fermare le altre
             diag.append(errore(f"render fallito: {type(e).__name__}: {e}", s.riga, s.n))
@@ -148,7 +150,7 @@ def anima(r: Reel, diag: list[Diagnostica], out: Path, qualita: str = "l", solo:
             diag.append(avviso(a, s.riga, s.n))
         png = fotogrammi.fotogramma_chiave(res.video, t.durata_s, out / "scene" / f"{s.n:02d}.png")
         fs = fotogrammi.filmstrip_scena(res.video, t.durata_s, out / "fotogrammi" / f"{s.n:02d}-filmstrip.png")
-        info.append({**base, "avvisi_tempi": res.avvisi, "controlli": res.controlli, "grafica": str(res.video.relative_to(out)),
+        info.append({**base, "avvisi_tempi": res.avvisi, "controlli": res.controlli, "grafica": relativo(res.video, out),
                      "png": str(png.relative_to(out)), "filmstrip": str(fs.relative_to(out)),
                      "tempo_manim_s": round(time.time() - t0, 1)})
     return info
@@ -232,11 +234,12 @@ def _scena_broll(r: Reel, s: Scena, t: TempiScena, out: Path, avatar: Path, args
     t2 = time.time()
     riq = s.riquadro_effettivo()
     c = clipmod.trova(r.slug, s.n) if t.origine == "clip" else None
-    cap, cap_xy, cap_report = _caption(r, s, t, out, cfg)
+    lav = lavoro_per(r.slug, out, cfg)
+    cap, cap_xy, cap_report = _caption(r, s, t, lav, cfg)
     src = compositing.Sorgenti(grafica=filmato, durata_s=t.durata_s, riquadro=riq, video_presentatore=c,
                                avatar=avatar if (c is None and riq != "no" and avatar.exists()) else None, audio=t.audio,
                                filmato=True, caption=cap, caption_xy=cap_xy)
-    dest = compositing.componi_scena(src, out / "_scene" / f"{s.n:02d}.mp4", cfg, anteprima=args.anteprima)
+    dest = compositing.componi_scena(src, lav / "_scene" / f"{s.n:02d}.mp4", cfg, anteprima=args.anteprima)
     tc = time.time() - t2
     cop = fotogrammi.copri_volto(cfg, riq, avatar, cap_report) if c else None   # il volto lo guarda solo lui
     png = fotogrammi.fotogramma_chiave(dest, t.durata_s, out / "scene" / f"{s.n:02d}.png", copri=cop)
@@ -247,14 +250,17 @@ def _scena_broll(r: Reel, s: Scena, t: TempiScena, out: Path, avatar: Path, args
             "caption": cap_report, **_voce_report(r, s, t),
             "avvisi_tempi": avvisi_tempi, "controlli": [], "riquadro": riq, "schermo": s.schermo, "filmato": True,
             "filmstrip": str(fs.relative_to(out)), "grafica": str(filmato.relative_to(RADICE)) if filmato.is_relative_to(RADICE) else str(filmato),
-            "video": str(dest.relative_to(out)), "tempo_manim_s": 0.0, "tempo_ffmpeg_s": round(tc, 1)}
+            "video": relativo(dest, out), "tempo_manim_s": 0.0, "tempo_ffmpeg_s": round(tc, 1)}
 
 
 def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None = None) -> int:
     cfg = cfg or carica()
     out.mkdir(parents=True, exist_ok=True)
-    for sub in ("_manim", "_scene", "scene", "fotogrammi"):
+    lav = lavoro_per(r.slug, out, cfg)     # il transitorio fuori dal progetto (tools/reel/percorsi.py)
+    for sub in ("scene", "fotogrammi"):
         (out / sub).mkdir(exist_ok=True)
+    for sub in ("_manim", "_scene"):
+        (lav / sub).mkdir(parents=True, exist_ok=True)
     prova = bool(args.prova)
     qualita = args.qualita or ("l" if args.anteprima else "h")
     solo = getattr(args, "scena", None)
@@ -269,7 +275,7 @@ def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None 
     elementi: list[dict] = []
     clip_info = clipmod.stato(r.slug, [s.n for s in r.scene])
     pezzi: list[tuple[Path, float]] = []
-    cache = _cache(out)
+    cache = _cache(lav)
     firma = hash_sorgenti(file_animazione(r.slug))
     for n, msg in lint_animazione(file_animazione(r.slug)):
         diag.append(avviso(f"{file_animazione(r.slug).name}:{n}: {msg}"))
@@ -278,7 +284,7 @@ def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None 
         if solo and s.n != solo:
             continue
         try:
-            t = tempi_scena(r, s, prova, out, cfg, ignora_clip=prova)   # --prova: sempre voce sintetica e avatar, anche con le clip
+            t = tempi_scena(r, s, prova, lav, cfg, ignora_clip=prova)   # --prova: sempre voce sintetica e avatar, anche con le clip
         except VoceNonDisponibile as e:
             diag.append(errore(str(e), s.riga, s.n))
             return _chiudi(r, diag, out, elementi, clip_info, None, tempi, prova, args)
@@ -314,26 +320,26 @@ def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None 
         if cls is None:
             grafica, avvisi_tempi, controlli = None, [], []
         elif (isinstance(voce_cache, dict) and voce_cache.get("chiave") == chiave and voce_cache.get("grafica")
-                and (out / voce_cache["grafica"]).exists()):
-            grafica = out / voce_cache["grafica"]
+                and (lav / voce_cache["grafica"]).exists()):
+            grafica = lav / voce_cache["grafica"]
             avvisi_tempi, controlli = list(voce_cache.get("avvisi", [])), list(voce_cache.get("controlli", []))
         else:
             try:
-                res = renderizza(cls, t.durata_s, dati, out / "_manim", f"scena-{s.n:02d}", qualita, trasparente=sopra_video, cfg=cfg)
+                res = renderizza(cls, t.durata_s, dati, lav / "_manim", f"scena-{s.n:02d}", qualita, trasparente=sopra_video, cfg=cfg)
             except Exception as e:  # noqa: BLE001 — l'errore di una scena non deve fermare le altre
                 diag.append(errore(f"render fallito: {type(e).__name__}: {e}", s.riga, s.n))
                 continue
             grafica, avvisi_tempi, controlli = res.video, res.avvisi, res.controlli
-            cache[f"{s.n:02d}"] = {"chiave": chiave, "grafica": str(grafica.relative_to(out)), "avvisi": avvisi_tempi,
+            cache[f"{s.n:02d}"] = {"chiave": chiave, "grafica": relativo(grafica, lav), "avvisi": avvisi_tempi,
                                    "controlli": controlli}
-            _salva_cache(out, cache)
+            _salva_cache(lav, cache)
         for a in avvisi_tempi + controlli:
             diag.append(avviso(a, s.riga, s.n))
         tm = time.time() - t1
         tempi["manim"] += tm
         t2 = time.time()
         c = clipmod.trova(r.slug, s.n) if t.origine == "clip" else None
-        cap, cap_xy, cap_report = _caption(r, s, t, out, cfg)
+        cap, cap_xy, cap_report = _caption(r, s, t, lav, cfg)
         entrata, uscita = raccordi_riquadro(r, s)
         src = compositing.Sorgenti(grafica=grafica, durata_s=t.durata_s, riquadro=riq, video_presentatore=c,
                                    avatar=avatar if (c is None and riq != "no" and avatar.exists()) else None, audio=t.audio,
@@ -341,7 +347,7 @@ def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None 
                                    entrata_da_riquadro=entrata, uscita_a_riquadro=uscita,
                                    durata_raccordo_s=float(cfg.dati["transizioni"].get("raccordo_riquadro_s",
                                                                                        compositing.DURATA_RACCORDO_S)))
-        dest = compositing.componi_scena(src, out / "_scene" / f"{s.n:02d}.mp4", cfg, anteprima=args.anteprima)
+        dest = compositing.componi_scena(src, lav / "_scene" / f"{s.n:02d}.mp4", cfg, anteprima=args.anteprima)
         tc = time.time() - t2
         tempi["compositing"] += tc
         cop = fotogrammi.copri_volto(cfg, riq, avatar, cap_report) if c else None   # il volto lo guarda solo lui
@@ -354,8 +360,8 @@ def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None 
                          "raccordo_riquadro": "+".join(v for v, q in (("entrata", entrata), ("uscita", uscita)) if q) or None,
                          "caption": cap_report, **_voce_report(r, s, t),
                          "filmstrip": str(fs.relative_to(out)),
-                         "grafica": str(grafica.relative_to(out)) if grafica else "",
-                         "video": str(dest.relative_to(out)), "tempo_manim_s": round(tm, 1), "tempo_ffmpeg_s": round(tc, 1)})
+                         "grafica": relativo(grafica, out) if grafica else "",
+                         "video": relativo(dest, out), "tempo_manim_s": round(tm, 1), "tempo_ffmpeg_s": round(tc, 1)})
         pezzi.append((dest, t.durata_s))
 
     reel_info = None
@@ -419,7 +425,7 @@ def _hook_senza_caption(r: Reel, hook: dict, out: Path, avatar: Path, args, cfg:
     src = compositing.Sorgenti(grafica=sorgente, durata_s=hook["durata_s"], riquadro=riq, video_presentatore=c,
                                avatar=avatar if (c is None and riq != "no" and avatar.exists()) else None,
                                filmato=bool(s.a_filmato))
-    return compositing.componi_scena(src, out / "_scene" / "01-copertina.mp4", cfg, anteprima=True)
+    return compositing.componi_scena(src, lavoro_per(r.slug, out, cfg) / "_scene" / "01-copertina.mp4", cfg, anteprima=True)
 
 
 def _chiudi(r: Reel, diag, out: Path, elementi, clip_info, reel_info, tempi, prova: bool, args) -> int:
@@ -429,7 +435,7 @@ def _chiudi(r: Reel, diag, out: Path, elementi, clip_info, reel_info, tempi, pro
         # con le clip vere la copertina è il suo volto: nel contact sheet (che legge Claude) va un cartello
         cop = out / reel_info["copertina_4x5"]
         if any(e.get("clip_vera") for e in elementi):
-            cop = fotogrammi.cartello(out / "_copertina-coperta.png", "copertina\n(la guarda il presentatore)")
+            cop = fotogrammi.cartello(lavoro_per(r.slug, out) / "_copertina-coperta.png", "copertina\n(la guarda il presentatore)")
         celle.append({"file": cop, "etichetta": "cover 4:5", "animata": False})
         celle.append({"file": out / reel_info["filmstrip"], "etichetta": f"reel · {reel_info['durata_s']:.0f} s", "animata": True})
     if celle:
@@ -439,7 +445,7 @@ def _chiudi(r: Reel, diag, out: Path, elementi, clip_info, reel_info, tempi, pro
     report = {
         "slug": r.slug, "formato": "reel-manim", "sorgente": str(path), "hash_md": hashlib.sha256(path.read_bytes()).hexdigest()[:16],
         "hash_animazione": hashlib.sha256(anim.read_bytes()).hexdigest()[:16] if anim.exists() else None,
-        "generato_il": datetime.now().isoformat(timespec="seconds"), "cartella": str(out), "prova": bool(prova),
+        "generato_il": datetime.now().isoformat(timespec="seconds"), "cartella": str(out), "lavoro": str(lavoro_per(r.slug, out)), "prova": bool(prova),
         "elementi": elementi, "clip": clip_info, "reel": reel_info, "diagnostica": [d.to_dict() for d in diag],
         "tempi_s": tempi, "ordine_upload": ["reel-9x16.mp4"] if reel_info else [],
     }

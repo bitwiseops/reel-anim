@@ -25,7 +25,7 @@ Ti arrivano: il percorso della sceneggiatura e il numero della scena (`N`).
 `monta` scrivono le immagini già coperte (avatar nel riquadro, cartello a volto pieno). Leggi solo quelle; non estrarre
 fotogrammi a mano con ffmpeg dai video montati e non aprire `copertina*.png`.
 1. `uv run reel strisce <file> --scena N` (sorgente `scene`: la scena **montata**, con il riquadro del presentatore e
-   le caption). Produce in `contenuti/render/<slug>/fotogrammi/` una striscia `NN-fitti-b<i>.png` per ogni beat
+   le caption). Produce nella cartella di lavoro `~/Library/Caches/reel-anim/<slug>/``fotogrammi/` (il comando stampa i percorsi: leggi quelli) una striscia `NN-fitti-b<i>.png` per ogni beat
    (8 fps, ~1,3 s attorno all'inizio del beat, con l'istante scritto sotto ogni fotogramma) e `NN-fitti-scena.png`
    (tutta la scena a 4 fps). Se un passaggio lungo non sta nella finestra, rilancia con `--finestra 2.5`; per un dubbio
    su un testo piccolo guarda anche `scene/NN.png`.

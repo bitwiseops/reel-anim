@@ -25,7 +25,8 @@ Piano completo: `~/.claude/plans/dobbiamo-revisionare-il-modello-lovely-piglet.m
 - `tools/reel/` — grammatica e montaggio: `model`, `parser`, `validate` (`LIMITI`, fonte unica), `stima`, `gobbo`,
   `clip`, `voce` (`say`), `manim_render`, `compositing` (filtergraph ffmpeg: b-roll, riquadro con maschera, audio,
   concat con xfade, raccordo volto pieno ↔ riquadro), `fotogrammi`, `contact_sheet`, `monta`, `stile` (guida del parlato rispetto al corpus), `parlato` (testo recitato
-  ↔ VOCE, `reel parlato`),
+  ↔ VOCE, `reel parlato`), `copione` (il parlato da un modello esterno prima della sceneggiatura: catena Poe →
+  `claude -p`, `reel copione`), `percorsi` (riepilogo nel progetto, lavoro transitorio fuori: `reel pulisci`),
   `__main__` (CLI `uv run reel`)
 - `broll/` — sottosistema del materiale esterno (filmati che si alternano alle animazioni): **progetto `uv`
   a sé**, con proprio `pyproject.toml`, `uv.lock` e `.venv`, così le sue dipendenze non entrano mai in quelle
@@ -33,11 +34,15 @@ Piano completo: `~/.claude/plans/dobbiamo-revisionare-il-modello-lovely-piglet.m
   dal piano a `contenuti/media/<slug>/broll-scena-NN.mp4`, poi `scrivi` mette nel `.md` il tipo `[broll]` che `reel monta` legge;
   banco di prova `broll/esempi/demo-alternanza.md`
 - `contenuti/` — `spunti/` (link, righe o tema: il punto di partenza, `stato: spunto → ideato`), `idee/`,
-  `sceneggiature/`, `bozze/ in-produzione/ pubblicati/ db/`, `archivio/<slug>/` (reel chiusi o abbandonati: si
+  `copioni/` (il parlato scritto dal modello, `<idea>.md` + il prompt accanto), `sceneggiature/`, `bozze/ in-produzione/ pubblicati/ db/`, `archivio/<slug>/` (reel chiusi o abbandonati: si
   leggono, non girano), `animazioni/<slug>.py` (una classe
   `ScenaNN(ScenaReel)` per scena), `media/<slug>/scena-NN.mov` (clip del presentatore, gitignored),
-  `render/<slug>/` (output, gitignored)
-- `templates/reel.md` — grammatica della sceneggiatura (blocco-commento) · `templates/esempio-reel.md` — esempio
+  `render/<slug>/` (il **riepilogo** per il presentatore: reel, contact sheet, copertine, `scene/`, filmstrip,
+  `report.json`; gitignored). Il transitorio — Manim, scene montate, voce di prova, caption, strisce fitte, provini dei
+  filmati — sta fuori dal progetto in `~/Library/Caches/reel-anim/<slug>/` (`[percorsi] lavoro`, `reel pulisci`), la
+  cache dei filmati e delle immagini Meshy in `~/Library/Application Support/reel-anim/cache-broll` (dal 2026-09-23)
+- `templates/reel.md` — grammatica della sceneggiatura (blocco-commento) · `templates/copione.md` — il prompt del
+  copione (le regole del parlato che ricevono i modelli esterni) · `templates/esempio-reel.md` — esempio
   completo (7 scene, tutti i tipi e tutti i componenti) con `contenuti/animazioni/esempio-reel.py` e il b-roll versionato
   in `contenuti/media/esempio-reel/`: `uv run reel monta templates/esempio-reel.md --prova --anteprima` (~20 s)
 - `docs/` — `regole-editoriali.md` (**fonte unica** delle regole del presentatore: reel muto, niente testo denso,
@@ -48,7 +53,7 @@ Piano completo: `~/.claude/plans/dobbiamo-revisionare-il-modello-lovely-piglet.m
   `assets/icone/` (SVG Lucide, licenza ISC)
 - `.claude/agents/` — `ideatore` (spunto → idea, anche da un link con WebFetch; sceglie uno schema da `pattern.md`
   e lo scrive in `## Struttura narrativa`), `stilista` (corpus di reelkit →
-  `docs/stile-parlato.md`), `sceneggiatore` (idea → sceneggiatura, `reel valida`), `revisore-tecnico` (claim anche
+  `docs/stile-parlato.md`), `sceneggiatore` (idea + copione → sceneggiatura: VOCE dal copione alla lettera, spezzata in beat, `reel valida`), `revisore-tecnico` (claim anche
   nelle animazioni e contro la fonte, `stato: rivisto`), `animatore` (`.py` + `anima --json` + fotogrammi +
   `monta --prova --anteprima`, `stato: animato`; non tocca `tools/`): questi cinque girano sul modello della sessione;
   su `sonnet` (nel frontmatter) i quattro di servizio: `broll` (modalità `marca` e `scegli`), `immagini` (clip da 2-3
@@ -84,6 +89,13 @@ I tre reel del regime vecchio (`scrivere-con-ia`, `ia-e-lavoro`, `generativa-pro
 `ia-e-lavoro` e `scrivere-con-ia`, rifatti col regime nuovo, sono fermi alla fermata 3 (`stato: animato`, mai
 registrati: decisione del 2026-09-21). Lo stesso giorno **gli agenti sono stati riordinati** (regole in vigore per
 tema, storico a parte, `docs/regole-editoriali.md`, tre agenti di servizio su `sonnet`, filmati ∥ animazione).
+Il **2026-09-23**, dopo una prova alla cieca sul reel GPU (gpt-5.4 > deepseek-v4-pro > gemini-3.1-pro > Claude), il
+parlato **esce dalla sceneggiatura**: l'ideatore scrive `## Tappe del parlato` (una riga per scena, registro e fatti),
+`reel copione` lo fa scrivere al primo modello della catena `[copione]` (Poe, punti contati: saldo e stima prima di
+ogni chiamata; Claude ultimo anello) e lo sceneggiatore prende la VOCE alla lettera, dichiarando gli scostamenti.
+Lo stesso giorno: **le clip sono metà Pexels e metà Meshy** (immagini generate e animate con zoom, carrellate e
+transizioni «wow», `[transizioni] immagini`); a Meshy vanno le scene i cui filmati convincono meno (`broll` mette
+in fila, poi l'agente `immagini`).
 **Prossimo passo**: un giro nuovo di contenuti scelti ad hoc per il regime attuale (memoria `stato-avanzamento`).
 
 ## Comandi
@@ -91,7 +103,8 @@ tema, storico a parte, `docs/regole-editoriali.md`, tre agenti di servizio su `s
 `registra <file> [--da-scena N] [--dispositivi] [--video N --audio N] [--spezza presa-NN]` · `parlato <file> [--applica]` ·
 `anima <file> [--scena N] [--qualita l|m|h] [--debug] [--json]` · `monta <file> [--prova] [--anteprima] [--scena N]` ·
 `strisce <file> [--scena N] [--fps 8] [--finestra 1.3] [--sorgente scene|anima]` (fotogrammi fitti attorno a ogni beat) ·
-`uscite <idea> [--per-modello 5] [--prova-a-secco]` (T0b) ·
+`uscite <idea> [--per-modello 5] [--prova-a-secco]` (T0b) · `pulisci [<slug>] [--tutto] [--prova-a-secco]` ·
+`copione <idea> [--prova-a-secco] [--nota "…"] [--modello X] [--forza]` (T0c) ·
 `uv run pytest -q` (i test `slow` usano Manim e ffmpeg). `--prova` = voce sintetica + avatar segnaposto: anteprima
 completa senza il presentatore, **non pubblicabile**.
 
@@ -108,7 +121,7 @@ dal 2026-09-22 il volto non stacca: negli ultimi ~0,5 s si rimpicciolisce fino a
 dopo, e in chiusura il cerchio si riapre — `[transizioni] raccordo_riquadro_s`, quella giunzione è sempre un taglio); inline `==evidenzia==`, `**grassetto**`.
 Limiti in `tools/reel/validate.py::LIMITI`: 6-9 scene (5-10), VOCE ≤ 50 parole/scena (hook ≤ 25, chiusura ≤ 18), ≤ 6 beat,
 scena 2,5-19 s,
-reel 30-100 s (dal 2026-09-15: la VOCE è parlato vero, «prima il monologo, poi i beat», `docs/sceneggiatura.md` §5;
+reel 30-100 s (dal 2026-09-15: la VOCE è parlato vero; dal 2026-09-23 «prima il copione, poi i beat», `docs/sceneggiatura.md` §5;
 `valida` avvisa su frasi da titolo in fila, «X, sì. Y, no.», due punti come snodo). La durata reale di ogni scena la
 decide la clip registrata; senza clip vale la stima (2,8 parole/s).
 I beat partono sugli inizi delle frasi VOCE: esatti con la voce di prova (una frase alla volta, `pausa_frasi_s`),
@@ -125,7 +138,7 @@ scena `inizi_frasi_s`, `origine_tempi`, `avvisi_tempi` (beat in ritardo, scena c
   `area.metti(mob, v, h)` e `px()`; spessori dei tratti con `tratto(px)` e mai `px()` (linee invisibili); le
   animazioni composte dei componenti passano `group=self`, altrimenti un riquadro pieno finisce sopra il testo.
 - Claude Code non vede i video: guarda `scene/NN.png`, `fotogrammi/NN-filmstrip.png`, `contact-sheet.png`,
-  `report.json` in `contenuti/render/<slug>/`.
+  `report.json` in `contenuti/render/<slug>/`, e le strisce fitte nella cartella di lavoro (il comando stampa il percorso).
 - Mai pubblicare senza `--pubblica`; la pubblicazione la lancia il presentatore.
 - Aggiornare la memoria (`~/.claude/projects/-Users-bitwise-Projects-reel-anim/memory/`) a ogni milestone.
 - **Gli agenti imparano**: ogni lezione di una sessione, tecnica (trappole, controlli mancanti) o di stile (note del
@@ -136,7 +149,8 @@ scena `inizi_frasi_s`, `origine_tempi`, `avvisi_tempi` (beat in ritardo, scena c
   `docs/regole-editoriali.md`, e negli agenti solo «cosa cambia per te».
 
 ## Pipeline (`.claude/commands/pipeline.md`; completa in fase 3)
-spunto → idea (ideatore, **fermata 1**) → sceneggiatura (**fermata 2**) → revisione tecnica (con ❌ ci si ferma) →
+spunto → idea (ideatore, **fermata 1**) → copione (T0c, `reel copione`: il parlato da un modello esterno) →
+sceneggiatura, che si adatta al copione (**fermata 2**, dove si rivedono insieme) → revisione tecnica (con ❌ ci si ferma) →
 filmati (T2b, agente `broll`: prima `marca` — `piano`, equilibrio, `scrivi --presto` —, poi `scegli` **in parallelo con
 l'animazione**: `cerca/provini`, **fermata 2b** sulla scelta, `rendi`; con `--tutto` la scelta è provvisoria e si
 conferma alla fermata 3) ∥ animazione (animatore: `.py` + `anima --json`) → montaggio `--prova` e un

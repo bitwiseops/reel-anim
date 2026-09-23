@@ -167,35 +167,41 @@ Limiti (fonte unica: `tools/reel/validate.py::LIMITI`; oltre il limite è un avv
 | il reel | 30-100 s stimati (dal 2026-09-22; oltre 120 s è un errore) |
 | `SCHERMO:` | il file deve esistere (errore in una scena `[schermo]`; in una scena a filmato è un avviso, «non ancora reso», e l'errore lo dà `monta`); il riquadro non deve coprire la cornice (avviso) |
 
-## 5. Come si scrive la VOCE: prima il monologo, poi i beat
+## 5. La VOCE: prima il copione, poi i beat
 
 Il presentatore, registrando il primo reel (2026-09-15), ha trovato la VOCE «molto poco umana»: letta a camera era una
 fila di titoli («Vuol dire probabile.», «Fluente, sì. Originale, no.», «Il testo non lo cerca: lo scrive lei.»). Scritti
-funzionano, detti suonano recitati: nessuno parla per aforismi. Da allora:
+funzionano, detti suonano recitati: nessuno parla per aforismi. Nemmeno le regole sono bastate: il 2026-09-23, in una
+prova alla cieca sullo stesso brief, il presentatore ha preferito il parlato di gpt-5.4, poi deepseek-v4-pro e
+gemini-3.1-pro, a quello scritto dallo sceneggiatore. Da allora **il parlato si scrive prima della sceneggiatura, da un
+modello esterno, e la sceneggiatura si adatta a lui**:
 
-0. **Prima ancora si ascolta.** `uv run reel stile --trascrizioni --lingua it` elenca i reel veri trascritti in
-   reelkit, col percorso del testo: se ne leggono **quattro-sei interi**, di almeno tre account diversi e di durata
-   vicina alla nostra, prima di scrivere una riga. La guida `docs/stile-parlato.md` dà le regole, le trascrizioni danno
-   l'orecchio: chi parla davvero allunga la frase con «che… e che…», riprende il soggetto in coda («non ne vediamo
-   traccia, di questi alieni»), si fa le domande da solo («E allora perché?»), infila «tra l'altro», «appunto», «ben»,
-   dà il numero preciso, e non chiude ogni frase con il fiocco. Si prende **il passo, non le frasi**: sono reel di
-   altri, e Whisper sbaglia i nomi, quindi da lì non si prende nessun fatto e nessuna battuta.
-1. **Prima si scrive il parlato intero della scena**, come lo si direbbe a un collega: con «io» e «tu», i connettivi
-   («quindi», «cioè», «guarda», «e non è che…»), il verbo in ogni frase, qualche ripresa. Frasi di 6-18 parole di norma; una catena parlata («…e quindi… che poi…»)
-   può arrivare a 25 se si dice in un fiato.
-2. **Poi lo si spezza in righe `VOCE:`** nei punti in cui cambia lo schermo: una riga = un beat = un pezzo di parlato
-   (una o due proposizioni), non per forza una frase chiusa. 2-5 righe per scena.
-3. **La prova dell'orecchio**: metti il tuo monologo accanto a una delle trascrizioni lette. Se a colpo d'occhio si
-   capisce qual è quello scritto — frasi tutte della stessa lunghezza, simmetrie («Non sbagli a X. Sbagli se Y.»),
-   terne, ogni frase che chiude un pensiero — è ancora scritto: scioglilo. Il parlato vero è **asimmetrico**.
-   E poi: lo diresti così al bar? Se una riga si può leggere solo come un titolo, riscrivila con un verbo.
-   Punta a un solo aforisma, la battuta finale: nella chiusura è libera, fuori `valida` ne tollera uno.
+0. **Le tappe.** L'idea porta `## Tappe del parlato`: una riga numerata per scena, `N. (registro) i fatti`, con il
+   registro `apertura`, `filmato: l'immagine`, `animazione` o `chiusura`. È tutto quello che il modello sa del reel,
+   oltre a tema e messaggio: i fatti che non ci sono non entrano.
+1. **Il copione.** `uv run reel copione <idea>` compone il prompt da `templates/copione.md` (le regole del parlato:
+   niente titoli, niente simmetrie, verbo in ogni frase, numeri in lettere, nessun fatto in più) con sei trascrizioni
+   intere di reelkit, scelte da sé (una per account, durata vicina al reel), perché il passo del parlato vero non
+   sopravvive a una regola. Lo manda al primo modello di `config.toml [copione] modelli` (gpt-5.4 → deepseek-v4-pro →
+   gemini-3.1-pro → Claude, via Poe e `claude -p`); si scende al successivo solo se il precedente fallisce (errore,
+   punti Poe che non bastano, cifre o un reel oltre i 120 s anche dopo **una** correzione chiesta allo stesso modello;
+   le lunghezze oltre i limiti, come in `valida`, restano avvisi nel frontmatter). Scrive
+   `contenuti/copioni/<idea>.md` (frontmatter: modello, catena, punti spesi, avvisi di stile) e il prompt accanto,
+   aggiunge all'idea `**Copione:**` e porta lo stato a `copione`. `--prova-a-secco` stampa il prompt con saldo e stime;
+   `--nota "…"` lo rigenera con una richiesta; `--modello X` usa un solo anello.
+2. **I beat.** Lo sceneggiatore prende ogni scena del copione **alla lettera** e la spezza in righe `VOCE:` nei punti
+   in cui cambia lo schermo: una riga = un beat = un pezzo di parlato (una o due proposizioni), non per forza una
+   frase chiusa. 2-6 righe per scena. Può dividere una scena in due, non cambiare parole.
+3. **Gli scostamenti.** Si cambiano parole solo per un errore di `valida`, per un numero o un termine tecnico in una
+   scena a filmato, o per un fatto che l'idea non ha: il minimo, elencato nelle Note di produzione sotto «Scostamenti
+   dal copione». Una frase che non convince si segnala; la corregge il presentatore nel copione, o lo rigenera.
 4. La revisione a voce la fa il presentatore **registrando** (2026-09-22): nella finestra di `reel registra` corregge le
    righe fuori dalla presa, le caption usano il testo recitato e `reel parlato --applica` lo riporta qui.
-5. `valida` avvisa sulle frasi da titolo in fila, sullo schema «X, sì. Y, no.» e sui due punti usati come snodo; lo
-   sceneggiatore li porta a zero. La verifica vera è il presentatore che la legge in `reel registra`.
+5. `valida` (e già `reel copione`, negli avvisi del frontmatter) segnala le frasi da titolo in fila, lo schema «X, sì.
+   Y, no.» e i due punti usati come snodo: lo sceneggiatore li riporta, non li riscrive. La verifica vera è il
+   presentatore che la legge in `reel registra`.
 
-Esempio (scena 4 del primo reel). Scritto: «A ogni bivio, di solito, vince la strada più battuta. Il testo non lo
+Esempio di cosa si cerca nel copione (scena 4 del primo reel). Scritto: «A ogni bivio, di solito, vince la strada più battuta. Il testo non lo
 cerca: lo scrive lei. Fluente, sì. Originale, no.» Parlato: «Quindi a ogni bivio, quasi sempre, prende la strada più
 battuta. E non è che il testo lo va a cercare da qualche parte: lo scrive lei, una parola dopo l'altra. Viene fuori
 fluente, certo. Ma originale no, non può esserlo.» Stesso contenuto, stessi quattro beat, il doppio delle parole.

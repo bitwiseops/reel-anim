@@ -2,8 +2,8 @@
   "versione": 1,
   "slug": "gpu-comprare-o-affittare",
   "sorgente": "contenuti/sceneggiature/2026-09-22-gpu-comprare-o-affittare.md",
-  "hash_md": "750380e550cbc58f",
-  "quando": "2026-09-22T22:20:13",
+  "hash_md": "2458defba7c94fe1",
+  "quando": "2026-09-23T12:29:03",
   "cornice": {
     "pieno": [
       1080,
@@ -18,17 +18,17 @@
     {
       "n": 1,
       "tipo": "hook",
-      "durata_s": 6.76,
+      "durata_s": 8.78,
       "origine_durata": "report",
       "inizi_frasi_s": [
         0.0,
-        3.047
+        5.16
       ],
       "origine_tempi": "voce-sintetica",
       "registro": "animazione",
       "voce": [
-        "Stai per comprare una scheda video per l'IA in casa?",
-        "Ok, ma prima, quante ore al mese la userai davvero?"
+        "Se stai pensando di comprarti una scheda video per usare l'intelligenza artificiale a casa,",
+        "la domanda vera è una sola: quante ore la userai ==davvero==?"
       ],
       "brief": [],
       "query": [],
@@ -41,60 +41,28 @@
     {
       "n": 2,
       "tipo": "broll",
-      "durata_s": 4.75,
+      "durata_s": 7.31,
       "origine_durata": "report",
       "inizi_frasi_s": [
         0.0,
-        1.899
+        1.681
       ],
       "origine_tempi": "voce-sintetica",
-      "registro": "filmato",
+      "registro": "immagini",
       "voce": [
-        "Ma poi vai a vedere i prezzi,",
-        "e sono molto più alti di quanto ti ==ricordavi==."
+        "Perché il punto parte da lì.",
+        "Le schede oggi costano parecchio, spesso più di quanto uno si aspetta guardando gli ==annunci==."
       ],
       "brief": [
-        "Primo piano di una scheda video al buio: le luci si accendono, le ventole cominciano a girare, la camera scorre lenta lungo il dissipatore."
+        "Primo piano di una scheda video nuova al buio, con un cartellino del prezzo appeso senza cifre leggibili: le luci si accendono, le ventole partono e la camera scorre lenta lungo il dissipatore."
       ],
       "query": [
         "graphics card close up fans spinning rgb",
-        "gpu macro shot dark lights turning on",
-        "computer graphics card heatsink slow pan"
+        "graphics card box price tag store shelf",
+        "gpu macro shot dark lights turning on"
       ],
       "stato": "reso",
       "candidati": [
-        {
-          "fornitore": "pexels",
-          "id": "34289018",
-          "url_pagina": "https://www.pexels.com/video/colorful-gaming-pc-light-show-at-night-34289018/",
-          "url_file": "https://videos.pexels.com/video-files/34289018/14526722_1080_1920_50fps.mp4",
-          "anteprima": "https://images.pexels.com/videos/34289018/custom-pc-gaming-gaming-pc-pc-build-34289018.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
-          "larghezza": 1080,
-          "altezza": 1920,
-          "durata_s": 6.0,
-          "fps": 50.0,
-          "autore": "Gladin  Joseph",
-          "autore_url": "https://www.pexels.com/@gladinjoseph",
-          "licenza": "Pexels License",
-          "query": "graphics card close up fans spinning rgb",
-          "resta_ritaglio": 1.0
-        },
-        {
-          "fornitore": "pexels",
-          "id": "34280528",
-          "url_pagina": "https://www.pexels.com/video/vibrant-gaming-pc-with-rgb-lighting-34280528/",
-          "url_file": "https://videos.pexels.com/video-files/34280528/14523166_1080_1920_50fps.mp4",
-          "anteprima": "https://images.pexels.com/videos/34280528/custom-pc-gaming-equipment-gaming-pc-pc-build-34280528.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
-          "larghezza": 1080,
-          "altezza": 1920,
-          "durata_s": 5.0,
-          "fps": 50.0,
-          "autore": "Gladin  Joseph",
-          "autore_url": "https://www.pexels.com/@gladinjoseph",
-          "licenza": "Pexels License",
-          "query": "graphics card close up fans spinning rgb",
-          "resta_ritaglio": 1.0
-        },
         {
           "fornitore": "pexels",
           "id": "10470834",
@@ -123,38 +91,6 @@
           "fps": 25.0,
           "autore": "Alena Darmel",
           "autore_url": "https://www.pexels.com/@a-darmel",
-          "licenza": "Pexels License",
-          "query": "graphics card close up fans spinning rgb",
-          "resta_ritaglio": 1.0
-        },
-        {
-          "fornitore": "pexels",
-          "id": "12346838",
-          "url_pagina": "https://www.pexels.com/video/camera-on-keyboard-12346838/",
-          "url_file": "https://videos.pexels.com/video-files/12346838/12346838-hd_1080_1920_30fps.mp4",
-          "anteprima": "https://images.pexels.com/videos/12346838/pexels-photo-12346838.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
-          "larghezza": 1080,
-          "altezza": 1920,
-          "durata_s": 5.0,
-          "fps": 29.97,
-          "autore": "AMBADY KOLAZHIKKARAN",
-          "autore_url": "https://www.pexels.com/@framesbyambro",
-          "licenza": "Pexels License",
-          "query": "graphics card close up fans spinning rgb",
-          "resta_ritaglio": 1.0
-        },
-        {
-          "fornitore": "pexels",
-          "id": "36862845",
-          "url_pagina": "https://www.pexels.com/video/artistic-close-up-of-open-book-pages-36862845/",
-          "url_file": "https://videos.pexels.com/video-files/36862845/15616751_1080_1920_25fps.mp4",
-          "anteprima": "https://images.pexels.com/videos/36862845/pexels-photo-36862845.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
-          "larghezza": 1080,
-          "altezza": 1920,
-          "durata_s": 8.0,
-          "fps": 25.0,
-          "autore": "Canan İldeniz",
-          "autore_url": "https://www.pexels.com/@canan-i-ldeniz-2158600658",
           "licenza": "Pexels License",
           "query": "graphics card close up fans spinning rgb",
           "resta_ritaglio": 1.0
@@ -190,60 +126,194 @@
           "licenza": "Pexels License",
           "query": "graphics card close up fans spinning rgb",
           "resta_ritaglio": 1.0
+        },
+        {
+          "fornitore": "pexels",
+          "id": "15440319",
+          "url_pagina": "https://www.pexels.com/video/3d-animation-of-a-luminous-geometric-design-15440319/",
+          "url_file": "https://videos.pexels.com/video-files/15440319/15440319-hd_1080_1920_30fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/15440319/3d-9-16-cgi-clip-15440319.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "larghezza": 1080,
+          "altezza": 1920,
+          "durata_s": 30.0,
+          "fps": 29.97,
+          "autore": "Pachon in Motion",
+          "autore_url": "https://www.pexels.com/@pachon-in-motion-426015731",
+          "licenza": "Pexels License",
+          "query": "graphics card close up fans spinning rgb",
+          "resta_ritaglio": 1.0
+        },
+        {
+          "fornitore": "pexels",
+          "id": "15439747",
+          "url_pagina": "https://www.pexels.com/video/a-3d-animation-of-a-luminous-geometric-pattern-15439747/",
+          "url_file": "https://videos.pexels.com/video-files/15439747/15439747-hd_1080_1920_30fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/15439747/3d-9-16-cgi-clip-15439747.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "larghezza": 1080,
+          "altezza": 1920,
+          "durata_s": 30.0,
+          "fps": 29.97,
+          "autore": "Pachon in Motion",
+          "autore_url": "https://www.pexels.com/@pachon-in-motion-426015731",
+          "licenza": "Pexels License",
+          "query": "graphics card close up fans spinning rgb",
+          "resta_ritaglio": 1.0
+        },
+        {
+          "fornitore": "pexels",
+          "id": "15283234",
+          "url_pagina": "https://www.pexels.com/video/pink-shiny-ripples-15283234/",
+          "url_file": "https://videos.pexels.com/video-files/15283234/15283234-hd_1080_1920_30fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/15283234/3-d-render-3d-3d-render-4k-background-15283234.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "larghezza": 1080,
+          "altezza": 1920,
+          "durata_s": 27.0,
+          "fps": 29.97,
+          "autore": "Pachon in Motion",
+          "autore_url": "https://www.pexels.com/@pachon-in-motion-426015731",
+          "licenza": "Pexels License",
+          "query": "graphics card close up fans spinning rgb",
+          "resta_ritaglio": 1.0
+        },
+        {
+          "fornitore": "pexels",
+          "id": "5924999",
+          "url_pagina": "https://www.pexels.com/video/person-holding-a-tag-5924999/",
+          "url_file": "https://videos.pexels.com/video-files/5924999/5924999-hd_1080_1920_24fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/5924999/pexels-photo-5924999.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "larghezza": 1080,
+          "altezza": 1920,
+          "durata_s": 10.0,
+          "fps": 23.98,
+          "autore": "Sora Shimazaki",
+          "autore_url": "https://www.pexels.com/@sora-shimazaki",
+          "licenza": "Pexels License",
+          "query": "graphics card box price tag store shelf",
+          "resta_ritaglio": 1.0
+        },
+        {
+          "fornitore": "pexels",
+          "id": "5924966",
+          "url_pagina": "https://www.pexels.com/video/bag-and-shopping-cart-with-sale-sign-5924966/",
+          "url_file": "https://videos.pexels.com/video-files/5924966/5924966-hd_1080_1920_24fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/5924966/pexels-photo-5924966.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "larghezza": 1080,
+          "altezza": 1920,
+          "durata_s": 13.0,
+          "fps": 23.98,
+          "autore": "Sora Shimazaki",
+          "autore_url": "https://www.pexels.com/@sora-shimazaki",
+          "licenza": "Pexels License",
+          "query": "graphics card box price tag store shelf",
+          "resta_ritaglio": 1.0
+        },
+        {
+          "fornitore": "pexels",
+          "id": "5925175",
+          "url_pagina": "https://www.pexels.com/video/person-holding-a-sale-tag-attached-to-the-coat-5925175/",
+          "url_file": "https://videos.pexels.com/video-files/5925175/5925175-hd_1080_1920_24fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/5925175/pexels-photo-5925175.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "larghezza": 1080,
+          "altezza": 1920,
+          "durata_s": 10.0,
+          "fps": 23.98,
+          "autore": "Sora Shimazaki",
+          "autore_url": "https://www.pexels.com/@sora-shimazaki",
+          "licenza": "Pexels License",
+          "query": "graphics card box price tag store shelf",
+          "resta_ritaglio": 1.0
+        },
+        {
+          "fornitore": "pexels",
+          "id": "5644250",
+          "url_pagina": "https://www.pexels.com/video/video-of-paper-bags-with-sale-tag-5644250/",
+          "url_file": "https://videos.pexels.com/video-files/5644250/5644250-hd_1080_2048_25fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/5644250/discount-hand-promotion-sale-5644250.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "larghezza": 1080,
+          "altezza": 2048,
+          "durata_s": 16.0,
+          "fps": 25.0,
+          "autore": "https://kaboompics.com/",
+          "autore_url": "https://www.pexels.com/@karola-g",
+          "licenza": "Pexels License",
+          "query": "graphics card box price tag store shelf",
+          "resta_ritaglio": 1.0
+        },
+        {
+          "fornitore": "pexels",
+          "id": "5924986",
+          "url_pagina": "https://www.pexels.com/video/person-holding-shopping-bags-5924986/",
+          "url_file": "https://videos.pexels.com/video-files/5924986/5924986-hd_1080_1920_24fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/5924986/pexels-photo-5924986.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "larghezza": 1080,
+          "altezza": 1920,
+          "durata_s": 10.0,
+          "fps": 23.98,
+          "autore": "Sora Shimazaki",
+          "autore_url": "https://www.pexels.com/@sora-shimazaki",
+          "licenza": "Pexels License",
+          "query": "graphics card box price tag store shelf",
+          "resta_ritaglio": 1.0
         }
       ],
       "scelti": [
         {
-          "fornitore": "pexels",
-          "id": "34289018",
-          "url_pagina": "https://www.pexels.com/video/colorful-gaming-pc-light-show-at-night-34289018/",
-          "url_file": "https://videos.pexels.com/video-files/34289018/14526722_1080_1920_50fps.mp4",
-          "anteprima": "https://images.pexels.com/videos/34289018/custom-pc-gaming-gaming-pc-pc-build-34289018.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
-          "larghezza": 1080,
-          "altezza": 1920,
-          "durata_s": 6.0,
-          "fps": 50.0,
-          "autore": "Gladin  Joseph",
-          "autore_url": "https://www.pexels.com/@gladinjoseph",
-          "licenza": "Pexels License",
-          "query": "graphics card close up fans spinning rgb",
-          "resta_ritaglio": 1.0,
-          "candidato": "pexels:34289018",
-          "da_s": 0.0,
-          "ancora": 0.5,
-          "sha256": "2a34026f27a61e7b189e4e6b8f10344f85c7899a7ade4b4422693e5ee4a5ba09"
+          "fornitore": "meshy",
+          "generata": true,
+          "prompt": "Macro shot of a brand-new graphics card cooling fans and heatsink shroud in near darkness, cool blue-purple accent lights just switching on along the edges, sharp focus on the fan blades with a second card box blurred in shadow behind it for depth, empty space in the upper right corner, cinematic still, vertical 9:16, dark background, shallow depth of field, no text, no words, no letters, no logos, no watermark, no people",
+          "indice": 1,
+          "modello": "nano-banana-pro",
+          "task": "01a0cd83-ce9a-7683-bf91-e0ab7df0a21c",
+          "quando": "2026-09-23",
+          "licenza": "Meshy — immagine generata",
+          "file": "/Users/bitwise/Library/Application Support/reel-anim/cache-broll/meshy-fa9892d5466851fbc24695350b424c59ebcff5a7-1.png",
+          "candidato": "meshy:fa9892d546-1",
+          "da_cache": true
+        },
+        {
+          "fornitore": "meshy",
+          "generata": true,
+          "prompt": "The same graphics card box standing upright on a dim store shelf, cool blue-purple accent lighting, shallow depth of field with more boxes blurred in a row receding behind on the shelf for depth, empty space in the upper right corner, cinematic still, vertical 9:16, dark background, no price tag, no hanging labels, no text, no words, no letters, no logos, no watermark, no people",
+          "indice": 2,
+          "modello": "nano-banana-pro",
+          "task": "01a0cda7-058a-7017-84e0-104aa224fe40",
+          "quando": "2026-09-23",
+          "licenza": "Meshy — immagine generata",
+          "file": "/Users/bitwise/Library/Application Support/reel-anim/cache-broll/meshy-8db24c658495276b970da77b7ed1f027df1a03b5-2.png",
+          "candidato": "meshy:8db24c6584-2",
+          "da_cache": false
         }
       ],
       "file": "broll-scena-02.mp4",
-      "note": ""
+      "note": "immagini generate: 2"
     },
     {
       "n": 3,
       "tipo": "spiegazione",
-      "durata_s": 15.24,
+      "durata_s": 16.71,
       "origine_durata": "report",
       "inizi_frasi_s": [
         0.0,
-        1.911,
-        6.507,
-        8.174,
-        12.778
+        1.633,
+        6.745,
+        8.889,
+        14.178
       ],
       "origine_tempi": "voce-sintetica",
       "registro": "animazione",
       "voce": [
-        "E uno dei problemi è la memoria.",
-        "Perché i produttori quella memoria la danno prima all'IA, che ne chiede tantissima.",
-        "Alle schede ne resta meno.",
-        "E le fabbriche nuove? Difficilmente cambieranno prima del 2028.",
-        "Quindi, ti conviene ==comprarla==?"
+        "E non è solo impressione.",
+        "C'entra la memoria, che in questo momento viene mandata prima all'intelligenza artificiale,",
+        "e quindi sulle schede ne resta meno.",
+        "E le fabbriche nuove, secondo TrendForce, conteranno solo dal duemilaventotto.",
+        "Quindi ti conviene davvero ==comprarla==?"
       ],
       "brief": [
-        "Stacco dal filmato, fotogramma 0 già pieno: a destra la scheda video (sagoma fatta di forme: un rettangolo scuro con due ventole tonde e, lungo il bordo, otto alloggi vuoti per i chip), a sinistra il server a cassetti (rack stilizzato: corpo, quattro cassetti con fessura e lucina, disegnato con forme di Manim) con appoggiata sopra una piccola rete neurale (tre strati di nodi e archi: l'IA), al centro in alto un mucchio di chip di memoria (rettangolini pieni in accento, nessuna scritta). Sulla frase il mucchio pulsa una volta e i primi chip escono in fila, uno dietro l'altro.",
-        "La rete sopra il server si illumina e cresce appena; la fila piega verso sinistra e i chip entrano uno per uno nei cassetti del server (si infilano nella fessura, la lucina del cassetto si accende, la rete pulsa a ogni arrivo). La scheda intanto resta ferma, con gli alloggi vuoti: la priorità si vede come ordine, non come quantità, e il mucchio non si svuota mai in massa verso i server.",
-        "Solo adesso la fila arriva anche alla scheda, lenta, un chip alla volta; sei alloggi si riempiono e due restano vuoti. GRANDE (contrasto di scala) su «Alle schede ne resta meno»: zoom sulla scheda, i due alloggi vuoti lampeggiano, poi torna.",
-        "Su «E le fabbriche nuove?» entra in fondo, per tutta la larghezza dell'area, una linea del tempo sottile; poi un segnaposto accento parte da sinistra, corre verso destra e si ferma di colpo contro una sbarra verticale in accento, con sopra «2028» grande e sotto piccola la Didascalia «TrendForce, 2026».",
-        "Il resto esce; il server con la rete si spegne a sinistra e ricompare piccolo in alto a destra, la scheda con gli alloggi vuoti scivola al centro e cresce, e accanto a lei entra un «?» grande che pulsa una volta. Ultimo fotogramma: la scheda con due alloggi vuoti, il «?», il server con la rete in piccolo."
+        "Stacco dal filmato, fotogramma 0 già pieno: a destra la scheda video (sagoma di forme: un rettangolo scuro con due ventole tonde e, lungo il bordo, otto alloggi vuoti per i chip), a sinistra il server a cassetti (rack stilizzato: corpo, quattro cassetti con fessura e lucina) con sopra una piccola rete neurale (tre strati di nodi e archi: l'IA), in alto al centro un mucchio di chip di memoria (rettangolini pieni in accento, nessuna scritta). Sulla frase il mucchio pulsa una volta e i primi chip escono e si mettono in fila sotto di lui, uno dietro l'altro.",
+        "La fila piega verso sinistra e i chip entrano uno alla volta nei cassetti del server: ogni chip si infila nella fessura, il cassetto si riempie di un velo accento, la lucina si accende e la rete pulsa a ogni arrivo. La scheda intanto resta ferma con gli alloggi vuoti: la priorità si vede come ordine, non come quantità, e il mucchio non si svuota mai in massa verso il server.",
+        "GRANDE (contrasto di scala) su «sulle schede ne resta meno»: solo adesso i chip rimasti arrivano alla scheda, uno alla volta, mentre la camera entra sulla scheda; sei alloggi si riempiono, due restano vuoti e lampeggiano, poi la camera torna.",
+        "In fondo all'area entra una linea del tempo sottile per tutta la larghezza; un segnaposto accento parte da sinistra, corre verso destra e si ferma di colpo contro una sbarra verticale in accento, con sopra «2028» grande e sotto, piccola, l'etichetta «TrendForce, 2026».",
+        "La linea del tempo esce; il server con la rete si spegne a sinistra e ricompare piccolo in alto a destra, la scheda con i due alloggi vuoti scivola al centro e cresce, e accanto a lei entra un «?» grande che pulsa su «comprarla». Ultimo fotogramma: la scheda con due alloggi vuoti, il «?», il server piccolo."
       ],
       "query": [],
       "stato": "da-scegliere",
@@ -255,19 +325,19 @@
     {
       "n": 4,
       "tipo": "broll",
-      "durata_s": 7.2,
+      "durata_s": 9.73,
       "origine_durata": "report",
       "inizi_frasi_s": [
         0.0,
-        1.82,
-        4.658
+        2.11,
+        5.622
       ],
       "origine_tempi": "voce-sintetica",
       "registro": "filmato",
       "voce": [
-        "Pensala come la macchina.",
-        "Se è tua, più viaggi fai e meno ti costa.",
-        "A noleggio invece paghi sempre ==uguale==."
+        "Pensala un po' come la macchina.",
+        "Se è tua, ogni viaggio ti costa meno man mano che la usi.",
+        "Se la noleggi, invece, quel costo resta sempre ==quello==."
       ],
       "brief": [
         "Di sera, in una via di città, un'auto parcheggiata si sblocca da sola: lampeggiano le frecce e si accendono i fari, nessuna persona in vista."
@@ -279,22 +349,6 @@
       ],
       "stato": "reso",
       "candidati": [
-        {
-          "fornitore": "pexels",
-          "id": "18138660",
-          "url_pagina": "https://www.pexels.com/video/arabian-city-nights-18138660/",
-          "url_file": "https://videos.pexels.com/video-files/18138660/18138660-hd_1080_1920_30fps.mp4",
-          "anteprima": "https://images.pexels.com/videos/18138660/buildings-busy-city-busy-road-city-at-night-18138660.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
-          "larghezza": 1080,
-          "altezza": 1920,
-          "durata_s": 9.0,
-          "fps": 30.0,
-          "autore": "Nasih Najim",
-          "autore_url": "https://www.pexels.com/@nasih-najim-839625",
-          "licenza": "Pexels License",
-          "query": "car unlocking lights flashing night street",
-          "resta_ritaglio": 1.0
-        },
         {
           "fornitore": "pexels",
           "id": "28115367",
@@ -372,7 +426,23 @@
           "autore": "Gera Cejas",
           "autore_url": "https://www.pexels.com/@gera-cejas-3616330",
           "licenza": "Pexels License",
-          "query": "parked car headlights turn on city evening",
+          "query": "car unlocking lights flashing night street",
+          "resta_ritaglio": 1.0
+        },
+        {
+          "fornitore": "pexels",
+          "id": "34638027",
+          "url_pagina": "https://www.pexels.com/video/nighttime-city-street-crossing-with-cars-34638027/",
+          "url_file": "https://videos.pexels.com/video-files/34638027/14681100_1080_1920_60fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/34638027/pexels-photo-34638027.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "larghezza": 1080,
+          "altezza": 1920,
+          "durata_s": 15.0,
+          "fps": 59.94,
+          "autore": "Evgenij Mikhailov",
+          "autore_url": "https://www.pexels.com/@evgenij-mikhailov-118166450",
+          "licenza": "Pexels License",
+          "query": "car unlocking lights flashing night street",
           "resta_ritaglio": 1.0
         },
         {
@@ -406,6 +476,70 @@
           "licenza": "Pexels License",
           "query": "parked car headlights turn on city evening",
           "resta_ritaglio": 1.0
+        },
+        {
+          "fornitore": "pexels",
+          "id": "35099109",
+          "url_pagina": "https://www.pexels.com/video/white-car-in-dimly-lit-parking-garage-35099109/",
+          "url_file": "https://videos.pexels.com/video-files/35099109/14869778_1080_1920_32fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/35099109/pexels-photo-35099109.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "larghezza": 1080,
+          "altezza": 1920,
+          "durata_s": 11.0,
+          "fps": 31.58,
+          "autore": "Videas",
+          "autore_url": "https://www.pexels.com/@videas-1380992400",
+          "licenza": "Pexels License",
+          "query": "parked car headlights turn on city evening",
+          "resta_ritaglio": 1.0
+        },
+        {
+          "fornitore": "pexels",
+          "id": "36248857",
+          "url_pagina": "https://www.pexels.com/video/vintage-car-parked-at-night-with-city-lights-36248857/",
+          "url_file": "https://videos.pexels.com/video-files/36248857/15372895_1080_1920_30fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/36248857/pexels-photo-36248857.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "larghezza": 1080,
+          "altezza": 1920,
+          "durata_s": 23.0,
+          "fps": 30.0,
+          "autore": "Alexander Mass",
+          "autore_url": "https://www.pexels.com/@rebornfilmes",
+          "licenza": "Pexels License",
+          "query": "parked car headlights turn on city evening",
+          "resta_ritaglio": 1.0
+        },
+        {
+          "fornitore": "pexels",
+          "id": "34405190",
+          "url_pagina": "https://www.pexels.com/video/city-night-traffic-on-busy-downtown-street-34405190/",
+          "url_file": "https://videos.pexels.com/video-files/34405190/14575406_1080_1920_60fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/34405190/pexels-photo-34405190.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "larghezza": 1080,
+          "altezza": 1920,
+          "durata_s": 15.0,
+          "fps": 59.94,
+          "autore": "SHOX ART",
+          "autore_url": "https://www.pexels.com/@shox",
+          "licenza": "Pexels License",
+          "query": "parked car headlights turn on city evening",
+          "resta_ritaglio": 1.0
+        },
+        {
+          "fornitore": "pexels",
+          "id": "34679320",
+          "url_pagina": "https://www.pexels.com/video/nighttime-city-street-with-moving-vehicles-34679320/",
+          "url_file": "https://videos.pexels.com/video-files/34679320/14699433_1080_1920_60fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/34679320/pexels-photo-34679320.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "larghezza": 1080,
+          "altezza": 1920,
+          "durata_s": 22.0,
+          "fps": 59.94,
+          "autore": "Evgenij Mikhailov",
+          "autore_url": "https://www.pexels.com/@evgenij-mikhailov-118166450",
+          "licenza": "Pexels License",
+          "query": "parked car headlights turn on city evening",
+          "resta_ritaglio": 1.0
         }
       ],
       "scelti": [
@@ -431,32 +565,35 @@
         }
       ],
       "file": "broll-scena-04.mp4",
-      "note": ""
+      "note": "durata cambiata da 10.80 a 9.73 s: da rendere di nuovo"
     },
     {
       "n": 5,
       "tipo": "spiegazione",
-      "durata_s": 14.72,
+      "durata_s": 16.06,
       "origine_durata": "report",
       "inizi_frasi_s": [
         0.0,
-        3.316,
-        10.067,
-        11.816
+        0.94,
+        7.087,
+        11.295,
+        12.912
       ],
       "origine_tempi": "voce-sintetica",
       "registro": "animazione",
       "voce": [
-        "Nel cloud la scheda la affitti a circa mezzo euro l'ora.",
-        "Se invece la compri, spendi, mettiamo, millecinquecento euro fra una GPU usata e il resto del PC.",
-        "Ora dividili su tre anni.",
-        "E poi dividi ancora per le ==ore== in cui la userai."
+        "Qui è uguale.",
+        "Se affitti, sei attorno a mezzo euro l'ora, zero virgola cinquantatré con l'imposta, sempre.",
+        "Se compri, mettiamo millecinquecento euro tra scheda e computer,",
+        "spalmati su tre anni.",
+        "Quella rata poi la dividi per le ore che fai ==davvero==."
       ],
       "brief": [
-        "Stacco dal filmato: fotogramma 0 con gli assi di un grafico già disegnati (due linee di Manim: in orizzontale le ore al mese, con due tacche, «0» e «300»; in verticale quanto costa un'ora, tacca «1 €» in cima), e in alto a sinistra il server a cassetti piccolo, lo stesso oggetto della scena 3: la rete che aveva sopra si spegne a grigio ed esce, e il server resta come noleggio (affitti un pezzo delle macchine dove è andata la memoria). Sulla frase dal server cade una riga orizzontale piatta, colore neutro, che si allunga da sinistra a destra per tutto il grafico all'altezza «0,53 €»; sotto il suo capo destro compare piccola la Didascalia «RunPod + IVA, set. 2026». La riga non si muove più in tutto il reel.",
-        "Sotto il grafico entra la scheda video (stessa sagoma della 3, con gli alloggi pieni) e accanto a lei cade una pila di monete (dischetti impilati) con «1.500 €» e, di fianco, piccola, l'etichetta su due righe «3090 usata» / «esempio».",
-        "GRANDE (metamorfosi) su «Ora dividili su tre anni»: la pila si sfoglia dall'alto, ogni striscia vola al suo posto ruotando in piedi, e diventa una fila orizzontale di 36 fettine sottili, una per mese; 35 si attenuano e una sola resta accesa, con «42 €».",
-        "La fetta accesa scivola sul grafico e si sbriciola sulle ore: a 50 ore in pochi pezzi grossi, e un punto accento nasce in alto; a 150 ore in pezzi più piccoli, punto più basso; a 300 ore in briciole, punto più basso ancora. Una curva accento si disegna unendo i punti e scende da sinistra a destra. Nessun segno dove la curva passa la riga piatta: l'incrocio si accende solo nella scena 6 (vedi Note, «il conto a due tempi»)."
+        "Stacco dal filmato: il server a cassetti piccolo in alto a sinistra (la rete che aveva sopra si spegne a grigio ed esce: resta il noleggio, le macchine dove la memoria è andata per prima) e la scheda video piccola in basso a destra. Sulla frase si disegnano gli assi di un grafico con linee di Manim: in orizzontale le ore al mese, tacche «0» e «300 h»; in verticale quanto costa un'ora, tacca «1 €» in cima.",
+        "Dal server cade una riga orizzontale piatta, colore neutro, che si allunga da sinistra a destra per tutto il grafico all'altezza «0,53 €», con sotto il capo destro, piccola, l'etichetta «RunPod + IVA, set. 2026». Su «sempre» la riga pulsa una volta; da qui alla fine del reel non si muove più.",
+        "La scheda pulsa su «Se compri»; accanto a lei cade una pila di monete (dischetti impilati) con «1.500 €» e, di fianco, piccola, l'etichetta su due righe «3090 usata» / «esempio»: sette monete su «millecinquecento euro», le ultime due su «e computer».",
+        "GRANDE (metamorfosi) su «spalmati su tre anni»: la pila si sfoglia dall'alto, ogni striscia vola al suo posto ruotando in piedi e diventa una fila orizzontale di 36 fettine sottili, una per mese; 35 si attenuano e una sola resta accesa, con «42 €».",
+        "La fetta accesa scivola sul grafico e si sbriciola sulle ore: a 50 ore in pochi pezzi grossi, e un punto accento nasce in alto; a 150 ore in pezzi più piccoli, punto più basso; a 300 ore in briciole, punto più basso ancora. Una curva accento si disegna unendo i punti e scende da sinistra a destra. Nessun segno dove la curva passa la riga piatta: l'incrocio si accende solo nella scena 6."
       ],
       "query": [],
       "stato": "da-scegliere",
@@ -468,27 +605,24 @@
     {
       "n": 6,
       "tipo": "spiegazione",
-      "durata_s": 12.06,
+      "durata_s": 10.26,
       "origine_durata": "report",
       "inizi_frasi_s": [
         0.0,
-        3.202,
-        8.608,
-        10.769
+        3.428,
+        7.975
       ],
       "origine_tempi": "voce-sintetica",
       "registro": "animazione",
       "voce": [
-        "Poi a casa c'è la corrente, che paghi tu a ogni ora.",
-        "E facendo due conti, con questi prezzi, il punto di pareggio è a ==centodieci== ore al mese.",
-        "Che sono quasi quattro ore al giorno.",
-        "Ogni giorno."
+        "Solo che a casa ci aggiungi anche la corrente, ogni ora.",
+        "E con i prezzi di oggi le due curve si incontrano attorno a ==centodieci== ore al mese,",
+        "cioè quasi quattro ore al giorno."
       ],
       "brief": [
-        "Nessun filmato in mezzo: il fotogramma 0 è l'ultimo della scena 5 (assi, riga piatta a «0,53 €», curva della rata, scheda con la fila delle fette). Sulla frase, in basso nel grafico, si disegna una riga tratteggiata a «0,16 €» (la corrente), con piccola la Didascalia «500 W · ARERA»; poi tutta la curva sale insieme della stessa altezza, e adesso scende verso la tratteggiata senza toccarla mai.",
-        "GRANDE (rivelazione a tratto) su «centodieci ore al mese»: il punto in cui la curva taglia la riga piatta si accende, una linea verticale scende da lì all'asse delle ore e sotto nasce «110 h», incorniciato da un tratto accento che gli corre intorno. Subito dopo l'area del grafico a sinistra dell'incrocio si colora di un tono pieno leggero con il server a cassetti piccolo (conviene il noleggio), quella a destra di un altro tono con la scheda piccola (conviene comprare).",
-        "Il grafico si riduce e scivola in alto a sinistra; al centro entra un orologio del giorno (un cerchio con 24 tacche) che si riempie a spicchio per 3,7 tacche su 24, con «≈ 4 h» accanto.",
-        "Sotto l'orologio, una Fila di 30 quadratini (i giorni del mese) si accende tutta, uno dopo l'altro, in fretta, e alla fine lo spicchio dell'orologio pulsa una volta. Ultimo fotogramma: il grafico piccolo con l'incrocio, l'orologio con lo spicchio, la fila accesa."
+        "Il fotogramma 0 è l'ultimo della scena 5 (assi, riga piatta a «0,53 €», curva della rata, scheda con la fila delle fette). Sulla frase, in basso nel grafico, si disegna una riga tratteggiata a «0,16 €» (la corrente), con piccola l'etichetta «500 W · ARERA»; poi due frecce corte dicono di quanto, e tutta la curva si stacca dalla sua ombra grigia e sale della stessa altezza: adesso scende verso la tratteggiata senza toccarla mai. L'ombra resta accanto fino all'inizio del beat dopo.",
+        "GRANDE (rivelazione a tratto) su «centodieci ore al mese»: il punto in cui la curva taglia la riga piatta si accende, una linea verticale scende da lì all'asse delle ore e sotto nasce «110 h», incorniciato da un tratto accento che gli corre intorno. Subito dopo l'area a sinistra dell'incrocio si colora di un tono leggero con il server piccolo (conviene il noleggio), quella a destra di un altro tono con la scheda piccola (conviene comprare).",
+        "Il grafico si riduce e scivola in alto a sinistra; al centro entra un orologio del giorno (un cerchio con 24 tacche) che si riempie a spicchio per 3,7 tacche su 24, con «≈ 4 h» accanto; sotto l'orologio una Fila di 30 quadratini (i giorni del mese) si accende tutta, in fretta, e lo spicchio pulsa una volta. Ultimo fotogramma: il grafico piccolo con l'incrocio, l'orologio con lo spicchio, la fila accesa."
       ],
       "query": [],
       "stato": "da-scegliere",
@@ -500,27 +634,27 @@
     {
       "n": 7,
       "tipo": "broll",
-      "durata_s": 7.35,
+      "durata_s": 10.05,
       "origine_durata": "report",
       "inizi_frasi_s": [
         0.0,
-        2.487,
-        5.074
+        2.738,
+        6.063
       ],
       "origine_tempi": "voce-sintetica",
       "registro": "immagini",
       "voce": [
-        "Certo, il conto non è perfetto.",
-        "Perché a noleggio paghi anche mentre aspetti.",
-        "E la tua puoi sempre ==rivenderla==."
+        "Poi chiaro, il conto non racconta tutto.",
+        "Se affitti, paghi anche quando stai lì ad aspettare.",
+        "Quella che compri, invece, un domani magari la ==rivendi==."
       ],
       "brief": [
         "Una sala server al buio: file di macchine con le lucine che lampeggiano, e su uno schermo una barra di avanzamento che va avanti piano."
       ],
       "query": [
         "server room blinking lights dark",
-        "data center corridor servers lights",
-        "progress bar loading on screen close up"
+        "progress bar loading on screen close up",
+        "data center corridor servers lights"
       ],
       "stato": "reso",
       "candidati": [
@@ -622,34 +756,98 @@
         },
         {
           "fornitore": "pexels",
-          "id": "8705291",
-          "url_pagina": "https://www.pexels.com/video/colleagues-walking-at-the-office-hallway-8705291/",
-          "url_file": "https://videos.pexels.com/video-files/8705291/8705291-hd_1080_2048_25fps.mp4",
-          "anteprima": "https://images.pexels.com/videos/8705291/pexels-photo-8705291.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "id": "8721927",
+          "url_pagina": "https://www.pexels.com/video/woman-typing-on-a-keyboard-while-wearing-a-vr-headset-8721927/",
+          "url_file": "https://videos.pexels.com/video-files/8721927/8721927-hd_1080_2048_25fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/8721927/pexels-photo-8721927.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
           "larghezza": 1080,
           "altezza": 2048,
-          "durata_s": 17.0,
+          "durata_s": 29.0,
           "fps": 25.0,
-          "autore": "Ron Lach",
-          "autore_url": "https://www.pexels.com/@ron-lach",
+          "autore": "cottonbro studio",
+          "autore_url": "https://www.pexels.com/@cottonbro",
           "licenza": "Pexels License",
-          "query": "data center corridor servers lights",
+          "query": "server room blinking lights dark",
           "resta_ritaglio": 1.0
         },
         {
           "fornitore": "pexels",
-          "id": "16252758",
-          "url_pagina": "https://www.pexels.com/video/back-view-of-a-woman-walking-down-a-hallway-16252758/",
-          "url_file": "https://videos.pexels.com/video-files/16252758/16252758-hd_1080_1920_30fps.mp4",
-          "anteprima": "https://images.pexels.com/videos/16252758/attending-school-bag-green-hallway-16252758.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "id": "7986749",
+          "url_pagina": "https://www.pexels.com/video/woman-putting-sleeping-mask-7986749/",
+          "url_file": "https://videos.pexels.com/video-files/7986749/7986749-hd_1080_1920_25fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/7986749/pexels-photo-7986749.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
           "larghezza": 1080,
           "altezza": 1920,
-          "durata_s": 16.0,
-          "fps": 29.97,
-          "autore": "Unam Mayanja",
-          "autore_url": "https://www.pexels.com/@unam-mayanja-450447843",
+          "durata_s": 10.0,
+          "fps": 25.0,
+          "autore": "SHVETS production",
+          "autore_url": "https://www.pexels.com/@shvets-production",
           "licenza": "Pexels License",
-          "query": "data center corridor servers lights",
+          "query": "server room blinking lights dark",
+          "resta_ritaglio": 1.0
+        },
+        {
+          "fornitore": "pexels",
+          "id": "8721926",
+          "url_pagina": "https://www.pexels.com/video/a-woman-typing-on-a-keyboard-while-wearing-a-vr-headset-8721926/",
+          "url_file": "https://videos.pexels.com/video-files/8721926/8721926-hd_1080_2048_25fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/8721926/pexels-photo-8721926.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "larghezza": 1080,
+          "altezza": 2048,
+          "durata_s": 28.0,
+          "fps": 25.0,
+          "autore": "cottonbro studio",
+          "autore_url": "https://www.pexels.com/@cottonbro",
+          "licenza": "Pexels License",
+          "query": "server room blinking lights dark",
+          "resta_ritaglio": 1.0
+        },
+        {
+          "fornitore": "pexels",
+          "id": "38860079",
+          "url_pagina": "https://www.pexels.com/video/analyzing-business-growth-on-tablet-screen-38860079/",
+          "url_file": "https://videos.pexels.com/video-files/38860079/16518972_1080_1920_25fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/38860079/analysis-analytics-bar-chart-broker-38860079.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "larghezza": 1080,
+          "altezza": 1920,
+          "durata_s": 15.0,
+          "fps": 25.0,
+          "autore": "Jakub Zerdzicki",
+          "autore_url": "https://www.pexels.com/@jakubzerdzicki",
+          "licenza": "Pexels License",
+          "query": "progress bar loading on screen close up",
+          "resta_ritaglio": 1.0
+        },
+        {
+          "fornitore": "pexels",
+          "id": "38902001",
+          "url_pagina": "https://www.pexels.com/video/efficient-task-management-on-digital-device-38902001/",
+          "url_file": "https://videos.pexels.com/video-files/38902001/16542412_1080_1920_25fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/38902001/agile-backend-business-close-up-38902001.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "larghezza": 1080,
+          "altezza": 1920,
+          "durata_s": 15.0,
+          "fps": 25.0,
+          "autore": "Jakub Zerdzicki",
+          "autore_url": "https://www.pexels.com/@jakubzerdzicki",
+          "licenza": "Pexels License",
+          "query": "progress bar loading on screen close up",
+          "resta_ritaglio": 1.0
+        },
+        {
+          "fornitore": "pexels",
+          "id": "38860073",
+          "url_pagina": "https://www.pexels.com/video/business-professional-analyzing-market-data-on-tablet-38860073/",
+          "url_file": "https://videos.pexels.com/video-files/38860073/16518968_1080_1920_25fps.mp4",
+          "anteprima": "https://images.pexels.com/videos/38860073/analysis-analytics-background-bar-graph-38860073.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=1200&w=630",
+          "larghezza": 1080,
+          "altezza": 1920,
+          "durata_s": 18.0,
+          "fps": 25.0,
+          "autore": "Jakub Zerdzicki",
+          "autore_url": "https://www.pexels.com/@jakubzerdzicki",
+          "licenza": "Pexels License",
+          "query": "progress bar loading on screen close up",
           "resta_ritaglio": 1.0
         }
       ],
@@ -657,70 +855,73 @@
         {
           "fornitore": "meshy",
           "generata": true,
-          "prompt": "Wide shot of a dark data center aisle at night, long rows of black server racks receding into deep shadow, rows of small blinking green and amber LED indicator lights scattered across the rack fronts, cool deep-blue ambient glow, empty aisle, no people, cinematic still, vertical 9:16, shallow depth of field, moody atmosphere, no text, no words, no letters, no numbers, no logos, no watermark",
+          "prompt": "A dark data center corridor lined with server racks on both sides, small blue and green status lights blinking and receding deep into the distance, empty aisle with soft haze, strong sense of depth, cinematic still, vertical 9:16, dark background, shallow depth of field, no text, no words, no letters, no logos, no watermark, no people",
           "indice": 1,
           "modello": "nano-banana-pro",
-          "task": "01a0cac5-5df4-72a9-bf9a-a02215d450da",
-          "quando": "2026-09-22",
+          "task": "01a0cd84-a346-709c-815a-e2059028117a",
+          "quando": "2026-09-23",
           "licenza": "Meshy — immagine generata",
-          "file": "contenuti/media/_cache-broll/meshy-d3194e1ba4d19c5d337ade8ba1b59fba32eeba00-1.png",
-          "candidato": "meshy:d3194e1ba4-1",
+          "file": "/Users/bitwise/Library/Application Support/reel-anim/cache-broll/meshy-6680e6968d064c1e035abc267b09f3c6b75917b6-1.png",
+          "candidato": "meshy:6680e6968d-1",
           "da_cache": false
         },
         {
           "fornitore": "meshy",
           "generata": true,
-          "prompt": "Medium shot a few steps further down the same dark server room aisle, closer to one server rack, a small embedded monitor glowing on the rack showing an abstract horizontal loading bar about one third filled, no digits or percentage on it, blinking amber and green LED lights around it, empty aisle, cool deep-blue ambient glow, cinematic still, vertical 9:16, shallow depth of field, no text, no words, no letters, no numbers, no logos, no watermark",
+          "prompt": "A computer monitor on a dark desk showing an abstract loading progress bar frozen halfway with no numbers or percentage text, a cold cup of coffee beside the keyboard, blurred server racks with blinking lights visible out of focus in the background, close framing on the screen, cinematic still, vertical 9:16, dark background, shallow depth of field, no text, no words, no letters, no logos, no watermark, no people",
           "indice": 2,
           "modello": "nano-banana-pro",
-          "task": "01a0cac5-bace-7798-8101-43da87a47e5a",
-          "quando": "2026-09-22",
+          "task": "01a0cd85-851f-7599-9dd6-6ebc0d1334d0",
+          "quando": "2026-09-23",
           "licenza": "Meshy — immagine generata",
-          "file": "contenuti/media/_cache-broll/meshy-0ef243400790cb7baaa90dbf28327f82ac6dd723-2.png",
-          "candidato": "meshy:0ef2434007-2",
+          "file": "/Users/bitwise/Library/Application Support/reel-anim/cache-broll/meshy-5d517ab2eace1bb249194203cc2605cb31ea4231-2.png",
+          "candidato": "meshy:5d517ab2ea-2",
           "da_cache": false
         },
         {
           "fornitore": "meshy",
           "generata": true,
-          "prompt": "Close-up shot in the same dark server room, tight framing on the glowing monitor embedded in the rack, an abstract horizontal loading bar now further filled, out-of-focus blinking LED lights of the server racks in the background, cool deep-blue ambient glow, cinematic still, vertical 9:16, shallow depth of field, no text, no words, no letters, no numbers, no logos, no watermark",
+          "prompt": "A used graphics card resting inside its opened cardboard box on a wooden table, warm daylight coming through a window, soft shadows, shallow depth of field with the room softly blurred behind for depth, empty space in the upper right corner, cinematic still, vertical 9:16, warm natural light, no text, no words, no letters, no logos, no watermark, no people",
           "indice": 3,
           "modello": "nano-banana-pro",
-          "task": "01a0cac6-17e6-771d-8edc-06669693ebb4",
-          "quando": "2026-09-22",
+          "task": "01a0cd85-e2c2-75a7-b378-da1c4c7365b1",
+          "quando": "2026-09-23",
           "licenza": "Meshy — immagine generata",
-          "file": "contenuti/media/_cache-broll/meshy-d0ce15c76b71699a075217dee871c5e9ae8c03a7-3.png",
-          "candidato": "meshy:d0ce15c76b-3",
+          "file": "/Users/bitwise/Library/Application Support/reel-anim/cache-broll/meshy-d5a0e088a59157c985091841399678d4645c4e0a-3.png",
+          "candidato": "meshy:d5a0e088a5-3",
           "da_cache": false
         }
       ],
       "file": "broll-scena-07.mp4",
-      "note": "immagini generate: 3"
+      "note": "durata cambiata da 9.73 a 10.05 s: da rendere di nuovo"
     },
     {
       "n": 8,
       "tipo": "spiegazione",
-      "durata_s": 16.79,
+      "durata_s": 17.55,
       "origine_durata": "report",
       "inizi_frasi_s": [
         0.0,
-        4.361,
-        8.081,
-        13.313
+        6.102,
+        8.882,
+        11.291,
+        13.806
       ],
       "origine_tempi": "voce-sintetica",
       "registro": "animazione",
       "voce": [
-        "Io farei così, guarda se il modello che vuoi ci entra, nella memoria.",
-        "Se non ci entra, prendilo più piccolo, o vai di cloud.",
-        "E se ci entra, la scheda affittala un mese, e leggi in fattura quante ore hai pagato.",
-        "Sotto le ==centodieci==, comprarla ti costava di più."
+        "La mossa sensata è questa: prima controlla se il modello che vuoi usare ci entra nella memoria della scheda.",
+        "Se non ci entra, fine, la ==affitti==.",
+        "Se ci entra, affittala un mese",
+        "e guarda in fattura quante ore hai pagato.",
+        "Se stai sotto centodieci, comprarla ti costava di più."
       ],
       "brief": [
-        "Stacco dal filmato: al centro la scheda video (stessa sagoma, alloggi pieni) con sotto «24 GB»; in alto a sinistra il server a cassetti (il noleggio). Sulla frase un blocco pieno in accento (il modello, nessuna scritta) scende dall'alto e si incastra nella scheda, preciso: accanto compare una Spunta.",
-        "Il blocco risale ed esce; ne scende un secondo, largo il doppio, che sborda dai lati della scheda, e la scheda si spegne a grigio con una Croce accanto. Su «prendilo più piccolo» il blocco largo si sdoppia in due copie intere: la prima si rimpicciolisce fino a entrare nella scheda, che si riaccende, e la Croce torna Spunta. GRANDE (carica e rimbalzo) su «o vai di cloud»: la seconda copia, larga com'era, arretra un attimo, vola verso il server stringendosi, lo supera di poco, ci torna e si infila nella fessura di un cassetto; il server pulsa.",
-        "A destra entra una fattura fatta di righe-sagoma (Sagome, sei righe, nessun testo): la vediamo un istante intera, poi una riga sola si accende in accento. Da quella riga si stacca un numero, «90 h», con sotto piccola l'etichetta «esempio», e vola accanto a una Barra verticale vuota con una tacca in accento a «110».",
-        "La Barra si riempie dal basso fino a 90 e si ferma sotto la tacca; parte una Freccia dalla cima della Barra verso il server, che pulsa una volta. Ultimo fotogramma e ultima figura del reel: la scheda con il blocco dentro, la Barra ferma sotto la tacca, la Freccia sul noleggio."
+        "Stacco dal filmato: al centro la scheda video (stessa sagoma, alloggi pieni), in alto a sinistra il server a cassetti (il noleggio). Su «prima controlla» compare sotto la scheda «24 GB»; su «il modello che vuoi usare» un blocco pieno in accento (il modello, nessuna scritta) scende dall'alto e si incastra nella scheda, preciso; su «nella memoria della scheda» accanto compare una Spunta.",
+        "Il blocco risale ed esce; ne scende un secondo, largo il doppio, che sborda dai lati della scheda: la scheda si spegne a grigio, con una Croce accanto. GRANDE (carica e rimbalzo) su «la affitti»: il blocco largo, intero, arretra un attimo, vola verso il server stringendosi, lo supera di poco, ci torna e si infila nella fessura di un cassetto; il server pulsa e la scheda si riaccende.",
+        "La Croce esce; a destra entra una fattura fatta di righe-sagoma (Sagome, sei righe, nessun testo) che si vede un istante intera; accanto al server compare un piccolo calendario di un mese (una Fila di 30 quadratini) che si accende in fretta.",
+        "Una riga sola della fattura si accende in accento; da quella riga si stacca un numero, «90 h», con sotto piccola l'etichetta «esempio», e vola accanto a una Barra verticale vuota con una tacca in accento a «110»; la fattura e il calendario svaniscono.",
+        "La Barra si riempie dal basso fino a 90 e si ferma sotto la tacca; parte una Freccia dalla cima della Barra verso il server, che pulsa una volta; poi fermo. Ultimo fotogramma e ultima figura del reel: la scheda, la Barra ferma sotto la tacca, la Freccia sul noleggio."
       ],
       "query": [],
       "stato": "da-scegliere",
@@ -732,17 +933,19 @@
     {
       "n": 9,
       "tipo": "chiusura",
-      "durata_s": 4.85,
+      "durata_s": 8.17,
       "origine_durata": "report",
       "inizi_frasi_s": [
         0.0,
-        2.333
+        2.611,
+        5.249
       ],
       "origine_tempi": "voce-sintetica",
       "registro": "animazione",
       "voce": [
-        "Quindi la domanda non è quanto costa.",
-        "È quante ore la farai lavorare ==davvero==."
+        "Quindi non chiederti quanto costa la scheda.",
+        "Chiediti quante ore la farai lavorare ==davvero==.",
+        "Se no compri un supereroe per tenerlo fermo."
       ],
       "brief": [],
       "query": [],

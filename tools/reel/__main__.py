@@ -180,12 +180,13 @@ def cmd_registra(args) -> int:
 
 def cmd_voce(args) -> int:
     from .monta import out_dir
+    from .percorsi import lavoro_per
     from .voce import sintetizza_frasi
     r, _ = _carica(Path(args.file))
-    out = out_dir(r, args.out)
+    lav = lavoro_per(r.slug, out_dir(r, args.out))
     for s in r.scene:
         if s.voce:
-            v = sintetizza_frasi(s.voce, out / "_voce" / f"{s.n:02d}.m4a")
+            v = sintetizza_frasi(s.voce, lav / "_voce" / f"{s.n:02d}.m4a")
             print(f"scena {s.n}: {v.audio}  {v.durata_s:.2f} s · frasi a {' / '.join(f'{x:.2f}' for x in v.inizi_s)} s")
     return 0
 
@@ -247,15 +248,17 @@ def cmd_strisce(args) -> int:
     from ..anim.config import carica
     from . import clip
     from .fotogrammi import copri_volto, strisce_fitte, tempi_dal_report, video_scena
+    from .percorsi import lavoro_per
     r, _ = _carica(Path(args.file))
     cfg = carica()
     out = Path(args.out) if args.out else RADICE / "contenuti" / "render" / r.slug   # come monta.out_dir, senza importare Manim
+    lav = lavoro_per(r.slug, out, cfg)      # video delle scene e strisce fitte: transitori, fuori dal progetto
     tempi = tempi_dal_report(out)
     scene: list[dict] = []
     for s in r.scene:
         if args.scena and s.n != args.scena:
             continue
-        video = video_scena(out, s.n, args.sorgente)
+        video = video_scena(lav, s.n, args.sorgente)
         if video is None:       # con `anima` le scene a filmato e a volto pieno non hanno un video: si saltano
             continue
         avvisi = []
@@ -277,12 +280,12 @@ def cmd_strisce(args) -> int:
         if args.sorgente == "scene" and clip.trova(r.slug, s.n) is not None and (t is None or t.get("clip_vera") is not False):
             # il volto lo guarda solo lui: nel dubbio (report vecchio o assente) si copre
             cop = copri_volto(cfg, s.riquadro_effettivo(), RADICE / cfg.presentatore.avatar, t["caption"] if t else None)
-        png = strisce_fitte(video, durata, inizi, out / "fotogrammi", s.n, args.fps, args.finestra, args.sorgente, copri=cop)
+        png = strisce_fitte(video, durata, inizi, lav / "fotogrammi", s.n, args.fps, args.finestra, args.sorgente, copri=cop)
         scene.append({"scena": s.n, "video": str(video), "durata_s": durata, "inizi_frasi_s": inizi,
                       "strisce": [str(p) for p in png], "avvisi": avvisi})
     if not scene:
         quale = f"la scena {args.scena}" if args.scena else "nessuna scena"
-        print(f"-> {quale} non ha un video in {out} (sorgente «{args.sorgente}»): prima "
+        print(f"-> {quale} non ha un video in {lav} (sorgente «{args.sorgente}»): prima "
               f"`uv run reel {'anima' if args.sorgente == 'anima' else 'monta'} {args.file}`", file=sys.stderr)
         return 1
     if args.json:
@@ -340,6 +343,117 @@ def cmd_uscite(args) -> int:
           f" · riga **Uscite:** in {idea}")
     for s, spie in esito["segnalate"].items():
         print(f"   ⚠ {s} nomina {', '.join(spie)}: da ricontrollare a mano (connettori, inferenze personali)")
+    return 0
+
+
+def cmd_copione(args) -> int:
+    from datetime import date
+    from ..anim.config import carica
+    from . import copione as cp
+    from .stile import trascrizioni
+    from .stima import parole_al_secondo
+    from .validate import LIMITI
+    cfg = carica()
+    conf = cfg.dati.get("copione", {})
+    idea_p = Path(args.file)
+    try:
+        testo_idea = idea_p.read_text(encoding="utf-8")
+        idea = cp.leggi_idea(testo_idea)
+    except (OSError, cp.ErroreCopione) as e:
+        print(f"-> {e}", file=sys.stderr)
+        return 1
+    parole = int(args.parole or conf.get("parole", 235))
+    pas = parole_al_secondo(cfg)
+    voci = cp.scegli_trascrizioni(trascrizioni(cfg, lingua="it"), idea_p.stem, int(conf.get("trascrizioni", 6)),
+                                  cp.secondi_per(parole, pas))
+    if not voci:
+        print("   ⚠ nessuna trascrizione di reelkit ([stile] indice e trascrizioni): il prompt parte senza l'orecchio", file=sys.stderr)
+    tr = [(v["id"], v["file"].read_text(encoding="utf-8")) for v in voci]
+    prompt = cp.componi_prompt(cp.TEMPLATE.read_text(encoding="utf-8"), idea, tr, parole, args.nota or "", pas)
+    modelli = [args.modello] if args.modello else list(conf.get("modelli", ["gpt-5.4", cp.CLAUDE]))
+    chiave = cp.chiave_poe()
+    poe = cp.Poe(chiave, int(conf.get("token_uscita", 6000)), int(conf.get("punti_minimi", 1500))) if chiave else None
+    dest = cp.CARTELLA / f"{idea_p.stem}.md"
+    scelte = ", ".join(f"{v['id']} ({v['account']})" for v in voci) or "nessuna"
+    riepilogo = (f"{len(idea.tappe)} tappe · {parole} parole (~{cp.secondi_per(parole, pas)} s) · trascrizioni "
+                 f"{scelte} · prompt {len(prompt)} caratteri")
+    if args.prova_a_secco:
+        print(prompt)
+        print(f"-> a secco: {riepilogo}", file=sys.stderr)
+        for m in modelli:
+            if m == cp.CLAUDE:
+                print(f"   {m}: claude -p --model {conf.get('claude_modello', 'opus')}, niente punti", file=sys.stderr)
+            elif poe is None:
+                print(f"   {m}: manca POE_API_KEY (ambiente o .env)", file=sys.stderr)
+            else:
+                perche = poe.salta(m, prompt)
+                print(f"   {m}: stima {poe.stima_punti(m, prompt) or '?'} punti · "
+                      f"{'si salterebbe: ' + perche if perche else 'si chiamerebbe'}", file=sys.stderr)
+        if poe is not None:
+            print(f"   saldo Poe: {poe.saldo()} punti", file=sys.stderr)
+        print(f"   il file sarebbe {dest}{' (ESISTE: serve --forza o --nota)' if dest.exists() else ''}", file=sys.stderr)
+        return 0
+    if dest.exists() and not (args.forza or args.nota):
+        print(f"-> {dest} esiste già: --forza per rigenerarlo, o --nota \"…\" per una versione con una richiesta", file=sys.stderr)
+        return 1
+
+    def salta(m: str, p: str) -> str | None:
+        if m == cp.CLAUDE:
+            return None
+        return "manca POE_API_KEY (ambiente o .env)" if poe is None else poe.salta(m, p)
+
+    def chiama(m: str, p: str) -> str:
+        if m == cp.CLAUDE:
+            return cp.chiama_claude(p, str(conf.get("claude_modello", "opus")))
+        return poe.chiama(m, p)
+
+    print(f"copione: {riepilogo}\n   catena: {' → '.join(modelli)}", file=sys.stderr)
+    saldo_prima = poe.saldo() if poe is not None else None
+    try:
+        esito = cp.catena(prompt, modelli, len(idea.tappe), parole, chiama, salta,
+                          lambda s: print(f"   {s}", file=sys.stderr), tetto=int(LIMITI["reel_errore_s"] * pas))
+    except cp.ErroreCopione as e:
+        print(f"-> {e}", file=sys.stderr)
+        return 1
+    spesi = saldo_prima - poe.saldo() if poe is not None and saldo_prima is not None else None
+    rel = lambda q: str(q.relative_to(RADICE)) if q.resolve().is_relative_to(RADICE) else str(q)
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_text(cp.componi_file(rel(idea_p.resolve()), idea, esito, date.today().isoformat(), spesi, args.nota or ""),
+                    encoding="utf-8")
+    dest.with_suffix(".prompt.md").write_text(prompt, encoding="utf-8")
+    idea_p.write_text(cp.riga_copione(testo_idea, rel(dest)), encoding="utf-8")
+    print(f"-> {dest}: {esito.modello}, {cp.parole_totali(esito.scene)} parole"
+          f"{f' · {spesi} punti Poe' if spesi is not None else ''} · riga **Copione:** in {idea_p}")
+    for a in esito.esame.avvisi:
+        print(f"   ⚠ {a}")
+    return 0
+
+
+def cmd_pulisci(args) -> int:
+    """Svuota il lavoro transitorio (tools/reel/percorsi.py): il riepilogo in contenuti/render/ resta."""
+    import shutil
+    from .percorsi import lavoro, radice_lavoro
+    radice = radice_lavoro()
+    if args.tutto:
+        cartelle = sorted(p for p in radice.glob("*") if p.is_dir()) if radice.is_dir() else []
+    elif args.slug:
+        cartelle = [lavoro(args.slug)]
+    else:
+        print("-> serve uno slug o --tutto (il lavoro sta in {})".format(radice), file=sys.stderr)
+        return 2
+    tot = 0
+    for c in cartelle:
+        if not c.is_dir():
+            print(f"{c}: niente da pulire")
+            continue
+        n = sum(f.stat().st_size for f in c.rglob("*") if f.is_file())
+        tot += n
+        if args.prova_a_secco:
+            print(f"{c}: {n / 1e6:.0f} MB (a secco)")
+        else:
+            shutil.rmtree(c)
+            print(f"{c}: {n / 1e6:.0f} MB tolti")
+    print(f"-> {tot / 1e6:.0f} MB{' da togliere' if args.prova_a_secco else ' liberati'}; il riepilogo in contenuti/render/ non si tocca")
     return 0
 
 
@@ -498,6 +612,18 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--prova-a-secco", action="store_true", help="stampa richieste e comandi senza lanciare niente")
     p.add_argument("--forza", action="store_true", help="sovrascrive il file delle uscite di oggi se esiste")
     p.set_defaults(fn=cmd_uscite)
+    p = sub.add_parser("copione", help="il parlato del reel da un modello esterno (catena di [copione]) → contenuti/copioni/")
+    p.add_argument("file", help="l'idea, con «## Tappe del parlato»")
+    p.add_argument("--modello", help="un solo anello (es. gpt-5.4, deepseek-v4-pro, claude) invece della catena")
+    p.add_argument("--nota", help="una richiesta del presentatore per questa versione (rigenera il copione)")
+    p.add_argument("--parole", type=int, help="parole in tutto (default [copione] parole)")
+    p.add_argument("--prova-a-secco", action="store_true", help="stampa il prompt, le trascrizioni, saldo e stime; non chiama")
+    p.add_argument("--forza", action="store_true", help="rigenera anche se il copione c'è già")
+    p.set_defaults(fn=cmd_copione)
+    p = sub.add_parser("pulisci", help="svuota il lavoro transitorio di un reel ([percorsi] lavoro); il riepilogo resta")
+    p.add_argument("slug", nargs="?"); p.add_argument("--tutto", action="store_true", help="tutti i reel")
+    p.add_argument("--prova-a-secco", action="store_true", help="dice quanto toglierebbe, non tocca niente")
+    p.set_defaults(fn=cmd_pulisci)
 
     args = ap.parse_args(argv)
     return args.fn(args)

@@ -79,13 +79,13 @@ Si parte da una sceneggiatura in `stato: rivisto` (`uv run reel valida <file>` s
    ```
    uv run reel strisce <file.md> --scena 5 [--fps 8] [--finestra 1.3] [--sorgente anima|scene]
    ```
-   scrive in `contenuti/render/<slug>/fotogrammi/05-fitti-*.png` (con `--sorgente anima`: `05-fitti-anima-*.png`) una striscia a 4 fps su tutta la scena e una striscia
+   scrive in `~/Library/Caches/reel-anim/<slug>/``fotogrammi/05-fitti-*.png` (la cartella di lavoro, fuori dal progetto: il comando stampa i percorsi) (con `--sorgente anima`: `05-fitti-anima-*.png`) una striscia a 4 fps su tutta la scena e una striscia
    fitta (8 fps, finestra di ~1,3 s) attorno all'inizio di ogni beat. Guardale: nessun testo deve sparire, lampeggiare,
    finire coperto o attraversarne un altro fra un fotogramma e l'altro. I **passaggi** (l'inizio di ogni beat, ogni
    `play` che sposta o scambia testi) vogliono 8 fps o più: a 4 fps due testi uno sull'altro per 0,3 s non si vedono.
    Vale per tutti i passaggi, su tutte e due le sorgenti: i video di `anima` e poi i `_scene` montati (solo lì c'è il
    riquadro del presentatore). Per una `play` lontana dall'inizio di un beat, a mano:
-   `ffmpeg -v error -y -ss 5.5 -t 1.3 -i …/_scene/05.mp4 -vf "fps=10,scale=180:-1,tile=13x1" -frames:v 1 <scratchpad>/05.png`.
+   `ffmpeg -v error -y -ss 5.5 -t 1.3 -i ~/Library/Caches/reel-anim/<slug>/_scene/05.mp4 -vf "fps=10,scale=180:-1,tile=13x1" -frames:v 1 <scratchpad>/05.png`.
    Dopo la consegna il coordinatore fa riguardare le stesse strisce a un `controllore-fotogrammi` per scena.
 6. Scrivi le «Note di animazione» nella sceneggiatura (beat scelti, cosa non ci stava, tempi Manim) e porta lo
    stato a `animato`.
@@ -565,7 +565,7 @@ Regole:
 
 - Mentre lavori: `anima --qualita l --scena N` (540×960 a 15 fps: la leggibilità va giudicata sul PNG della
   scena, non sulla bassa qualità).
-- `monta` tiene in `_manim/cache.json` una chiave per scena (file delle animazioni, libreria `tools/anim`,
+- `monta` tiene nella cartella di lavoro (`config.toml [percorsi] lavoro`, dal 2026-09-23) `_manim/cache.json` una chiave per scena (file delle animazioni, libreria `tools/anim`,
   config, dati della scena con gli inizi delle frasi): se nulla è cambiato la grafica non si rifà. `anima` non usa
   la cache e scrive in `_anima/`.
 - Tempi misurati sull'esempio (7 scene, reel di 51 s, Mac M4 Pro):

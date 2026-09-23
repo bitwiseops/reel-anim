@@ -8,7 +8,7 @@ Lo schema è quello già collaudato in `~/Projects/3d-models-ai/src/meshy_client
 task id, polling fino a `SUCCEEDED`, download dell'immagine, failover sulla seconda chiave quando la prima
 ha finito i crediti — riscritto qui perché quel progetto resta separato: nessun import fra i due.
 
-Generare costa. Per questo la cache è la prima cosa che si guarda: `contenuti/media/_cache-broll/` (fuori
+Generare costa. Per questo la cache è la prima cosa che si guarda: `config.toml [percorsi] cache_broll` (fuori dal progetto e
 da git, come i filmati scaricati), un file per prompt e indice, così rilanciare `broll genera` non ripaga
 niente. La chiave non si stampa mai, nemmeno nei messaggi d'errore.
 """
@@ -23,6 +23,8 @@ from pathlib import Path
 
 import requests
 
+from tools.reel.percorsi import cache_broll
+
 from ..credenziali import chiavi as chiavi_fornitore
 from . import FornitoreNonConfigurato, RichiestaFallita
 
@@ -36,7 +38,7 @@ INTERVALLO_S = 5.0
 ATTESA_MAX_S = 900.0
 
 RADICE = Path(__file__).resolve().parents[3]
-CACHE = RADICE / "contenuti" / "media" / "_cache-broll"
+CACHE = cache_broll()   # fuori dal progetto e mai ripulita da sé: le immagini generate si pagano (2026-09-23)
 
 
 class CreditiEsauriti(RichiestaFallita):

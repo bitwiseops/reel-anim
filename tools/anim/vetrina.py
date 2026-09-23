@@ -104,9 +104,10 @@ class VetrinaCodice(ScenaReel):
 class VetrinaIcone(ScenaReel):
     def costruisci(self):
         att = self.cfg.palette.attenuato
-        celle = VGroup(*[VGroup(Icona(n, 100), testo(n, "piede", colore=att)).arrange(DOWN, buff=px(14))
+        # 4 colonne (con 14 icone, 3 uscivano dall'area in basso); i nomi composti vanno a capo, sennò escono di lato
+        celle = VGroup(*[VGroup(Icona(n, 84), testo(n.replace("-", "-\n"), "piede", colore=att)).arrange(DOWN, buff=px(12))
                          for n in Icona.disponibili()])
-        celle.arrange_in_grid(cols=3, buff=(px(40), px(36)))
+        celle.arrange_in_grid(cols=4, buff=(px(20), px(24)))
         self.area.contenuto.metti(celle, "centro", "centro")
         self.play(LaggedStart(*[AnimationGroup(c[0].entra(), FadeIn(c[1])) for c in celle], lag_ratio=0.1), run_time=1.5)
 

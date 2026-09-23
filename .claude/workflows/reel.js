@@ -4,10 +4,11 @@ export const meta = {
   whenToUse: "Corsa completa della pipeline dei reel senza fermate intermedie. args = percorso in contenuti/spunti/, contenuti/idee/ o contenuti/sceneggiature/",
   phases: [
     { title: 'Idea', detail: "ideatore sullo spunto (saltata se si parte da un'idea o da una sceneggiatura)" },
-    { title: 'Sceneggiatura', detail: "uscite vere se servono, sceneggiatore; poi valida a 0 errori e l'idea passa a sceneggiata" },
+    { title: 'Copione', detail: 'il parlato da un modello esterno (reel copione, catena di [copione]), se l\'idea non ce l\'ha già', model: 'haiku' },
+    { title: 'Sceneggiatura', detail: "uscite vere se servono, sceneggiatore sul copione; poi valida a 0 errori e l'idea passa a sceneggiata" },
     { title: 'Fonti', detail: 'un verificatore-fonte per fonte, in parallelo', model: 'sonnet' },
     { title: 'Revisione', detail: 'revisore-tecnico con le schede delle fonti: con un ❌ la corsa si ferma' },
-    { title: 'Filmati', detail: 'broll: marca le scene (in serie), poi cerca, sceglie e rende in parallelo con l\'animazione', model: 'sonnet' },
+    { title: 'Filmati', detail: 'broll: marca le scene (in serie), poi cerca e mette in fila; la metà più debole va a immagini (Meshy); tutto in parallelo con l\'animazione', model: 'sonnet' },
     { title: 'Animazione', detail: 'animatore: .py, anima --json a zero avvisi e zero controlli' },
     { title: 'Fotogrammi', detail: 'monta --prova, poi un controllore-fotogrammi per scena animata, in parallelo; al massimo due rimandi', model: 'sonnet' },
     { title: 'Rapporto', detail: 'VOCE per scena, durate, avvisi, fotogrammi, prossimo passo', model: 'sonnet' },
@@ -47,7 +48,7 @@ const FONTI = {
 const SCENE = {
   type: 'object',
   required: ['scene'],
-  properties: { scene: { type: 'array', items: { type: 'integer' }, description: 'numeri delle scene ANIMATE (con un video in _scene/ e una classe Manim)' } },
+  properties: { scene: { type: 'array', items: { type: 'integer' }, description: 'numeri delle scene ANIMATE (con un video in ~/Library/Caches/reel-anim/<slug>/_scene/ e una classe Manim)' } },
 }
 const vuoto = (motivo) => ({ stato: '', file: '', errori: 0, avvisi: 0, bloccato: true, motivo })
 
@@ -88,7 +89,16 @@ if (!partenza.includes('contenuti/sceneggiature/')) {
     `bloccato = true solo se il comando fallisce. stato = "idea", file = ${idea}, errori = 0, avvisi = numero di uscite da ricontrollare.`,
     'general-purpose', COMANDO)
   if (u.bloccato) return ferma('uscite', u)
-  let s = await tappa('Sceneggiatura', `Idea: ${idea}. Scrivi la sceneggiatura in contenuti/sceneggiature/ finché \`uv run reel valida\` non ha errori. Non toccare il file idea.`, 'sceneggiatore')
+  // T0c: il parlato lo scrive un modello esterno (catena di config.toml [copione]); la sceneggiatura si adatta a lui.
+  phase('Copione')
+  const cp = await tappa('Copione',
+    `Tappa T0c di .claude/commands/pipeline.md su ${idea}. Se l'idea ha già la riga \`**Copione:**\` e il file esiste, non fare niente: bloccato = false, motivo = "copione già scritto: <percorso>". ` +
+    `Altrimenti lancia \`uv run reel copione ${idea} --prova-a-secco > /dev/null\` (riporta in motivo il saldo e i modelli che si salterebbero), poi \`uv run reel copione ${idea}\` UNA volta sola (costa punti Poe: mai rilanciarlo). ` +
+    `In motivo: il percorso del copione, il modello che l'ha scritto, gli anelli saltati o falliti. avvisi = numero di righe ⚠. bloccato = true solo se il comando fallisce. stato = "copione", file = il percorso del copione.`,
+    'general-purpose', COMANDO)
+  if (cp.bloccato) return ferma('copione', cp)
+  log(`copione: ${cp.motivo}`)
+  let s = await tappa('Sceneggiatura', `Idea: ${idea}. La VOCE è il copione indicato da **Copione:** nell'idea: prendilo alla lettera e scrivi la sceneggiatura in contenuti/sceneggiature/ finché \`uv run reel valida\` non ha errori. Non toccare il file idea.`, 'sceneggiatore')
   if (s.bloccato || !s.file.includes('contenuti/sceneggiature/')) return ferma('sceneggiatura', s)
   let c = null
   for (let giro = 1; giro <= 3; giro++) {
@@ -103,7 +113,7 @@ if (!partenza.includes('contenuti/sceneggiature/')) {
   }
   if (c.bloccato || c.errori > 0) return ferma('valida', c)
   file = s.file
-  noteSceneggiatore = s.motivo
+  noteSceneggiatore = `${s.motivo} · copione: ${cp.motivo}`
   log(`sceneggiatura: ${file} (${c.avvisi} avvisi)`)
 }
 
@@ -139,8 +149,16 @@ if (marca.bloccato || marca.errori > 0) return ferma('filmati (marca)', marca)
 
 // T2b secondo tempo ∥ T3. La scelta del filmato è la più soggettiva della corsa: qui è provvisoria e si dichiara nel
 // rapporto; cambiarla dopo non tocca le animazioni (scegli, rendi --forza, monta).
+// Metà delle scene a filmato va a Meshy (regole editoriali §3, 2026-09-23): broll le mette in fila e passa la metà
+// più debole all'agente immagini, che lavora mentre l'animatore continua.
 const [fl0, an0] = await parallel([
-  () => tappa('Filmati', `Modalità: scegli, scelta PROVVISORIA (--tutto). Sceneggiatura: ${file}.`, 'broll'),
+  async () => {
+    const b = await tappa('Filmati', `Modalità: scegli, scelta PROVVISORIA (--tutto). Sceneggiatura: ${file}. ` +
+      `Metti in fila le scene a filmato per quanto convince il miglior filmato e scrivi in motivo «scene per Meshy: N, M» (la metà più debole): per quelle non scegliere né rendere niente.`, 'broll')
+    if (b.bloccato || b.errori > 0) return b
+    const im = await tappa('Filmati', `Sceneggiatura: ${file}. Rapporto di broll (le scene per Meshy sono lì): ${b.motivo}`, 'immagini')
+    return { ...im, motivo: `${b.motivo} · immagini: ${im.motivo}`, bloccato: im.bloccato, errori: b.errori + im.errori }
+  },
   () => tappa('Animazione',
     `Anima ${file} fino a \`uv run reel anima ${file} --json\` con 0 avvisi di tempo e 0 controlli, e porta il frontmatter a stato: animato. ` +
     `I filmati delle scene [broll] si stanno rendendo in parallelo: se \`monta --prova --anteprima\` fallisce solo perché un filmato manca, non è un tuo errore (dillo in motivo): il montaggio lo rifà il coordinatore.`,
@@ -159,7 +177,7 @@ const MONTA = `Esegui \`uv run --project broll broll piano ${file}\` e, se una s
 let mt = await tappa('Fotogrammi', MONTA, 'general-purpose', COMANDO)
 if (mt.bloccato) return ferma('montaggio', mt)
 const sc = await agent(
-  `Leggi ${file} e contenuti/render/<slug>/report.json (lo slug è nel frontmatter): elenca i numeri delle scene ANIMATE, cioè non [broll], non a volto pieno (apertura e chiusura), con un video in contenuti/render/<slug>/_scene/NN.mp4.`,
+  `Leggi ${file} e contenuti/render/<slug>/report.json (lo slug è nel frontmatter): elenca i numeri delle scene ANIMATE, cioè non [broll], non a volto pieno (apertura e chiusura), con un video in ~/Library/Caches/reel-anim/<slug>/_scene/NN.mp4 (il campo «video» di report.json).`,
   { agentType: 'general-purpose', ...COMANDO, phase: 'Fotogrammi', label: 'Fotogrammi · scene', schema: SCENE })
 const scene = (sc && sc.scene) || []
 let difetti = ''
@@ -183,7 +201,7 @@ phase('Rapporto')
 const rapporto = await agent(
   `Scrivi il report unico per il presentatore sul reel ${file}, seguendo la sezione «Report della FERMATA 3» di .claude/commands/pipeline.md. ` +
   `Leggi la sceneggiatura, l'idea collegata e contenuti/render/<slug>/report.json (lo slug è nel frontmatter). ` +
-  `Note dello sceneggiatore (titolo alternativo, frasi incerte): ${noteSceneggiatore || 'nessuna'}. ` +
+  `Note dello sceneggiatore (titolo alternativo, frasi del copione segnalate, scostamenti; e il modello che ha scritto il copione): ${noteSceneggiatore || 'nessuna'}. ` +
   `Revisione: ${rv.motivo || 'nessuna nota'}. Filmati: equilibrio e scene marcate: ${marca.motivo || '—'}; scelte PROVVISORIE, da mettere in testa ai punti da confermare: ${fl.motivo || 'nessuna scena a filmato'}. ` +
   `Animazione: ${an.motivo || 'nessuna nota'} (${an.errori} controlli, ${an.avvisi} avvisi di tempo). Montaggio: ${mt.motivo || '—'}. ` +
   `Difetti dei controllore-fotogrammi rimasti dopo i rimandi: ${difetti || 'nessuno'}.`,

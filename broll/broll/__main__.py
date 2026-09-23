@@ -350,7 +350,8 @@ def cmd_prova_immagini(args) -> int:
               f"`uv run reel monta <sceneggiatura> --prova`", file=sys.stderr)
         return 1
 
-    out = RADICE / "contenuti" / "render" / args.slug / "broll"
+    from tools.reel.percorsi import lavoro
+    out = lavoro(args.slug) / "broll"
     try:
         video, tenute = componi([Path(p) for p in args.immagini], d["inizi_frasi_s"],
                                 d["durata_s"], out / f"immagini-scena-{args.scena:02d}.mp4")

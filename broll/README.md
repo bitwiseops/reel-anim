@@ -27,7 +27,7 @@ percorsi relativi che passi sulla riga di comando restano quelli che vedi.
 | `broll provini <slug> [--scena N]` | contact sheet dei candidati, dalle **miniature**: si sceglie senza scaricare i filmati |
 | `broll scegli <slug> --scena N --candidato <fornitore:id> [--da S] [--ancora …] [--aggiungi]` | fissa nel piano il filmato della scena: da che secondo parte, dove si ritaglia un orizzontale (`sinistra \| centro \| destra \| 0-1`). Con `--aggiungi` un secondo taglio nella stessa scena: lo stacco cade sull'inizio frase più vicino alla divisione in parti uguali |
 | `broll genera <slug> --scena N [--prompt "…"]… [--quante 3] [--forza]` | **quando su Pexels non c'è un candidato buono**: genera le immagini della scena con Meshy, le mette nel piano (`registro: immagini`, stato `scelto`, i file e i prompt) e salva il contact sheet `immagini-scena-NN.png` da guardare prima di rendere |
-| `broll rendi <slug> [--scena N] [--forza]` | scarica i filmati scelti (cache in `contenuti/media/_cache-broll/`), li ritaglia a 9:16 e scrive `contenuti/media/<slug>/broll-scena-NN.mp4`: 1080×1920, muto, lungo quanto la scena **al fotogramma**. Le scene a `immagini` le compone invece di scaricarle, con la dissolvenza fra un'immagine e l'altra. Poi una filmstrip `reso-scena-NN.png` da guardare e `CREDITI.md` |
+| `broll rendi <slug> [--scena N] [--forza]` | scarica i filmati scelti (cache in `config.toml [percorsi] cache_broll`, fuori dal progetto), li ritaglia a 9:16 e scrive `contenuti/media/<slug>/broll-scena-NN.mp4`: 1080×1920, muto, lungo quanto la scena **al fotogramma**. Le scene a `immagini` le compone invece di scaricarle, con la dissolvenza fra un'immagine e l'altra. Poi una filmstrip `reso-scena-NN.png` da guardare e `CREDITI.md` |
 | `broll scrivi <slug>` | porta nella sceneggiatura le scene **già rese**: il tipo diventa `[broll]` e compare la riga `SCHERMO:`, nient'altro cambia. Non converte una scena con `TESTO:` (toglierlo è una scelta del presentatore) e non salva se il risultato non passa `valida`. Si torna indietro con `git checkout` del `.md` |
 | `broll scrivi <slug> --presto` | lo stesso, ma per **tutte** le scene a filmato (o a immagini) del piano, anche non ancora scelte né rese: `SCHERMO:` prende il nome che `rendi` scriverà. Serve a far correre in parallelo le due tappe: subito dopo `piano` le scene sono marcate, l'animatore sa quali non sono sue e parte (`reel anima` le salta), e intanto si scelgono i filmati. Finché il file manca `reel valida` avvisa («filmato non ancora reso») e `reel monta` si ferma con un errore. Dopo `rendi` non serve un altro `scrivi` |
 | `broll chiavi` | quali chiavi dei servizi esterni sono configurate, **mascherate** |
@@ -62,17 +62,21 @@ dividendo i registri.
 C'è un terzo registro, **immagini composte**, per quando non esiste né una clip filmata né una animata:
 immagini trovate fuori o generate con Meshy, montate **una per frase** sugli `inizi_frasi_s` che
 `report.json` già calcola esatti, così quello che si vede richiama quello che il presentatore sta dicendo
-in quel momento. Ogni immagine si muove piano (carrellata a verso alternato), perché un fermo immagine
+in quel momento. Ogni immagine si muove, con una mossa diversa dalla precedente (spinta dentro, carrellata, allargamento,
+diagonale: `zoompan` su un'immagine raddoppiata), perché un fermo immagine
 per otto secondi è il «fermo morto» che `docs/animazioni.md` vieta. Verso il montaggio è identico agli
 altri due: **un solo file per scena**, già 1080×1920 e già lungo quanto la scena.
 
 **Decisione del presentatore del 2026-09-22**: quando su Pexels non esiste un candidato buono, la clip
 della scena si fa **unendo 2-3 immagini generate con Meshy**, con una dissolvenza fra l'una e l'altra; e
 ogni reel deve avere almeno una clip generata. Il comando è `broll genera`, e il testo non è mai il
-ripiego (`CLAUDE.md`: «mai il testo come ripiego»).
+ripiego (`CLAUDE.md`: «mai il testo come ripiego»). **Dal 2026-09-23 le clip generate sono metà**: l'agente
+`broll` cerca i filmati per tutte le scene a filmato, le mette in fila per quanto convincono, e la metà più
+debole la fa l'agente `immagini` con Meshy (regole editoriali §3).
 
-La dissolvenza è la stessa del reel, `config.toml [transizioni] durata_s` (0,25 s), e **comincia
-sull'inizio frase**, come faceva lo stacco secco: il cambio resta ancorato a quello che si sta dicendo.
+Fra un'immagine e l'altra c'è una transizione «wow» presa in giro da `config.toml [transizioni] immagini`
+(zoomin, circleopen, smoothleft, radial), lunga `immagini_s` (0,45 s; senza le due chiavi, la dissolvenza del
+reel), e **comincia sull'inizio frase**, come faceva lo stacco secco: il cambio resta ancorato a quello che si sta dicendo.
 Si accorcia da sé se la tenuta più breve non le lascia almeno tre decimi di immagine ferma e sola, e con
 una sola immagine non c'è niente da dissolvere. Con `xfade` le durate si **sovrappongono** — l'uscita
 dura `offset + lunghezza del secondo ingresso`, non la somma — quindi le lunghezze degli ingressi si
@@ -95,9 +99,9 @@ che il comando elenca.
 |---|---|---|
 | `contenuti/broll/<slug>/piano.json` | **sì** | le scelte: id, tagli, autore, licenza, url, sha256 |
 | `contenuti/broll/<slug>/CREDITI.md` | **sì** | attribuzione pronta per la didascalia (la scrive `rendi`) |
-| `contenuti/media/_cache-broll/` | no | i filmati scaricati (`rendi`) e le immagini generate, `meshy-<sha1 del prompt>-<n>.png` (`genera`) |
+| `~/Library/Application Support/reel-anim/cache-broll/` (`[percorsi] cache_broll`) | no | i filmati scaricati (`rendi`) e le immagini generate, `meshy-<sha1 del prompt>-<n>.png` (`genera`) |
 | `contenuti/media/<slug>/broll-scena-NN.mp4` | no | il filmato reso per la scena (`rendi`) |
-| `contenuti/render/<slug>/broll/` | no | provini e prove di inquadratura |
+| `~/Library/Caches/reel-anim/<slug>/``broll/` (`[percorsi] lavoro`) | no | provini, prove di inquadratura, strisce di resa: `reel pulisci` |
 
 Il piano è riproducibile, i byte no: la stessa divisione che il repo fa già fra
 `contenuti/animazioni/<slug>.py` e `contenuti/render/`. Un'immagine generata non si riscarica da nessuna

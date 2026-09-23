@@ -128,7 +128,7 @@ def strisce_fitte(video: Path, durata_s: float, inizi_frasi_s: list[float], cart
 
 
 def video_scena(out: Path, n: int, sorgente: str = "scene") -> Path | None:
-    """Il video della scena n nella cartella di render: `scene` = la scena montata (riquadro e caption compresi),
+    """Il video della scena n nella cartella di lavoro (`percorsi.lavoro`): `scene` = la scena montata (riquadro e caption compresi),
     `anima` = la sola grafica di `reel anima` (Manim la lascia in _anima/videos/<risoluzione>/: vale la più recente)."""
     if sorgente == "scene":
         p = out / "_scene" / f"{n:02d}.mp4"

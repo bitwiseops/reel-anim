@@ -191,12 +191,16 @@ def test_rendi_a_immagini_senza_immagini_si_rifiuta(tmp_path):
 
 
 @pytest.mark.slow
-def test_fra_un_immagine_e_l_altra_c_e_davvero_una_dissolvenza(tmp_path):
-    """Le immagini finte sono tinte piatte: a metà dissolvenza il colore deve stare in mezzo."""
+def test_fra_un_immagine_e_l_altra_c_e_davvero_una_dissolvenza(tmp_path, monkeypatch):
+    """Le immagini finte sono tinte piatte: a metà dissolvenza il colore deve stare in mezzo. Con la `fade`: le
+    transizioni «wow» di config ([transizioni] immagini) non mescolano il pixel centrale, lo spostano."""
     from PIL import Image
 
+    from broll import immagini
     from broll.immagini import dissolvenza_s, finestre
     from tools.reel.ffmpeg import estrai_fotogramma
+
+    monkeypatch.setattr(immagini, "transizioni", lambda cfg: ("fade",))
 
     trova_ffmpeg()
     s = _scena(durata_s=6.0, inizi_frasi_s=[0.0, 3.0])

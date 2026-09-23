@@ -84,7 +84,7 @@ Tu e io, domande, gesti che chi guarda ha già fatto. Frasi **come le dici** (6-
 connettivi) e la parola chiave ripetuta (nel primo reel «probabile» torna tre volte: bene). I titoli restano a schermo:
 detti a camera suonano recitati. **Lezione del 2026-09-15**: il presentatore, registrando, ha trovato la VOCE del
 primo reel «molto poco umana»; frasi di 4-10 parole a slogan («Vuol dire probabile.», «Fluente, sì. Originale, no.»)
-erano proprio il difetto. Il metodo nuovo («prima il monologo, poi i beat») è in `docs/sceneggiatura.md` §5.
+erano proprio il difetto. Il metodo nuovo (dal 2026-09-23 «prima il copione, poi i beat»: il parlato lo scrive un modello esterno) è in `docs/sceneggiatura.md` §5.
 
 | Scritto (da titolo) | Parlato |
 |---|---|

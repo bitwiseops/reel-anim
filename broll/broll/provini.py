@@ -20,7 +20,9 @@ SCADENZA_S = 30
 
 
 def cartella(slug: str) -> Path:
-    return RADICE / "contenuti" / "render" / slug / "broll"
+    """Provini, contact sheet dei candidati e strisce di resa: lavoro transitorio, fuori dal progetto (2026-09-23)."""
+    from tools.reel.percorsi import lavoro
+    return lavoro(slug) / "broll"
 
 
 def scarica_anteprima(candidato: dict, dest: Path) -> Path | None:

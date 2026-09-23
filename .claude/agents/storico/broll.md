@@ -15,3 +15,10 @@ Per la scena 7 non esisteva una sala server senza persone: si è ripiegato su lu
 candidato su pexel, la clip si potrebbe fare unendo 2-3 immagini fatte con meshy fatte passare con transizione», e
 ha imposto **almeno una clip generata per reel**. Nasce l'agente `immagini` (T2c, in parallelo con broll e
 animatore) e il comando `broll genera`; la regola sta in docs/regole-editoriali.md §3.
+
+## 2026-09-23 · metà delle clip a Meshy
+Flavio, rifacendo il reel GPU dal copione: le clip devono essere 50/50 fra fonte esterna (Pexels) e immagini generate
+con Meshy e animate (zoom, pan, transizioni wow), e a Meshy vanno le scene i cui filmati convincono meno. Superata
+«almeno una clip generata per reel» (2026-09-22). Regola in `docs/regole-editoriali.md` §3; per `broll` il passo 7 di
+`scegli` (classifica di convinzione, metà più debole all'agente `immagini`). Libreria: `broll/broll/immagini.py` con
+le mosse (`zoompan`) e `[transizioni] immagini` / `immagini_s`.

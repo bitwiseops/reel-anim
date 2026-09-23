@@ -38,7 +38,7 @@ con l'animatore) e, per `scegli`, se la scelta è **a fermate** (consigli, scegl
 
 ## Modalità `scegli`
 1. `broll chiavi` (se manca la chiave di ricerca: BLOCKED), `broll cerca <slug> --max 12`, `broll provini <slug>`.
-2. **Guarda tu** i contact sheet `contenuti/render/<slug>/broll/candidati-scena-NN.png` (Read). Criteri, in ordine:
+2. **Guarda tu** i contact sheet `candidati-scena-NN.png` che `broll provini` stampa (Read; stanno in `~/Library/Caches/reel-anim/<slug>/``broll/`, fuori dal progetto). Criteri, in ordine:
    soggetto pertinente alla VOCE della scena; **spazio libero dove cade il riquadro** del presentatore (alto a destra);
    **niente volti umani** se la sceneggiatura non chiede espressamente una persona (mani e sagome di spalle sì), e fra
    i candidati pertinenti vince quello con un **«wow» tecnologico** che serve al racconto (§3 delle regole editoriali,
@@ -55,10 +55,12 @@ con l'animatore) e, per `scegli`, se la scelta è **a fermate** (consigli, scegl
    volto) **si cambia candidato** — con i filmati già verticali l'ancora non sposta niente.
 5. `broll scrivi <slug>` (conferma tipo e file; se `marca` è già passata non cambia niente) e `uv run reel valida`.
 6. `contenuti/broll/<slug>/CREDITI.md` va nel rapporto: i nomi servono in didascalia.
-7. **Se per una scena non c'è un candidato buono, non ripiegare**: dillo nel rapporto e la scena passa all'agente
-   `immagini`, che la fa con 2-3 immagini generate con Meshy (regole editoriali §3, 2026-09-22). Lo stesso vale per
-   la clip generata che **spetta a ogni reel**: se hai trovato un buon filmato per tutte, indica tu la scena in cui
-   un'immagine generata aggiungerebbe di più.
+7. **Metà delle scene a filmato va a Meshy** (regole editoriali §3, 2026-09-23): cerca e guarda i candidati per
+   **tutte**, poi mettile in fila da quella il cui miglior filmato convince di più a quella che convince meno
+   (pertinenza alla VOCE, riquadro libero, «wow»). La **metà più debole** passa all'agente `immagini`, che la fa con
+   2-3 immagini generate con Meshy e animate: per quelle non scegli né rendi niente, e nel rapporto scrivi perché il
+   filmato non convince. Con un numero dispari la scena di mezzo va a Meshy solo se il suo filmato è debole. Scegli,
+   rendi e scrivi solo la metà più forte. Non ripiegare mai su un filmato che non c'entra.
 
 I filmati sono resi sulla durata **di adesso**: dopo la prima anteprima (o dopo la registrazione vera) le durate
 cambiano; `broll piano` riporta la scena a `scelto` e `broll rendi` la rifà lunga giusta (solo ffmpeg, costa poco).
@@ -72,6 +74,7 @@ Non modifichi la sceneggiatura a mano: la tocca solo `broll scrivi`. Con Edit to
 ```
 Stato: DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT · modalità: marca | scegli (a fermate | provvisoria)
 Equilibrio: N scene a filmato su M in mezzo (scene: …) — corrette a mano nel piano: … perché …
+Classifica di convinzione: scena → quanto convince il miglior filmato (dal più al meno) · **scene per Meshy: …**
 Per scena a filmato: query · candidato scelto o i due consigliati (fornitore:id, autore) e perché · cosa copre il riquadro
 Scene che scrivi non ha convertito: …
 valida: N errori, N avvisi · Crediti: contenuti/broll/<slug>/CREDITI.md

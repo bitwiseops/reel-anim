@@ -72,6 +72,8 @@ pausa_frasi_s = 0.3       # silenzio tra le frasi: una frase alla volta, così g
 [transizioni]
 tipo = "dissolvenza"      # taglio | dissolvenza
 durata_s = 0.25
+immagini = ["zoomin", "circleopen", "smoothleft", "radial"]  # fra le immagini Meshy di una scena (xfade), in giro
+immagini_s = 0.45         # più lunga della dissolvenza: il passaggio si deve vedere (2026-09-23)
 filmato = "taglio"        # taglio | dissolvenza: le giunzioni che toccano una scena a filmato ([broll], hook a filmato)
 raccordo_riquadro_s = 0.5 # il volto a tutta tela che si rimpicciolisce fino al cerchio del riquadro della scena dopo
                           # (e il contrario prima della chiusura): sta dentro la scena a volto pieno, e quella
@@ -90,6 +92,10 @@ latenza_s = 0.10          # ritardo fra la fotocamera e il fotogramma letto; se 
 codec = "h264_videotoolbox"
 bitrate = "8M"
 
+[percorsi]                # dal 2026-09-23: nel progetto solo il riepilogo di ogni reel (contenuti/render/<slug>/)
+lavoro = "~/Library/Caches/reel-anim"   # il transitorio (Manim, scene montate, voce di prova, strisce): `reel pulisci`
+cache_broll = "~/Library/Application Support/reel-anim/cache-broll"   # filmati scaricati e immagini Meshy (pagate)
+
 [stile]                   # corpus di reel altrui trascritti (reelkit): docs/stile-parlato.md ne distilla le regole
 corpus = "~/Projects/reelkit/export.md"   # override in config.local.toml; "" = nessun corpus
 guida = "docs/stile-parlato.md"           # relativo alla radice del repo
@@ -100,3 +106,12 @@ trascrizioni = "~/Projects/reelkit/trascrizioni"  # il parlato vero, un file per
 
 [uscite]                  # `uv run reel uscite` (tappa T0b): le uscite vere dei testi attribuiti a un modello
 anonimizza = []           # coppie ["vero", "finto"] oltre a nome ed email di git (dominio, città…): i dati veri stanno in config.local.toml
+
+[copione]                 # `uv run reel copione <idea>`: il parlato da un modello esterno, prima della sceneggiatura
+modelli = ["gpt-5.4", "deepseek-v4-pro", "gemini-3.1-pro", "claude"]  # catena di riserva: si scende solo se fallisce
+                          # (ordine dalla prova alla cieca del 2026-09-23); "claude" = `claude -p`, niente punti Poe
+claude_modello = "opus"
+parole = 235              # in tutto (≈ 85 s a 2,8 parole/s); oltre il 10 % in più il modello riceve una correzione
+trascrizioni = 6          # reel di reelkit nel prompt, per l'orecchio
+token_uscita = 6000       # per stimare il costo massimo di una chiamata (Poe lo riserva prima di rispondere)
+punti_minimi = 1500       # sotto questo saldo i modelli Poe si saltano

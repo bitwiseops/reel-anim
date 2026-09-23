@@ -48,6 +48,7 @@ Prima di scrivere leggi:
 ## Situazione                  ← una scena di ufficio o di vita quotidiana, con un momento di prova per chi guarda
 ## Messaggio centrale          ← due frasi al massimo
 ## Struttura narrativa         ← lo schema di reelkit adattato (vedi sotto)
+## Tappe del parlato           ← una riga numerata per scena: il brief del copione (vedi «Tappe del parlato» sotto)
 ## Come si mostra              ← LA FIGURA: quantità, gesto, prima/dopo, qualcosa che si rompe o si riempie. Il reel si guarda muto
 ## Cosa impara chi guarda      ← un modo nuovo di leggere + la mossa concreta + il criterio per capire se ha funzionato
 ## Pilastro                    ← come funziona davvero | cosa può fare per te | dove sbaglia
@@ -55,7 +56,7 @@ Prima di scrivere leggi:
 ## Fonte                       ← con fonte: url la pagina letta (url, testata, data, i fatti presi, cosa non dice);
                                  con testo | tema le fonti ufficiali dei numeri (chi, anno, link, cosa misura)
 ## Angoli scartati
-## Note per il reel            ← hook candidato (la frase), Percorso a tappe (animata | a filmato), filo visivo,
+## Note per il reel            ← query in inglese delle tappe a filmato, filo visivo,
                                  numeri, MESSAGGIO e CTA candidati (per la caption del post), claim per il
                                  revisore, note per la caption
 ```
@@ -70,8 +71,15 @@ Regole:
 - **Nessun personaggio, nessun dialogo**: il presentatore parla a camera e le animazioni spiegano. La situazione
   diventa oggetti a schermo (una richiesta, una risposta, una classifica), non battute fra due voci.
 - Il potenziale e il limite stanno nella stessa idea: il reel non è né una lode né una stroncatura.
-- **Note per il reel**: hook candidato al «tu» o come domanda, ≤ 20 parole (la sola frase: la dice lui a tutto
-  schermo); il **Percorso** a tappe che alterna animate e a filmato (sotto, «Percorso e registri»); filo visivo di 2-3
+- **Tappe del parlato** (dal 2026-09-23): il parlato non lo scrive più lo sceneggiatore ma un modello esterno
+  (`uv run reel copione <idea>`, `templates/copione.md`), che riceve **solo** tema, messaggio e queste righe. Una riga
+  numerata per scena, nella forma `N. (registro) i fatti della scena, e solo quelli`; il registro è `apertura`,
+  `filmato: l'immagine concreta`, `animazione` (o `animazione, grafico`…) o `chiusura`. La prima è l'hook: la domanda
+  o il problema di chi guarda, ≤ 20 parole. L'ultima è la conclusione (e «Battuta finale.» se ne vuoi una). I
+  numeri qui si scrivono in cifre con la fonte già verificata: il modello li dirà in lettere e **non aggiunge fatti**,
+  quindi quello che non c'è non entra nel reel. Le tappe sono il Percorso: alternano i registri (sotto, «Percorso e
+  registri») e fissano il numero di scene.
+- **Note per il reel**: le 2-3 query in inglese per ogni tappa a filmato; filo visivo di 2-3
   oggetti che tornano in tutte le scene animate; numeri solo con una fonte ufficiale, altrimenti «esempio dichiarato»;
   MESSAGGIO candidato ≤ 12 parole e una CTA sola (invia a qualcuno, salva, o una domanda vera), tutti e due per la
   **caption del post**; i claim delicati da far verificare al revisore; le note per la caption (crediti, link).
@@ -143,17 +151,18 @@ come ci si è arrivati è in `.claude/agents/storico/ideatore.md` (non serve leg
   rigenerare tutte le uscite.
 
 ### Percorso e registri (regole editoriali §3 e §4)
-- **I primi 5-10 secondi devono catturare l'attenzione** (2026-09-19). **L'hook candidato è la sola frase** da dire
+- **I primi 5-10 secondi devono catturare l'attenzione** (2026-09-19). **La tappa di apertura è la sola frase** da dire
   in faccia a chi guarda — un problema o una domanda sua, non la tesi, ≤ 20 parole: l'apertura è il presentatore a
   tutta tela. Niente immagine e niente query per l'hook. Il TITOLO di copertina resta la tesi.
 - La chiusura è lui che dice la conclusione, con le sole caption: il **MESSAGGIO candidato è per la caption del post**.
-- Nelle «Note per il reel» il **Percorso** alterna già i due registri e arriva a **metà per metà** (± una tappa,
-  contate senza apertura e chiusura): segna per ogni tappa se è **animata** (cosa si disegna) o **a filmato** (cosa si
-  vede), e non metterne mai due a filmato di fila.
+- Le **Tappe del parlato** alternano già i due registri e arrivano a **metà per metà** (± una tappa,
+  contate senza apertura e chiusura): il registro fra parentesi dice se è **animata** (cosa si disegna) o **a filmato**
+  (cosa si vede), e non se ne mettono mai due a filmato di fila.
 - Una tappa a filmato va scritta **senza numeri e senza termini tecnici**: se il suo contenuto ha una cifra, quella
   cifra appartiene alla tappa animata accanto. È il segnale con cui `broll piano` decide, e una sola frase tecnica fa
   restare la scena a Manim.
-- Per **ogni** tappa a filmato scrivi l'immagine concreta (chi, dove, che gesto) e **2-3 query in inglese**: `broll
+- Per **ogni** tappa a filmato scrivi l'immagine concreta fra parentesi (chi, dove, che gesto) e **2-3 query in
+  inglese** nelle Note per il reel: `broll
   piano` le ricava dalle parole italiane del brief e Pexels le capisce male («piedi» → otto filmati di piedi nudi).
 - Se per stare a metà servono più tappe, proponile: le scene a filmato sono corte (4-7 s) e non allungano il reel.
 - Se per una tappa generica non ti viene in mente un'immagine filmabile, la tappa è ancora troppo astratta:
@@ -186,6 +195,7 @@ File: contenuti/idee/<data>-<slug>.md
 Fonte: url | testo | tema (spunto: <percorso>)
 Angolo scelto: … (scartati: …)
 Schema: @account · r00NN — <schema in una riga> (tecniche: …)
+Tappe del parlato: N (animate: …; a filmato: …)
 Richieste da generare: … (o «nessuna»)
 Numeri scelti, con la fonte ufficiale: … (due-tre; o «nessuno»)
 Dal resto della lettura (due righe): …

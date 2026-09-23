@@ -71,8 +71,8 @@ Prima di scrivere codice leggi OBBLIGATORIAMENTE:
    distinguersi a colpo d'occhio: se due si somigliano, una va rifatta) e leggi `report.json` (per scena
    `inizi_frasi_s`, `origine_tempi`, `avvisi_tempi`; `diagnostica`). Poi le **strisce fitte** di ogni scena:
    `uv run reel strisce <file.md> --scena N [--fps 8] [--finestra 1.3] [--sorgente anima|scene]` scrive in
-   `fotogrammi/NN-fitti-*.png` (da `anima`: `NN-fitti-anima-*.png`) una striscia attorno a ogni inizio di beat e una a 4 fps su tutta la scena. Guardale
-   su tutte e due le sorgenti: prima i video di `anima`, poi i `_scene/NN.mp4` montati (vedi «Cosa i controlli non
+   `fotogrammi/NN-fitti-*.png` nella cartella di lavoro `~/Library/Caches/reel-anim/<slug>/`, il percorso lo stampa il comando (da `anima`: `NN-fitti-anima-*.png`) una striscia attorno a ogni inizio di beat e una a 4 fps su tutta la scena. Guardale
+   su tutte e due le sorgenti: prima i video di `anima`, poi i `_scene/NN.mp4` montati (anche loro nella cartella di lavoro; vedi «Cosa i controlli non
    vedono»). Nessun testo che sparisce, lampeggia o ne attraversa un altro, e il momento wow che si vede.
 6. Scrivi la sezione `## Note di animazione` della sceneggiatura (sostituisci il commento segnaposto): per scena la
    mossa wow e su quale frase, i beat e cosa entra su ciascuno, cosa hai cambiato rispetto al brief e perché, tempi

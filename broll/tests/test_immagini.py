@@ -5,7 +5,7 @@ import pytest
 from tools.anim.config import carica
 
 from broll.immagini import (DURATA_MIN_S, MARGINE_S, TENUTA_MIN_S, ImmaginiMancanti, comando,
-                            componi, dissolvenza_s, finestre, montaggio)
+                            componi, dissolvenza_s, finestre, montaggio, mossa, transizioni)
 
 
 def test_una_finestra_per_frase():
@@ -50,7 +50,8 @@ def test_immagini_assenti(tmp_path):
 
 def test_la_dissolvenza_e_quella_delle_transizioni_del_reel():
     cfg = carica()
-    voluta = float(cfg.dati["transizioni"]["durata_s"])
+    tr = cfg.dati["transizioni"]
+    voluta = float(tr.get("immagini_s", tr["durata_s"]))
     assert dissolvenza_s([(0.0, 5.0), (5.0, 5.0)], cfg) == pytest.approx(voluta)
 
 
@@ -96,7 +97,10 @@ def test_il_comando_usa_xfade_e_chiude_al_fotogramma(tmp_path):
     img = [tmp_path / "a.png", tmp_path / "b.png", tmp_path / "c.png"]
     cmd = comando(img, [(0.0, 3.0), (3.0, 4.0), (7.0, 5.0)], tmp_path / "out.mp4", cfg)
     filtri = cmd[cmd.index("-filter_complex") + 1]
-    assert filtri.count("xfade=transition=fade") == 2
+    nomi = transizioni(cfg)
+    assert filtri.count("xfade=transition=") == 2
+    assert f"xfade=transition={nomi[0]}:" in filtri and f"xfade=transition={nomi[1 % len(nomi)]}:" in filtri
+    assert filtri.count("zoompan=") == 3
     assert "offset=3.000" in filtri and "offset=7.000" in filtri
     assert "concat=" not in filtri
     assert f"trim=end_frame={round(12.0 * cfg.fps)}" in filtri
@@ -108,3 +112,13 @@ def test_una_sola_immagine_resta_uno_stacco_solo(tmp_path):
     cmd = comando([tmp_path / "a.png"], [(0.0, 6.0)], tmp_path / "out.mp4", cfg)
     filtri = cmd[cmd.index("-filter_complex") + 1]
     assert "xfade" not in filtri and "concat=n=1" in filtri
+
+
+def test_le_mosse_cambiano_a_ogni_immagine():
+    assert [mossa(i) for i in range(5)] == ["spinta", "carrellata", "allarga", "diagonale", "spinta"]
+    assert mossa(0) != mossa(1)
+
+
+def test_senza_chiave_resta_la_dissolvenza():
+    from tools.anim.config import Config
+    assert transizioni(Config({"transizioni": {}})) == ("fade",)

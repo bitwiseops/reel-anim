@@ -246,3 +246,20 @@ Un consulente ha riscritto la voce del reel GPU: troppo scritta, frasi lunghe, p
 micro-pausa. Flavio ha accettato la direzione e ha deciso: limiti più larghi (hook 25 parole, 6 beat, reel 100 s),
 «GPU» e «cloud» ammessi, l'eco che non conta come frase da titolo. Regole nel tema «VOCE e orecchio»; la sezione
 «Come suona il parlato da social» sta in docs/stile-parlato.md. Il reel GPU è stato riscritto e va registrato di nuovo.
+
+## 2026-09-23 · la VOCE passa al copione
+Flavio trovava che la VOCE scritta dai modelli Claude non suonasse abbastanza da social. Prova alla cieca sul reel
+GPU, stesso brief e sei trascrizioni di reelkit (`contenuti/prove-parlato/gpu-comprare-o-affittare/`): la sua
+classifica è stata gpt-5.4, deepseek-v4-pro, gemini-3.1-pro, e per ultima la VOCE dello sceneggiatore (grok-4.7 non
+ha risposto per il 402 di Poe). Decisione: la pipeline diventa spunto → idea → **copione** → sceneggiatura; il
+parlato lo scrive `uv run reel copione` con la catena in quell'ordine, e la sceneggiatura si adatta al copione.
+Superate e tolte: «prima di scrivere la VOCE ascolta il parlato vero» (le trascrizioni ora vanno nel prompt del
+copione) e «VOCE = parlato vero, prima il monologo e poi i beat» (le regole di scrittura stanno in
+`templates/copione.md`). Le regole «VOCE e orecchio» restano, per leggere il copione e segnalare.
+
+## 2026-09-23 · gpu-comprare-o-affittare · la scarsità nella scena 3
+Flavio: i chip gialli della scena 3 «brutti e posizionati male», e «una scheda video con dei chip mancanti non
+trasmette proprio bene l'idea della scarsità». Proposte tre figure (scaffale, torta, coda): scelto lo scaffale di
+negozio; il revisore l'ha bocciato (❌: scarsità nei negozi senza fonte, NVIDIA Q4 FY2026 parla di scorte sane nei
+canali) e ha proposto la rastrelliera d'uscita della produzione, accettata. Regola nel tema «Numeri, conti e
+diagrammi»; icone Lucide `memory-stick` e `factory` aggiunte in `assets/icone/`.

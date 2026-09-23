@@ -2,7 +2,7 @@
 
 Verso il montaggio il contratto è uno solo, uguale per i tre registri: **un file per scena**, già
 1080×1920, già lungo quanto la scena, muto. Qui si scarica il filmato scelto (una volta: la cache è
-`contenuti/media/_cache-broll/`, fuori da git e ricostruibile dal piano), lo si ritaglia a 9:16
+`config.toml [percorsi] cache_broll`, fuori dal progetto e ricostruibile dal piano), lo si ritaglia a 9:16
 sull'ancora scelta e si concatenano i tagli con gli stacchi sui beat.
 
 La lunghezza si conta in **fotogrammi**, non in secondi: ogni taglio è chiuso da `trim=end_frame`, così
@@ -18,6 +18,7 @@ from tools.anim.config import Config, carica
 from tools.reel.clip import cartella as cartella_media
 from tools.reel.ffmpeg import esegui, ffprobe, trova_ffmpeg
 from tools.reel.model import Diagnostica, avviso
+from tools.reel.percorsi import cache_broll
 
 from .fornitori import Candidato, pexels
 from .immagini import ImmaginiMancanti, componi
@@ -25,7 +26,7 @@ from .piano import ScenaBroll
 from .scelta import confini
 
 RADICE = Path(__file__).resolve().parents[2]
-CACHE = RADICE / "contenuti" / "media" / "_cache-broll"
+CACHE = cache_broll()   # config.toml [percorsi] cache_broll, fuori dal progetto (2026-09-23)
 FORNITORI = {pexels.NOME: pexels}
 MARGINE_S = 0.5         # si legge un po' oltre il taglio: a chiuderlo al fotogramma ci pensa `trim`
 
@@ -81,7 +82,10 @@ def file_immagini(s: ScenaBroll) -> list[Path]:
     fuori: list[Path] = []
     for t in s.scelti:
         f = Path(t.get("file") or "")
-        fuori.append(f if f.is_absolute() else RADICE / f)
+        f = f if f.is_absolute() else RADICE / f
+        if not f.exists() and (CACHE / f.name).exists():   # un piano di prima dello spostamento della cache
+            f = CACHE / f.name
+        fuori.append(f)
     return fuori
 
 
