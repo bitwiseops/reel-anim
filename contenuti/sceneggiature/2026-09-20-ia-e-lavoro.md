@@ -460,11 +460,11 @@ Anteprima `monta --prova --anteprima`: **reel 89,4 s**, 0 errori, 0 avvisi di te
   colonna della rete. La lente passa anche sulle cifre, come chiede il brief, benché la voce dica solo «la bozza».
 - Nuove icone Lucide (ISC) in `assets/icone/`: `phone`, `pen-line`, `keyboard`, `calendar`, `folder`.
 
+Chiuso (2026-09-23): il presentatore ha chiesto di accettare tutte le revisioni; ❌ della scena 9 e ⚠️ delle scene 8 e 6
+applicati con le riformulazioni proposte qui sopra. Stato `rivisto`.
+
 ## Pacchetto social
 **Caption Reel:**
 **Hashtag:**
 **Alt text cover:**
 **Variante LinkedIn (post testuale):**
-
-Chiuso (2026-09-23): il presentatore ha chiesto di accettare tutte le revisioni; ❌ della scena 9 e ⚠️ delle scene 8 e 6
-applicati con le riformulazioni proposte qui sopra. Stato `rivisto`.
