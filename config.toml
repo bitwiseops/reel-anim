@@ -99,7 +99,7 @@ riduzione_rumore = "nr=10:nf=-50:tn=1"   # afftdn: leggera, sennò la voce suona
 deesser = "i=0.3"         # le «s» sibilanti; "" = spento
 compressore = ""          # acompressor, spento: le prese hanno già una dinamica stretta (es. "threshold=-24dB:ratio=2.5")
 loudness_lufs = -14       # il reel intero, in due passaggi: il livello tipico di Instagram e TikTok
-picco_db = -1.5           # −1 usciva a −0,5 dopo la codifica AAC: margine per il true peak
+picco_db = -2             # la codifica AAC aggiunge fino a ~0,6 dB: così il true peak resta sotto −1
 lra = 11
 
 [percorsi]                # dal 2026-09-23: nel progetto solo il riepilogo di ogni reel (contenuti/render/<slug>/)

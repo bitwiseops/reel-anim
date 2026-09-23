@@ -2,8 +2,8 @@
   "versione": 1,
   "slug": "gpu-comprare-o-affittare",
   "sorgente": "contenuti/sceneggiature/2026-09-22-gpu-comprare-o-affittare.md",
-  "hash_md": "2458defba7c94fe1",
-  "quando": "2026-09-23T12:29:03",
+  "hash_md": "457cdf5a61585f44",
+  "quando": "2026-09-23T17:02:24",
   "cornice": {
     "pieno": [
       1080,
@@ -54,7 +54,7 @@
         "Le schede oggi costano parecchio, spesso più di quanto uno si aspetta guardando gli ==annunci==."
       ],
       "brief": [
-        "Primo piano di una scheda video nuova al buio, con un cartellino del prezzo appeso senza cifre leggibili: le luci si accendono, le ventole partono e la camera scorre lenta lungo il dissipatore."
+        "Primo piano di una scheda video nuova al buio: le luci si accendono, le ventole partono e la camera scorre lenta lungo il dissipatore; poi la sua scatola su uno scaffale di negozio, senza cartellini (il presentatore, 2026-09-23: niente etichetta vuota penzolante)."
       ],
       "query": [
         "graphics card close up fans spinning rgb",
@@ -285,7 +285,7 @@
         }
       ],
       "file": "broll-scena-02.mp4",
-      "note": "immagini generate: 2"
+      "note": ""
     },
     {
       "n": 3,
@@ -309,11 +309,11 @@
         "Quindi ti conviene davvero ==comprarla==?"
       ],
       "brief": [
-        "Stacco dal filmato, fotogramma 0 già pieno: a destra la scheda video (sagoma di forme: un rettangolo scuro con due ventole tonde e, lungo il bordo, otto alloggi vuoti per i chip), a sinistra il server a cassetti (rack stilizzato: corpo, quattro cassetti con fessura e lucina) con sopra una piccola rete neurale (tre strati di nodi e archi: l'IA), in alto al centro un mucchio di chip di memoria (rettangolini pieni in accento, nessuna scritta). Sulla frase il mucchio pulsa una volta e i primi chip escono e si mettono in fila sotto di lui, uno dietro l'altro.",
-        "La fila piega verso sinistra e i chip entrano uno alla volta nei cassetti del server: ogni chip si infila nella fessura, il cassetto si riempie di un velo accento, la lucina si accende e la rete pulsa a ogni arrivo. La scheda intanto resta ferma con gli alloggi vuoti: la priorità si vede come ordine, non come quantità, e il mucchio non si svuota mai in massa verso il server.",
-        "GRANDE (contrasto di scala) su «sulle schede ne resta meno»: solo adesso i chip rimasti arrivano alla scheda, uno alla volta, mentre la camera entra sulla scheda; sei alloggi si riempiono, due restano vuoti e lampeggiano, poi la camera torna.",
-        "In fondo all'area entra una linea del tempo sottile per tutta la larghezza; un segnaposto accento parte da sinistra, corre verso destra e si ferma di colpo contro una sbarra verticale in accento, con sopra «2028» grande e sotto, piccola, l'etichetta «TrendForce, 2026».",
-        "La linea del tempo esce; il server con la rete si spegne a sinistra e ricompare piccolo in alto a destra, la scheda con i due alloggi vuoti scivola al centro e cresce, e accanto a lei entra un «?» grande che pulsa su «comprarla». Ultimo fotogramma: la scheda con due alloggi vuoti, il «?», il server piccolo."
+        "Stacco dal filmato, fotogramma 0 già pieno, su tutta l'area del contenuto (niente sotto il riquadro): in alto al centro una fabbrica (Icona `factory`); a sinistra, a metà altezza, il server a cassetti con sopra la piccola rete neurale (l'IA); in basso a destra, sotto la fabbrica e collegata a lei da un filo sottile, la rastrelliera d'uscita della produzione di schede: otto posti in fila, tutti vuoti e tratteggiati («in attesa di memoria»), senza ripiani da negozio e senza numeri. Sulla frase la fabbrica pulsa una volta.",
+        "La fabbrica sforna moduli di memoria (Icona `memory-stick` in accento, grandi: una stecca riconoscibile, mai rettangolini) uno dopo l'altro, e la fila scende verso il server: ogni modulo si infila in un cassetto, il cassetto si riempie di un velo accento, la lucina si accende e la rete pulsa a ogni arrivo. La priorità si vede come ordine: tutti i primi moduli vanno lì.",
+        "GRANDE (contrasto di scala) su «sulle schede ne resta meno»: solo adesso un filo di due moduli prende l'altra strada, verso la rastrelliera, mentre la camera entra sulla rastrelliera; ogni modulo, arrivato, diventa una scheda piccola (la sagoma della scheda del reel) che occupa un posto. Due posti pieni, sei restano tratteggiati «in attesa»; i sei posti vuoti pulsano insieme, una volta o due: sono le schede che mancano per la vendita. Niente cartellino né freccia (il presentatore, 2026-09-23). Poi la camera torna.",
+        "Accanto alla fabbrica compare una seconda fabbrica solo tratteggiata (in costruzione). In fondo all'area entra una linea del tempo sottile per tutta la larghezza; un segnaposto accento parte da sinistra, corre verso destra e si ferma di colpo contro una sbarra verticale in accento, con sopra «2028» grande e sotto, piccola, l'etichetta «TrendForce, 2026»; un filo sottile collega la fabbrica tratteggiata alla sbarra.",
+        "La linea del tempo e le fabbriche escono; il server con la rete si rimpicciolisce in alto a sinistra; la rastrelliera scivola al centro e cresce (due schede, i posti in attesa), e accanto entra un «?» grande che pulsa su «comprarla». Ultimo fotogramma: la rastrelliera con due schede e i posti in attesa, il «?», il server piccolo."
       ],
       "query": [],
       "stato": "da-scegliere",
@@ -565,25 +565,25 @@
         }
       ],
       "file": "broll-scena-04.mp4",
-      "note": "durata cambiata da 10.80 a 9.73 s: da rendere di nuovo"
+      "note": ""
     },
     {
       "n": 5,
       "tipo": "spiegazione",
-      "durata_s": 16.06,
+      "durata_s": 15.14,
       "origine_durata": "report",
       "inizi_frasi_s": [
         0.0,
         0.94,
-        7.087,
-        11.295,
-        12.912
+        6.17,
+        10.378,
+        11.995
       ],
       "origine_tempi": "voce-sintetica",
       "registro": "animazione",
       "voce": [
         "Qui è uguale.",
-        "Se affitti, sei attorno a mezzo euro l'ora, zero virgola cinquantatré con l'imposta, sempre.",
+        "Se affitti, sei attorno a mezzo euro l'ora, tasse comprese, e sempre quello.",
         "Se compri, mettiamo millecinquecento euro tra scheda e computer,",
         "spalmati su tre anni.",
         "Quella rata poi la dividi per le ore che fai ==davvero==."
@@ -893,12 +893,12 @@
         }
       ],
       "file": "broll-scena-07.mp4",
-      "note": "durata cambiata da 9.73 a 10.05 s: da rendere di nuovo"
+      "note": ""
     },
     {
       "n": 8,
       "tipo": "spiegazione",
-      "durata_s": 17.55,
+      "durata_s": 17.99,
       "origine_durata": "report",
       "inizi_frasi_s": [
         0.0,
@@ -914,7 +914,7 @@
         "Se non ci entra, fine, la ==affitti==.",
         "Se ci entra, affittala un mese",
         "e guarda in fattura quante ore hai pagato.",
-        "Se stai sotto centodieci, comprarla ti costava di più."
+        "Se stai sotto centodieci, comprarla ti potrebbe costare di più."
       ],
       "brief": [
         "Stacco dal filmato: al centro la scheda video (stessa sagoma, alloggi pieni), in alto a sinistra il server a cassetti (il noleggio). Su «prima controlla» compare sotto la scheda «24 GB»; su «il modello che vuoi usare» un blocco pieno in accento (il modello, nessuna scritta) scende dall'alto e si incastra nella scheda, preciso; su «nella memoria della scheda» accanto compare una Spunta.",

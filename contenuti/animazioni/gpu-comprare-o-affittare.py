@@ -804,7 +804,7 @@ def spegni_rete(rete: Rete) -> UpdateFromAlphaFunc:
 
 class Scena05(ScenaReel):
     """Cinque beat. La rete si spegne ed esce, il server resta (è il noleggio), si disegnano gli assi (b0); la riga
-    piatta cade dal server, «0,53 €», la fonte, e su «sempre» pulsa: poi non si muove più (b1); la scheda pulsa e la
+    piatta cade dal server, «0,53 €», la fonte, e su «sempre quello» pulsa: poi non si muove più (b1); la scheda pulsa e la
     pila di monete, «1.500 €» (b2); la pila si sfoglia in 36 fette (b3); una fetta si sbriciola sulle ore e i punti
     disegnano la curva che scende (b4)."""
 
@@ -825,7 +825,8 @@ class Scena05(ScenaReel):
                   *[FadeIn(m, rate_func=fra(0.75, 1)) for m in (g.l0, g.l300, g.l1)], run_time=self.arrotonda(0.8))
         self.remove(rete)
 
-        # beat 1 · «Se affitti, sei attorno a mezzo euro l'ora, zero virgola cinquantatré con l'imposta, sempre.»
+        # beat 1 · «Se affitti, sei attorno a mezzo euro l'ora, tasse comprese, e sempre quello.»
+        # (tempi misurati sulla voce di prova: «mezzo euro» ~1,6 s, «tasse comprese» ~2,8 s, «sempre» ~4,05 s)
         # la riga cade dal server e si allunga per tutto il grafico: da qui in poi non si muove né si ridisegna
         # (richiesta del revisore, 2026-09-22: il noleggio costa uguale a ogni ora)
         self.beat(1)
@@ -840,11 +841,11 @@ class Scena05(ScenaReel):
                   run_time=self.arrotonda(0.8))
         self.remove(corta)
         self.add(g.riga)
-        self.attendi_fino(inizio + 2.85)                                                   # «zero virgola cinquantatré»
+        self.attendi_fino(inizio + 1.7)                                                    # «mezzo euro»
         self.play(FadeIn(g.l053, shift=RIGHT * px(10)), run_time=self.arrotonda(0.4))
-        self.attendi_fino(inizio + 4.45)                                                   # «con l'imposta»
+        self.attendi_fino(inizio + 2.8)                                                    # «tasse comprese»
         self.play(FadeIn(g.fonte_riga, shift=UP * px(8)), run_time=self.arrotonda(0.4))
-        self.attendi_fino(inizio + 5.4)                                                    # «sempre»
+        self.attendi_fino(inizio + 4.05)                                                   # «sempre quello»
         w0 = g.riga.get_stroke_width()
         self.play(UpdateFromAlphaFunc(g.riga, lambda m, a: m.set_stroke(width=w0 * (1 + 1.3 * np.sin(np.pi * a))),
                                       rate_func=linear), run_time=self.arrotonda(0.5))

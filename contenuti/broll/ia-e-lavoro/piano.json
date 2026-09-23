@@ -2,8 +2,8 @@
   "versione": 1,
   "slug": "ia-e-lavoro",
   "sorgente": "contenuti/sceneggiature/2026-09-20-ia-e-lavoro.md",
-  "hash_md": "109072a8ed670731",
-  "quando": "2026-09-23T15:45:27",
+  "hash_md": "ed7d1cd5cede4341",
+  "quando": "2026-09-23T16:24:12",
   "cornice": {
     "pieno": [
       1080,
@@ -24,7 +24,7 @@
         0.0,
         2.086
       ],
-      "origine_tempi": "presa",
+      "origine_tempi": "voce-sintetica",
       "registro": "animazione",
       "voce": [
         "Hai paura che l'IA ti tolga il lavoro?",
@@ -41,16 +41,16 @@
     {
       "n": 2,
       "tipo": "spiegazione",
-      "durata_s": 12.23,
+      "durata_s": 13.89,
       "origine_durata": "report",
       "inizi_frasi_s": [
         0.0,
         2.441,
         4.159,
         5.375,
-        10.212
+        11.616
       ],
-      "origine_tempi": "presa",
+      "origine_tempi": "voce-sintetica",
       "registro": "animazione",
       "voce": [
         "Su dieci lavori in un paese avanzato,",
@@ -76,13 +76,13 @@
     {
       "n": 3,
       "tipo": "broll",
-      "durata_s": 5.9,
+      "durata_s": 6.73,
       "origine_durata": "report",
       "inizi_frasi_s": [
         0.0,
-        2.027
+        2.383
       ],
-      "origine_tempi": "presa",
+      "origine_tempi": "voce-sintetica",
       "registro": "immagini",
       "voce": [
         "Possiamo leggerlo come posti persi.",
@@ -333,20 +333,20 @@
         }
       ],
       "file": "broll-scena-03.mp4",
-      "note": "durata cambiata da 5.86 a 5.90 s: da rendere di nuovo · VOCE cambiata dopo la scelta: riguarda il filmato sul testo nuovo"
+      "note": ""
     },
     {
       "n": 4,
       "tipo": "spiegazione",
-      "durata_s": 11.9,
+      "durata_s": 11.36,
       "origine_durata": "report",
       "inizi_frasi_s": [
         0.0,
         3.723,
         5.39,
-        10.529
+        9.995
       ],
-      "origine_tempi": "presa",
+      "origine_tempi": "voce-sintetica",
       "registro": "animazione",
       "voce": [
         "Esposto vuol dire che una parte dei compiti è alla sua portata,",
@@ -370,14 +370,14 @@
     {
       "n": 5,
       "tipo": "broll",
-      "durata_s": 9.1,
+      "durata_s": 10.3,
       "origine_durata": "report",
       "inizi_frasi_s": [
         0.0,
-        3.187,
-        7.221
+        3.721,
+        7.729
       ],
-      "origine_tempi": "presa",
+      "origine_tempi": "voce-sintetica",
       "registro": "filmato",
       "voce": [
         "Secondo me, a prescindere, ci rimette chi non conosce.",
@@ -630,23 +630,23 @@
         }
       ],
       "file": "broll-scena-05.mp4",
-      "note": "durata cambiata da 9.06 a 9.10 s: da rendere di nuovo · VOCE cambiata dopo la scelta: riguarda il filmato sul testo nuovo"
+      "note": ""
     },
     {
       "n": 6,
       "tipo": "spiegazione",
-      "durata_s": 19.9,
+      "durata_s": 22.22,
       "origine_durata": "report",
       "inizi_frasi_s": [
         0.0,
-        3.618,
-        7.097,
-        8.44,
-        11.785,
-        14.848,
-        15.737
+        3.954,
+        7.433,
+        9.925,
+        12.859,
+        16.258,
+        17.437
       ],
-      "origine_tempi": "presa",
+      "origine_tempi": "voce-sintetica",
       "registro": "animazione",
       "voce": [
         "Ad Harvard, nel duemilaventitré, hanno fatto un esperimento.",
@@ -676,17 +676,17 @@
     {
       "n": 7,
       "tipo": "spiegazione",
-      "durata_s": 14.6,
+      "durata_s": 17.66,
       "origine_durata": "report",
       "inizi_frasi_s": [
         0.0,
-        2.517,
-        5.717,
-        7.791,
-        9.795,
-        11.648
+        3.861,
+        8.048,
+        10.482,
+        12.555,
+        14.409
       ],
-      "origine_tempi": "presa",
+      "origine_tempi": "voce-sintetica",
       "registro": "animazione",
       "voce": [
         "Ad esempio, se devi fare il resoconto mensile per il capo,",
@@ -714,13 +714,13 @@
     {
       "n": 8,
       "tipo": "broll",
-      "durata_s": 5.2,
+      "durata_s": 7.33,
       "origine_durata": "report",
       "inizi_frasi_s": [
         0.0,
-        2.352
+        3.002
       ],
-      "origine_tempi": "presa",
+      "origine_tempi": "voce-sintetica",
       "registro": "filmato",
       "voce": [
         "Il posto non te lo garantisce nessuno, è vero,",
@@ -952,18 +952,18 @@
         }
       ],
       "file": "broll-scena-08.mp4",
-      "note": "VOCE cambiata dopo la scelta: riguarda il filmato sul testo nuovo"
+      "note": ""
     },
     {
       "n": 9,
       "tipo": "chiusura",
-      "durata_s": 5.63,
+      "durata_s": 6.91,
       "origine_durata": "report",
       "inizi_frasi_s": [
         0.0,
         2.252
       ],
-      "origine_tempi": "presa",
+      "origine_tempi": "voce-sintetica",
       "registro": "animazione",
       "voce": [
         "Quei sei su dieci restano esposti.",
