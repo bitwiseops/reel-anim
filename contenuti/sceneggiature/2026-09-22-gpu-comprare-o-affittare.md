@@ -488,8 +488,74 @@ ufficiale, e NVIDIA parla di scorte sane). Ritocco qui sopra: rastrelliera d'usc
 scheda, FIGURA «di schede ne escono poche». La VOCE e il resto del reel restano approvati.
 Chiuso (2026-09-23): il presentatore ha scelto il ritocco del revisore — rastrelliera d'uscita della produzione al posto dello scaffale di negozio, cartellino appeso a una scheda e gonfio 1,3-1,5×, FIGURA «di schede ne escono poche». Applicato ai brief della scena 3; stato di nuovo `rivisto`.
 
+**Pacchetto social (2026-09-23).** Guardati Caption Reel, Hashtag, Alt text cover e Variante LinkedIn contro le fonti
+già verificate (RunPod 13/09/2026, ARERA 25/06/2026, BCE 21/09/2026, NVIDIA RTX 3090, TrendForce 3/07 e 30/07/2026) e
+contro il conto e la sensibilità dell'idea, non riaperte. Conti rifatti: 0,50/1,1490×1,22 = 0,531; 0,5×0,3163 = 0,158;
+41,67/0,373 = 111,8; 27,78/0,373 = 74; 55,56/0,373 = 149; 20,83/0,373 = 56; 0,22/1,1490×1,22 − 0,158 = 0,076 →
+551 h. Il presentatore ha chiesto di accettare tutte le revisioni: le correzioni sono **già applicate** nel pacchetto.
+Conteggio: **13 ✅ · 1 ⚠️ · 0 ❌**. Caption + hashtag: 2.155 caratteri (UTF-16), sotto i 2.200.
+- «con i prezzi di oggi» (scena 6) ✅ riparato: «Il conto del video è un esempio» c'era; **aggiunto** «Nel video "i
+  prezzi di oggi" sono questi», e la sensibilità (75 / 150 / 56 / 550) dice che il 110 dipende dall'esempio.
+- «conteranno dal 2028» (scena 3) ✅ riparato e **precisato**: «le nuove fabbriche di DRAM dovrebbero dare un
+  contributo sostanziale solo dal 2028 (è una previsione, 30/07/2026)», alla lettera della fonte («substantial output
+  contributions are not expected to materialize until 2028», DRAM in generale); prima diceva «la nuova capacità».
+- «fine, la affitti» (scena 8) ✅ riparato: «oppure scegli un modello più piccolo» nella verifica 1; **aggiunto** anche
+  nella variante LinkedIn, che non lo diceva.
+- «tutti i giorni» ✅ in caption e in LinkedIn accanto a «quasi quattro ore al giorno».
+- Noleggio dai privati ✅ c'era; **precisato** «RunPod Community Cloud» e «oltre diciotto ore al giorno» (idea); il
+  prezzo di 0,50 $ ora dice «Secure Cloud», così i due listini non si confondono.
+- 500 W ✅ **precisato** «(350 la scheda, dato NVIDIA, più il resto)»: le fonti citavano NVIDIA senza dire per cosa.
+- ARERA ✅ «cliente vulnerabile in Maggior Tutela» (era «in tutela»). IVA 22 %, BCE, disco a parte ✅.
+- Formula ✅ con un ritocco: l'esempio dà 111,8, non 110; ora «≈ 112, circa 110» (chi rifà il conto non trova un
+  errore).
+- Verifica 2 ✅ «molto sotto la tua soglia, comprare ti costerebbe di più» (più prudente del «potrebbe» detto).
+- Memoria (TrendForce 3/07) ✅ «spostano capacità verso altri prodotti … la memoria grafica resta scarsa» è alla
+  lettera («reallocating production capacity toward other mainstream products … graphics DRAM supply constrained»).
+- Crediti ✅ uguali a `contenuti/broll/gpu-comprare-o-affittare/CREDITI.md` (Pexels scena 4, Meshy scene 2 e 7).
+  Hashtag ✅ (GPU e cloud ammessi, regole §10). MESSAGGIO e CTA ✅.
+- Variante LinkedIn **corretta** in quattro punti: «numeri di settembre 2026» → «con i listini di settembre 2026» (i
+  1.500 € non sono un numero di mercato); «quante ore hai davvero usato» → «quante ore hai pagato» (la fattura dice le
+  ore pagate, attesa compresa, che è la cautela della scena 7); aggiunta la riga della cautela (rivendita → 56 ore,
+  ore pagate in attesa, privati → 550), che mancava e lasciava il post a senso unico; la formula dice che l'IVA va
+  trattata allo stesso modo su tutte le voci (un'azienda la detrae).
+- ⚠️ La caption non dice che la priorità esplicita all'IA, in TrendForce 3/07, riguarda DRAM e LPDRAM e non la memoria
+  grafica (nota della quinta passata); la voce della 3 lo semplifica, la caption resta alla lettera della fonte.
+  Nessuna modifica.
+
+Esito: **APPROVATO** il pacchetto social (2026-09-23). Stato del file invariato.
+
 ## Pacchetto social
 **Caption Reel:**
-**Hashtag:**
-**Alt text cover:**
+Prima di comprare una scheda video per far girare l'IA in casa, conta le ore. A noleggio ogni ora costa uguale; comprata, ogni ora costa meno quanto più la usi.
+
+🧮 Il conto del video è un esempio: 1.500 € fra una RTX 3090 usata e il resto del computer, su tre anni; 500 W di consumo (350 la scheda, dato NVIDIA, più il resto); corrente a 31,63 c€/kWh (ARERA, cliente vulnerabile in Maggior Tutela); RTX 3090 a noleggio a 0,50 $/h su RunPod Secure Cloud, cioè circa 0,53 € con l'IVA al 22 %. Nel video «i prezzi di oggi» sono questi: con questi numeri le due curve si incontrano verso 110 ore al mese: quasi quattro ore al giorno, tutti i giorni.
+
+Rifallo con i tuoi prezzi: soglia (ore/mese) = (prezzo ÷ mesi d'uso) ÷ (affitto orario con IVA − kW × prezzo del kWh). Esempio: (1.500 ÷ 36) ÷ (0,531 − 0,5 × 0,316) ≈ 112, circa 110.
+Come si sposta: macchina a 1.000 € → 75 ore; a 2.000 € → 150; rivenduta a metà dopo tre anni → 56; noleggio dai privati (RunPod Community Cloud, 0,22 $/h più IVA, meno affidabile) → circa 550, oltre diciotto ore al giorno.
+
+✅ Prima di comprare:
+1) il modello entra nella memoria della scheda? Se no, affitti, oppure scegli un modello più piccolo;
+2) affitta un mese e guarda in fattura quante ore hai pagato: molto sotto la tua soglia, comprare ti costerebbe di più;
+3) fai ricerca? Un accesso istituzionale (per esempio i bandi ISCRA del CINECA) cambia il conto.
+
+📉 La memoria: secondo TrendForce (3/07/2026) i produttori spostano capacità verso altri prodotti e la memoria grafica resta scarsa; le nuove fabbriche di DRAM dovrebbero dare un contributo sostanziale solo dal 2028 (è una previsione, 30/07/2026).
+
+Fonti: RunPod, listino del 13/09/2026 (tasse e disco esclusi); ARERA, 25/06/2026; BCE, cambio del 21/09/2026; NVIDIA, scheda RTX 3090; TrendForce. Nessuna sponsorizzazione, i prezzi cambiano.
+Filmato: Redyar Rzgar (Pexels). Immagini delle scene della scheda e dei server generate con Meshy: non sono fotografie. Parlato scritto con l'aiuto di un modello e rivisto da me.
+
+📨 Mandalo a chi sta per comprarsi una scheda video per l'IA.
+
+**Hashtag:** #intelligenzaartificiale #IA #GPU #schedavideo #cloud #IAlocale #tecnologia
+
+**Alt text cover:** Il presentatore guarda in camera; sopra, il titolo «Scheda per l'IA? Conviene solo se la usi tanto».
+
 **Variante LinkedIn (post testuale):**
+Comprare una GPU per far girare l'IA in locale, o affittarla a ore?
+
+La differenza sta nella forma del costo. A noleggio ogni ora costa uguale; comprata, il prezzo della macchina si spalma sulle ore in cui la usi, e ogni ora costa meno quanto più la usi (più la corrente, che paghi sempre).
+
+Un esempio, con i listini di settembre 2026: RTX 3090 a noleggio a 0,50 $/h su RunPod Secure Cloud (circa 0,53 € con IVA), contro 1.500 € fra scheda usata e computer su tre anni, 500 W di consumo e il kWh a 31,63 centesimi (ARERA). Le due curve si incontrano verso 110 ore al mese: quasi quattro ore al giorno, tutti i giorni. Con una macchina da 1.000 € la soglia scende a 75 ore, con 2.000 € sale a 150. Il conto non tiene la rivendita (a metà prezzo dopo tre anni la soglia scende a 56 ore) né le ore pagate mentre aspetti; con il noleggio dai privati (Community Cloud, 0,22 $/h) sale a circa 550.
+
+La verifica che consiglio: prima controlla che il modello entri nella memoria della scheda (se no, un modello più piccolo o il noleggio); poi affitta per un mese e guarda in fattura quante ore hai pagato. Sotto la soglia, comprare ti costerebbe di più.
+
+Formula per rifarlo con i propri prezzi: soglia (ore/mese) = (prezzo ÷ mesi d'uso) ÷ (affitto orario − kW × prezzo del kWh), con l'IVA trattata allo stesso modo su tutte le voci.

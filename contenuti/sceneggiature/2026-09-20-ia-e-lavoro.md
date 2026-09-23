@@ -109,7 +109,7 @@ ANIMAZIONE: Da vicino, la punta di una penna scorre le righe di un foglio stampa
 FIGURA: una penna ripassa un foglio di cifre e si ferma su una riga: si controlla, non ci si fida.
 
 ## Scena 9 [chiusura]
-MESSAGGIO: Esposto non vuol dire perso. Saperla usare lo scegli tu.
+MESSAGGIO: Esposto non vuol dire perso. Arrivarci preparati dipende da te.
 CTA: Mandalo a chi ha paura che l'IA gli tolga il lavoro
 VOCE: Quei sei su dieci restano esposti.
 VOCE: Ma un conto è subire le conseguenze, un altro è ==accoglierle preparati==.
@@ -393,6 +393,49 @@ limite restano entrambi (+32 dentro, −19 fuori, «il posto non te lo garantisc
 non ci sono più). Reel stimato 101 s, 263 parole; scena 6 a 52 parole, sopra le 50 di `docs/sceneggiatura.md` senza
 avviso di `valida` (registrata: solo da sapere). Stato invariato.
 
+### Pacchetto social (2026-09-23)
+
+Guardati Caption Reel, Hashtag, Alt text cover e Variante LinkedIn, contro le fonti già verificate (FMI SDN/2024/001;
+Dell'Acqua e altri, *Organization Science* 2026, «average of 32%» del §4.1; working paper HBS 24-013), non riaperte.
+Il presentatore ha chiesto di accettare tutte le revisioni: le correzioni sono **già applicate** nel pacchetto.
+Conteggio: **12 ✅ · 2 ⚠️ · 0 ❌**. Caption + hashtag: 2.183 caratteri (UTF-16), sotto i 2.200.
+
+**Conflitti della VOCE registrata: riparati in caption**
+- ❌ scena 6 «Dove l'IA veniva usata correttamente» ✅ riparato: la riga del +32 % dice il confronto (chi aveva
+  accesso contro chi era sorteggiato senza), i 18 compiti dentro le capacità e la qualità; **corretta** la frase «Non
+  dipende da quanto "bene" la si usasse: dipende dal compito», che affermava un risultato che lo studio non misura
+  (nessuno ha misurato l'uso «buono»), in «Nel video dico "usata correttamente", ma nello studio la condizione non era
+  quanto bene la si usasse: era il compito, dentro o fuori dalle sue capacità».
+- «Lo dicono loro» tolto dalla voce ✅: la clausola dello staff (opinioni degli autori, non del Fondo) e «media delle
+  economie avanzate, non l'Italia» ci sono.
+- «Secondo me» ✅ e «può fare la differenza» ✅: le due righe proposte ci sono, alla lettera.
+- «Ad Harvard» ✅: **aggiunto** «Nel 2023 ricercatori di» (la caption non diceva l'anno dell'esperimento né che
+  Harvard era un gruppo di ricercatori, non il luogo).
+
+**Numeri e attribuzioni** ✅ 60 % «circa», economie avanzate, «potrebbe risentirne / trarne vantaggio» (may / could),
+«sono stime» · 758, a sorte, GPT-4 · +32 % qualità contro il gruppo senza, 18 compiti · −19 punti percentuali, un
+compito, contro chi lavorava senza. **Aggiunto** «(la versione del 2023 diceva «oltre il 40 %»: il 32 % è quella
+pubblicata)»: il 40 % è il numero che gira, e chi lo conosce penserebbe a un errore (era una condizione della
+revisione del 20/09). Crediti ✅ uguali a `contenuti/broll/ia-e-lavoro/CREDITI.md` (Pexels scene 5 e 8, Meshy scena 3).
+MESSAGGIO e CTA ✅ in fondo alla caption.
+
+**Mossa** ✅ **ritoccata**: «prendi un compito che fai ogni mese e spezzalo» (la generalizzazione chiesta dalle note)
+e «(il resoconto del video è un esempio)».
+
+**Hashtag** ✅ **corretto** `#AIalavoro` → `#IAalavoro` (regole §10: «IA», mai «AI»).
+
+**Variante LinkedIn** ✅ **corretta**: «L'esperimento … lo fa vedere bene» attaccava l'esperimento alla stima del Fondo
+(metà ci rimette, metà ci guadagna), che l'esperimento non misura: ora «Un esperimento del 2023 … mostra dove sta il
+confine». Il resto regge (staff del Fondo, 32 % contro chi non l'aveva, 19 punti, «il posto non lo garantisce nessuno»).
+
+**⚠️**
+1. MESSAGGIO «Arrivarci preparati dipende da te»: «arrivarci» non ha un riferimento esplicito (si legge «al
+   cambiamento»); regge accanto alla VOCE della 9. Nessuna modifica.
+2. Scena 5 «Oppure possiamo capire cos'è davvero» (promessa più larga del reel): la riga facoltativa non è entrata;
+   la copre in parte la riga sulla differenza misurata «nella qualità del lavoro». Nessuna modifica.
+
+Esito: **APPROVATO** il pacchetto social (2026-09-23). Stato del file invariato.
+
 ## Note di animazione
 
 ### Storyboard (2026-09-23, prima del codice)
@@ -465,6 +508,33 @@ applicati con le riformulazioni proposte qui sopra. Stato `rivisto`.
 
 ## Pacchetto social
 **Caption Reel:**
-**Hashtag:**
-**Alt text cover:**
+«Esposto» all'IA non vuol dire «perso». Vuol dire che una parte dei compiti del tuo lavoro è alla sua portata.
+
+📊 Il numero. Circa il 60 % dei posti di lavoro nelle economie avanzate è esposto all'IA: è una stima dello staff del Fondo Monetario Internazionale (Staff Discussion Note SDN/2024/001, gennaio 2024), le opinioni sono degli autori e non necessariamente del Fondo. È la media delle economie avanzate, non un dato sull'Italia. Di quei posti, circa metà potrebbe risentirne e metà trarne vantaggio: sono stime, non un calendario.
+
+🧪 L'esperimento. Nel 2023 ricercatori di Harvard Business School, Wharton, MIT, Warwick e BCG (Dell'Acqua e altri, pubblicato su Organization Science nel 2026) hanno diviso a sorte 758 consulenti di Boston Consulting Group, con GPT-4 e senza.
++32 %: la qualità media dei lavori di chi aveva accesso all'IA, rispetto a chi era stato sorteggiato senza, su 18 compiti scelti dentro le capacità dell'IA (la versione del 2023 diceva «oltre il 40 %»: il 32 % è quella pubblicata). Nel video dico «usata correttamente», ma nello studio la condizione non era quanto bene la si usasse: era il compito, dentro o fuori dalle sue capacità.
+−19 punti: su un solo compito scelto apposta fuori dalle sue capacità, chi la usava ha dato la risposta giusta 19 punti percentuali meno spesso di chi lavorava senza.
+
+🧭 La mossa: prendi un compito che fai ogni mese e spezzalo in pezzi. Quelli alla sua portata glieli dai, quelli che richiedono i tuoi numeri e il tuo giudizio li tieni tu, e ricontrolli quello che torna (il resoconto del video è un esempio).
+«Secondo me» nel video è un'opinione mia: nessuna delle due fonti misura se conoscere l'IA protegga il posto. La differenza che l'esperimento misura è nella qualità del lavoro, non nel posto.
+
+Esposto non vuol dire perso. Arrivarci preparati dipende da te.
+📨 Mandalo a chi ha paura che l'IA gli tolga il lavoro.
+
+Filmati: Anna Shvets, Sergei Starostin, Kindel Media (Pexels). Immagini della scena della scrivania generate con Meshy: non sono fotografie. Parlato scritto con l'aiuto di un modello e rivisto da me.
+
+**Hashtag:** #intelligenzaartificiale #IA #lavoro #futurodellavoro #produttività #IAalavoro #carriera
+
+**Alt text cover:** Il presentatore guarda in camera; sopra, il titolo «L'IA e il tuo lavoro: meno paura, più controllo».
+
 **Variante LinkedIn (post testuale):**
+«Esposto all'IA» non vuol dire «perso».
+
+Lo staff del Fondo Monetario Internazionale stima che circa il 60 % dei posti nelle economie avanzate sia esposto all'IA (SDN/2024/001, gennaio 2024; media delle economie avanzate, non un dato italiano). Esposto significa che una parte dei compiti è alla portata dell'IA: di quei posti, circa metà potrebbe risentirne e metà trarne vantaggio.
+
+Un esperimento del 2023 con 758 consulenti di BCG (Dell'Acqua e altri, Organization Science 2026) mostra dove sta il confine: su 18 compiti dentro le capacità di GPT-4 la qualità media del lavoro di chi la usava è stata più alta del 32 % rispetto a chi non l'aveva; su un compito scelto apposta fuori dalle sue capacità, chi la usava ha dato la risposta giusta 19 punti percentuali meno spesso.
+
+Il punto non è quanto la usi, ma dove. La mossa pratica: spezza un lavoro in pezzi, dai all'IA quelli alla sua portata, tieni tu numeri e conclusioni, e ricontrolla quello che torna.
+
+Il posto non lo garantisce nessuno. Arrivarci preparati sì, dipende da noi.
