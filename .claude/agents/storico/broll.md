@@ -22,3 +22,9 @@ con Meshy e animate (zoom, pan, transizioni wow), e a Meshy vanno le scene i cui
 «almeno una clip generata per reel» (2026-09-22). Regola in `docs/regole-editoriali.md` §3; per `broll` il passo 7 di
 `scegli` (classifica di convinzione, metà più debole all'agente `immagini`). Libreria: `broll/broll/immagini.py` con
 le mosse (`zoompan`) e `[transizioni] immagini` / `immagini_s`.
+
+## 2026-09-23 · ia-e-lavoro · il piano che buttava le scelte dopo la registrazione
+Dopo `reel parlato --applica` (il presentatore aveva corretto la VOCE in 8 scene registrando) `broll piano` ha rifatto
+le scene 3, 5 e 8 come «da scegliere»: `eredita` voleva la VOCE identica, e con essa sparivano anche le immagini Meshy
+pagate. Ripristinato piano.json dal commit; corretto `piano.eredita`: una scena già `[broll]` eredita anche con la VOCE
+cambiata, con una nota «riguarda il filmato sul testo nuovo». Nessuna regola nuova per l'agente: era la libreria.

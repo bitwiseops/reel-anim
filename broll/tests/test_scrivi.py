@@ -185,3 +185,12 @@ def test_piano_rifatto_dopo_presto_rispetta_le_scene_e_non_perde_le_query(tmp_pa
     for n in a_filmato:
         assert nuovo.scena(n).query == [{"q": "scelta a mano"}] and nuovo.scena(n).candidati == [{"id": "1"}]
         assert nuovo.scena(n).file == f"broll-scena-{n:02d}.mp4"
+
+
+def test_eredita_la_scena_broll_anche_con_la_voce_corretta_registrando():
+    """Dal 22/09 la VOCE si corregge in `reel registra`: la scena [broll] resta la stessa e tiene le immagini pagate."""
+    vecchio = _piano(_scena(2, tipo="broll", registro="immagini", scelti=[{"candidato": "meshy:a-1"}]))
+    nuovo = _piano(_scena(2, tipo="broll", stato="da-scegliere", voce=["il testo recitato"]))
+    assert eredita(nuovo, vecchio) == [2]
+    s = nuovo.scena(2)
+    assert s.registro == "immagini" and s.scelti == [{"candidato": "meshy:a-1"}] and "VOCE cambiata" in s.note

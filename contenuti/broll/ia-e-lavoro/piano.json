@@ -2,8 +2,8 @@
   "versione": 1,
   "slug": "ia-e-lavoro",
   "sorgente": "contenuti/sceneggiature/2026-09-20-ia-e-lavoro.md",
-  "hash_md": "9ea2cb81865b3a72",
-  "quando": "2026-09-23T13:34:21",
+  "hash_md": "109072a8ed670731",
+  "quando": "2026-09-23T15:45:27",
   "cornice": {
     "pieno": [
       1080,
@@ -24,7 +24,7 @@
         0.0,
         2.086
       ],
-      "origine_tempi": "voce-sintetica",
+      "origine_tempi": "presa",
       "registro": "animazione",
       "voce": [
         "Hai paura che l'IA ti tolga il lavoro?",
@@ -50,14 +50,14 @@
         5.375,
         10.212
       ],
-      "origine_tempi": "voce-sintetica",
+      "origine_tempi": "presa",
       "registro": "animazione",
       "voce": [
         "Su dieci lavori in un paese avanzato,",
         "quanti sono esposti all'IA?",
         "Tu quanti dici?",
-        "Il Fondo Monetario Internazionale, nel duemilaventiquattro, ha stimato ==sei==.",
-        "Lo dicono loro, non io."
+        "Il Fondo Monetario Internazionale, nel duemilaventiquattro, ha stimato circa il ==60 %==.",
+        "Ma dobbiamo precisare una cosa."
       ],
       "brief": [
         "Stacco dalla faccia, fotogramma 0 già pieno: dieci figure umane identiche (Fila, icona `user`) in due file da cinque, tutte spente, nella metà alta dell'area. Sulla frase un impulso le attraversa una alla volta da sinistra, come un conteggio che passa su ciascuna.",
@@ -76,17 +76,17 @@
     {
       "n": 3,
       "tipo": "broll",
-      "durata_s": 5.86,
+      "durata_s": 5.9,
       "origine_durata": "report",
       "inizi_frasi_s": [
         0.0,
         2.027
       ],
-      "origine_tempi": "voce-sintetica",
+      "origine_tempi": "presa",
       "registro": "immagini",
       "voce": [
-        "L'hai letto come posti persi.",
-        "Ma un lavoro è tanti ==compiti==, e alcuni l'IA li sa fare."
+        "Possiamo leggerlo come posti persi.",
+        "Ma un lavoro è fatto di tanti ==compiti==, e alcuni l'IA li sa fare."
       ],
       "brief": [
         "Dall'alto, una scrivania di legno con fogli, telefono e tastiera alla luce di una finestra: una mano alza la cornetta, una mano firma un foglio, due mani battono sulla tastiera; solo mani, nessun volto, niente di leggibile."
@@ -333,7 +333,7 @@
         }
       ],
       "file": "broll-scena-03.mp4",
-      "note": "durata cambiata da 6.87 a 5.86 s: da rendere di nuovo"
+      "note": "durata cambiata da 5.86 a 5.90 s: da rendere di nuovo · VOCE cambiata dopo la scelta: riguarda il filmato sul testo nuovo"
     },
     {
       "n": 4,
@@ -346,12 +346,12 @@
         5.39,
         10.529
       ],
-      "origine_tempi": "voce-sintetica",
+      "origine_tempi": "presa",
       "registro": "animazione",
       "voce": [
         "Esposto vuol dire che una parte dei compiti è alla sua portata,",
         "non che il posto sparisce.",
-        "Di quei sei, circa ==metà== potrebbe rimetterci e metà guadagnarci, secondo loro.",
+        "Di quei sei, circa la ==metà== potrebbe rimetterci e l'altra metà guadagnarci.",
         "Ma sono stime."
       ],
       "brief": [
@@ -370,19 +370,19 @@
     {
       "n": 5,
       "tipo": "broll",
-      "durata_s": 9.06,
+      "durata_s": 9.1,
       "origine_durata": "report",
       "inizi_frasi_s": [
         0.0,
         3.187,
         7.221
       ],
-      "origine_tempi": "voce-sintetica",
+      "origine_tempi": "presa",
       "registro": "filmato",
       "voce": [
-        "Secondo me, quello che non conosci spaventa di più.",
-        "Starne fuori è una scelta seria, ma in ufficio prima o poi ==arriva==.",
-        "Oppure le vai incontro."
+        "Secondo me, a prescindere, ci rimette chi non conosce.",
+        "Possiamo decidere di non usare l'IA, ma in ufficio prima o poi ==arriva==.",
+        "Oppure possiamo capire cos'è davvero."
       ],
       "brief": [
         "Su un tavolo di legno alla luce di una finestra due mani abbassano lo schermo di un portatile acceso e lo spingono da parte, aprono un quaderno e scrivono a penna; infine una mano si posa sul coperchio del portatile chiuso, come per riaprirlo. Solo mani, nessun volto."
@@ -630,12 +630,12 @@
         }
       ],
       "file": "broll-scena-05.mp4",
-      "note": "durata cambiata da 10.09 a 9.06 s: da rendere di nuovo"
+      "note": "durata cambiata da 9.06 a 9.10 s: da rendere di nuovo · VOCE cambiata dopo la scelta: riguarda il filmato sul testo nuovo"
     },
     {
       "n": 6,
       "tipo": "spiegazione",
-      "durata_s": 19.87,
+      "durata_s": 19.9,
       "origine_durata": "report",
       "inizi_frasi_s": [
         0.0,
@@ -646,16 +646,16 @@
         14.848,
         15.737
       ],
-      "origine_tempi": "voce-sintetica",
+      "origine_tempi": "presa",
       "registro": "animazione",
       "voce": [
-        "Harvard e Boston Consulting Group, nel duemilaventitré,",
-        "hanno diviso a sorte settecentocinquantotto consulenti.",
-        "Dove l'IA arrivava,",
-        "chi l'aveva ha fatto lavori migliori del trentadue per cento.",
-        "Poi ad altri hanno dato un compito fuori portata.",
-        "Indovina:",
-        "peggio, ==diciannove punti== percentuali di risposte giuste in meno."
+        "Ad Harvard, nel duemilaventitré, hanno fatto un esperimento.",
+        "Hanno diviso a sorte settecentocinquantotto consulenti.",
+        "Dove l'IA veniva usata correttamente,",
+        "ha fatto lavori migliori del trentadue per cento.",
+        "Poi ad altri hanno dato un compito fuori la portata dell'IA,",
+        "l'hanno svolto",
+        "ed è andata peggio, ==diciannove punti== percentuali di risposte giuste in meno."
       ],
       "brief": [
         "Stacco dal filmato: in alto, piccole e attenuate, le dieci figure con le sei accese (il filo del reel, senza numero: lo slot è vuoto). Sulla frase al centro entra un mucchio indistinto di sagome minuscole, diverse dalle figure dei posti, sovrapposte e sfalsate: mai una griglia o una fila contabile, nessun numero di persone accanto.",
@@ -686,15 +686,15 @@
         9.795,
         11.648
       ],
-      "origine_tempi": "voce-sintetica",
+      "origine_tempi": "presa",
       "registro": "animazione",
       "voce": [
-        "Prendi il resoconto mensile per il capo:",
-        "numeri, bozza, ordine, conclusione.",
-        "Bozza e ordine li fai fare a lei,",
-        "numeri e conclusione li tieni tu,",
+        "Ad esempio, se devi fare il resoconto mensile per il capo,",
+        "e devi condividere numeri, bozza, ordine, conclusione,",
+        "magari bozza e ordine li fai fare a lei,",
+        "numeri e conclusione li scrivi tu,",
         "e ci ricontrolli la bozza.",
-        "Decidi tu cosa darle e cosa ==controllare==."
+        "Decidi tu cosa farle fare e cosa ==controllare==."
       ],
       "brief": [
         "GRANDE (contrasto di scala) sulla frase: stacco dal filmato, area vuota; al centro una tessera piccola come quelle della scena 6 cresce fino a riempire l'area: un documento fatto di sole righe-sagoma (Sagome), nessuna parola.",
@@ -714,17 +714,17 @@
     {
       "n": 8,
       "tipo": "broll",
-      "durata_s": 5.18,
+      "durata_s": 5.2,
       "origine_durata": "report",
       "inizi_frasi_s": [
         0.0,
         2.352
       ],
-      "origine_tempi": "voce-sintetica",
+      "origine_tempi": "presa",
       "registro": "filmato",
       "voce": [
-        "Il posto non te lo garantisce nessuno,",
-        "però qui vedi come funziona e dove ==sbaglia==."
+        "Il posto non te lo garantisce nessuno, è vero,",
+        "ma conoscere come funziona e dove ==sbaglia== l'IA può fare la differenza."
       ],
       "brief": [
         "Da vicino, la punta di una penna scorre le righe di un foglio stampato fitto di cifre, accanto a un portatile acceso con una tabella sfocata, e si ferma cerchiando una riga; solo la mano, nessun volto."
@@ -952,7 +952,7 @@
         }
       ],
       "file": "broll-scena-08.mp4",
-      "note": "durata cambiata da 6.16 a 5.18 s: da rendere di nuovo"
+      "note": "VOCE cambiata dopo la scelta: riguarda il filmato sul testo nuovo"
     },
     {
       "n": 9,
@@ -963,11 +963,11 @@
         0.0,
         2.252
       ],
-      "origine_tempi": "voce-sintetica",
+      "origine_tempi": "presa",
       "registro": "animazione",
       "voce": [
         "Quei sei su dieci restano esposti.",
-        "Ma una cosa è subirla, un'altra è ==saperla usare==."
+        "Ma un conto è subire le conseguenze, un altro è ==accoglierle preparati==."
       ],
       "brief": [],
       "query": [],

@@ -29,8 +29,8 @@ VOCE: I numeri che girano sono veri, ma dicono ==altro==.
 VOCE: Su dieci lavori in un paese avanzato,
 VOCE: quanti sono esposti all'IA?
 VOCE: Tu quanti dici?
-VOCE: Il Fondo Monetario Internazionale, nel duemilaventiquattro, ha stimato ==sei==.
-VOCE: Lo dicono loro, non io.
+VOCE: Il Fondo Monetario Internazionale, nel duemilaventiquattro, ha stimato circa il ==60 %==.
+VOCE: Ma dobbiamo precisare una cosa.
 ANIMAZIONE: Stacco dalla faccia, fotogramma 0 già pieno: dieci figure umane identiche (Fila, icona `user`) in due file da cinque, tutte spente, nella metà alta dell'area. Sulla frase un impulso le attraversa una alla volta da sinistra, come un conteggio che passa su ciascuna.
 ANIMAZIONE: Sotto la fila si apre lo slot in cui per tutto il reel starà il numero: dentro solo un trattino, sotto niente (non c'è ancora niente da contare, nessuna etichetta sarebbe vera).
 ANIMAZIONE: Il trattino esce e al suo posto pulsa per circa un secondo un punto interrogativo in accento; le dieci figure restano spente, non se ne accende nessuna: il vuoto della scommessa si deve vedere.
@@ -41,15 +41,15 @@ TESTO: 6 su 10
 
 ## Scena 3 [broll]
 SCHERMO: broll-scena-03.mp4
-VOCE: L'hai letto come posti persi.
-VOCE: Ma un lavoro è tanti ==compiti==, e alcuni l'IA li sa fare.
+VOCE: Possiamo leggerlo come posti persi.
+VOCE: Ma un lavoro è fatto di tanti ==compiti==, e alcuni l'IA li sa fare.
 ANIMAZIONE: Dall'alto, una scrivania di legno con fogli, telefono e tastiera alla luce di una finestra: una mano alza la cornetta, una mano firma un foglio, due mani battono sulla tastiera; solo mani, nessun volto, niente di leggibile.
 FIGURA: sulla stessa scrivania le mani passano da un gesto di lavoro all'altro: un lavoro è tanti compiti.
 
 ## Scena 4 [spiegazione]
 VOCE: Esposto vuol dire che una parte dei compiti è alla sua portata,
 VOCE: non che il posto sparisce.
-VOCE: Di quei sei, circa ==metà== potrebbe rimetterci e metà guadagnarci, secondo loro.
+VOCE: Di quei sei, circa la ==metà== potrebbe rimetterci e l'altra metà guadagnarci.
 VOCE: Ma sono stime.
 ANIMAZIONE: GRANDE (metamorfosi) sull'inizio della frase: stacco dal filmato su una composizione che chi guarda riconosce, le dieci figure con le sei accese e il numero nel suo slot con le due etichette; subito una delle sei si stacca, vola al centro crescendo e diventa una tessera che si apre a ventaglio in cinque pezzi, ognuno con la sola icona di un compito (telefono, penna, tastiera, calendario, cartella). Due pezzi non contigui si accendono uno dopo l'altro, i tre restanti si attenuano ma restano presenti e della stessa misura; un anello in accento si disegna attorno ai soli due accesi. Sotto, piccola, l'etichetta «esempio». Nessun conteggio accanto alla tessera.
 ANIMAZIONE: La tessera si richiude, torna figura e rientra nel suo posto nella fila, ancora accesa e intera; lì fa un piccolo `Indicate`: il posto c'è ancora.
@@ -60,20 +60,20 @@ TESTO: esempio
 
 ## Scena 5 [broll]
 SCHERMO: broll-scena-05.mp4
-VOCE: Secondo me, quello che non conosci spaventa di più.
-VOCE: Starne fuori è una scelta seria, ma in ufficio prima o poi ==arriva==.
-VOCE: Oppure le vai incontro.
+VOCE: Secondo me, a prescindere, ci rimette chi non conosce.
+VOCE: Possiamo decidere di non usare l'IA, ma in ufficio prima o poi ==arriva==.
+VOCE: Oppure possiamo capire cos'è davvero.
 ANIMAZIONE: Su un tavolo di legno alla luce di una finestra due mani abbassano lo schermo di un portatile acceso e lo spingono da parte, aprono un quaderno e scrivono a penna; infine una mano si posa sul coperchio del portatile chiuso, come per riaprirlo. Solo mani, nessun volto.
 FIGURA: due mani chiudono il portatile e scelgono carta e penna; poi una mano torna sul portatile.
 
 ## Scena 6 [spiegazione]
-VOCE: Harvard e Boston Consulting Group, nel duemilaventitré,
-VOCE: hanno diviso a sorte settecentocinquantotto consulenti.
-VOCE: Dove l'IA arrivava,
-VOCE: chi l'aveva ha fatto lavori migliori del trentadue per cento.
-VOCE: Poi ad altri hanno dato un compito fuori portata.
-VOCE: Indovina:
-VOCE: peggio, ==diciannove punti== percentuali di risposte giuste in meno.
+VOCE: Ad Harvard, nel duemilaventitré, hanno fatto un esperimento.
+VOCE: Hanno diviso a sorte settecentocinquantotto consulenti.
+VOCE: Dove l'IA veniva usata correttamente,
+VOCE: ha fatto lavori migliori del trentadue per cento.
+VOCE: Poi ad altri hanno dato un compito fuori la portata dell'IA,
+VOCE: l'hanno svolto
+VOCE: ed è andata peggio, ==diciannove punti== percentuali di risposte giuste in meno.
 ANIMAZIONE: Stacco dal filmato: in alto, piccole e attenuate, le dieci figure con le sei accese (il filo del reel, senza numero: lo slot è vuoto). Sulla frase al centro entra un mucchio indistinto di sagome minuscole, diverse dalle figure dei posti, sovrapposte e sfalsate: mai una griglia o una fila contabile, nessun numero di persone accanto.
 ANIMAZIONE: Il mucchio si rimescola e si divide in due pile affiancate, sempre indistinte e non contabili; sopra una delle due si accende l'icona della macchina, sopra l'altra niente.
 ANIMAZIONE: Sopra le pile una linea si disegna a tratto e chiude un bordo tutto frastagliato, con punte e rientranze, che separa un dentro e un fuori; dentro il bordo si accendono a raffica diciotto tessere-compito (stessa famiglia di icone della scena 4, mai `user`).
@@ -86,12 +86,12 @@ TESTO: +32%
 TESTO: −19 punti
 
 ## Scena 7 [spiegazione]
-VOCE: Prendi il resoconto mensile per il capo:
-VOCE: numeri, bozza, ordine, conclusione.
-VOCE: Bozza e ordine li fai fare a lei,
-VOCE: numeri e conclusione li tieni tu,
+VOCE: Ad esempio, se devi fare il resoconto mensile per il capo,
+VOCE: e devi condividere numeri, bozza, ordine, conclusione,
+VOCE: magari bozza e ordine li fai fare a lei,
+VOCE: numeri e conclusione li scrivi tu,
 VOCE: e ci ricontrolli la bozza.
-VOCE: Decidi tu cosa darle e cosa ==controllare==.
+VOCE: Decidi tu cosa farle fare e cosa ==controllare==.
 ANIMAZIONE: GRANDE (contrasto di scala) sulla frase: stacco dal filmato, area vuota; al centro una tessera piccola come quelle della scena 6 cresce fino a riempire l'area: un documento fatto di sole righe-sagoma (Sagome), nessuna parola.
 ANIMAZIONE: Il documento si spezza in quattro pezzi che si aprono a ventaglio, uno per parola detta, con quattro forme diverse riconoscibili anche da ferme: (a) un blocco di cifre fitto a griglia con una colonna più scura; (b) un foglio di righe-sagoma corte con l'angolo piegato, cioè un testo; (c) una scaletta di tre blocchetti staccati a gradini, ognuno con un pallino davanti, cioè una sequenza; (d) una lampadina accesa, l'unica figura tonda. In fondo, piccola, l'etichetta «esempio».
 ANIMAZIONE: A destra entra l'icona della macchina; il foglio di righe e la scaletta scivolano verso di lei e si posano sotto, mentre cifre e lampadina restano ferme.
@@ -103,8 +103,8 @@ TESTO: esempio
 
 ## Scena 8 [broll]
 SCHERMO: broll-scena-08.mp4
-VOCE: Il posto non te lo garantisce nessuno,
-VOCE: però qui vedi come funziona e dove ==sbaglia==.
+VOCE: Il posto non te lo garantisce nessuno, è vero,
+VOCE: ma conoscere come funziona e dove ==sbaglia== l'IA può fare la differenza.
 ANIMAZIONE: Da vicino, la punta di una penna scorre le righe di un foglio stampato fitto di cifre, accanto a un portatile acceso con una tabella sfocata, e si ferma cerchiando una riga; solo la mano, nessun volto.
 FIGURA: una penna ripassa un foglio di cifre e si ferma su una riga: si controlla, non ci si fida.
 
@@ -112,7 +112,7 @@ FIGURA: una penna ripassa un foglio di cifre e si ferma su una riga: si controll
 MESSAGGIO: Esposto non vuol dire perso. Saperla usare lo scegli tu.
 CTA: Mandalo a chi ha paura che l'IA gli tolga il lavoro
 VOCE: Quei sei su dieci restano esposti.
-VOCE: Ma una cosa è subirla, un'altra è ==saperla usare==.
+VOCE: Ma un conto è subire le conseguenze, un altro è ==accoglierle preparati==.
 <!-- A volto pieno con le sole caption: niente grafica né classe Manim. MESSAGGIO e CTA sono per la caption del post. -->
 
 ## Note di produzione
@@ -314,6 +314,84 @@ del copione esce.
 due punti come snodo; stile del copione, non claim). Reel stimato 91 s, 235 parole.
 
 **DA CORREGGERE** (2026-09-23): ❌ 1, scena 9.
+
+### Dopo la registrazione (2026-09-23)
+
+Guardate **solo le righe VOCE cambiate registrando** (`reel parlato --applica`, `git diff HEAD`), contro le fonti già
+lette alla pagina (FMI SDN/2024/001; Dell'Acqua e altri, *Organization Science* 2026 / working paper HBS 24-013,
+2023), non riaperte. Il reel è registrato e le revisioni del presentatore hanno l'ultima parola (regole §7): **nessuna
+ri-registrazione**; dove una frase dice più o meno della fonte, la correzione va nella **caption del post**.
+Conteggio: **8 ✅ · 5 ⚠️ · 1 ❌** (il ❌ non blocca: si ripara in caption).
+
+**❌ Scena 6 — «Dove l'IA veniva usata correttamente, ha fatto lavori migliori del trentadue per cento.»**
+Tre cose si spostano rispetto allo studio. (a) La condizione dello studio non è l'uso *corretto* ma il **tipo di
+compito**: 18 compiti scelti *dentro* la frontiera delle capacità di GPT-4. Detta così, fa credere che il +32 % dipenda
+da quanto bene lo usi, e per contrasto che il −19 sia di chi l'ha usata male: è il modello mentale opposto alla tesi
+del bordo frastagliato (il compito fuori era fatto apposta perché l'IA sbagliasse, anche usata come da istruzioni).
+(b) Il soggetto è l'IA («ha fatto lavori migliori»): lo studio misura i **consulenti con accesso all'IA** contro
+**chi non l'aveva**, e il gruppo senza IA a voce non c'è più (era il ❌ 2 del 20/09; oggi lo tengono solo le due pile
+con la macchina su una sola e le barre). (c) Il +32 % è qualità giudicata da valutatori, non produttività. La figura
+(dentro/fuori dal bordo, «+32%» · qualità · Harvard, 2023) regge il claim giusto; la voce no. Riga di caption:
+> «+32 %: qualità media dei lavori dei consulenti che avevano accesso a GPT-4, rispetto a quelli sorteggiati senza, su
+> 18 compiti scelti dentro le capacità dell'IA. Non dipende da quanto "bene" la si usasse: dipende dal compito.»
+
+**⚠️ Semplificazioni accettabili (con la riga di caption che serve)**
+1. **Scena 6 — «Ad Harvard, nel duemilaventitré, hanno fatto un esperimento.»** L'esperimento non si è svolto a
+   Harvard: è stato condotto da ricercatori di Harvard Business School (e di Wharton, MIT, Warwick) con Boston
+   Consulting Group, su 758 consulenti BCG. «Harvard» come etichetta regge (è anche a schermo). Caption: «Lo studio:
+   Dell'Acqua e altri (Harvard Business School, Wharton, MIT, Warwick, BCG), esperimento del 2023 con 758 consulenti di
+   Boston Consulting Group e GPT-4, pubblicato su *Organization Science* nel 2026.»
+2. **Scena 6 — «Poi ad altri hanno dato un compito fuori la portata dell'IA, l'hanno svolto ed è andata peggio,
+   diciannove punti…»** «Fuori la portata dell'IA» ✅ (compito disegnato fuori dalla frontiera), «ad altri» ✅ (braccio
+   di 373, consulenti diversi), «punti percentuali» ✅. A voce però non si dice *chi* ha fatto peggio né rispetto a chi
+   (lo dice la figura: croce sulla pila con la macchina). Caption: «−19 punti: su un solo compito scelto apposta fuori
+   dalle capacità dell'IA, chi la usava ha dato la risposta giusta 19 punti percentuali meno spesso di chi lavorava
+   senza (circa 60-71 % contro 84,5 %).»
+3. **Scena 5 — «Secondo me, a prescindere, ci rimette chi non conosce.»** Opinione dichiarata («Secondo me»), non
+   presentata come studio: regge (regole §5). Letta dopo la scena 4, «a prescindere» sfiora l'idea che conoscere l'IA
+   tenga fuori dalla metà che ci rimette, che nessuna fonte dice. Caption: «"Secondo me" è un'opinione mia: nessuna
+   delle due fonti misura se conoscere l'IA protegga il posto. Il Fondo divide gli esposti per tipo di mestiere, non
+   per quanto chi lo fa conosce l'IA.»
+4. **Scena 5 — «Oppure possiamo capire cos'è davvero.»** Promessa più larga del reel: non spiega cos'è un modello,
+   mostra dove aiuta e dove sbaglia in un esperimento (stesso ⚠️ di «ora sai come funziona»). Nessun fatto sbagliato.
+   Caption (facoltativa): «In questo reel ne vedi un pezzo: dove aiuta e dove sbaglia, in un esperimento del 2023.»
+5. **Scena 8 — «ma conoscere come funziona e dove sbaglia l'IA può fare la differenza.»** «Può» tiene la cautela e
+   «il posto non te lo garantisce nessuno, è vero» resta; ma subito dopo quella frase la «differenza» si legge sul
+   posto. La differenza che lo studio misura è sulla **qualità del lavoro** (+32 dentro, −19 fuori). Coperta dalla
+   stessa riga del ⚠️ 3; in più, in caption: «La differenza che l'esperimento misura è nella qualità del lavoro, non
+   nel posto.»
+
+**✅ Verificate**
+- Scena 2 — «ha stimato circa il ==60 %==»: «about 60 percent of jobs are exposed to AI» (economie avanzate,
+  gennaio 2024), «circa» = «about», «stimato» e non «previsto». A schermo «6 su 10» è lo stesso numero. Con «Lo dicono
+  loro, non io» esce dalla voce la distanza dalla fonte: la clausola dello staff, già prevista per la caption, ora
+  **è obbligatoria**: «Stima dello staff del Fondo Monetario Internazionale (Staff Discussion Note SDN/2024/001,
+  gennaio 2024): le opinioni sono degli autori e non necessariamente del Fondo. Il 60 % è la media delle economie
+  avanzate, non un dato sull'Italia.»
+- Scena 2 — «Ma dobbiamo precisare una cosa.»: nessun claim; la precisazione arriva nelle 3-4. (Per l'animatore: la
+  sottolineatura sotto «Fondo Monetario, 2024», nata per «Lo dicono loro», ora cade su questa frase e si legge come
+  «precisiamo la fonte»: regge.)
+- Scena 3 — «Possiamo leggerlo come posti persi» e «un lavoro è fatto di tanti compiti»: invariate nella sostanza.
+- Scena 4 — «circa la metà potrebbe rimetterci e l'altra metà guadagnarci»: «potrebbe» regge le due metà, «circa» c'è
+  («about half may be negatively affected … the rest could benefit»). Esce «secondo loro»: l'attribuzione resta
+  nell'etichetta a schermo e in caption (riga della scena 2), «Ma sono stime» tiene la cautela.
+- Scena 5 — «Possiamo decidere di non usare l'IA, ma in ufficio prima o poi ==arriva==»: attesa dentro l'opinione,
+  come prima.
+- Scena 6 — «Hanno diviso a sorte settecentocinquantotto consulenti»: invariata.
+- Scena 7 — «Ad esempio… magari bozza e ordine li fai fare a lei… li scrivi tu… Decidi tu cosa farle fare e cosa
+  ==controllare==»: la mossa («Cosa impara chi guarda» n. 2) è ancora tutta **nella voce**, e «Ad esempio» e «magari»
+  la dichiarano esempio meglio di prima.
+- Scena 9 — «Ma un conto è subire le conseguenze, un altro è ==accoglierle preparati==.»: **chiude il ❌ della passata
+  di prima**. Le conseguenze arrivano in entrambi i casi; l'unica cosa che dipende da chi guarda è arrivarci preparato,
+  non in quale metà cadere. Coerente con «il posto non te lo garantisce nessuno». Il MESSAGGIO del post («Saperla usare
+  lo scegli tu») regge, preceduto da «Esposto non vuol dire perso».
+
+Registri (§3): nelle scene a filmato 3, 5, 8 nessun numero né termine tecnico, anche dopo i ritocchi. Potenziale e
+limite restano entrambi (+32 dentro, −19 fuori, «il posto non te lo garantisce nessuno»).
+
+`uv run reel valida`: 0 errori, 0 avvisi (spariti i due avvisi sui due punti: «Indovina:» e «Prendi il resoconto…:»
+non ci sono più). Reel stimato 101 s, 263 parole; scena 6 a 52 parole, sopra le 50 di `docs/sceneggiatura.md` senza
+avviso di `valida` (registrata: solo da sapere). Stato invariato.
 
 ## Note di animazione
 

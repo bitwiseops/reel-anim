@@ -283,8 +283,11 @@ def da_sceneggiatura(md: Path, cfg: Config | None = None) -> tuple[Piano, list[D
 def eredita(nuovo: Piano, vecchio: Piano, fps: int = 30) -> list[int]:
     """Rifare il piano non deve disfare le decisioni: porta nel nuovo candidati e scelte del vecchio.
 
-    Una scena eredita se è ancora a materiale esterno e dice ancora le stesse frasi (la VOCE è congelata da
-    prima della tappa: se è cambiata, il filmato scelto rispondeva a un'altra scena). Se nel frattempo è
+    Una scena eredita se è ancora a materiale esterno e dice ancora le stesse frasi (se la VOCE è cambiata prima
+    della scelta, il filmato rispondeva a un'altra scena). **Eccezione dal 2026-09-23**: una scena già scritta
+    `[broll]` nella sceneggiatura eredita anche con la VOCE cambiata, perché dal 22/09 la VOCE si corregge
+    registrando (`reel parlato --applica`) e la scena resta la stessa; buttare la scelta buttava anche le immagini
+    Meshy pagate. Resta una nota: il filmato va riguardato sul testo nuovo. Se nel frattempo è
     cambiata la durata — è arrivata la presa vera al posto della stima — la scelta resta ma la resa no: si
     torna a `scelto`, e `broll rendi` la rifà lunga giusta. Ritorna le scene che hanno ereditato.
 
@@ -295,7 +298,8 @@ def eredita(nuovo: Piano, vecchio: Piano, fps: int = 30) -> list[int]:
     ereditate: list[int] = []
     for s in nuovo.scene:
         v = vecchio.scena(s.n)
-        if v is None or v.registro not in ESTERNI or v.voce != s.voce:
+        voce_cambiata = v is not None and v.voce != s.voce
+        if v is None or v.registro not in ESTERNI or (voce_cambiata and not (s.tipo == v.tipo == "broll")):
             continue
         if v.registro == "immagini":
             s.registro = "immagini"
@@ -307,6 +311,8 @@ def eredita(nuovo: Piano, vecchio: Piano, fps: int = 30) -> list[int]:
         if v.stato == "reso" and abs(v.durata_s - s.durata_s) > 1 / fps:
             s.stato = "scelto"
             s.note = f"durata cambiata da {v.durata_s:.2f} a {s.durata_s:.2f} s: da rendere di nuovo"
+        if voce_cambiata:
+            s.note = ((s.note + " · ") if s.note else "") + "VOCE cambiata dopo la scelta: riguarda il filmato sul testo nuovo"
         if s.candidati or s.scelti:
             ereditate.append(s.n)
     return ereditate
