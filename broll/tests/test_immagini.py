@@ -5,7 +5,7 @@ import pytest
 from tools.anim.config import carica
 
 from broll.immagini import (DURATA_MIN_S, MARGINE_S, TENUTA_MIN_S, ImmaginiMancanti, comando,
-                            componi, dissolvenza_s, finestre, montaggio, mossa, transizioni)
+                            componi, dissolvenza_s, dividi_per_immagini, finestre, montaggio, mossa, transizioni)
 
 
 def test_una_finestra_per_frase():
@@ -122,3 +122,14 @@ def test_le_mosse_cambiano_a_ogni_immagine():
 def test_senza_chiave_resta_la_dissolvenza():
     from tools.anim.config import Config
     assert transizioni(Config({"transizioni": {}})) == ("fade",)
+
+
+def test_piu_immagini_che_frasi_si_divide_la_tenuta_piu_lunga():
+    tenute = dividi_per_immagini([(0.0, 2.5), (2.5, 6.0)], 3)
+    assert tenute == [(0.0, 2.5), (2.5, 3.0), (5.5, 3.0)]
+    assert sum(d for _, d in tenute) == pytest.approx(8.5)
+
+
+def test_non_si_divide_sotto_la_tenuta_minima():
+    assert dividi_per_immagini([(0.0, 2.0), (2.0, 2.5)], 3) == [(0.0, 2.0), (2.0, 2.5)]
+    assert dividi_per_immagini([(0.0, 4.0)], 1) == [(0.0, 4.0)]

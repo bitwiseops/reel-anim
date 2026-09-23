@@ -12,10 +12,10 @@ LIMITI = {
     "scene_min": 5,
     "scene_max": 10,   # dal 2026-09-21: i due registri a metà vogliono più scene, non più minuti
     "scene_tipiche": (6, 9),
-    "parole_voce_max": 50,        # per scena (≈ 18 s a 2,8 parole/s): parlato vero, non titoli (dal 2026-09-15; era 35)
+    "parole_voce_max": 70,        # per scena (≈ 25 s): dal 2026-09-23 il parlato del copione è più lungo (era 50, prima 35)
     "parole_voce_hook_max": 25,   # dal 2026-09-22: l'hook parlato fa una domanda e la rilancia («Ok. Ma prima…»)
-    "parole_voce_chiusura_max": 18,   # la chiusura è un payoff, non un riassunto (docs/linguaggio-reel.md §8)
-    "beat_max": 6,                # righe VOCE per scena (una riga = un beat); 6 dal 2026-09-22: le frasi corte del parlato
+    "parole_voce_chiusura_max": 25,   # la chiusura è un payoff, non un riassunto (docs/linguaggio-reel.md §8); 18 → 25 il 2026-09-23
+    "beat_max": 8,                # righe VOCE per scena (una riga = un beat); 6 dal 2026-09-22, 8 dal 2026-09-23 (scene più lunghe)
     "parole_titolo_max": 10,
     "parole_messaggio_max": 25,
     "parole_messaggio_consigliate": 12,   # una frase grande a schermo; il resto in caption
@@ -24,10 +24,11 @@ LIMITI = {
     "evidenzia_max": 1,           # ==evidenzia== per scena
     "emoji_scena_max": 1,
     "scena_min_s": 2.5,
-    "scena_max_s": 19,
+    "scena_max_s": 26,            # 19 → 26 il 2026-09-23
     "reel_min_s": 30,
-    "reel_max_s": 100,            # Instagram non penalizza i video lunghi (docs/linguaggio-reel.md §0); 90 → 100 il 2026-09-22
-    "reel_errore_s": 120,
+    "reel_max_s": 150,            # Instagram non penalizza i video lunghi (docs/linguaggio-reel.md §0); 90 → 100 → 150 (2026-09-23):
+                                  # l'aggancio si gioca nei primi 15 s (hook), non sulla durata totale
+    "reel_errore_s": 180,
     "frasi_titolo_reel_max": 2,   # aforismi per reel fuori dalla chiusura (le eco non contano: vedi frasi_titolo)
     "parole_figura_max": 20,      # FIGURA: cosa si capisce guardando, in una riga
 }

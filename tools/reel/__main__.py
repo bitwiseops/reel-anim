@@ -410,8 +410,16 @@ def cmd_copione(args) -> int:
     print(f"copione: {riepilogo}\n   catena: {' → '.join(modelli)}", file=sys.stderr)
     saldo_prima = poe.saldo() if poe is not None else None
     try:
+        tentativi_dir = cp.CARTELLA / f"{idea_p.stem}.tentativi"
+
+        def archivia(m: str, fase: str, testo: str) -> None:
+            tentativi_dir.mkdir(parents=True, exist_ok=True)
+            k = len(list(tentativi_dir.glob("*.md"))) + 1
+            (tentativi_dir / f"{date.today().isoformat()}-{k:02d}-{m}-{fase}.md").write_text(testo, encoding="utf-8")
+
         esito = cp.catena(prompt, modelli, len(idea.tappe), parole, chiama, salta,
-                          lambda s: print(f"   {s}", file=sys.stderr), tetto=int(LIMITI["reel_errore_s"] * pas))
+                          lambda s: print(f"   {s}", file=sys.stderr), tetto=int(LIMITI["reel_errore_s"] * pas),
+                          archivia=archivia)
     except cp.ErroreCopione as e:
         print(f"-> {e}", file=sys.stderr)
         return 1

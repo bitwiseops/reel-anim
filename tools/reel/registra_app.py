@@ -29,8 +29,10 @@ from .registra import (PRESE, Karaoke, Presa, Timeline, carica_inquadratura, com
 TASTI = ("Spazio: registra / ferma   ·   P: prova senza registrare   ·   E: modifica il testo   ·   ← → o cifre: scena di partenza   ·   Esc: esci\n"
          "Inquadratura (prima di registrare): trascina il cerchio col mouse, rotella o + − per lo zoom, W A S D per spostarlo, 0 per il centro")
 PAD = 16
-RISERVA_ALTEZZA = 330      # barra dei menu e titolo della finestra + il blocco dei comandi sotto i pannelli
-LARGHEZZA_KARAOKE = 620
+RISERVA_ALTEZZA = 330      # prima stima di barra dei menu, titolo e comandi: poi si misura (`_adatta_allo_schermo`)
+CORNICE_ALTEZZA = 70       # barra dei menu di macOS + titolo della finestra, che Tk non conta nella finestra
+ALTO_MINIMO = 240          # sotto, i pannelli non servono più: meglio che la finestra sbordi
+LARGHEZZA_KARAOKE = 520    # stretta e al centro, sotto la fotocamera: gli occhi si spostano poco (2026-09-23)
 AIUTO_ERRORE = ("Controlla Impostazioni di Sistema → Privacy e sicurezza → Fotocamera e Microfono per l'app del terminale, "
                 "che nessun'altra app usi la fotocamera, oppure scegli il dispositivo: `uv run reel registra --dispositivi`, `--video N`.")
 
@@ -42,15 +44,11 @@ class AppRegistra:
         self.avvisi = avvisi
         self.dispositivi = dispositivi or {"video": [], "audio": []}   # {"video": [(indice, nome)], "audio": [...]}
         self.root = tk.Tk()        # prima dei pannelli: la loro misura dipende dallo schermo
-        self.dim_webcam, self.dim_reel, self.dim_karaoke = self._misure_pannelli()
-        self.scala = self.dim_reel[0] / cfg.larghezza
         self.W, self.H = (int(x) for x in str(opz["risoluzione"]).lower().split("x"))
-        self.scala_webcam = self.dim_webcam[0] / self.W
         self.lato_minimo = int(cfg.dati["riquadro"]["dimensione_px"])
         self.inq = carica_inquadratura(cartella, str(opz["risoluzione"]), self.lato_minimo)
         self._trascino: tuple[int, int, int, int] | None = None
-        lato = riquadro_in_scala(cfg, "si", self.scala)[2]
-        self.maschera = Image.open(maschera_riquadro(cfg)).convert("L").resize((lato, lato), Image.LANCZOS)
+        self._imposta_misure()
         self.stato = "pronto"
         self.messaggio = ""
         self.anteprima: Cattura | None = None
@@ -72,14 +70,61 @@ class AppRegistra:
         self._chiave_karaoke = None
         self.da_scena = da_scena or self._prima_senza_clip()
         self._costruisci_finestra()
+        self._adatta_allo_schermo()
 
     # --- finestra ----------------------------------------------------------------------------------
 
-    def _misure_pannelli(self) -> tuple[tuple[int, int], tuple[int, int], tuple[int, int]]:
+    def _imposta_misure(self, alto: int | None = None) -> None:
+        """Pannelli e tutto ciò che ne dipende: scala del reel e della webcam, maschera del riquadro."""
+        self.dim_webcam, self.dim_reel, self.dim_karaoke = self._misure_pannelli(alto)
+        self.scala = self.dim_reel[0] / self.cfg.larghezza
+        self.scala_webcam = self.dim_webcam[0] / self.W
+        lato = riquadro_in_scala(self.cfg, "si", self.scala)[2]
+        self.maschera = Image.open(maschera_riquadro(self.cfg)).convert("L").resize((lato, lato), Image.LANCZOS)
+
+    def _adatta_allo_schermo(self) -> None:
+        """La riserva per i comandi era una stima: qui si misura la finestra vera e, se sborda dallo schermo (in
+        altezza o in larghezza), si rifanno i pannelli più bassi. Succede una volta, prima che partano le catture
+        (2026-09-23: sul portatile i comandi finivano fuori schermo anche a tutto schermo)."""
+        try:
+            if self.opz.get("altezza_pannelli_px"):
+                return
+            self._restringi_allo_schermo()
+        finally:
+            self._centra_in_alto()
+
+    def _centra_in_alto(self) -> None:
+        """La finestra centrata in orizzontale e attaccata in alto: il karaoke, nella colonna centrale, cade sotto la
+        fotocamera."""
+        self.root.update_idletasks()
+        x = max(0, (self.root.winfo_screenwidth() - self.root.winfo_reqwidth()) // 2)
+        self.root.geometry(f"+{x}+0")
+
+    def _restringi_allo_schermo(self) -> None:
+        for _ in range(3):
+            self.root.update_idletasks()
+            sw, sh = self.root.winfo_screenwidth(), self.root.winfo_screenheight()
+            troppo_alto = self.root.winfo_reqheight() + CORNICE_ALTEZZA - sh
+            troppo_largo = self.root.winfo_reqwidth() - sw
+            if troppo_alto <= 0 and troppo_largo <= 0:
+                return
+            alto = self.dim_karaoke[1]
+            nuovo = alto - max(troppo_alto, 0)
+            if troppo_largo > 0:     # i pannelli sono larghi in proporzione all'altezza: si stringono insieme
+                nuovo = min(nuovo, int(alto * (sw - PAD * 2) / max(1, self.root.winfo_reqwidth())))
+            nuovo = max(ALTO_MINIMO, nuovo - 4)
+            if nuovo >= alto:
+                return
+            for figlio in self.root.winfo_children():
+                figlio.destroy()
+            self._imposta_misure(nuovo)
+            self._costruisci_finestra()
+
+    def _misure_pannelli(self, alto: int | None = None) -> tuple[tuple[int, int], tuple[int, int], tuple[int, int]]:
         """I tre pannelli stanno in fila sopra i comandi: prendono l'altezza che lo schermo lascia libera (o
         `altezza_pannelli_px`) e ognuno al massimo un terzo della larghezza. Webcam e reel tengono le proporzioni."""
         sw, sh = self.root.winfo_screenwidth(), self.root.winfo_screenheight()
-        alto = int(self.opz.get("altezza_pannelli_px") or max(360, sh - RISERVA_ALTEZZA))
+        alto = int(alto or self.opz.get("altezza_pannelli_px") or max(360, sh - RISERVA_ALTEZZA))
         larga_max = (sw - 4 * PAD) // 3
 
         def larghezza(w: int, h: int) -> int:
@@ -127,14 +172,16 @@ class AppRegistra:
 
         w, h = self.dim_reel
         self.c_reel = tk.Canvas(pannelli, width=w, height=h, bg="black", highlightthickness=0)
-        self.c_reel.grid(row=0, column=1, sticky="n", padx=PAD)
+        self.c_reel.grid(row=0, column=2, sticky="n")
         self.foto_reel = ImageTk.PhotoImage(Image.new("RGB", self.dim_reel, (0, 0, 0)))
         self.c_reel.create_image(0, 0, anchor="nw", image=self.foto_reel)
         self.t_conto = self.c_reel.create_text(w // 2, h // 2, text="", font=self.f_conto, fill=pal.accento)
         self.t_rec = self.c_reel.create_text(w - 14, 16, text="", font=self.f_medio, fill=self.colori["rec"], anchor="ne")
 
+        # il karaoke al centro, fra webcam e reel: con la finestra centrata in alto sta subito sotto la fotocamera del
+        # portatile, e leggendo lo sguardo resta in camera (il presentatore, 2026-09-23)
         dx = tk.Frame(pannelli, bg=pal.sfondo, width=lk, height=alto)
-        dx.grid(row=0, column=2, sticky="n")
+        dx.grid(row=0, column=1, sticky="n", padx=PAD)
         dx.pack_propagate(False)
         self.l_intestazione = tk.Label(dx, text="", font=self.f_medio, fg=pal.attenuato, bg=pal.sfondo, anchor="w")
         self.l_intestazione.pack(fill="x")
@@ -175,14 +222,17 @@ class AppRegistra:
         self.b_annulla = ttk.Button(riga, text="Annulla  (Esc)", takefocus=False, command=self._clic(self._annulla_modifica))
         for b in (self.b_registra, self.b_prova, self.b_ferma, self.b_prima, self.b_dopo, self.b_modifica, self.b_annulla):
             b.pack(side="left", padx=(0, 6))
+        # i menu dei dispositivi su una riga loro: con i pulsanti sulla stessa riga uscivano dallo schermo del portatile
+        riga = tk.Frame(comandi, bg=pal.sfondo)
+        riga.pack(fill="x", pady=(0, 4))
         self.menu_dispositivi: dict[str, ttk.Combobox] = {}
         for tipo, etichetta in (("audio", "Microfono"), ("video", "Fotocamera")):
             voci = [f"[{i}] {n}" for i, n in self.dispositivi[tipo]]
             if tipo == "audio":
                 voci.insert(0, "predefinito di sistema")
             cb = ttk.Combobox(riga, values=voci, state="readonly", font=self.f_piccolo, width=24)
-            cb.pack(side="right", padx=(4, 0))
-            tk.Label(riga, text=etichetta, font=self.f_piccolo, fg=pal.attenuato, bg=pal.sfondo).pack(side="right", padx=(12, 0))
+            tk.Label(riga, text=etichetta, font=self.f_piccolo, fg=pal.attenuato, bg=pal.sfondo).pack(side="left", padx=(0, 4))
+            cb.pack(side="left", padx=(0, 16))
             cb.bind("<<ComboboxSelected>>", lambda e, t=tipo: self._scegli_dispositivo(t))
             # col fuoco sul menu: Spazio registra (non apre il menu), Esc lascia il menu (non chiude l'app)
             cb.bind("<space>", lambda e: (self.root.focus_set(), self._spazio(), "break")[-1])
@@ -190,8 +240,9 @@ class AppRegistra:
             self.menu_dispositivi[tipo] = cb
             self._mostra_dispositivo(tipo)
 
-        self.l_stato = tk.Label(comandi, text="", font=self.f_medio, fg=pal.testo, bg=pal.sfondo, anchor="w",
-                                wraplength=larghezza_totale, justify="left")
+        self.l_stato = tk.Label(comandi, text="", font=self.f_medio, fg=pal.testo, bg=pal.sfondo, anchor="nw",
+                                wraplength=larghezza_totale, justify="left", height=2)   # alta fissa: un messaggio lungo
+                                                                                          # non deve spingere giù la finestra
         self.l_stato.pack(fill="x", pady=(4, 0))
         tk.Label(comandi, text="Il cerchio sulla webcam è ciò che va nel riquadro: volto al centro, spazio sopra la testa.\n" + TASTI,
                  font=self.f_piccolo, fg=pal.attenuato, bg=pal.sfondo, anchor="w", justify="left").pack(fill="x", pady=(4, 0))

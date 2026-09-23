@@ -72,9 +72,12 @@ mano (§4); in quel caso il gobbo è `uv run reel gobbo <file> --scrivi` → `co
 Un'app desktop (Tkinter + ffmpeg avfoundation) con tre pannelli: **la webcam** con il cerchio del riquadro, **il reel
 con te dentro** (l'anteprima `--prova` con il tuo volto live nel riquadro, dove lo metterà il montaggio) e **il testo
 karaoke** (la frase in corso con le parole che si accendono, la frase prima e quella dopo attenuate). I tre pannelli
-stanno in fila **sopra** e prendono l'altezza che lo schermo lascia libera (`altezza_pannelli_px` in `[registrazione]`
-per forzarla); **sotto** ci sono le scene (cliccabili), i pulsanti (● Registra, ▶ Prova, ■ Ferma, ◀ ▶ scena), i menu di
-microfono e fotocamera e la riga di stato (2026-09-22: prima i pannelli non entravano nello schermo di un portatile).
+stanno in fila **sopra**, con **il karaoke al centro** fra webcam e reel e la finestra centrata in alto: il testo
+cade sotto la fotocamera del portatile e leggendo lo sguardo resta in camera (2026-09-23). I pannelli e prendono l'altezza che lo schermo lascia libera (`altezza_pannelli_px` in `[registrazione]`
+per forzarla); **sotto** ci sono le scene (cliccabili), i pulsanti (● Registra, ▶ Prova, ■ Ferma, ◀ ▶ scena), su una
+riga a parte i menu di microfono e fotocamera, e la riga di stato ad altezza fissa. All'avvio l'app misura la finestra
+vera e, se sborda dallo schermo, rifà i pannelli più bassi (2026-09-23: sul portatile i comandi uscivano di sotto e di
+lato anche a tutto schermo).
 
 Come funziona:
 1. Scegli la scena di partenza con ← → o una cifra (default: la prima senza clip). Il pannello centrale mostra il

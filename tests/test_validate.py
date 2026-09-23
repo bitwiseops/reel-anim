@@ -54,9 +54,9 @@ def test_limiti_di_voce_testo_beat_ed_evidenzia():
 def test_frontmatter_e_durata_del_reel():
     m = _msg(_check(_base(), fm="---\ntitolo: T\nformato: carosello\nmessaggio_centrale: M\n---\n\n"))
     assert "'slug' mancante" in m and "'formato: reel' obbligatorio" in m
-    lungo = _check(_base(12))       # 14 scene × ~7,9 s ≈ 105 s: avviso, non errore
-    assert not ha_errori(lungo) and "reel stimato" in _msg(lungo) and "14 scene" in _msg(lungo)
-    troppo = _check(_base(16))
+    lungo = _check(_base(20))       # 22 scene, ≈ 164 s: avviso, non errore (limiti del 2026-09-23)
+    assert not ha_errori(lungo) and "reel stimato" in _msg(lungo) and "22 scene" in _msg(lungo)
+    troppo = _check(_base(24))
     assert ha_errori(troppo) and f"oltre {LIMITI['reel_errore_s']} s" in _msg(troppo)
 
 
@@ -213,7 +213,7 @@ def test_eco_non_e_una_frase_da_titolo():
 
 def test_limiti_larghi_del_2026_09_22():
     from tools.reel.validate import LIMITI
-    assert (LIMITI["parole_voce_hook_max"], LIMITI["beat_max"], LIMITI["reel_max_s"]) == (25, 6, 100)
+    assert (LIMITI["parole_voce_hook_max"], LIMITI["beat_max"], LIMITI["reel_max_s"]) == (25, 8, 150)
     md = ("---\ntitolo: T\nslug: limiti\nformato: reel\nmessaggio_centrale: M\n---\n\n"
           "## Scena 1 [hook]\nTITOLO: T\n"
           "VOCE: Stai pensando di comprare una scheda video per far girare l'IA a casa?\nVOCE: Ok. Ma prima: quante ore al mese la userai davvero?\n\n"

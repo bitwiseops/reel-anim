@@ -11,7 +11,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from manim import DOWN, LEFT, RIGHT, AnimationGroup, FadeIn, LaggedStart, VGroup
+from manim import DOWN, LEFT, RIGHT, AnimationGroup, FadeIn, FadeOut, LaggedStart, VGroup
 
 from .base import ScenaReel
 from .componenti import (Classifica, Codice, ContatoreScorre, Croce, Didascalia, Fila, Icona, Indice, Lente,
@@ -102,14 +102,22 @@ class VetrinaCodice(ScenaReel):
 
 
 class VetrinaIcone(ScenaReel):
+    PER_PAGINA = 12     # 4 × 3: con più icone la griglia usciva dall'area; si sfogliano a pagine (2026-09-23)
+
     def costruisci(self):
         att = self.cfg.palette.attenuato
-        # 4 colonne (con 14 icone, 3 uscivano dall'area in basso); i nomi composti vanno a capo, sennò escono di lato
-        celle = VGroup(*[VGroup(Icona(n, 84), testo(n.replace("-", "-\n"), "piede", colore=att)).arrange(DOWN, buff=px(12))
-                         for n in Icona.disponibili()])
-        celle.arrange_in_grid(cols=4, buff=(px(20), px(24)))
-        self.area.contenuto.metti(celle, "centro", "centro")
-        self.play(LaggedStart(*[AnimationGroup(c[0].entra(), FadeIn(c[1])) for c in celle], lag_ratio=0.1), run_time=1.5)
+        nomi = Icona.disponibili()
+        pagine = [nomi[k:k + self.PER_PAGINA] for k in range(0, len(nomi), self.PER_PAGINA)]
+        for n_pag, pagina in enumerate(pagine):
+            # i nomi composti vanno a capo, sennò escono di lato
+            celle = VGroup(*[VGroup(Icona(n, 84), testo(n.replace("-", "-\n"), "piede", colore=att)).arrange(DOWN, buff=px(12))
+                             for n in pagina])
+            celle.arrange_in_grid(cols=4, buff=(px(20), px(24)))
+            self.area.contenuto.metti(celle, "centro", "centro")
+            self.play(LaggedStart(*[AnimationGroup(c[0].entra(), FadeIn(c[1])) for c in celle], lag_ratio=0.1), run_time=1.2)
+            if n_pag < len(pagine) - 1:
+                self.wait(0.6)
+                self.play(FadeOut(celle), run_time=0.3)
 
 
 class VetrinaContatore(ScenaReel):

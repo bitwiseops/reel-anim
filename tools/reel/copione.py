@@ -202,8 +202,8 @@ def esamina(scene: dict[int, str], n_tappe: int, parole: int, tetto: int | None 
         massimo, nome = ((LIMITI["parole_voce_hook_max"], "apertura") if n == 1 else
                          (LIMITI["parole_voce_chiusura_max"], "chiusura") if n == n_tappe else
                          (LIMITI["parole_voce_max"], f"scena {n}"))
-        if k > massimo:
-            corr.append(f"la {nome} ha {k} parole: al massimo {massimo}")
+        if k > massimo:   # dal 2026-09-23 solo l'apertura si corregge: l'aggancio sta nei primi 15 s; il resto è avviso
+            (corr if n == 1 else avvisi).append(f"la {nome} ha {k} parole: al massimo {massimo}")
         if re.search(r"\d", t):
             cifre = ", ".join(sorted(set(re.findall(r"\d[\d.,]*", t))))
             duri.append(f"scena {n}: numeri in cifre ({cifre}): vanno scritti in lettere come si dicono")
@@ -211,7 +211,7 @@ def esamina(scene: dict[int, str], n_tappe: int, parole: int, tetto: int | None 
     if tetto is not None and tot > tetto:
         duri.append(f"in tutto {tot} parole: oltre {tetto} il reel supera il limite di `valida`")
     elif tot > parole * 1.1:
-        corr.append(f"in tutto {tot} parole: al massimo {parole}")
+        avvisi.append(f"in tutto {tot} parole: chieste {parole}")
     corr += duri
     frasi = [f for n, t in sorted(scene.items()) if n != n_tappe for f in frasi_di([t])]
     titoli = frasi_titolo(frasi)
@@ -229,12 +229,21 @@ def esamina(scene: dict[int, str], n_tappe: int, parole: int, tetto: int | None 
 
 def catena(prompt: str, modelli: list[str], n_tappe: int, parole: int,
            chiama: Callable[[str, str], str], salta: Callable[[str, str], str | None] = lambda m, p: None,
-           avanzamento: Callable[[str], None] | None = None, tetto: int | None = None) -> Esito:
+           avanzamento: Callable[[str], None] | None = None, tetto: int | None = None,
+           archivia: Callable[[str, str, str], None] | None = None) -> Esito:
     """Il primo modello che consegna un copione senza errori. `salta(modello, prompt)` dice perché non chiamarlo
-    (punti che non bastano); `chiama(modello, prompt)` risponde o solleva ErroreChiamata. Un copione solo lungo o con
-    cifre riceve **una** correzione dallo stesso modello: nella prova gpt-5.4 era il preferito, ma a 310 parole."""
+    (punti che non bastano); `chiama(modello, prompt)` risponde o solleva ErroreChiamata. Un copione con cifre o con
+    l'apertura troppo lunga riceve **una** correzione dallo stesso modello; le altre lunghezze sono avvisi (2026-09-23:
+    il presentatore preferisce il parlato di gpt-5.4 anche se più lungo). `archivia(modello, fase, testo)` salva ogni
+    risposta, anche scartata."""
     tentativi: list[str] = []
     dillo = avanzamento or (lambda s: None)
+    chiama_e_archivia = chiama
+    if archivia:     # ogni risposta si salva, anche scartata: i punti Poe spesi non si buttano (2026-09-23)
+        def chiama_e_archivia(m: str, p: str, fase: str = "prima") -> str:
+            testo = chiama(m, p)
+            archivia(m, fase, testo)
+            return testo
     for m in modelli:
         perche = salta(m, prompt)
         if perche:
@@ -242,7 +251,7 @@ def catena(prompt: str, modelli: list[str], n_tappe: int, parole: int,
             dillo(tentativi[-1])
             continue
         try:
-            scene = leggi_uscita(chiama(m, prompt))
+            scene = leggi_uscita(chiama_e_archivia(m, prompt))
             esame = esamina(scene, n_tappe, parole, tetto)
             nota = "ok"
             if not esame.errori and esame.correggibili:
@@ -252,7 +261,7 @@ def catena(prompt: str, modelli: list[str], n_tappe: int, parole: int,
                 perche = salta(m, p2)
                 if perche:
                     raise ErroreChiamata(f"correzione saltata ({perche})")
-                corrette = leggi_uscita(chiama(m, p2))
+                corrette = leggi_uscita(chiama_e_archivia(m, p2, "correzione") if archivia else chiama(m, p2))
                 esame = esamina(corrette, n_tappe, parole, tetto)
                 scene, nota = corrette, f"corretto ({prima} → {parole_totali(corrette)} parole)"
         except ErroreChiamata as e:
@@ -317,6 +326,8 @@ class Poe:
         self._s.headers["Authorization"] = f"Bearer {chiave}"
         self.token_uscita, self.punti_minimi = token_uscita, punti_minimi
         self._prezzi: dict[str, dict] | None = None
+        self._primo_saldo: int | None = None   # il saldo letto prima della prima chiamata
+        self._impegnati = 0                    # le stime delle chiamate fatte da allora
 
     def saldo(self) -> int:
         r = self._s.get(f"{POE}/usage/current_balance", timeout=30)
@@ -343,9 +354,17 @@ class Poe:
                    + self.token_uscita * float(p.get("completion") or 0))
         return int(usd / USD_PER_PUNTO) + 1
 
+    def saldo_prudente(self) -> int:
+        """Il saldo che Poe mostra si aggiorna in ritardo: dopo una chiamata può sembrare intatto (il 23/09 deepseek è
+        partito con 480 punti veri e ha risposto vuoto). Vale il minore fra il letto e il primo meno le stime spese."""
+        letto = self.saldo()
+        if self._primo_saldo is None:
+            self._primo_saldo = letto
+        return min(letto, self._primo_saldo - self._impegnati)
+
     def salta(self, modello: str, prompt: str) -> str | None:
         try:
-            saldo = self.saldo()
+            saldo = self.saldo_prudente()
             stima = self.stima_punti(modello, prompt)
         except Exception as e:  # rete, JSON: senza saldo non si rischia la chiamata
             return f"saldo non leggibile: {e}"
@@ -357,6 +376,7 @@ class Poe:
 
     def chiama(self, modello: str, prompt: str) -> str:
         import requests
+        self._impegnati += self.stima_punti(modello, prompt) or 0
         try:
             r = self._s.post(f"{POE}/v1/chat/completions", timeout=TIMEOUT_S,
                              json={"model": modello, "messages": [{"role": "user", "content": prompt}]})

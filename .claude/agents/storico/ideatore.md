@@ -114,3 +114,8 @@ nella caption del post). Quindi nelle «Note per il reel»:
 Con il copione scritto da un modello esterno prima della sceneggiatura (vedi storico dello sceneggiatore, stessa
 data) serve un brief per scena: l'idea porta `## Tappe del parlato`, nel formato del brief della prova alla cieca
 (`contenuti/prove-parlato/gpu-comprare-o-affittare/brief.md`). Prende il posto del **Percorso** nelle Note per il reel.
+
+## 2026-09-23 · ia-e-lavoro · tappe troppo dense per il copione
+Prima corsa di `reel copione` su un'idea nuova: gpt-5.4 ha scritto 382 parole (345 dopo la correzione), oltre il
+tetto dei 120 s, e ha consumato quasi tutti i punti Poe; il copione l'ha scritto Claude. La tappa 6 portava in una
+riga istituzioni, anno, campione, due percentuali e una domanda. Regola «Tappe magre» nel tema «Percorso e registri».

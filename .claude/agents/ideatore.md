@@ -79,6 +79,9 @@ Regole:
   numeri qui si scrivono in cifre con la fonte già verificata: il modello li dirà in lettere e **non aggiunge fatti**,
   quindi quello che non c'è non entra nel reel. Le tappe sono il Percorso: alternano i registri (sotto, «Percorso e
   registri») e fissano il numero di scene.
+- **Tappe magre** (2026-09-23): il modello del copione dice tutto quello che trova nella riga, e gpt-5.4 su tappe
+  dense (un esperimento con cinque numeri in una riga) ha scritto 382 parole contro 235 ed è stato scartato. Al massimo
+  due fatti per tappa; il dettaglio che non deve dire a voce (campione, anno, bracci) sta in `## Fonte`, non nella riga.
 - **Note per il reel**: le 2-3 query in inglese per ogni tappa a filmato; filo visivo di 2-3
   oggetti che tornano in tutte le scene animate; numeri solo con una fonte ufficiale, altrimenti «esempio dichiarato»;
   MESSAGGIO candidato ≤ 12 parole e una CTA sola (invia a qualcuno, salva, o una domanda vera), tutti e due per la

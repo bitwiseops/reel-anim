@@ -153,18 +153,18 @@ Limiti (fonte unica: `tools/reel/validate.py::LIMITI`; oltre il limite è un avv
 | Cosa | Limite |
 |---|---|
 | scene | 6-9 (minimo 5, massimo 10): il numero lo decide l'equilibrio fra i due registri |
-| parole di `VOCE:` per scena | ≤ 50 (hook ≤ 25, dal 2026-09-22) |
-| righe `VOCE:` per scena | ≤ 6 (dal 2026-09-22: le frasi corte del parlato vogliono un beat in più) |
+| parole di `VOCE:` per scena | ≤ 70 (dal 2026-09-23; hook ≤ 25: l'aggancio si gioca nei primi 15 s) |
+| righe `VOCE:` per scena | ≤ 8 (dal 2026-09-23: il parlato del copione è più lungo) |
 | `TITOLO:` / `MESSAGGIO:` | ≤ 10 / ≤ 25 parole (MESSAGGIO consigliato ≤ 12: è la frase memorabile della caption del post) |
 | VOCE dell'hook | un «tu» o una domanda: l'hook è una promessa a chi guarda (`docs/linguaggio-reel.md` §1) |
-| VOCE della chiusura | ≤ 18 parole (~6-7 s): un payoff, non un riassunto |
+| VOCE della chiusura | ≤ 25 parole (dal 2026-09-23): un payoff, non un riassunto |
 | lingua parlata | niente frasi da titolo in fila (≤ 4 parole, senza «tu» né «io»), al massimo due nel reel fuori dalla chiusura; **l'eco non conta** (una frase corta che riprende una parola di quella prima: «…quasi quattro ore al giorno. Ogni giorno.»); niente «X, sì. Y, no.»; niente due punti come snodo (valgono solo per citare: «scrive: …») |
 | `TESTO:` | ≤ 2 per scena, ≤ 2 parole ciascuno (numeri e percentuali non contano); avviso se ripete parole della VOCE |
 | `FIGURA:` | obbligatoria nelle scene animate, ≤ 20 parole |
 | testo a schermo (animazione) | mai più di **2 parole di fila**: lo fa rispettare il controllo `parole-leggibili` |
 | `==evidenzia==` / emoji | 1 per scena |
-| una scena | 2,5-19 s stimati |
-| il reel | 30-100 s stimati (dal 2026-09-22; oltre 120 s è un errore) |
+| una scena | 2,5-26 s stimati |
+| il reel | 30-150 s stimati (dal 2026-09-23: conta l'aggancio dei primi 15 s, non la durata; oltre 180 s è un errore) |
 | `SCHERMO:` | il file deve esistere (errore in una scena `[schermo]`; in una scena a filmato è un avviso, «non ancora reso», e l'errore lo dà `monta`); il riquadro non deve coprire la cornice (avviso) |
 
 ## 5. La VOCE: prima il copione, poi i beat

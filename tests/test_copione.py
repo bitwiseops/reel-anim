@@ -92,13 +92,14 @@ def test_leggi_uscita_toglie_saluti_e_formattazione():
 
 def test_esame():
     assert esamina(BUONO, 5, 235) == ([], [], [], [])
-    e = esamina({**BUONO, 3: "Costa 0,53 euro l'ora " + "e poi " * 30}, 5, 60)
+    e = esamina({**BUONO, 3: "Costa 0,53 euro l'ora " + "e poi " * 40}, 5, 60)
     assert not e.errori
-    assert any("cifre (0,53)" in c for c in e.correggibili) and any("in tutto" in c for c in e.correggibili)
-    assert any("scena 3 ha" in c for c in e.correggibili)
+    assert any("cifre (0,53)" in c for c in e.correggibili) and any("in tutto" in a for a in e.avvisi)
+    assert any("scena 3 ha" in a for a in e.avvisi)          # dal 2026-09-23 solo l'apertura si corregge
+    assert any("apertura ha" in c for c in esamina({**BUONO, 1: "parola " * 30}, 5, 235).correggibili)
     assert esamina({1: "x", 2: "y"}, 5, 235).errori
-    lunga_chiusura = esamina({**BUONO, 5: "parola " * 19}, 5, 235)
-    assert any("chiusura ha 19" in c for c in lunga_chiusura.correggibili)
+    lunga_chiusura = esamina({**BUONO, 5: "parola " * 30}, 5, 235)
+    assert any("chiusura ha 30" in a for a in lunga_chiusura.avvisi) and not lunga_chiusura.correggibili
     stile = esamina({**BUONO, 2: "Fluente, sì. Originale, no. Il testo non lo cerca: lo scrive lei."}, 5, 235)
     assert stile.avvisi and not stile.correggibili
 
@@ -139,9 +140,9 @@ def test_catena_corregge_una_volta_lo_stesso_modello():
 
 
 def test_catena_tiene_il_lungo_dopo_la_correzione_ma_non_oltre_il_tetto():
-    lungo = {**BUONO, 5: "parola " * 20}
+    lungo = {**BUONO, 5: "parola " * 30}
     e = catena("P", ["gpt", "deep"], 5, 235, lambda m, p: _uscita(lungo), tetto=300)
-    assert e.modello == "gpt" and any("chiusura ha 20" in a for a in e.esame.avvisi) and not e.esame.correggibili
+    assert e.modello == "gpt" and any("chiusura ha 30" in a for a in e.esame.avvisi) and not e.esame.correggibili
     enorme = {**BUONO, 3: "parola " * 45, 2: "parola " * 45, 4: "parola " * 45}
     e = catena("P", ["gpt", "deep"], 5, 235, lambda m, p: _uscita(enorme if m == "gpt" else BUONO), tetto=120)
     assert e.modello == "deep" and "oltre 120" in e.tentativi[0]
@@ -187,3 +188,25 @@ def test_idea_gpu_del_repo():
     p = Path(__file__).resolve().parents[1] / "contenuti" / "idee" / "2026-09-22-gpu-comprare-o-affittare.md"
     if p.exists() and "## Tappe del parlato" in p.read_text(encoding="utf-8"):
         assert len(leggi_idea(p.read_text(encoding="utf-8")).tappe) == 9
+
+
+def test_saldo_prudente_non_si_fida_del_saldo_in_ritardo():
+    poe = cp.Poe.__new__(cp.Poe)
+    poe.token_uscita, poe.punti_minimi = 1000, 1500
+    poe._prezzi = {"a": {"request": "0.06"}}          # 2.001 punti a chiamata
+    poe._primo_saldo, poe._impegnati = None, 0
+    poe.saldo = lambda: 4000                          # Poe non ha ancora scalato niente
+    assert poe.salta("a", "x") is None
+    poe._impegnati += poe.stima_punti("a", "x")      # come fa `chiama`
+    assert poe.saldo_prudente() == 4000 - 2001
+    assert "stima" in poe.salta("a", "x")             # 1.999 < 2.001: la seconda non parte
+
+
+def test_ogni_risposta_si_archivia_anche_scartata():
+    salvate = []
+    cifre = {**BUONO, 3: "costa 1500 euro"}
+    risposte = {"gpt": [_uscita(cifre), _uscita(cifre)], "deep": [_uscita(BUONO)]}
+    e = catena("P", ["gpt", "deep"], 5, 235, lambda m, p: risposte[m].pop(0),
+               archivia=lambda m, fase, t: salvate.append((m, fase)))
+    assert e.modello == "deep"
+    assert salvate == [("gpt", "prima"), ("gpt", "correzione"), ("deep", "prima")]

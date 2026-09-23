@@ -36,6 +36,7 @@ ZOOM = 0.22             # quanto entra (o esce) la spinta: 1 → 1,22
 MOSSE = ("spinta", "carrellata", "allarga", "diagonale")
 TRANSIZIONI = ("fade",) # ripiego se config.toml non ha [transizioni] immagini
 DURATA_MIN_S = 0.6      # sotto, il cambio è uno sfarfallio invece che uno stacco
+TENUTA_DIVISA_MIN_S = 1.5   # una tenuta si divide per far vedere un'immagine in più solo se ognuna resta almeno così
 DISSOLVENZA_S = 0.25    # ripiego se config.toml non ha [transizioni] durata_s
 TENUTA_MIN_S = 0.3      # quanto ogni immagine resta ferma e sola: sotto, si vedono solo dissolvenze
 MARGINE_S = 0.04        # un fotogramma d'aria sugli ingressi intermedi: xfade taglia il resto da sé
@@ -61,6 +62,20 @@ def finestre(inizi_frasi_s: list[float], durata_s: float) -> list[tuple[float, f
         else:
             tenute.append((t, fine - t))
     return tenute
+
+
+def dividi_per_immagini(tenute: list[tuple[float, float]], n_immagini: int) -> list[tuple[float, float]]:
+    """Più immagini che frasi: si divide a metà la tenuta più lunga finché ogni immagine ha la sua, purché le metà
+    restino di almeno `TENUTA_DIVISA_MIN_S`. Le immagini generate si pagano: una generata e mai vista è sprecata
+    (2026-09-23, ia-e-lavoro: 2 frasi e 3 gesti). Il cambio in più cade a metà frase, non su un inizio."""
+    out = list(tenute)
+    while len(out) < n_immagini:
+        k = max(range(len(out)), key=lambda i: out[i][1])
+        inizio, d = out[k]
+        if d / 2 < TENUTA_DIVISA_MIN_S:
+            break
+        out[k:k + 1] = [(inizio, round(d / 2, 3)), (round(inizio + d / 2, 3), round(d - d / 2, 3))]
+    return out
 
 
 def dissolvenza_s(tenute: list[tuple[float, float]], cfg: Config | None = None) -> float:
@@ -169,7 +184,7 @@ def componi(immagini: list[Path], inizi_frasi_s: list[float], durata_s: float, d
     mancanti = [p for p in immagini if not p.exists()]
     if mancanti:
         raise ImmaginiMancanti(f"immagini assenti: {', '.join(p.name for p in mancanti)}")
-    tenute = finestre(inizi_frasi_s, durata_s)
+    tenute = dividi_per_immagini(finestre(inizi_frasi_s, durata_s), len(immagini))
     dest.parent.mkdir(parents=True, exist_ok=True)
     esegui(comando(immagini, tenute, dest, cfg), f"ffmpeg (immagini scena {dest.stem})")
     return dest, tenute

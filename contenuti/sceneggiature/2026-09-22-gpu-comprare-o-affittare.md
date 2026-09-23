@@ -55,7 +55,7 @@ FIGURA: un'auto a noleggio che si sblocca in strada, pronta per chi la prende a 
 
 ## Scena 5 [spiegazione]
 VOCE: Qui è uguale.
-VOCE: Se affitti, sei attorno a mezzo euro l'ora, zero virgola cinquantatré con l'imposta, sempre.
+VOCE: Se affitti, sei attorno a mezzo euro l'ora, tasse comprese, e sempre quello.
 VOCE: Se compri, mettiamo millecinquecento euro tra scheda e computer,
 VOCE: spalmati su tre anni.
 VOCE: Quella rata poi la dividi per le ore che fai ==davvero==.
@@ -90,7 +90,7 @@ VOCE: La mossa sensata è questa: prima controlla se il modello che vuoi usare c
 VOCE: Se non ci entra, fine, la ==affitti==.
 VOCE: Se ci entra, affittala un mese
 VOCE: e guarda in fattura quante ore hai pagato.
-VOCE: Se stai sotto centodieci, comprarla ti costava di più.
+VOCE: Se stai sotto centodieci, comprarla ti potrebbe costare di più.
 ANIMAZIONE: Stacco dal filmato: al centro la scheda video (stessa sagoma, alloggi pieni), in alto a sinistra il server a cassetti (il noleggio). Su «prima controlla» compare sotto la scheda «24 GB»; su «il modello che vuoi usare» un blocco pieno in accento (il modello, nessuna scritta) scende dall'alto e si incastra nella scheda, preciso; su «nella memoria della scheda» accanto compare una Spunta.
 ANIMAZIONE: Il blocco risale ed esce; ne scende un secondo, largo il doppio, che sborda dai lati della scheda: la scheda si spegne a grigio, con una Croce accanto. GRANDE (carica e rimbalzo) su «la affitti»: il blocco largo, intero, arretra un attimo, vola verso il server stringendosi, lo supera di poco, ci torna e si infila nella fessura di un cassetto; il server pulsa e la scheda si riaccende.
 ANIMAZIONE: La Croce esce; a destra entra una fattura fatta di righe-sagoma (Sagome, sei righe, nessun testo) che si vede un istante intera; accanto al server compare un piccolo calendario di un mese (una Fila di 30 quadratini) che si accende in fretta.

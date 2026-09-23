@@ -119,9 +119,9 @@ nelle animazioni la spiegazione complessa, e per stare a metà si aggiungono sce
 Manim, e nemmeno la chiusura: lui e le caption, MESSAGGIO e CTA solo per il post; registrazione verticale 1080×1920;
 dal 2026-09-22 il volto non stacca: negli ultimi ~0,5 s si rimpicciolisce fino al cerchio del riquadro della scena
 dopo, e in chiusura il cerchio si riapre — `[transizioni] raccordo_riquadro_s`, quella giunzione è sempre un taglio); inline `==evidenzia==`, `**grassetto**`.
-Limiti in `tools/reel/validate.py::LIMITI`: 6-9 scene (5-10), VOCE ≤ 50 parole/scena (hook ≤ 25, chiusura ≤ 18), ≤ 6 beat,
-scena 2,5-19 s,
-reel 30-100 s (dal 2026-09-15: la VOCE è parlato vero; dal 2026-09-23 «prima il copione, poi i beat», `docs/sceneggiatura.md` §5;
+Limiti in `tools/reel/validate.py::LIMITI`: 6-9 scene (5-10), VOCE ≤ 70 parole/scena (hook ≤ 25, chiusura ≤ 25), ≤ 8 beat,
+scena 2,5-26 s,
+reel 30-150 s (dal 2026-09-23 i limiti di tempo sono larghi: l'aggancio si gioca nei primi 15 s; dal 2026-09-15: la VOCE è parlato vero; dal 2026-09-23 «prima il copione, poi i beat», `docs/sceneggiatura.md` §5;
 `valida` avvisa su frasi da titolo in fila, «X, sì. Y, no.», due punti come snodo). La durata reale di ogni scena la
 decide la clip registrata; senza clip vale la stima (2,8 parole/s).
 I beat partono sugli inizi delle frasi VOCE: esatti con la voce di prova (una frase alla volta, `pausa_frasi_s`),
