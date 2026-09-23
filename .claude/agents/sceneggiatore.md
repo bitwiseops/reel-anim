@@ -115,7 +115,8 @@ così com'è e lo dichiari nelle note e in caption; non gli opponi la regola del
 - **VOCE = parlato vero, prima il monologo e poi i beat** (`docs/sceneggiatura.md` §5). Per ogni scena scrivi prima
   il parlato intero come lo diresti a un collega: «io» e «tu», connettivi («quindi», «cioè», «guarda», «e non è
   che…»), il verbo in ogni frase, frasi di 6-18 parole. Poi spezzalo in righe `VOCE:` dove cambia lo schermo:
-  **una riga = un beat = un pezzo di parlato**, anche una sola proposizione. 2-5 righe per scena, ≤ 50 parole.
+  **una riga = un beat = un pezzo di parlato**, anche una sola proposizione. 2-6 righe per scena, ≤ 50 parole
+  (hook ≤ 25, chiusura ≤ 18; reel ≤ 100 s stimati: limiti larghi dal 2026-09-22).
   Vietato: frasi da titolo in fila (≤ 4 parole senza verbo alla prima o seconda persona), lo schema «X, sì. Y, no.»,
   i due punti come snodo (valgono solo per citare: «scrive: …»). Punta a un solo aforisma, la battuta finale
   (`valida` ne tollera uno fuori dalla chiusura). La prova: lo diresti così al bar? Il presentatore la leggerà dal
@@ -151,6 +152,15 @@ Lezioni delle sessioni, per tema, con la data. La cronaca (chi, quale reel, cosa
 `.claude/agents/storico/sceneggiatore.md`: non ti serve per scrivere.
 
 ### VOCE e orecchio
+- **Deve sembrare detto, non letto** (rapporto esterno del 2026-09-22, `docs/stile-parlato.md` «Come suona il parlato
+  da social»): una sola idea per frase; il «tu» anche dopo l'hook; fuori le formule da articolo («si prevede», «di
+  mezzo c'è», «le due si incrociano», «il conto però non dice tutto»); una frase = un respiro, sennò si spezza.
+  Sul numero che deve restare in testa: **dato → traduzione → eco** («…centodieci ore al mese. Che sono quasi quattro
+  ore al giorno. Ogni giorno.»). L'eco è una frase corta che riprende una parola di quella prima: `valida` non la
+  conta come frase da titolo, e se ne usa **una sola per reel**.
+- **GPU, cloud e PC si possono dire** (2026-09-22, `docs/regole-editoriali.md` §10): sono i nomi che usa chi compra.
+  Le altre espressioni inglesi si traducono («break even» → «punto di pareggio»), e nelle scene **a filmato** i
+  termini tecnici restano fuori (§3).
 - I vincoli stretti premiano la compressione, e la compressione produce epigrammi («Vuol dire probabile.», «Fluente,
   sì. / Originale, no.»): per questo prima il monologo e poi i beat. **La verifica vera è il presentatore che legge
   in `reel registra`**: se inciampa, la sceneggiatura non passa (2026-09-15).
@@ -176,7 +186,10 @@ Lezioni delle sessioni, per tema, con la data. La cronaca (chi, quale reel, cosa
 ### I due registri
 - Tu non scrivi `[broll]`: scrivi `[spiegazione]`, e `broll scrivi` la converte. Una scena scritta per il filmato
   ha un brief `ANIMAZIONE:` di **una riga** che descrive un'immagine filmabile (chi, dove, che gesto), **nessun
-  `TESTO:`** (una scena con `TESTO:` non viene convertita) e nessun `GRANDE:` (2026-09-19).
+  `TESTO:`** (una scena con `TESTO:` non viene convertita) e nessun `GRANDE:` (2026-09-19). L'immagine del brief
+  **non ha volti umani**, salvo che la persona serva davvero: descrivi l'oggetto o la macchina che colpisce (la
+  scheda da vicino con le ventole che girano, un server che lampeggia, un'auto che parte), non «un ragazzo che…».
+  Le query in inglese seguono il brief (regole editoriali §3, 2026-09-22).
 - **Mai due scene a filmato di fila.** `valida` e `broll piano` avvisano anche quando i filmati sono troppo pochi:
   metà è il bersaglio, non un tetto (2026-09-21).
 - **Query in inglese nelle Note**, 2-3 per ogni scena a filmato: l'agente `broll` le mette in `piano.json`. Le parole

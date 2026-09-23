@@ -228,8 +228,12 @@ nell'export dicono dove Whisper ha sbagliato. Otto id di otto account:
   viene una corta: «Ma non sapeva niente di quella montagna.» (r0037, 7 parole fra una da 17 e una da 27).
 - **Frasi corte con il verbo per l'azione o la svolta** (20 su 40 · 9 account): «Gli altri lo trovano.» (r0015),
   «Cioè, si organizzano.» (r0015), «Esistono software apposta.» (r0042). Qui `valida` conta come frase da titolo
-  ogni frase di 4 parole o meno senza «tu», «io» o punto di domanda, e ne tollera una fuori dalla chiusura: dalla
-  seconda in poi la si lega alla precedente con «e», o diventa una domanda («Il risultato?», r0009).
+  ogni frase di 4 parole o meno senza «tu», «io» o punto di domanda, e ne tollera due fuori dalla chiusura: dalla
+  terza in poi la si lega alla precedente con «e», o diventa una domanda («Il risultato?», r0009).
+- **L'eco: la micro-pausa del parlato** (dal 2026-09-22). Una frase corta che **riprende una parola di quella prima**
+  non è un titolo, è un respiro, e dà peso al dato: «Che sono quasi quattro ore al giorno. Ogni giorno.» `valida` non
+  la conta. Si usa **una volta sola per reel**, sul numero che deve restare in testa: prima il dato, poi la sua
+  traduzione in qualcosa di intuitivo, poi l'eco.
 - **Il passo, per account** (parole al secondo, misurate con `uv run reel stile --trascrizioni` il 2026-09-19: parole
   della trascrizione sulla durata registrata, pause comprese): @gabrysolution 3,4-3,7 · @gianluigiballarani 2,8-3,1 ·
   @marcomontemagno 2,8-3,1 · @ifarmsrlai 2,9 · @ingegneria.italia 2,6-3,2 · @simorizzo_ai 2,5-3,0 ·
@@ -238,6 +242,23 @@ nell'export dicono dove Whisper ha sbagliato. Otto id di otto account:
   **Il passo che somiglia a una spiegazione tecnica detta con calma è 2,5-2,8**: @ingegneria.italia in r0040 e r0042
   (~2,7, frasi tecniche complete sopra le immagini) e @inregola.it. @yousciences va più piano perché le pause le fa
   la dimostrazione. La stima del repo (2,8) è il bordo alto di quel passo. Sopra 3,3 è voce montata su immagini.
+
+## Come suona il parlato da social (rapporto esterno, 2026-09-22)
+Un consulente ha letto la voce del reel GPU: «grammaticalmente corretta, ma troppo scritta». Le mosse che ha chiesto,
+e che ora valgono qui:
+- **Una sola idea per frase.** «E di mezzo c'è la memoria, che i produttori danno prima all'IA, e per le schede ne
+  resta poca» è densa: diventa «E uno dei problemi è la memoria. La domanda dell'IA è enorme, e per le schede ne
+  resta meno.»
+- **Il «tu» anche dopo l'hook**: non «Comprata, mettiamo millecinquecento euro», ma «Se invece la compri, spendi
+  magari millecinquecento euro».
+- **Dato, traduzione, eco**: «Il punto di pareggio è a centodieci ore al mese. Che sono quasi quattro ore al giorno.
+  Ogni giorno.» È il momento centrale del reel: non si dice di corsa.
+- **Fuori le formule da articolo**: «si prevede», «di mezzo c'è», «le due si incrociano», «il conto però non dice
+  tutto» → «il problema è che…», «facendo due conti…», «però c'è un altro pezzo…», «il conto non è perfetto…».
+- **Una frase = un respiro.** Se ne servono due, o se ci sono tre subordinate, si spezza.
+- **Non il tono uguale per tutto il reel**: hook più svelto, parte dei numeri più calma, chiusura più lenta (le note
+  di tono vanno nelle Note di produzione, non nel testo).
+- Il calcolo non è il protagonista: deve restare la mossa, non la formula.
 
 ## Come si chiude
 - **L'ultima frase è una battuta, riprende l'hook o fa una domanda** (25 su 40 · 10 account). Il contrasto: «Pensate

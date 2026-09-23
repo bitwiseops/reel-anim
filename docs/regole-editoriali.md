@@ -32,6 +32,14 @@ si alternano fra scene senza mai stare insieme.
 - Nelle **animazioni** va la **spiegazione complessa**: meccanismo, quantità, confronti, conti.
 - Per stare a metà **si aggiungono scene, non secondi**: le scene a filmato sono corte (4-7 s), le animate tengono i
   12-16 s. Mai due scene a filmato di fila, mai `TESTO:` sopra un filmato. Il tipo `[broll]` lo scrive `broll scrivi`.
+- **Almeno una clip generata per reel** (2026-09-22): una delle scene a filmato si fa con **2-3 immagini generate
+  con Meshy**, montate una per beat con una dissolvenza fra l'una e l'altra (`broll genera`, agente `immagini`).
+  Si usa questo registro anche ogni volta che su Pexels non c'è un candidato buono: meglio un'immagine generata che
+  una clip che non c'entra. Le immagini generate si dichiarano in `CREDITI.md` e in caption.
+- **Clip senza volti, con un «wow» tecnologico** (2026-09-22): se la sceneggiatura non chiede espressamente una
+  persona, la clip non mostra volti umani (mani e sagome di spalle sì). Si preferisce un'immagine tecnologica che
+  colpisce e che serve al racconto: schede e circuiti da vicino, ventole, server che lampeggiano, schermi, macchine
+  in movimento. L'unico volto del reel è il presentatore.
 - Perché: Manim spiega, la clip tiene l'attenzione; cinque scene animate di fila stancano.
 - Dettaglio: `docs/sceneggiatura.md` §2 · `broll/README.md` · `valida` e `broll piano` avvisano anche sui *troppo pochi*.
 
@@ -43,7 +51,13 @@ con le **sole caption**.
 - **Chiusura**: la VOCE dice la conclusione (≤ 18 parole), **senza messaggio a schermo** e senza classe Manim.
   `MESSAGGIO:` e `CTA:` restano obbligatori ma sono il testo per la **caption del post**. L'ultima figura del reel è
   l'ultimo fotogramma dell'ultima scena animata.
-- La scena dopo l'apertura e quella prima della chiusura partono o finiscono su uno **stacco**: niente raccordo.
+- **Il volto non stacca di colpo** (2026-09-22): negli ultimi ~0,5 s dell'apertura il presentatore a tutta tela si
+  rimpicciolisce fino a diventare il cerchio del riquadro della scena dopo, e nei primi ~0,5 s della chiusura il
+  cerchio si riapre a tutta tela. Lo fa il **montaggio** (`[transizioni] raccordo_riquadro_s`, `tools/reel/compositing.py`),
+  dentro la scena a volto pieno; quella giunzione resta un taglio, mai una dissolvenza. Se la scena vicina non ha
+  riquadro il raccordo non c'è.
+- Per l'**animazione** la scena vicina resta comunque uno **stacco**: non c'è uno stato della faccia da riprendere,
+  il fotogramma 0 è già pieno.
 - Dettaglio: `docs/sceneggiatura.md` §2 · `docs/animazioni.md` §5 · registrazione verticale 1080×1920.
 
 ## 5. Si citano solo fonti ufficiali (2026-09-20)
@@ -68,8 +82,24 @@ si ridice in una frase, come fosse la prima volta. Gli altri reel si leggono sol
 Un suo ritocco, anche a un testo attribuito a un modello, si applica così com'è: non gli si oppone una regola. Si
 controlla solo che sia **dichiarato in caption** («tagliate e ritoccate da noi») e che non cambi un claim.
 
-## 8. Costanti di linguaggio
-Tutto in italiano; si scrive «IA», mai «AI». Nessun personaggio e nessun dialogo: il presentatore parla a camera.
+## 8. Il volto del presentatore lo guarda solo lui (2026-09-22)
+Claude non guarda fotogrammi in cui compare il suo volto. Dopo la registrazione le immagini di controllo (`scene/NN.png`,
+`fotogrammi/*`, `contact-sheet.png`, `reel strisce --sorgente scene`) si scrivono **già coperte**: nel riquadro torna
+l'avatar segnaposto e una scena a volto pieno diventa un cartello con le caption (`fotogrammi.copri_volto`). Non si
+aprono mai `copertina*.png`, i video montati né fotogrammi estratti a mano con ffmpeg da un montaggio con le clip vere:
+quelli li guarda lui. Dopo la registrazione si controlla con le immagini coperte, `report.json` e il testo delle caption.
+
+## 9. La VOCE si rivede registrando (2026-09-22)
+Il testo generato con l'IA è la partenza: la revisione vera la fa il presentatore **nella finestra di `reel registra`**,
+correggendo le righe fuori dalla presa (tasto `E`). Il testo recitato finisce nel sidecar della clip e le caption, che
+si fanno al montaggio, usano quello. `uv run reel parlato <file> --applica` lo riporta nella sceneggiatura (§7: le sue
+righe si copiano così come sono; frasi con numeri o fatti nuovi si passano al revisore).
+
+## 10. Costanti di linguaggio
+Tutto in italiano; si scrive «IA», mai «AI». **Eccezione dal 2026-09-22**: i nomi delle cose che si comprano si dicono
+come li dice chi le compra — «GPU», «cloud», «PC» stanno nella voce senza traduzione. Restano fuori le espressioni da
+gergo che hanno un equivalente comune («break even» → «punto di pareggio»), e valgono i registri (§3): nelle scene a
+filmato la voce non dice termini tecnici, quindi GPU e cloud stanno nelle animate. Nessun personaggio e nessun dialogo: il presentatore parla a camera.
 La chiusura è una battuta, mai un elenco letto a camera (gli elenchi vanno in caption). Il reel non è né una lode né
 una stroncatura: potenziale e limite stanno nella stessa idea. I testi attribuiti a un modello sono **uscite vere**
 (`uv run reel uscite`, `contenuti/idee/uscite/`), con i tagli dichiarati. Dettaglio: `docs/linguaggio-reel.md`.

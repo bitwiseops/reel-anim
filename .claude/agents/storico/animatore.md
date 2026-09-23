@@ -271,3 +271,13 @@ passare **subito** a un fuoco su una parte e rendere il resto meno visibile.
 - Vale anche per richieste lunghe, elenchi di problemi, schede: una riga, poche parole, il resto sagoma e «[…]».
 - Se una condizione del revisore (testo alla lettera, didascalia sempre leggibile) confligge con la regola: i testi
   restano alla lettera, ma se ne mostra meno; le didascalie di onestà («inventati», «riscritta da noi») restano.
+
+## 2026-09-22 · gpu-comprare-o-affittare · l'IA non è un database
+Nel reel GPU l'icona Lucide «database» faceva i server dell'IA (scena 3) e poi il noleggio (5, 6, 8). Flavio: «l'IA
+vista come database non mi piace». Deciso: rete neurale piccola sopra un server a cassetti nella 3; dalla 5 la rete
+si spegne e resta il server, che diventa il noleggio. Regola nel tema «Il reel si guarda muto».
+
+## 2026-09-22 · gpu-comprare-o-affittare · volto coperto e VOCE rivista registrando
+Dopo la prima presa Flavio: «non voglio che leggi i fotogrammi dove compare il mio volto»; la revisione della VOCE si
+fa in `reel registra` (tasto E, fuori dalla presa), le caption dal testo recitato, `reel parlato --applica` lo riporta
+nel .md. Regole in docs/regole-editoriali.md §8-9; codice in fotogrammi.copri_volto, registra_app, monta.voce_recitata.

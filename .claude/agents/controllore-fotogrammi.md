@@ -21,6 +21,9 @@ Ti arrivano: il percorso della sceneggiatura e il numero della scena (`N`).
 - `docs/regole-editoriali.md` §1 e §2 (il reel si guarda muto; niente testo denso).
 
 ## Come guardi
+**Il volto del presentatore non si guarda** (regole editoriali §8, 2026-09-22): dopo la registrazione `strisce` e
+`monta` scrivono le immagini già coperte (avatar nel riquadro, cartello a volto pieno). Leggi solo quelle; non estrarre
+fotogrammi a mano con ffmpeg dai video montati e non aprire `copertina*.png`.
 1. `uv run reel strisce <file> --scena N` (sorgente `scene`: la scena **montata**, con il riquadro del presentatore e
    le caption). Produce in `contenuti/render/<slug>/fotogrammi/` una striscia `NN-fitti-b<i>.png` per ogni beat
    (8 fps, ~1,3 s attorno all'inizio del beat, con l'istante scritto sotto ogni fotogramma) e `NN-fitti-scena.png`

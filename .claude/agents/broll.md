@@ -40,8 +40,9 @@ con l'animatore) e, per `scegli`, se la scelta è **a fermate** (consigli, scegl
 1. `broll chiavi` (se manca la chiave di ricerca: BLOCKED), `broll cerca <slug> --max 12`, `broll provini <slug>`.
 2. **Guarda tu** i contact sheet `contenuti/render/<slug>/broll/candidati-scena-NN.png` (Read). Criteri, in ordine:
    soggetto pertinente alla VOCE della scena; **spazio libero dove cade il riquadro** del presentatore (alto a destra);
-   niente volti in primo piano che rubano la scena al presentatore, niente persone che parlano a lungo o sorridono in
-   camera; niente stock da catalogo (strette di mano, sorrisi in posa); movimento calmo, leggibile senza audio;
+   **niente volti umani** se la sceneggiatura non chiede espressamente una persona (mani e sagome di spalle sì), e fra
+   i candidati pertinenti vince quello con un **«wow» tecnologico** che serve al racconto (§3 delle regole editoriali,
+   2026-09-22); niente persone che parlano o sorridono in camera; niente stock da catalogo (strette di mano, sorrisi in posa); movimento calmo, leggibile senza audio;
    verticale nativo meglio di un 16:9 ritagliato. Scarta ciò che contraddice la VOCE anche di poco.
    Un'immagine con **due oggetti in relazione** (telefono vecchio accanto al nuovo) su Pexels quasi non esiste: dopo
    un giro di query a vuoto, due tagli nella stessa scena (`--aggiungi`) e dillo nel rapporto. Le ricerche di spesa e
@@ -54,6 +55,10 @@ con l'animatore) e, per `scegli`, se la scelta è **a fermate** (consigli, scegl
    volto) **si cambia candidato** — con i filmati già verticali l'ancora non sposta niente.
 5. `broll scrivi <slug>` (conferma tipo e file; se `marca` è già passata non cambia niente) e `uv run reel valida`.
 6. `contenuti/broll/<slug>/CREDITI.md` va nel rapporto: i nomi servono in didascalia.
+7. **Se per una scena non c'è un candidato buono, non ripiegare**: dillo nel rapporto e la scena passa all'agente
+   `immagini`, che la fa con 2-3 immagini generate con Meshy (regole editoriali §3, 2026-09-22). Lo stesso vale per
+   la clip generata che **spetta a ogni reel**: se hai trovato un buon filmato per tutte, indica tu la scena in cui
+   un'immagine generata aggiungerebbe di più.
 
 I filmati sono resi sulla durata **di adesso**: dopo la prima anteprima (o dopo la registrazione vera) le durate
 cambiano; `broll piano` riporta la scena a `scelto` e `broll rendi` la rifà lunga giusta (solo ffmpeg, costa poco).

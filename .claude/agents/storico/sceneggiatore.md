@@ -230,3 +230,19 @@ regola del 2026-09-19 sull'hook a filmato.
   «paragrafo» in VOCE, a schermo e nelle note; la mossa resta «pezzo» perché parla del documento di chi guarda.
 - Il revisore dà ❌ su «Poi chiedile la frase esatta da cui ha preso la risposta»: la citazione sembrava già la
   verifica. Riformulata in «…da cui l'ha presa, e cercala nel documento», accettata da Flavio.
+
+## 2026-09-22 · gpu-comprare-o-affittare · clip senza volti, wow tecnologico
+Sulle clip provvisorie del reel GPU (ragazzo sul divano, donna all'auto, uomo addormentato alla scrivania) Flavio:
+«se non espressamente richiesto, meglio scegliere clip che non mostrano volti umani; preferire qualcosa che contiene
+del tecnologico wow in funzione al resto». Regola in docs/regole-editoriali.md §3; negli agenti cosa cambia.
+
+## 2026-09-22 · gpu-comprare-o-affittare · volto coperto e VOCE rivista registrando
+Dopo la prima presa Flavio: «non voglio che leggi i fotogrammi dove compare il mio volto»; la revisione della VOCE si
+fa in `reel registra` (tasto E, fuori dalla presa), le caption dal testo recitato, `reel parlato --applica` lo riporta
+nel .md. Regole in docs/regole-editoriali.md §8-9; codice in fotogrammi.copri_volto, registra_app, monta.voce_recitata.
+
+## 2026-09-22 · gpu-comprare-o-affittare · il rapporto esterno sul parlato
+Un consulente ha riscritto la voce del reel GPU: troppo scritta, frasi lunghe, poche volte il «tu», nessuna
+micro-pausa. Flavio ha accettato la direzione e ha deciso: limiti più larghi (hook 25 parole, 6 beat, reel 100 s),
+«GPU» e «cloud» ammessi, l'eco che non conta come frase da titolo. Regole nel tema «VOCE e orecchio»; la sezione
+«Come suona il parlato da social» sta in docs/stile-parlato.md. Il reel GPU è stato riscritto e va registrato di nuovo.

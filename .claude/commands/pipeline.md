@@ -87,12 +87,17 @@ brief non descrive un'immagine) si rimanda allo sceneggiatore con il suo elenco,
 il filmato (ha un `TESTO:`), **non far partire l'animatore**: la vedrebbe come scena sua. A fermate lo decide il
 presentatore; con `--tutto` fermati e riportalo. Zero scene a filmato: scrivilo nel report e prosegui.
 
-**T2b secondo tempo ∥ T3: in parallelo** (un solo messaggio, due Agent).
+**T2b secondo tempo ∥ T2c ∥ T3: in parallelo** (un solo messaggio, tre Agent).
 - `broll` in modalità `scegli`: `cerca`, `provini`, guarda i contact sheet. A fermate → **FERMATA 2b**: per ogni scena i
   due candidati consigliati e perché, con i comandi `broll scegli` pronti; il presentatore sceglie **mentre l'animatore
   lavora**, poi `/pipeline <file>` riparte da `rendi`. Con `--tutto` l'agente sceglie da sé: la scelta è **provvisoria**
   e va in testa ai punti «da confermare» del report. Poi `rendi`, `prova-inquadratura`, `scrivi`, `valida`.
   Cambiare un filmato dopo costa poco: `broll scegli`, `broll rendi --forza`, `uv run reel monta`, senza rianimare.
+- **T2c · la clip generata** (agente `immagini`, `sonnet`). Ogni reel ne ha **almeno una** (regole editoriali §3,
+  2026-09-22): 2-3 immagini generate con Meshy montate sui beat, con la dissolvenza. Si lancia insieme a `broll`
+  `scegli`: se la scena non è già decisa, glielo dice `broll` nel suo rapporto (scena senza candidati buoni, o quella
+  dove l'immagine generata aggiunge di più). Costa chiamate a Meshy: una scena per reel, e si rigenera solo se
+  l'immagine è inservibile. Alla fermata 3 il provino e i prompt vanno fra i punti da confermare.
 - **T3 · animazione.** `animatore`: `.py`, `anima --json` a zero ⚠ e zero ✗, fotogrammi, `stato: animato`. Se i filmati
   non sono ancora resi il suo `monta --prova --anteprima` fallisce sulle scene `[broll]`: non è un suo errore, il
   montaggio lo rifai tu in T4 quando `broll` ha finito.
@@ -123,8 +128,16 @@ il report unico.
 5. **Da confermare**: i fatti presi dalla fonte (idee da un link), i testi attribuiti a un modello (con la sigla
    dell'uscita), lo schema narrativo e come è stato distribuito sulle scene.
 6. **Prossimo passo**: guardare l'anteprima e annotare leggibilità, tempi e beat; poi la registrazione in presa unica
-   sull'anteprima (`uv run reel registra <file>`) e il montaggio con le clip vere (`uv run reel monta <file>
-   --anteprima`).
+   sull'anteprima (`uv run reel registra <file>`), dove il presentatore **corregge la VOCE** fuori dalla presa (tasto `E`),
+   e il montaggio con le clip vere (`uv run reel monta <file> --anteprima`).
+
+## Dopo la registrazione (regole editoriali §8-9)
+- `uv run reel monta <file> --anteprima`: le caption si fanno dal testo recitato; la riga «testo cambiato in
+  registrazione» e `report.json` (`voce_recitata`, `voce_cambiata`) dicono dove. `uv run reel parlato <file>` mostra le
+  differenze; con il sì del presentatore `--applica` le riporta nel .md (frasi con numeri o fatti nuovi → revisore).
+- **Il volto lo guarda solo lui**: dopo un montaggio con le clip vere si leggono solo le immagini coperte che `monta` e
+  `strisce` scrivono da sé (avatar nel riquadro, cartello a volto pieno), mai `copertina*.png`, i video o fotogrammi
+  estratti a mano. Si controllano durate, `origine_tempi` e caption nel report.
 
 ## Chi gira su che modello
 `ideatore`, `sceneggiatore`, `revisore-tecnico`, `animatore`, `stilista`: il modello della sessione (il più forte: è

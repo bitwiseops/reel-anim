@@ -32,7 +32,9 @@ Il meccanismo, senza semplificare in falso:
   memoria del computer che la ospita), a qualunque uso. Su RunPod, il 22 settembre 2026, una RTX 3090 (24 GB di
   memoria video) costa **0,50 $/h** nella parte «Secure Cloud» (centri dati del fornitore) e **0,22 $/h** nella parte
   «Community Cloud» (macchine di privati collegate al servizio). Al cambio BCE del 21 settembre 2026 (1 € = 1,1490 $):
-  **0,435 €/h** e **0,191 €/h**.
+  **0,435 €/h** e **0,191 €/h** tasse escluse (termini di servizio RunPod: «Fees do not include any Sales Tax»); per un
+  privato in Italia si aggiunge l'IVA al 22 %: **0,531 €/h** e **0,234 €/h**, la stessa base (tasse incluse) della
+  corrente e del prezzo della macchina.
 - **Acquisto: costo orario che scende.** Il prezzo della macchina è una spesa fissa; divisa sui mesi in cui la usi
   (36, tre anni, come nel testo del presentatore) diventa una quota mensile, e divisa per le ore che la fai lavorare in
   un mese diventa un costo per ora: `quota / ore`. È una curva che scende (un'iperbole): a 20 ore al mese ogni ora
@@ -47,24 +49,25 @@ Il meccanismo, senza semplificare in falso:
 somma del testo del presentatore, 1.250 + 250, che non ho potuto verificare su fonti ufficiali):
 - quota mensile = 1.500 € / 36 mesi = **41,67 €/mese**
 - corrente = 0,5 kW × 0,3163 €/kWh = **0,158 €/h**
-- affitto (Secure Cloud) = 0,50 $ / 1,1490 = **0,435 €/h**
-- H = 41,67 / (0,435 − 0,158) = 41,67 / 0,277 = **150 ore al mese**, cioè **circa 5 ore al giorno, tutti i giorni**.
-- Verifica: a 150 ore, l'acquisto costa 41,67/150 + 0,158 = 0,436 €/h, pari all'affitto.
+- affitto (Secure Cloud) = 0,50 $ / 1,1490 × 1,22 (IVA) = **0,531 €/h**
+- H = 41,67 / (0,531 − 0,158) = 41,67 / 0,373 = 111,8, detta **centodieci ore al mese**, cioè **quasi quattro ore al
+  giorno (3,7), tutti i giorni**.
+- Verifica: a 110 ore, l'acquisto costa 41,67/110 + 0,158 = 0,537 €/h, quanto l'affitto.
 
 Quanto si sposta la soglia (per il revisore e per la caption, non tutti per il reel):
-- scheda + computer a 1.000 € → **100 h/mese** (3,3 h al giorno); a 2.000 € → **201 h/mese** (6,7 h al giorno);
-- se dopo tre anni rivendi la macchina a metà prezzo (ipotesi, nessuna fonte), la spesa netta è 750 € → **75 h/mese**:
+- scheda + computer a 1.000 € → **75 h/mese** (2,5 h al giorno); a 2.000 € → **circa 150 h/mese** (5 h al giorno);
+- se dopo tre anni rivendi la macchina a metà prezzo (ipotesi, nessuna fonte), la spesa netta è 750 € → **56 h/mese**:
   il valore di rivendita pesa quanto il prezzo d'acquisto, e il testo del presentatore ha ragione a dirlo;
-- **se affitti al prezzo più basso** (Community, 0,191 €/h), la differenza con la corrente è 0,033 €/h e la soglia
-  diventa 41,67 / 0,033 = **circa 1.250 ore al mese**: più delle ore che ha un mese (720-744). **La curva non incrocia
-  mai la riga**: a quel prezzo, con questi numeri e senza rivendita, comprare non conviene nemmeno tenendo la scheda
-  accesa giorno e notte. È un risultato forte ma fragile (i privati sono meno affidabili, e basta una rivendita per
+- **se affitti al prezzo più basso** (Community, 0,22 $/h + IVA = 0,234 €/h), la differenza con la corrente è 0,076 €/h
+  e la soglia diventa 41,67 / 0,076 = **circa 550 ore al mese**, oltre diciotto ore al giorno su un mese di 720-744.
+  **L'incrocio c'è, ma lontanissimo**: a quel prezzo, con questi numeri e senza rivendita, comprare conviene solo
+  tenendo la scheda accesa quasi giorno e notte. È un risultato forte ma fragile (i privati sono meno affidabili, e basta una rivendita per
   cambiarlo): va detto con la cautela.
 
-**La soglia del testo (83 ore) non si ritrova.** Con gli stessi dati del testo (1.500 €, 500 W, 0,3163 €/kWh, 0,51
-$/h, 36 mesi) ottengo 146 ore convertendo i dollari in euro, 118 senza conversione; 83 ore tornano solo con un
-ingrediente che il testo non dice (per esempio una rivendita). Nel reel va **150**, col calcolo sopra; nella caption
-si dice che è un esempio e che ognuno lo rifà con i suoi prezzi.
+**La soglia del testo (83 ore) non si ritrova.** Le 83 ore tornano togliendo la corrente (41,67 / 0,50 ≈ 83). Con
+la corrente e l'IVA al 22 % sull'affitto (revisione del 2026-09-22, approvata dal presentatore) il numero giusto è
+**110**: 41,67 / (0,531 − 0,158) = 111,7, quasi quattro ore al giorno. Nella caption si dice che è un esempio e che
+ognuno lo rifà con i suoi prezzi.
 
 **Il tetto che nessuna ora compra.** Prima del conto c'è una domanda di sì o no: il modello che vuoi far girare entra
 nella memoria della scheda? Una scheda da 24 GB non diventa una da 80 GB a forza di ore; se il modello non ci sta, il
@@ -85,15 +88,15 @@ chiedi se comprarla. La domanda che ti fai è «quanto costa?»; quella giusta �
 
 Il momento di prova per chi guarda (*proposta*): prima che compaia la soglia, il presentatore gli chiede di fare il
 suo conto a mente: «quante ore al mese la terresti accesa a lavorare, davvero? Non quante ci stai al computer: quante
-la fai girare». Chi guarda di solito si dà un numero generoso; la figura gli mostra che serve una media di cinque
-ore al giorno, tutti i giorni, per tre anni.
+la fai girare». Chi guarda di solito si dà un numero generoso; la figura gli mostra che serve una media di quasi
+quattro ore al giorno, tutti i giorni, per tre anni.
 
 A schermo la situazione diventa oggetti, non battute: una scheda video (sagoma), un mucchio di monete che è il suo
 prezzo, un orologio o un contatore delle ore del mese, un grafico con una riga piatta e una curva.
 
 ## Messaggio centrale
 Una scheda comprata costa meno a ogni ora che la usi, una affittata costa sempre uguale. Prima di comprarla conta le
-ore: con i prezzi di oggi, sotto le cinque ore al giorno conviene affittare.
+ore: con i prezzi di oggi, sotto le quattro ore al giorno conviene affittare.
 
 ## Struttura narrativa
 **Schema di partenza:** @ingegneria.italia · r0039 — allarme di mercato con i numeri → tre cause in elenco →
@@ -123,18 +126,18 @@ altre idee in `contenuti/idee/` usa r0039 (usate: r0040, r0018, r0020, r0045, r0
   tutti conoscono, sul filmato: l'auto tua e l'auto a noleggio. L'auto tua costa meno a ogni viaggio che fai, quella a
   noleggio costa uguale.
 - [Si parte da (tappa 1)… (tappe)] → il conto a tappe, animato: la riga piatta dell'affitto, il mucchio del prezzo
-  diviso in mesi e poi in ore, la corrente, l'incrocio a 150 ore.
+  diviso in mesi e poi in ore, la corrente, l'incrocio a 110 ore.
 - [E come dicevamo all'inizio, (la soluzione risponde al problema d'apertura)] → anello sulla domanda d'apertura: la
   mossa è rispondere davvero a «quante ore?», e la chiusura riprende la domanda dell'hook ribaltandola (non quanto
   costa: quante ore).
 
 **Tecniche** (da «Tecniche condivise»):
 - `domanda-pivot`: «devi proprio comprarla?» fra il prezzo che corre (scena 3) e l'analogia (scena 4).
-- `numeri-come-prova`: la soglia si guadagna con il conto fatto vedere, un numero per beat (0,44 · 42 · 0,16 · 150).
+- `numeri-come-prova`: la soglia si guadagna con il conto fatto vedere, un numero per beat (0,53 · 42 · 0,16 · 110).
 - `analogia`: l'auto tua e l'auto a noleggio (scena 4, a filmato), detta come somiglianza del meccanismo di costo.
 - `struttura-ad-anello`: l'hook chiede «quante ore?», la chiusura dice che quella è la domanda giusta.
 - `cautela`: il conto non tiene la rivendita né le ore buttate sul noleggio; con i prezzi più bassi dei privati
-  l'incrocio sparisce (scena 6 e caption).
+  l'incrocio scivola lontanissimo (scena 6 e caption).
 
 **Escluse:**
 - `elenco` delle tre cause (r0039 ne ha tre: concentrazione, strategia, vincolo fisico): qui una causa sola, la
@@ -159,27 +162,28 @@ torna in tutte le scene animate.
   destra, che resta mezza vuota. Poi una linea del tempo che corre in avanti e si ferma contro una sbarra: «2028».
   Etichetta piccola: «TrendForce, 2026». Si capisce senza leggere: la memoria va altrove, e per un po' sarà così.
 - **Scena 5 — il conto che si vede (prima una riga, poi una curva, poi l'incrocio).**
-  1. La riga dell'affitto: piatta, all'altezza «0,44 €» (un'ora a noleggio), con una piccola nuvola accanto.
+  1. La riga dell'affitto: piatta, all'altezza «0,53 €» (un'ora a noleggio, IVA inclusa), con una piccola nuvola accanto.
   2. Il prezzo della macchina: un mucchio di monete «1.500 €» accanto alla scheda. Il mucchio si divide in 36 fette
      (i mesi di tre anni); una fetta, «42 €», resta in mano.
   3. La fetta si sbriciola sulle ore del mese: con poche ore (20) ogni ora è un pezzo grosso e il punto sta in alto
-     sul grafico; con 50, più basso; con 150, all'altezza della riga dell'affitto; con 300, sotto. La curva si
+     sul grafico; con 50, più basso; con 110, all'altezza della riga dell'affitto; con 300, sotto. La curva si
      disegna unendo i punti.
   4. Sotto a tutto, una riga tratteggiata: la corrente, «0,16 €». La curva le si avvicina e non la passa mai.
-  5. L'incrocio si accende: «150 h», e accanto un orologio di un giorno che si riempie per cinque ore: circa cinque ore
-     al giorno. Etichette piccole: «RunPod, set. 2026» sotto la riga dell'affitto, «ARERA, 2026» sotto la corrente.
+  5. L'incrocio si accende: «110 h», e accanto un orologio di un giorno che si riempie per 3,7 ore: quasi quattro ore
+     al giorno. Etichette piccole: «RunPod + IVA, set. 2026» sotto la riga dell'affitto, «500 W · ARERA» sotto la
+     corrente.
   A sinistra dell'incrocio l'area si colora (affitta), a destra l'altra (compra): la regola si legge senza parole.
 - **Scena 7 — la mossa (due gesti, prima/dopo).** Primo gesto: un blocco (il modello) scende nella scheda; in una
   versione ci sta e si incastra, nell'altra sborda e la scheda si spegne (il blocco va verso la nuvola). Etichetta
-  sulla scheda: «24 GB». Secondo gesto: il contatore delle ore del mese si riempie fino a una tacca a «150»; si ferma
+  sulla scheda: «24 GB». Secondo gesto: il contatore delle ore del mese si riempie fino a una tacca a «110»; si ferma
   sotto la tacca → la freccia va alla nuvola (affitta); la supera → la freccia va alla scheda (compra). Poi il
   criterio: una ricevuta del mese di noleggio (sagoma, righe grigie) da cui si accende un solo numero, le ore pagate,
   che vola sul contatore.
 
 **Mossa wow candidata** (*proposta*, facoltativa, scena 5 o 6): la seconda riga dell'affitto, quella dei privati a
-«0,19 €», scende sul grafico e si ferma appena sopra la corrente; il grafico si allarga fino a «720 h» (un mese
-intero, giorno e notte) e la curva ancora non la tocca. È l'unico momento in cui la figura rovescia l'intuizione
-(«se la usi tanto conviene comprare» diventa «a certi prezzi, mai»); va accompagnato dalla cautela (vedi claim).
+«0,23 €», scende sul grafico e si ferma appena sopra la corrente; il grafico si allarga fino a «720 h» (un mese
+intero, giorno e notte) e la curva la tocca solo verso «550 h», oltre diciotto ore al giorno. È l'unico momento in cui la figura rovescia l'intuizione
+(«se la usi tanto conviene comprare» diventa «a certi prezzi, quasi mai»); va accompagnato dalla cautela (vedi claim).
 
 Le tre scene a filmato (gli annunci, l'auto a noleggio, le ore buttate) sono in «Note per il reel», con le query.
 
@@ -189,8 +193,8 @@ Le tre scene a filmato (gli annunci, l'auto a noleggio, le ore buttate) sono in 
   curva che scende, e dove si incrociano c'è la tua risposta.
 - **La mossa, per domani** (del presentatore, §5 del testo; le prime due verifiche nel reel, la terza in caption):
   1. il modello che vuoi usare entra nella memoria della scheda? Se no, affitti;
-  2. quante ore al mese la faresti lavorare davvero? Se sei sotto la soglia (con i prezzi di oggi, circa 150, cinque
-     ore al giorno), affitti.
+  2. quante ore al mese la faresti lavorare davvero? Se sei sotto la soglia (con i prezzi di oggi, circa 110, quasi
+     quattro ore al giorno), affitti.
 - **Il criterio per capire se ha funzionato** (*proposta*, un gesto di chi guarda): **prima di comprare, affitta per un
   mese e, a fine mese, leggi sulla fattura del noleggio quante ore hai pagato davvero.** Se il numero è sotto la
   soglia, comprare ti sarebbe costato di più; se è sopra, hai la prova che conviene comprare. Rifai il conto con il
@@ -257,7 +261,7 @@ non verificati: nessuna fonte trovata; non entra (resta la cautela a parole, sen
 - **«Salire di fascia peggiora la soglia»** (3090 contro 5090, §3). Interessante, ma servono i prezzi d'acquisto di
   due schede, che non hanno fonte ufficiale; e due curve in più affollano il grafico. In caption, se il presentatore
   lo vuole, come ragionamento senza numeri.
-- **«Il valore di rivendita decide»** (§3). È la variabile che sposta di più la soglia (da 150 a 75 ore con una
+- **«Il valore di rivendita decide»** (§3). È la variabile che sposta di più la soglia (da 110 a 56 ore con una
   rivendita a metà), ma il valore futuro di una scheda usata è una scommessa, non un dato: nel reel una frase di
   cautela, in caption il conto.
 - **«Accesso istituzionale: tempo di coda contro denaro»** (terza verifica del §5). Vale per chi fa ricerca (in Italia,
@@ -269,7 +273,7 @@ non verificati: nessuna fonte trovata; non entra (resta la cautela a parole, sen
   (20 parole)
 - Alternativa: «Vuoi l'IA sul tuo computer e stai guardando le schede video? Prima dimmi quante ore la farai lavorare.» (18)
 - **TITOLO della copertina** (la tesi): «Comprare una scheda per l'IA conviene solo se la usi tanto». Alternative:
-  «Scheda per l'IA: comprarla o affittarla? Conta le ore»; «Cinque ore al giorno: sotto, affitta».
+  «Scheda per l'IA: comprarla o affittarla? Conta le ore»; «Quattro ore al giorno: sotto, affitta».
 
 **Percorso** (*proposta*, otto scene; sei in mezzo: tre animate e tre a filmato, alternate, nessuna coppia di filmati;
 la VOCE la scrive lo sceneggiatore):
@@ -287,9 +291,9 @@ la VOCE la scrive lo sceneggiatore):
    con il telefono un'auto a noleggio parcheggiata, sale e parte**; in alternativa **un'auto ferma sotto casa, coperta
    di foglie**. Query: `person unlocking car sharing car with smartphone`, `woman getting into rental car city
    street`, `parked car covered in leaves`.
-5. **Animata · il conto e la soglia.** Riga piatta dell'affitto (0,44 €), il mucchio da 1.500 € in 36 fette (42 €), la
-   fetta sbriciolata in ore, la curva, la corrente (0,16 €), l'incrocio a 150 h, l'orologio che si riempie per cinque
-   ore. Qui stanno tutti i numeri. Un beat per numero; non più di cinque beat.
+5. **Animata · il conto e la soglia.** Riga piatta dell'affitto (0,53 €), il mucchio da 1.500 € in 36 fette (42 €), la
+   fetta sbriciolata in ore, la curva, la corrente (0,16 €), l'incrocio a 110 h, l'orologio che si riempie per quasi
+   quattro ore. Qui stanno tutti i numeri. Un beat per numero; non più di cinque beat.
 6. **A filmato · la cautela.** Voce generica: il conto non dice tutto; sul noleggio paghi anche le ore in cui sistemi,
    aspetti, sbagli; in casa quelle ore costano solo la corrente; e se poi la scheda la rivendi, comprare conviene
    prima; però ci sono servizi a noleggio che costano così poco che comprare non conviene quasi mai. (Niente numeri
@@ -298,7 +302,7 @@ la VOCE la scrive lo sceneggiatore):
    piano**; oppure **un tassametro / un parchimetro che scorre**. Query: `developer waiting in front of laptop at
    night`, `person bored waiting for computer to finish`, `taxi meter running close up`.
 7. **Animata · la mossa.** Il blocco-modello che entra o sborda dalla scheda («24 GB»); il contatore delle ore del
-   mese con la tacca a 150, la freccia verso la nuvola o verso la scheda; la ricevuta del mese di noleggio da cui si
+   mese con la tacca a 110, la freccia verso la nuvola o verso la scheda; la ricevuta del mese di noleggio da cui si
    accende il numero delle ore pagate (il criterio).
 8. **Chiusura, volto pieno**: la battuta.
 
@@ -315,19 +319,19 @@ Obiettivo ≤ 70 s, circa 170-180 parole di VOCE. La scena più densa è la 5: s
 Ogni scena animata ha il suo cambio grande: i chip che scivolano via (3), il mucchio che si sbriciola e la curva (5),
 il blocco che sborda e la freccia che sceglie (7).
 
-**Numeri.** In VOCE al massimo tre: «meno di mezzo euro l'ora» a noleggio, «centocinquanta ore al mese», «cinque ore al
-giorno». Tutti gli altri solo a schermo, arrotondati: 0,44 € (affitto, RunPod Secure Cloud RTX 3090, 0,50 $ al cambio
-BCE), 1.500 € (**esempio dichiarato**, detto come tale: «mettiamo millecinquecento euro fra scheda e computer»), 36
-mesi (scelta del conto, tre anni), 42 € al mese, 0,16 € l'ora di corrente (0,5 kW esempio × 31,63 c€/kWh ARERA), 150
-h, 24 GB (scheda tecnica NVIDIA), 2028 (TrendForce). Il 150 va sempre detto come risultato **di questo esempio**.
+**Numeri.** In VOCE al massimo tre: «circa mezzo euro l'ora» a noleggio, «centodieci ore al mese», «quasi quattro ore al
+giorno». Tutti gli altri solo a schermo, arrotondati: 0,53 € (affitto, RunPod Secure Cloud RTX 3090, 0,50 $ tasse
+escluse al cambio BCE, più IVA al 22 %), 1.500 € (**esempio dichiarato**, detto come tale: «mettiamo millecinquecento euro fra scheda e computer»), 36
+mesi (scelta del conto, tre anni), 42 € al mese, 0,16 € l'ora di corrente (0,5 kW esempio × 31,63 c€/kWh ARERA), 110
+h, 24 GB (scheda tecnica NVIDIA), 2028 (TrendForce). Il 110 va sempre detto come risultato **di questo esempio**.
 
-**Chi si nomina nel reel.** A schermo, piccole, le etichette che reggono i numeri: «TrendForce, 2026», «RunPod, set.
-2026», «ARERA, 2026». Nessun nome a voce. Nessuna idea viene da un post o da un articolo non ufficiale: la tesi è del
+**Chi si nomina nel reel.** A schermo, piccole, le etichette che reggono i numeri: «TrendForce, 2026», «RunPod + IVA,
+set. 2026», «500 W · ARERA». Nessun nome a voce. Nessuna idea viene da un post o da un articolo non ufficiale: la tesi è del
 presentatore.
 
 **MESSAGGIO candidato** (per la caption del post, ≤ 12 parole):
 - «Prima di comprare la scheda per l'IA, conta le ore.» (10)
-- Alternative: «Affitto: ogni ora uguale. Acquisto: più la usi, meno costa.» (10); «Sotto le cinque ore al giorno, affitta.» (7)
+- Alternative: «Affitto: ogni ora uguale. Acquisto: più la usi, meno costa.» (10); «Sotto le quattro ore al giorno, affitta.» (7)
 
 **Chiusura a battuta** (*proposta*, ≤ 18 parole di VOCE, sceglie lo sceneggiatore): «Non chiederti quanto costa la
 scheda. Chiediti quante ore la farai lavorare.» (13) Seconda direzione, ad anello con l'hook: «La domanda non è
@@ -337,13 +341,12 @@ quanto costa. È quante ore: il resto è una divisione.» (15)
 voglia di comprarla.»
 
 **Claim per il revisore** (con le formule prudenti)
-- **La soglia di 150 ore** è il risultato di un esempio: 1.500 € (non verificato, esempio dichiarato), 36 mesi, 0,5 kW
+- **La soglia di 110 ore** è il risultato di un esempio: 1.500 € (non verificato, esempio dichiarato), 36 mesi, 0,5 kW
   (esempio), 31,63 c€/kWh (ARERA, cliente tipo vulnerabile in Maggior Tutela), 0,50 $/h (RunPod Secure Cloud, RTX
-  3090, 22/09/2026), 1,1490 $/€ (BCE, 21/09/2026). Formula: «con questi prezzi», «in questo esempio», mai «la soglia è
-  150 ore» in assoluto. Ricontrollare il conto: 41,67 / (0,4352 − 0,1582) = 150,4.
-- **Lo scarto con il testo del presentatore**: il testo dice «circa 83 ore»; con i suoi stessi dati il conto dà 146
-  (dollari convertiti) o 118 (senza conversione). Nel reel va 150. Se il presentatore vuole tenere 83, bisogna sapere
-  quale ingrediente in più ha usato (rivendita?) e dirlo.
+  3090, 22/09/2026, tasse escluse) + IVA 22 %, 1,1490 $/€ (BCE, 21/09/2026). Formula: «con questi prezzi», «in questo
+  esempio», mai «la soglia è 110 ore» in assoluto. Conto: 41,67 / (0,531 − 0,158) = 111,7 (era 150 senza IVA, ❌ 3
+  della prima revisione).
+- **Lo scarto con il testo del presentatore**: le sue 83 ore tornano togliendo la corrente (41,67 / 0,50 ≈ 83). Chiuso.
 - **La tariffa ARERA** non è «la tariffa di casa» di tutti: è il prezzo di riferimento del cliente tipo vulnerabile in
   Maggior Tutela. Formula: «una tariffa di casa tipica, circa 30 centesimi al kWh». Mai «la bolletta di tutti».
 - **Il prezzo RunPod** non comprende lo spazio disco (si paga a parte: da verificare sulla stessa pagina) ed è per
@@ -352,7 +355,8 @@ voglia di comprarla.»
   non il prezzo delle schede video. Formula: «la memoria resterà scarsa per tutto il 2027, i nuovi impianti pesano dal
   2028». Il legame con le schede video è nel comunicato del 3 luglio 2026 (memoria grafica «constrained», prezzi
   GDDR6/7 in salita). Mai «le schede costeranno care fino al 2028».
-- **La riga dei privati (0,19 €/h) che non incrocia mai**, se usata: vale senza rivendita e con 1.500 €; i privati del
+- **La riga dei privati (0,23 €/h con IVA) che incrocia solo verso 550 ore**, se usata: vale senza rivendita e con
+  1.500 €; i privati del
   «Community Cloud» sono meno affidabili (formula: «servizi più economici, ma meno affidabili»). Mai «comprare non
   conviene mai».
 - **«Le ore buttate sul noleggio»** e **la rivendita** si dicono senza numeri: nessuna fonte ufficiale.
@@ -364,13 +368,15 @@ voglia di comprarla.»
 **Note per la caption**
 - La tesi e le tre verifiche sono del presentatore; il conto è rifatto con numeri verificati al 22 settembre 2026.
 - Il conto per intero, per chi vuole rifarlo con i suoi prezzi: soglia (ore al mese) = (prezzo della macchina ÷ mesi
-  di uso) ÷ (affitto orario − consumo in kW × prezzo del kWh). Esempio: (1.500 ÷ 36) ÷ (0,435 − 0,5 × 0,316) ≈ 150.
+  di uso) ÷ (affitto orario − consumo in kW × prezzo del kWh). Esempio: (1.500 ÷ 36) ÷ (0,531 − 0,5 × 0,316) ≈ 110,
+  con l'affitto IVA inclusa.
 - Le tre verifiche in elenco (solo in caption): 1) il modello entra nella memoria della scheda (24-32 GB)? se no,
   affitti; 2) le ore al mese superano la soglia calcolata sui tuoi prezzi? se sono molto sotto, affitti; 3) hai un
   accesso istituzionale (per chi fa ricerca, in Italia per esempio i bandi ISCRA del CINECA)? allora il confronto è
   tempo di coda contro denaro.
-- Come si sposta la soglia: macchina a 1.000 € → 100 ore; a 2.000 € → 200 ore; rivenduta a metà dopo tre anni → 75
-  ore; noleggio dei privati a 0,22 $/h → nessun incrocio in un mese.
+- Come si sposta la soglia: macchina a 1.000 € → 75 ore; a 2.000 € → 150 ore; rivenduta a metà dopo tre anni → 56
+  ore; noleggio dei privati a 0,22 $/h più IVA → circa 550 ore, oltre diciotto al giorno. Con partita IVA l'IVA si
+  toglie da tutte le voci e la soglia resta vicina a 110 (circa 117 con la corrente al 10 %).
 - Fonti: RunPod pricing (13/09/2026), ARERA comunicato del 25/06/2026, BCE cambio del 21/09/2026, scheda tecnica NVIDIA
   RTX 3090, TrendForce 03/07/2026 e 30/07/2026 (link in «Fonte»). Nessuna sponsorizzazione: RunPod è citato solo come
   listino pubblico di riferimento, e i prezzi cambiano.

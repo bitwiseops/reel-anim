@@ -5,5 +5,19 @@
       "Bash(uv run pytest:*)",
       "Bash(uv run python -m tools.anim.vetrina:*)"
     ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Agent|Workflow",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/caffeina.sh 2>/dev/null || true",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
   }
 }

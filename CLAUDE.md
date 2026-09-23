@@ -1,7 +1,7 @@
 # reel-anim — Reel esplicativi con Manim
 
 ## Cos'è
-Pipeline per produrre Reel Instagram 9:16 (30-90 s) in cui **le animazioni guidano la spiegazione** di un concetto
+Pipeline per produrre Reel Instagram 9:16 (30-100 s) in cui **le animazioni guidano la spiegazione** di un concetto
 e **il presentatore compare in un riquadro** in sovraimpressione (volto + voce, una clip registrata per scena).
 Motore: **Manim Community** (grafica), **ffmpeg** (compositing e montaggio), Python 3.12 con `uv`. Tutto generato
 da script a partire da una sceneggiatura markdown; niente tool esterni. **Senza brand**: identità (palette, font,
@@ -24,11 +24,12 @@ Piano completo: `~/.claude/plans/dobbiamo-revisionare-il-modello-lovely-piglet.m
   componente: `uv run python -m tools.anim.vetrina`), `prova` (scena di prova della fase 0)
 - `tools/reel/` — grammatica e montaggio: `model`, `parser`, `validate` (`LIMITI`, fonte unica), `stima`, `gobbo`,
   `clip`, `voce` (`say`), `manim_render`, `compositing` (filtergraph ffmpeg: b-roll, riquadro con maschera, audio,
-  concat con xfade), `fotogrammi`, `contact_sheet`, `monta`, `stile` (guida del parlato rispetto al corpus),
+  concat con xfade, raccordo volto pieno ↔ riquadro), `fotogrammi`, `contact_sheet`, `monta`, `stile` (guida del parlato rispetto al corpus), `parlato` (testo recitato
+  ↔ VOCE, `reel parlato`),
   `__main__` (CLI `uv run reel`)
 - `broll/` — sottosistema del materiale esterno (filmati che si alternano alle animazioni): **progetto `uv`
   a sé**, con proprio `pyproject.toml`, `uv.lock` e `.venv`, così le sue dipendenze non entrano mai in quelle
-  della radice. `uv run --project broll broll piano|stato|cerca|provini|scegli|rendi|scrivi|prova-inquadratura` (`broll/README.md`):
+  della radice. `uv run --project broll broll piano|stato|cerca|provini|genera|scegli|rendi|scrivi|prova-inquadratura` (`broll/README.md`):
   dal piano a `contenuti/media/<slug>/broll-scena-NN.mp4`, poi `scrivi` mette nel `.md` il tipo `[broll]` che `reel monta` legge;
   banco di prova `broll/esempi/demo-alternanza.md`
 - `contenuti/` — `spunti/` (link, righe o tema: il punto di partenza, `stato: spunto → ideato`), `idee/`,
@@ -50,7 +51,8 @@ Piano completo: `~/.claude/plans/dobbiamo-revisionare-il-modello-lovely-piglet.m
   `docs/stile-parlato.md`), `sceneggiatore` (idea → sceneggiatura, `reel valida`), `revisore-tecnico` (claim anche
   nelle animazioni e contro la fonte, `stato: rivisto`), `animatore` (`.py` + `anima --json` + fotogrammi +
   `monta --prova --anteprima`, `stato: animato`; non tocca `tools/`): questi cinque girano sul modello della sessione;
-  su `sonnet` (nel frontmatter) i tre di servizio: `broll` (modalità `marca` e `scegli`), `controllore-fotogrammi`
+  su `sonnet` (nel frontmatter) i quattro di servizio: `broll` (modalità `marca` e `scegli`), `immagini` (clip da 2-3
+  immagini Meshy, `broll genera`, in parallelo con `broll` e animatore), `controllore-fotogrammi`
   (uno per scena animata, in parallelo: guarda i passaggi a 8 fps e riferisce) e `verificatore-fonte` (uno per fonte,
   in parallelo, prima del revisore). Ogni agente ha le **«Regole in vigore» per tema**; la cronaca delle lezioni sta
   in `.claude/agents/storico/<agente>.md`, che gli agenti non caricano · `.claude/commands/pipeline.md` —
@@ -59,7 +61,8 @@ Piano completo: `~/.claude/plans/dobbiamo-revisionare-il-modello-lovely-piglet.m
   `contenuti/idee/uscite/`; gli agenti non lanciano agenti, quindi il parallelo lo apre il coordinatore (verificatori,
   filmati ∥ animazione, controllori) · `.claude/workflows/reel.js` — la stessa corsa come Workflow deterministico
   (`args` = percorso di partenza) · `.claude/workflows/stile.js` — la guida di stile a due tempi (schede dei reel in
-  parallelo su `sonnet`, poi lo `stilista`)
+  parallelo su `sonnet`, poi lo `stilista`) · `.claude/hooks/caffeina.sh` — a ogni Agent/Workflow tiene sveglio il
+  Mac per 2 ore (`caffeinate`)
 
 ## Stato
 Fasi 0 e 1 chiuse (2026-09-13, in `main`). Fase 2 in corso (branch `fase-2-primo-reel`). Il primo reel vero
@@ -85,7 +88,7 @@ tema, storico a parte, `docs/regole-editoriali.md`, tre agenti di servizio su `s
 
 ## Comandi
 `uv run reel setup` · `stile` · `valida <file>` · `gobbo <file> [--scrivi]` · `clip <file>` · `voce <file>` ·
-`registra <file> [--da-scena N] [--dispositivi] [--video N --audio N] [--spezza presa-NN]` ·
+`registra <file> [--da-scena N] [--dispositivi] [--video N --audio N] [--spezza presa-NN]` · `parlato <file> [--applica]` ·
 `anima <file> [--scena N] [--qualita l|m|h] [--debug] [--json]` · `monta <file> [--prova] [--anteprima] [--scena N]` ·
 `strisce <file> [--scena N] [--fps 8] [--finestra 1.3] [--sorgente scene|anima]` (fotogrammi fitti attorno a ogni beat) ·
 `uscite <idea> [--per-modello 5] [--prova-a-secco]` (T0b) ·
@@ -100,9 +103,12 @@ grafica né `TESTO:` né classe Manim (lo scrive `broll scrivi`, `docs/sceneggia
 registri stanno a metà** (± una scena, contate fra le scene in mezzo): sulle clip la voce dice le cose generiche,
 nelle animazioni la spiegazione complessa, e per stare a metà si aggiungono scene invece di allungare il reel;
 **apertura e chiusura sono il presentatore a tutto schermo** (`RIQUADRO: pieno`, loro default; apertura senza classe
-Manim, e nemmeno la chiusura: lui e le caption, MESSAGGIO e CTA solo per il post; registrazione verticale 1080×1920); inline `==evidenzia==`, `**grassetto**`.
-Limiti in `tools/reel/validate.py::LIMITI`: 6-9 scene (5-10), VOCE ≤ 50 parole/scena (hook ≤ 20, chiusura ≤ 18), scena 2,5-19 s,
-reel 30-90 s (dal 2026-09-15: la VOCE è parlato vero, «prima il monologo, poi i beat», `docs/sceneggiatura.md` §5;
+Manim, e nemmeno la chiusura: lui e le caption, MESSAGGIO e CTA solo per il post; registrazione verticale 1080×1920;
+dal 2026-09-22 il volto non stacca: negli ultimi ~0,5 s si rimpicciolisce fino al cerchio del riquadro della scena
+dopo, e in chiusura il cerchio si riapre — `[transizioni] raccordo_riquadro_s`, quella giunzione è sempre un taglio); inline `==evidenzia==`, `**grassetto**`.
+Limiti in `tools/reel/validate.py::LIMITI`: 6-9 scene (5-10), VOCE ≤ 50 parole/scena (hook ≤ 25, chiusura ≤ 18), ≤ 6 beat,
+scena 2,5-19 s,
+reel 30-100 s (dal 2026-09-15: la VOCE è parlato vero, «prima il monologo, poi i beat», `docs/sceneggiatura.md` §5;
 `valida` avvisa su frasi da titolo in fila, «X, sì. Y, no.», due punti come snodo). La durata reale di ogni scena la
 decide la clip registrata; senza clip vale la stima (2,8 parole/s).
 I beat partono sugli inizi delle frasi VOCE: esatti con la voce di prova (una frase alla volta, `pausa_frasi_s`),
@@ -142,6 +148,12 @@ animato → …`. Mai spostare file tra cartelle: lo fa il presentatore. Fase 3:
 social-strategist.
 
 ## Registrazione guidata (fase 5, fatta il 2026-09-14; decisione: B con «riprendi da questa scena»)
+**Dal 2026-09-22** (regole editoriali §8-9): la finestra ha i pannelli sopra e i comandi sotto, la prova senza
+registrare (`P`) e la **modifica del testo fuori dalla presa** (`E`, righe in `contenuti/media/<slug>/parlato.json`,
+tante quante le VOCE); il sidecar `scena-NN.json` porta `voce` = il testo recitato, e le caption del montaggio si fanno
+da lì (`monta.voce_recitata`); `reel parlato --applica` lo riporta nel .md. Dopo la registrazione le immagini di
+controllo si scrivono con il volto coperto (`fotogrammi.copri_volto`): **Claude non guarda mai il volto del
+presentatore** (niente `copertina*.png`, video montati o fotogrammi estratti a mano).
 `uv run reel registra <file>` (`docs/registrazione.md` §6): app Tkinter con tre pannelli (webcam con il cerchio, il
 reel `--prova` con il volto live nel riquadro, testo karaoke sui tempi della voce di prova; inquadratura spostabile e
 zoomabile prima della presa, salvata in `inquadratura.json` e applicata come ritaglio al taglio). **Presa unica** da

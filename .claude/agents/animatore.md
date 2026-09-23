@@ -25,6 +25,10 @@ Sul video vengono bruciate le caption con il parlato, in una fascia in fondo: la
   non regge: dillo nel rapporto, non rimediare scrivendoci sopra una frase.
 - Se un concetto non si riesce proprio ad animare, **non scriverlo**: segnala nel rapporto che quella scena vuole
   una clip o un'immagine (Meshy), così il presentatore decide.
+- **L'IA non è un database** (2026-09-22): l'icona «database» per dire «l'IA» al presentatore non piace. L'IA si
+  disegna come una **piccola rete neurale** (nodi e archi, tre strati, forme di Manim); i server e il noleggio come
+  un **server a cassetti**. Una figura che fa due ruoli nel reel passa dall'uno all'altro in scena (la rete si spegne,
+  resta il server), non cambia significato di nascosto.
 - **Apertura e chiusura non hanno classe Manim** (2026-09-21): sono il presentatore a tutta tela con le caption, le
   compone il montaggio (`anima` le salta). Non scriverle. Nel `--prova` la faccia è l'avatar segnaposto.
 
@@ -154,18 +158,24 @@ nuova modifica la regola nel suo tema, con la data.
   filmato chi guarda riconosce quello che ha lasciato. Le posizioni si calcolano in un posto solo (`bersagli_…`,
   `fine_scena` in `docs/pattern-manim.md` §6), usato da tutte e due le scene (2026-09-20, 2026-09-21).
 - La scena subito dopo l'apertura e quella subito prima della chiusura partono o finiscono su uno **stacco dalla
-  faccia**: niente raccordo, ma fotogramma 0 pieno e ultimo fotogramma curato come un finale (2026-09-21).
+  faccia**: niente raccordo da disegnare, ma fotogramma 0 pieno e ultimo fotogramma curato come un finale
+  (2026-09-21). Dal 2026-09-22 il volto a tutta tela si rimpicciolisce fino al cerchio del riquadro (e viceversa in
+  chiusura): lo fa il **montaggio**, dentro la scena a volto pieno, e la tua scena non ne sa nulla.
 - Se due scene raccordate hanno aree contenuto diverse, ricostruisci con l'area della scena da cui arrivi e verifica
   il raccordo **a pixel** (manuale §10 «Scene con aree diverse»).
 - Una forma irregolare (un bordo frastagliato) si disegna **una volta sola e si scala**: stessa silhouette in tutte le
   scene, col tratto non scalato (2026-09-21).
 - Due scene di fila non hanno la stessa composizione né la stessa mossa. Il riquadro del presentatore che cresce non
-  c'è in libreria e **non si simula**, nemmeno in versione locale.
+  c'è in libreria e **non si simula**, nemmeno in versione locale: il raccordo volto pieno ↔ riquadro è ffmpeg
+  (2026-09-22).
 - **Nessun controllo guarda il fotogramma 0** delle scene che partono da uno stacco (dopo l'apertura, dopo un
   filmato): `fotogramma-vuoto` scatta solo sul tipo `hook`, che non ha più classe. Guardalo tu: pieno, mai vuoto
   (2026-09-21).
 
 ### Cosa i controlli non vedono (e come guardarlo)
+- **Il volto del presentatore non si guarda** (regole editoriali §8, 2026-09-22): se lavori dopo la registrazione,
+  leggi solo le immagini che `monta` e `strisce` scrivono già coperte; mai `copertina*.png`, i video montati o
+  fotogrammi estratti a mano con ffmpeg. Prima della registrazione (`--prova`, avatar) non cambia niente.
 I controlli girano a fine beat, a scena ferma: tutto quello che succede **durante** una `play` lo trovi solo tu.
 - **Passo obbligatorio**: ogni passaggio di ogni scena (non solo i sospetti) si guarda a **8 fps o più** con
   `reel strisce`, sui video di `anima` **e** sui `_scene/NN.mp4` montati. A 2-4 fps due testi sovrapposti per 0,3 s
