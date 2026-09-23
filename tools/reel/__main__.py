@@ -465,6 +465,26 @@ def cmd_pulisci(args) -> int:
     return 0
 
 
+def cmd_audio(args) -> int:
+    """Il prima/dopo della catena audio su un pezzo di presa: si ascolta, non si guarda (niente video)."""
+    from . import clip, compositing
+    from ..anim.config import carica
+    from .ffmpeg import esegui
+    r, _ = _carica(Path(args.file))
+    cfg = carica()
+    scene = [args.scena] if args.scena else [s.n for s in r.scene if s.voce]
+    c = next((clip.trova(r.slug, n) for n in scene if clip.trova(r.slug, n)), None)
+    if c is None:
+        print(f"-> nessuna clip registrata in contenuti/media/{r.slug}/ per le scene {scene}", file=sys.stderr)
+        return 1
+    dest = RADICE / "contenuti" / "render" / r.slug / f"confronto-audio-{c.stem}.m4a"
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    esegui(compositing.comando_confronto(c, dest, args.secondi, cfg), "ffmpeg (confronto audio)")
+    print(f"-> {dest}\n   prima: solo il volume · un secondo di silenzio · dopo: {compositing.catena_voce(cfg) or 'catena spenta'}\n"
+          f"   (stesso bersaglio di loudness: si sente la pulizia, non il volume; la regoli in config.toml [audio])")
+    return 0
+
+
 def cmd_setup(args) -> int:
     from ..anim.config import carica, registra_font
     from .compositing import maschera_riquadro, maschera_schermo
@@ -632,6 +652,10 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("slug", nargs="?"); p.add_argument("--tutto", action="store_true", help="tutti i reel")
     p.add_argument("--prova-a-secco", action="store_true", help="dice quanto toglierebbe, non tocca niente")
     p.set_defaults(fn=cmd_pulisci)
+    p = sub.add_parser("audio", help="prima/dopo della catena audio ([audio]) su un pezzo di presa → contenuti/render/<slug>/")
+    p.add_argument("file"); p.add_argument("--scena", type=int, help="la scena da cui prendere la presa (default: la prima registrata)")
+    p.add_argument("--secondi", type=float, default=12.0, help="quanto dura il pezzo (default 12)")
+    p.set_defaults(fn=cmd_audio)
 
     args = ap.parse_args(argv)
     return args.fn(args)

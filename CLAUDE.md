@@ -24,7 +24,7 @@ Piano completo: `~/.claude/plans/dobbiamo-revisionare-il-modello-lovely-piglet.m
   componente: `uv run python -m tools.anim.vetrina`), `prova` (scena di prova della fase 0)
 - `tools/reel/` — grammatica e montaggio: `model`, `parser`, `validate` (`LIMITI`, fonte unica), `stima`, `gobbo`,
   `clip`, `voce` (`say`), `manim_render`, `compositing` (filtergraph ffmpeg: b-roll, riquadro con maschera, audio,
-  concat con xfade, raccordo volto pieno ↔ riquadro), `fotogrammi`, `contact_sheet`, `monta`, `stile` (guida del parlato rispetto al corpus), `parlato` (testo recitato
+  concat con xfade, raccordo volto pieno ↔ riquadro, voce pulita per scena e reel a −14 LUFS in due passaggi: `[audio]`), `fotogrammi`, `contact_sheet`, `monta`, `stile` (guida del parlato rispetto al corpus), `parlato` (testo recitato
   ↔ VOCE, `reel parlato`), `copione` (il parlato da un modello esterno prima della sceneggiatura: catena Poe →
   `claude -p`, `reel copione`), `percorsi` (riepilogo nel progetto, lavoro transitorio fuori: `reel pulisci`),
   `__main__` (CLI `uv run reel`)
@@ -103,7 +103,7 @@ in fila, poi l'agente `immagini`).
 `registra <file> [--da-scena N] [--dispositivi] [--video N --audio N] [--spezza presa-NN]` · `parlato <file> [--applica]` ·
 `anima <file> [--scena N] [--qualita l|m|h] [--debug] [--json]` · `monta <file> [--prova] [--anteprima] [--scena N]` ·
 `strisce <file> [--scena N] [--fps 8] [--finestra 1.3] [--sorgente scene|anima]` (fotogrammi fitti attorno a ogni beat) ·
-`uscite <idea> [--per-modello 5] [--prova-a-secco]` (T0b) · `pulisci [<slug>] [--tutto] [--prova-a-secco]` ·
+`uscite <idea> [--per-modello 5] [--prova-a-secco]` (T0b) · `pulisci [<slug>] [--tutto] [--prova-a-secco]` · `audio <file> [--scena N]` (prima/dopo della catena audio) ·
 `copione <idea> [--prova-a-secco] [--nota "…"] [--modello X] [--forza]` (T0c) ·
 `uv run pytest -q` (i test `slow` usano Manim e ffmpeg). `--prova` = voce sintetica + avatar segnaposto: anteprima
 completa senza il presentatore, **non pubblicabile**.

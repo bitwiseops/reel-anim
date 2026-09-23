@@ -78,6 +78,12 @@ per forzarla); **sotto** ci sono le scene (cliccabili), i pulsanti (● Registra
 riga a parte i menu di microfono e fotocamera, e la riga di stato ad altezza fissa. All'avvio l'app misura la finestra
 vera e, se sborda dallo schermo, rifà i pannelli più bassi (2026-09-23: sul portatile i comandi uscivano di sotto e di
 lato anche a tutto schermo).
+**Vu-meter** (2026-09-23): accanto ai menu dei dispositivi c'è il livello del microfono, acceso anche fuori dalla
+presa: verde fra −18 e −3 dB di picco (il bersaglio), giallo se basso o alto, rosso se troppo basso o se satura
+(«ha saturato» resta scritto). Il 23/09 le prese erano a −37 LUFS: alza il volume d'ingresso in Impostazioni di Sistema
+→ Suono → Ingresso finché il parlato normale sta nel verde. Il montaggio pulisce la voce e la porta a −14 LUFS
+(`config.toml [audio]`, `uv run reel audio <file>` per il prima/dopo), ma un segnale più alto in partenza porta meno
+rumore.
 
 Come funziona:
 1. Scegli la scena di partenza con ← → o una cifra (default: la prima senza clip). Il pannello centrale mostra il

@@ -11,6 +11,57 @@ import wave
 from pathlib import Path
 
 
+class Livello:
+    """Il vu-meter della registrazione: uno stream d'ingresso a parte, acceso anche fuori dalla presa (il volume
+    d'ingresso si regola prima), che tiene il picco con una discesa lenta come un vu-meter vero. Non scrive niente."""
+
+    CADUTA_DB_S = 15.0
+
+    def __init__(self, dispositivo: int | str | None, frequenza: int = 48000):
+        self.dispositivo, self.frequenza = dispositivo, frequenza
+        self._lock = threading.Lock()
+        self._picco, self._t = -90.0, 0.0
+        self.massimo = -90.0          # il picco più alto da quando è acceso: dice se ha saturato
+        self.stream = None
+        self.errore = ""
+
+    def avvia(self) -> None:
+        import sounddevice as sd
+        try:
+            self.stream = sd.InputStream(device=self.dispositivo, samplerate=self.frequenza, channels=1, dtype="int16",
+                                         blocksize=1024, callback=self._callback)
+            self.stream.start()
+        except Exception as e:  # noqa: BLE001 — senza vu-meter si registra lo stesso
+            self.errore, self.stream = str(e), None
+
+    def _callback(self, indata, frames, tempo, stato) -> None:
+        import time
+        from .registra import dbfs
+        db = dbfs(int(abs(indata).max()) if frames else 0)
+        adesso = time.monotonic()
+        with self._lock:
+            if db >= self._valore(adesso):
+                self._picco, self._t = db, adesso
+            self.massimo = max(self.massimo, db)
+
+    def _valore(self, adesso: float) -> float:
+        return max(-90.0, self._picco - self.CADUTA_DB_S * max(0.0, adesso - self._t))
+
+    def picco_db(self) -> float:
+        import time
+        with self._lock:
+            return self._valore(time.monotonic())
+
+    def ferma(self) -> None:
+        if self.stream is not None:
+            try:
+                self.stream.stop()
+                self.stream.close()
+            except Exception:  # noqa: BLE001
+                pass
+            self.stream = None
+
+
 class Microfono:
     """Registra il microfono in un wav (PCM 16 bit mono). `n` conta i campioni consegnati dal callback: con la latenza
     d'ingresso riferita da PortAudio dà l'istante nel wav di qualunque istante del clock di Python."""

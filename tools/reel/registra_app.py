@@ -18,11 +18,11 @@ from PIL import Image, ImageOps, ImageTk
 
 from ..anim.config import Config
 from . import clip as clipmod
-from .cattura import Cattura, Microfono, Riproduttore
+from .cattura import Cattura, Livello, Microfono, Riproduttore
 from .compositing import maschera_riquadro
 from .ffmpeg import ffprobe
 from .model import PIENO, Reel
-from .registra import (PRESE, Karaoke, Presa, Timeline, carica_inquadratura, comando_cattura, comando_riproduzione, con_voce,
+from .registra import (PRESE, giudizio_livello, Karaoke, Presa, Timeline, carica_inquadratura, comando_cattura, comando_riproduzione, con_voce,
                        dimensioni_pipe, karaoke, limita_inquadratura, nuova_presa, prossima_presa, riquadro_in_scala,
                        salva_dispositivi_scelti, salva_inquadratura, snap_fotogramma, spezza)
 
@@ -54,6 +54,7 @@ class AppRegistra:
         self.anteprima: Cattura | None = None
         self.cattura: Cattura | None = None
         self.mic: Microfono | None = None
+        self.livello: Livello | None = None     # il vu-meter, acceso anche fuori dalla presa
         self.riproduttore: Riproduttore | None = None
         self.presa: Presa | None = None
         self.nome_presa = ""
@@ -140,7 +141,7 @@ class AppRegistra:
     def _costruisci_finestra(self) -> None:
         pal = self.cfg.palette
         self.colori = {"sfondo": pal.sfondo, "testo": pal.testo, "attenuato": pal.attenuato, "accento": pal.accento,
-                       "secondario": pal.secondario, "rec": "#E0524D"}
+                       "secondario": pal.secondario, "rec": "#E0524D", "ok": "#5BBF7A", "attenzione": "#E3B341"}
         root = self.root
         root.title(f"reel registra · {self.r.meta.get('titolo', self.r.slug)}")
         root.configure(bg=pal.sfondo)
@@ -239,6 +240,16 @@ class AppRegistra:
             cb.bind("<Escape>", lambda e: (self.root.focus_set(), "break")[-1])
             self.menu_dispositivi[tipo] = cb
             self._mostra_dispositivo(tipo)
+        # il vu-meter del microfono: si regola il volume d'ingresso prima della presa (bersaglio: picchi −18 … −3 dB)
+        tk.Label(riga, text="Livello", font=self.f_piccolo, fg=pal.attenuato, bg=pal.sfondo).pack(side="left", padx=(8, 4))
+        self.c_livello = tk.Canvas(riga, width=220, height=14, bg="#26272B", highlightthickness=0)
+        self.c_livello.pack(side="left")
+        self.g_livello = self.c_livello.create_rectangle(0, 0, 0, 14, fill=self.colori["ok"], outline="")
+        for db in (-18, -3):                 # le tacche della zona buona
+            x = self._x_livello(db)
+            self.c_livello.create_line(x, 0, x, 14, fill=pal.attenuato)
+        self.l_livello = tk.Label(riga, text="", font=self.f_piccolo, fg=pal.attenuato, bg=pal.sfondo, width=22, anchor="w")
+        self.l_livello.pack(side="left", padx=(6, 0))
 
         self.l_stato = tk.Label(comandi, text="", font=self.f_medio, fg=pal.testo, bg=pal.sfondo, anchor="nw",
                                 wraplength=larghezza_totale, justify="left", height=2)   # alta fissa: un messaggio lungo
@@ -264,6 +275,7 @@ class AppRegistra:
 
     def esegui(self) -> int:
         self._avvia_anteprima()
+        self._avvia_livello()
         self._disegna_elenco()
         self._mostra_fermo()
         self.root.after(1000 // int(self.opz["fps_pannelli"]), self._tick)
@@ -389,6 +401,8 @@ class AppRegistra:
             if self.anteprima:
                 self.anteprima.ferma()
             self._avvia_anteprima()
+        else:
+            self._avvia_livello()
 
     # --- inquadratura --------------------------------------------------------------------------------
 
@@ -450,7 +464,37 @@ class AppRegistra:
         self.mic = None
         return anomalie
 
+    def _avvia_livello(self) -> None:
+        if self.livello:
+            self.livello.ferma()
+        self.livello = Livello(self.opz.get("audio"), int(self.opz["frequenza_audio"]))
+        self.livello.avvia()
+
+    @staticmethod
+    def _x_livello(db: float, larga: int = 220) -> int:
+        """−60 dB a sinistra, 0 dB a destra."""
+        return int(larga * min(1.0, max(0.0, (db + 60) / 60)))
+
+    def _disegna_livello(self) -> None:
+        if not self.livello:
+            return
+        if self.livello.errore:
+            self.l_livello.configure(text="vu-meter spento", fg=self.colori["attenuato"])
+            return
+        db = self.livello.picco_db()
+        giudizio = giudizio_livello(db)
+        colore = {"buono": "ok", "basso": "attenzione", "alto": "attenzione"}.get(giudizio, "rec")
+        self.c_livello.coords(self.g_livello, 0, 0, self._x_livello(db), 14)
+        self.c_livello.itemconfigure(self.g_livello, fill=self.colori[colore])
+        testo = f"{db:.0f} dB · {giudizio}" if db > -85 else "silenzio"
+        if self.livello.massimo >= -1.0:
+            testo += " · ha saturato"
+        self.l_livello.configure(text=testo, fg=self.colori[colore] if db > -85 else self.colori["attenuato"])
+
     def _chiudi(self) -> None:
+        if self.livello:
+            self.livello.ferma()
+            self.livello = None
         for p in (self.cattura, self.anteprima):
             if p:
                 p.ferma()
@@ -683,6 +727,7 @@ class AppRegistra:
         elif src and not src.vivo() and self.stato == "pronto" and src is self.anteprima:
             self._errore("l'anteprima della fotocamera si è fermata.")
 
+        self._disegna_livello()
         if self.stato == "apertura":
             if src and src.k >= 1:
                 self.stato = "conto"

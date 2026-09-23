@@ -382,6 +382,7 @@ def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None 
                           or _raccordo(elementi[k - 1], "uscita") or _raccordo(elementi[k], "entrata"))
         finale = compositing.concatena(pezzi, out / "reel-9x16.mp4", tipo_tr, d_tr, cfg, anteprima=args.anteprima, tagli=tagli)
         durata_tot = compositing.durata_concat(pezzi, tipo_tr, d_tr, tagli)
+        volume = compositing.normalizza_audio(finale, cfg)   # una volta sola, sul reel intero ([audio])
         tempi["concat"] = time.time() - t3
         t_acc = 0.0
         for k, e in enumerate(elementi):
@@ -401,7 +402,8 @@ def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None 
         probe = ffprobe(finale)
         _verifica_probe(probe, cfg, durata_tot, diag)
         reel_info = {"file": "reel-9x16.mp4", "formato": "9:16", "durata_s": durata_tot, "fps": cfg.fps, "transizione": tipo_tr,
-                     "filmstrip": str(fs.relative_to(out)), "copertina": cop.name, "copertina_4x5": cop45.name, "ffprobe": probe}
+                     "filmstrip": str(fs.relative_to(out)), "copertina": cop.name, "copertina_4x5": cop45.name, "ffprobe": probe,
+                     "audio": volume}
     tempi = {k: round(v, 1) for k, v in tempi.items()}
     tempi["totale"] = round(time.time() - t0, 1)
     return _chiudi(r, diag, out, elementi, clip_info, reel_info, tempi, usa_prova, args)

@@ -471,3 +471,11 @@ def test_a_volto_pieno_la_clip_tiene_il_fotogramma_intero():
     pieno = reg.comando_taglio(p, replace(tl.scene[0], riquadro="pieno"), Path("/tmp/p.mov"), Path("/tmp/b.mov"), opz,
                                Path("/tmp/p.wav"))
     assert normale[normale.index("-vf") + 1] == "crop=1080:1080:0:420" and "-vf" not in pieno
+
+
+def test_livello_dbfs_e_giudizio():
+    from tools.reel.registra import dbfs, giudizio_livello
+    assert dbfs(32767) == pytest.approx(0.0, abs=0.01)
+    assert dbfs(16384) == pytest.approx(-6.02, abs=0.01)
+    assert dbfs(0) == -90.0
+    assert [giudizio_livello(x) for x in (0.0, -2.0, -10.0, -24.0, -40.0)] == ["satura", "alto", "buono", "basso", "troppo basso"]

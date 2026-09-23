@@ -41,7 +41,7 @@ def test_scena_con_avatar_nel_riquadro():
 
 def test_scena_con_la_clip_del_presentatore():
     f = _filtri(comando_scena(Sorgenti(GRAFICA, 5.0, "si", video_presentatore=Path("/tmp/scena-02.mov")), DEST))
-    assert "loudnorm=I=-16" in f and "overlay=x=576:y=220" in f   # «si» = alto-destra, sopra la fascia delle caption
+    assert "highpass=f=" in f and "overlay=x=576:y=220" in f     # la catena della voce ([audio]); «si» = alto-destra
 
 
 def test_scena_schermo_con_broll():
@@ -117,7 +117,7 @@ def test_volto_pieno_il_presentatore_e_la_tela():
     f = _filtri(comando_scena(Sorgenti(Path("/tmp/grafica.mov"), 6.0, "pieno", video_presentatore=clip), DEST))
     assert "scale=1080:1920:force_original_aspect_ratio=increase" in f and "crop=1080:1920" in f
     assert "[volto][gr]overlay=0:0" in f and "alphamerge" not in f     # niente cerchio: non c'è riquadro
-    assert "loudnorm" in f                                              # l'audio resta quello della clip
+    assert "highpass=f=" in f                                           # l'audio resta quello della clip, pulito
     solo = _filtri(comando_scena(Sorgenti(None, 5.0, "pieno", video_presentatore=clip), DEST))
     assert "[volto]null[v0]" in solo and "[gr]" not in solo            # l'apertura: lui e basta
 
@@ -225,3 +225,31 @@ def test_raccordo_il_volto_arriva_davvero_nel_riquadro(tmp_path):
     px = Image.open(files[-1]).convert("RGB").load()
     assert px[x + 6, y + 6][1] > 15 and px[x + 6, y + 6][0] < 120     # angolo alto-sinistra: sfondo
     assert px[x + d // 2, y + d // 2][0] > 120                        # centro: volto
+
+
+def test_catena_voce_dal_config_e_spegnibile():
+    from tools.anim.config import Config
+    from tools.reel.compositing import catena_voce
+    cfg = Config({"audio": {"catena": True, "passa_alto_hz": 80, "riduzione_rumore": "nr=10", "deesser": "i=0.3", "compressore": ""}})
+    assert catena_voce(cfg) == "highpass=f=80,afftdn=nr=10,deesser=i=0.3"
+    assert catena_voce(Config({"audio": {"catena": False}})) == ""
+
+
+def test_normalizza_in_due_passaggi_copia_il_video(tmp_path):
+    from tools.anim.config import Config
+    from tools.reel.compositing import comando_normalizza
+    cfg = Config({"audio": {"loudness_lufs": -14, "picco_db": -1, "lra": 11}})
+    m = {"input_i": "-30.1", "input_tp": "-9.0", "input_lra": "4.0", "input_thresh": "-40.5", "target_offset": "0.3"}
+    cmd = comando_normalizza(tmp_path / "a.mp4", tmp_path / "b.mp4", m, cfg)
+    af = cmd[cmd.index("-af") + 1]
+    assert "I=-14.0" in af and "measured_I=-30.1" in af and "linear=true" in af
+    assert cmd[cmd.index("-c:v") + 1] == "copy"
+
+
+def test_confronto_stesso_bersaglio_prima_e_dopo(tmp_path):
+    from tools.anim.config import Config
+    from tools.reel.compositing import comando_confronto
+    cfg = Config({"audio": {"passa_alto_hz": 80, "loudness_lufs": -14}})
+    grafo = comando_confronto(tmp_path / "c.mov", tmp_path / "o.m4a", 5, cfg)
+    g = grafo[grafo.index("-filter_complex") + 1]
+    assert g.count("loudnorm=I=-14.0") == 2 and "highpass=f=80" in g and "atrim=0:5.00" in g

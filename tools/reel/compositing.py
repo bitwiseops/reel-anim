@@ -272,7 +272,8 @@ def comando_scena(src: Sorgenti, dest: Path, cfg: Config | None = None, anteprim
         i_a = aggiungi("-i", str(src.audio))
         filtri.append(f"[{i_a}:a]aresample=48000,apad[a]")
     elif src.video_presentatore and i_pres is not None:
-        filtri.append(f"[{i_pres}:a]aresample=48000,loudnorm=I=-16:TP=-1.5:LRA=11,apad[a]")
+        voce = catena_voce(cfg)      # pulizia per scena; il volume si fa una volta sola sul reel (normalizza_audio)
+        filtri.append(f"[{i_pres}:a]aresample=48000,{voce or 'loudnorm=I=-16:TP=-1.5:LRA=11'},apad[a]")
     else:
         i_a = aggiungi("-f", "lavfi", "-i", "anullsrc=r=48000:cl=stereo")
         filtri.append(f"[{i_a}:a]anull[a]")
@@ -349,6 +350,98 @@ def durata_concat(scene: list[tuple[Path, float]], transizione: str, durata_tran
     if transizione == "dissolvenza" and len(scene) > 1:
         tot -= durata_trans_s * (len(scene) - 1 - len([k for k in tagli if 0 < k < len(scene)]))
     return round(tot, 3)
+
+
+# --- audio della voce (2026-09-23) --------------------------------------------------------------------------------
+# Le prese erano a −37 LUFS: il loudnorm per scena le alzava di 20 dB, e con loro il rumore della stanza. Ora la voce
+# si pulisce scena per scena (passa-alto, riduzione del rumore, de-esser) e il volume si porta al bersaglio una volta
+# sola, sul reel intero, con loudnorm in due passaggi. La presa .wav non si tocca mai. `[audio] catena = false` torna
+# al loudnorm per scena di prima.
+
+def _audio(cfg: Config | None) -> dict:
+    return dict((cfg or carica()).dati.get("audio") or {})
+
+
+def catena_voce(cfg: Config | None = None) -> str:
+    """I filtri ffmpeg della voce registrata, prima del volume; "" se la catena è spenta."""
+    a = _audio(cfg)
+    if not a.get("catena", True):
+        return ""
+    f = []
+    if a.get("passa_alto_hz"):
+        f.append(f"highpass=f={int(a['passa_alto_hz'])}")
+    if a.get("riduzione_rumore"):
+        f.append(f"afftdn={a['riduzione_rumore']}")
+    if a.get("deesser"):
+        f.append(f"deesser={a['deesser']}")
+    if a.get("compressore"):
+        f.append(f"acompressor={a['compressore']}")
+    return ",".join(f) or "anull"
+
+
+def _loudnorm(a: dict) -> str:
+    return (f"loudnorm=I={float(a.get('loudness_lufs', -14))}:TP={float(a.get('picco_db', -1))}"
+            f":LRA={float(a.get('lra', 11))}")
+
+
+def misura_loudness(video: Path, cfg: Config | None = None) -> dict:
+    """Primo passaggio di loudnorm: le misure del reel, in JSON dallo stderr di ffmpeg."""
+    import json
+    import subprocess
+    ff, _ = trova_ffmpeg()
+    r = subprocess.run([ff, "-hide_banner", "-nostats", "-i", str(video), "-vn",
+                        "-af", _loudnorm(_audio(cfg)) + ":print_format=json", "-f", "null", "-"],
+                       capture_output=True, text=True)
+    testo = r.stderr
+    inizio = testo.rfind("{")
+    if r.returncode != 0 or inizio < 0:
+        raise RuntimeError(f"loudnorm, misura fallita: {testo.strip()[-300:]}")
+    return json.loads(testo[inizio:testo.rfind("}") + 1])
+
+
+def comando_normalizza(video: Path, dest: Path, misure: dict, cfg: Config | None = None) -> list[str]:
+    ff, _ = trova_ffmpeg()
+    m = misure
+    filtro = (_loudnorm(_audio(cfg)) + f":measured_I={m['input_i']}:measured_TP={m['input_tp']}:measured_LRA={m['input_lra']}"
+              f":measured_thresh={m['input_thresh']}:offset={m['target_offset']}:linear=true")
+    return [ff, "-y", "-loglevel", "error", "-i", str(video), "-map", "0:v", "-map", "0:a", "-c:v", "copy",
+            "-af", filtro, "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-ac", "2", "-movflags", "+faststart", str(dest)]
+
+
+def normalizza_audio(video: Path, cfg: Config | None = None) -> dict | None:
+    """Secondo passaggio: il reel intero al bersaglio di `[audio]` (−14 LUFS, picco −1 dB), video copiato così com'è.
+    Ritorna le misure prima e il bersaglio; None se la catena è spenta."""
+    a = _audio(cfg)
+    if not a.get("catena", True):
+        return None
+    m = misura_loudness(video, cfg)
+    if not str(m.get("input_i", "")).lstrip("-").replace(".", "", 1).isdigit():   # «-inf»: nessun audio, niente da alzare
+        return {"prima_lufs": None, "prima_picco_db": None, "bersaglio_lufs": None}
+    tmp = video.with_name(video.stem + ".audio" + video.suffix)
+    try:
+        esegui(comando_normalizza(video, tmp, m, cfg), "ffmpeg (volume del reel)")
+    except RuntimeError:
+        tmp.unlink(missing_ok=True)
+        raise
+    tmp.replace(video)
+    return {"prima_lufs": float(m["input_i"]), "prima_picco_db": float(m["input_tp"]),
+            "bersaglio_lufs": float(a.get("loudness_lufs", -14))}
+
+
+def comando_confronto(clip: Path, dest: Path, secondi: float = 12.0, cfg: Config | None = None) -> list[str]:
+    """Prima/dopo per l'orecchio: lo stesso pezzo di presa, prima solo col volume e poi con la catena, allo stesso
+    bersaglio di loudness (così si sente la pulizia, non il volume), separati da un secondo di silenzio."""
+    ff, _ = trova_ffmpeg()
+    a = _audio(cfg)
+    ln = _loudnorm(a)
+    voce = catena_voce(cfg) or "anull"
+    grafo = (f"[0:a]aresample=48000,atrim=0:{secondi:.2f},asetpts=PTS-STARTPTS,asplit=2[x][y];"
+             f"[x]{ln}[prima];[y]{voce},{ln}[dopo];"
+             f"anullsrc=r=48000:cl=mono,atrim=0:1[pausa];"
+             f"[prima]aresample=48000,aformat=channel_layouts=mono[p1];[dopo]aresample=48000,aformat=channel_layouts=mono[p2];"
+             f"[p1][pausa][p2]concat=n=3:v=0:a=1[out]")
+    return [ff, "-y", "-loglevel", "error", "-i", str(clip), "-filter_complex", grafo, "-map", "[out]",
+            "-c:a", "aac", "-b:a", "192k", str(dest)]
 
 
 def concatena(scene: list[tuple[Path, float]], dest: Path, transizione: str = "dissolvenza", durata_trans_s: float = 0.25,

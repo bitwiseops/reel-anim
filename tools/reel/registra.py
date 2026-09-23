@@ -252,6 +252,27 @@ def karaoke(tl: Timeline, t: float) -> Karaoke:
 
 # --- comandi ffmpeg -----------------------------------------------------------------------------------
 
+# --- livello del microfono (vu-meter) ------------------------------------------------------------------
+
+# Il 23/09 le prese di ia-e-lavoro erano a −37 LUFS: il montaggio le alzava di 20 dB, e con la voce il rumore della
+# stanza. Il bersaglio sono picchi del parlato fra −18 e −3 dBFS (le soglie dicono il primo giudizio che vale).
+SOGLIE_LIVELLO = ((-1.0, "satura"), (-3.0, "alto"), (-18.0, "buono"), (-30.0, "basso"))
+SILENZIO_DB = -90.0
+
+
+def dbfs(picco_campione: int, fondo_scala: int = 32768) -> float:
+    """Il picco di un blocco PCM 16 bit in dBFS (0 = fondo scala)."""
+    import math
+    return max(SILENZIO_DB, 20 * math.log10(max(abs(picco_campione), 1) / fondo_scala))
+
+
+def giudizio_livello(picco_db: float) -> str:
+    for soglia, nome in SOGLIE_LIVELLO:
+        if picco_db >= soglia:
+            return nome
+    return "troppo basso"
+
+
 def dimensioni_pipe(risoluzione: str, larghezza: int) -> tuple[int, int]:
     """Dimensioni (pari) dell'anteprima ridotta di un flusso WxH portato a `larghezza` px."""
     w, h = (int(x) for x in risoluzione.lower().split("x"))
