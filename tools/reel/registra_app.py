@@ -22,12 +22,15 @@ from .cattura import Cattura, Microfono, Riproduttore
 from .compositing import maschera_riquadro
 from .ffmpeg import ffprobe
 from .model import PIENO, Reel
-from .registra import (PRESE, Karaoke, Presa, Timeline, carica_inquadratura, comando_cattura, comando_riproduzione,
+from .registra import (PRESE, Karaoke, Presa, Timeline, carica_inquadratura, comando_cattura, comando_riproduzione, con_voce,
                        dimensioni_pipe, karaoke, limita_inquadratura, nuova_presa, prossima_presa, riquadro_in_scala,
                        salva_dispositivi_scelti, salva_inquadratura, snap_fotogramma, spezza)
 
-TASTI = ("Spazio: registra / ferma   ·   ← → o cifre: scena di partenza   ·   Esc: esci\n"
+TASTI = ("Spazio: registra / ferma   ·   P: prova senza registrare   ·   E: modifica il testo   ·   ← → o cifre: scena di partenza   ·   Esc: esci\n"
          "Inquadratura (prima di registrare): trascina il cerchio col mouse, rotella o + − per lo zoom, W A S D per spostarlo, 0 per il centro")
+PAD = 16
+RISERVA_ALTEZZA = 330      # barra dei menu e titolo della finestra + il blocco dei comandi sotto i pannelli
+LARGHEZZA_KARAOKE = 620
 AIUTO_ERRORE = ("Controlla Impostazioni di Sistema → Privacy e sicurezza → Fotocamera e Microfono per l'app del terminale, "
                 "che nessun'altra app usi la fotocamera, oppure scegli il dispositivo: `uv run reel registra --dispositivi`, `--video N`.")
 
@@ -38,8 +41,8 @@ class AppRegistra:
         self.r, self.tl, self.opz, self.cfg, self.cartella, self.out = r, tl, opz, cfg, cartella, out
         self.avvisi = avvisi
         self.dispositivi = dispositivi or {"video": [], "audio": []}   # {"video": [(indice, nome)], "audio": [...]}
-        self.dim_webcam = dimensioni_pipe(str(opz["risoluzione"]), int(opz["anteprima_webcam_px"]))
-        self.dim_reel = dimensioni_pipe(f"{cfg.larghezza}x{cfg.altezza}", int(opz["anteprima_reel_px"]))
+        self.root = tk.Tk()        # prima dei pannelli: la loro misura dipende dallo schermo
+        self.dim_webcam, self.dim_reel, self.dim_karaoke = self._misure_pannelli()
         self.scala = self.dim_reel[0] / cfg.larghezza
         self.W, self.H = (int(x) for x in str(opz["risoluzione"]).lower().split("x"))
         self.scala_webcam = self.dim_webcam[0] / self.W
@@ -72,28 +75,47 @@ class AppRegistra:
 
     # --- finestra ----------------------------------------------------------------------------------
 
+    def _misure_pannelli(self) -> tuple[tuple[int, int], tuple[int, int], tuple[int, int]]:
+        """I tre pannelli stanno in fila sopra i comandi: prendono l'altezza che lo schermo lascia libera (o
+        `altezza_pannelli_px`) e ognuno al massimo un terzo della larghezza. Webcam e reel tengono le proporzioni."""
+        sw, sh = self.root.winfo_screenwidth(), self.root.winfo_screenheight()
+        alto = int(self.opz.get("altezza_pannelli_px") or max(360, sh - RISERVA_ALTEZZA))
+        larga_max = (sw - 4 * PAD) // 3
+
+        def larghezza(w: int, h: int) -> int:
+            return max(2, min(larga_max, round(w * alto / h)))
+
+        W, H = (int(x) for x in str(self.opz["risoluzione"]).lower().split("x"))
+        dim_webcam = dimensioni_pipe(f"{W}x{H}", larghezza(W, H))
+        dim_reel = dimensioni_pipe(f"{self.cfg.larghezza}x{self.cfg.altezza}", larghezza(self.cfg.larghezza, self.cfg.altezza))
+        alto = max(dim_webcam[1], dim_reel[1])
+        larga_k = max(320, min(LARGHEZZA_KARAOKE, sw - dim_webcam[0] - dim_reel[0] - 5 * PAD))
+        return dim_webcam, dim_reel, (larga_k, alto)
+
     def _costruisci_finestra(self) -> None:
         pal = self.cfg.palette
         self.colori = {"sfondo": pal.sfondo, "testo": pal.testo, "attenuato": pal.attenuato, "accento": pal.accento,
                        "secondario": pal.secondario, "rec": "#E0524D"}
-        root = self.root = tk.Tk()
+        root = self.root
         root.title(f"reel registra · {self.r.meta.get('titolo', self.r.slug)}")
         root.configure(bg=pal.sfondo)
         root.resizable(False, False)
         famiglia = "Helvetica Neue" if "Helvetica Neue" in tkfont.families() else "Helvetica"
-        self.f_karaoke = tkfont.Font(family=famiglia, size=30)
-        self.f_karaoke_b = tkfont.Font(family=famiglia, size=30, weight="bold")
-        self.f_piccolo = tkfont.Font(family=famiglia, size=14)
-        self.f_medio = tkfont.Font(family=famiglia, size=17, weight="bold")
-        self.f_conto = tkfont.Font(family=famiglia, size=120, weight="bold")
-        pad = 16
+        lk, alto = self.dim_karaoke
+        corpo = max(18, min(30, alto // 22))
+        self.f_karaoke = tkfont.Font(family=famiglia, size=corpo)
+        self.f_karaoke_b = tkfont.Font(family=famiglia, size=corpo, weight="bold")
+        self.f_piccolo = tkfont.Font(family=famiglia, size=13)
+        self.f_piccolo_editor = tkfont.Font(family=famiglia, size=max(16, corpo * 2 // 3))
+        self.f_medio = tkfont.Font(family=famiglia, size=16, weight="bold")
+        self.f_conto = tkfont.Font(family=famiglia, size=max(60, self.dim_reel[0] // 3), weight="bold")
 
-        # sinistra: webcam + elenco scene
-        sx = tk.Frame(root, bg=pal.sfondo)
-        sx.grid(row=0, column=0, sticky="n", padx=(pad, 0), pady=pad)
+        # sopra: i tre pannelli in fila, alti uguali
+        pannelli = tk.Frame(root, bg=pal.sfondo)
+        pannelli.grid(row=0, column=0, sticky="w", padx=PAD, pady=(PAD, 8))
         w, h = self.dim_webcam
-        self.c_webcam = tk.Canvas(sx, width=w, height=h, bg="black", highlightthickness=0)
-        self.c_webcam.pack()
+        self.c_webcam = tk.Canvas(pannelli, width=w, height=h, bg="black", highlightthickness=0)
+        self.c_webcam.grid(row=0, column=0, sticky="n")
         self.foto_webcam = ImageTk.PhotoImage(Image.new("RGB", self.dim_webcam, (0, 0, 0)))
         self.c_webcam.create_image(0, 0, anchor="nw", image=self.foto_webcam)
         self.g_quadrato = self.c_webcam.create_rectangle(0, 0, 1, 1, outline=pal.attenuato, dash=(4, 4))
@@ -102,62 +124,77 @@ class AppRegistra:
         self.c_webcam.bind("<ButtonPress-1>", self._inizio_trascino)
         self.c_webcam.bind("<B1-Motion>", self._trascina)
         self.c_webcam.bind("<MouseWheel>", lambda e: self._zoom(-1 if e.delta > 0 else 1))
-        tk.Label(sx, text="Il cerchio è ciò che va nel riquadro: volto al centro, spazio sopra la testa.", font=self.f_piccolo,
-                 fg=pal.attenuato, bg=pal.sfondo, wraplength=w, justify="left").pack(anchor="w", pady=(6, 8))
+
+        w, h = self.dim_reel
+        self.c_reel = tk.Canvas(pannelli, width=w, height=h, bg="black", highlightthickness=0)
+        self.c_reel.grid(row=0, column=1, sticky="n", padx=PAD)
+        self.foto_reel = ImageTk.PhotoImage(Image.new("RGB", self.dim_reel, (0, 0, 0)))
+        self.c_reel.create_image(0, 0, anchor="nw", image=self.foto_reel)
+        self.t_conto = self.c_reel.create_text(w // 2, h // 2, text="", font=self.f_conto, fill=pal.accento)
+        self.t_rec = self.c_reel.create_text(w - 14, 16, text="", font=self.f_medio, fill=self.colori["rec"], anchor="ne")
+
+        dx = tk.Frame(pannelli, bg=pal.sfondo, width=lk, height=alto)
+        dx.grid(row=0, column=2, sticky="n")
+        dx.pack_propagate(False)
+        self.l_intestazione = tk.Label(dx, text="", font=self.f_medio, fg=pal.attenuato, bg=pal.sfondo, anchor="w")
+        self.l_intestazione.pack(fill="x")
+        self.larga_barra = lk
+        self.c_barra = tk.Canvas(dx, width=lk, height=6, bg=pal.sfondo, highlightthickness=0)
+        self.c_barra.pack(fill="x", pady=(4, 12))
+        self.barra = self.c_barra.create_rectangle(0, 0, 0, 6, fill=pal.accento, outline="")
+        self.t_karaoke = tk.Text(dx, wrap="word", font=self.f_karaoke, bg=pal.sfondo, fg=pal.testo,
+                                 bd=0, highlightthickness=0, padx=4, pady=4, cursor="arrow", spacing1=6, spacing3=6)
+        self.t_karaoke.pack(fill="both", expand=True)
+        self.t_karaoke.tag_configure("attenuata", foreground=pal.attenuato)
+        self.t_karaoke.tag_configure("corrente", foreground=pal.testo)
+        self.t_karaoke.tag_configure("accesa", foreground=pal.accento, font=self.f_karaoke_b)
+        self.t_karaoke.tag_configure("nota", foreground=pal.secondario, font=self.f_piccolo)
+        self.t_karaoke.configure(state="disabled")
+        larghezza_totale = self.dim_webcam[0] + self.dim_reel[0] + lk + 2 * PAD
+
+        # sotto: le scene, i comandi di registrazione e riproduzione, i dispositivi, lo stato
+        comandi = tk.Frame(root, bg=pal.sfondo)
+        comandi.grid(row=1, column=0, sticky="we", padx=PAD, pady=(0, PAD))
+        riga_scene = tk.Frame(comandi, bg=pal.sfondo)
+        riga_scene.pack(fill="x")
+        self.l_scene: list[tk.Label] = []
+        for s in self.tl.scene:
+            lbl = tk.Label(riga_scene, font=self.f_piccolo, bg=pal.sfondo, fg=pal.testo, justify="left", padx=8, pady=2, cursor="hand2")
+            lbl.pack(side="left", padx=(0, 4))
+            lbl.bind("<Button-1>", lambda e, n=s.n: self._scegli_scena(n))
+            self.l_scene.append(lbl)
+
+        riga = tk.Frame(comandi, bg=pal.sfondo)
+        riga.pack(fill="x", pady=(8, 4))
+        self.b_registra = ttk.Button(riga, text="● Registra  (Spazio)", takefocus=False, command=self._clic(self._spazio))
+        self.b_prova = ttk.Button(riga, text="▶ Prova senza registrare  (P)", takefocus=False, command=self._clic(self._prova))
+        self.b_ferma = ttk.Button(riga, text="■ Ferma", takefocus=False, command=self._clic(self._ferma))
+        self.b_prima = ttk.Button(riga, text="◀ Scena", takefocus=False, command=self._clic(lambda: self._cambia_scena(-1)))
+        self.b_dopo = ttk.Button(riga, text="Scena ▶", takefocus=False, command=self._clic(lambda: self._cambia_scena(+1)))
+        self.b_modifica = ttk.Button(riga, text="✎ Modifica testo  (E)", takefocus=False, command=self._modifica_o_salva)
+        self.b_annulla = ttk.Button(riga, text="Annulla  (Esc)", takefocus=False, command=self._clic(self._annulla_modifica))
+        for b in (self.b_registra, self.b_prova, self.b_ferma, self.b_prima, self.b_dopo, self.b_modifica, self.b_annulla):
+            b.pack(side="left", padx=(0, 6))
         self.menu_dispositivi: dict[str, ttk.Combobox] = {}
-        for tipo, etichetta in (("video", "Fotocamera"), ("audio", "Microfono")):
-            riga = tk.Frame(sx, bg=pal.sfondo)
-            riga.pack(fill="x", pady=(0, 4))
-            tk.Label(riga, text=etichetta, font=self.f_piccolo, fg=pal.attenuato, bg=pal.sfondo, width=11, anchor="w").pack(side="left")
+        for tipo, etichetta in (("audio", "Microfono"), ("video", "Fotocamera")):
             voci = [f"[{i}] {n}" for i, n in self.dispositivi[tipo]]
             if tipo == "audio":
                 voci.insert(0, "predefinito di sistema")
-            cb = ttk.Combobox(riga, values=voci, state="readonly", font=self.f_piccolo, width=34)
-            cb.pack(side="left", fill="x", expand=True)
+            cb = ttk.Combobox(riga, values=voci, state="readonly", font=self.f_piccolo, width=24)
+            cb.pack(side="right", padx=(4, 0))
+            tk.Label(riga, text=etichetta, font=self.f_piccolo, fg=pal.attenuato, bg=pal.sfondo).pack(side="right", padx=(12, 0))
             cb.bind("<<ComboboxSelected>>", lambda e, t=tipo: self._scegli_dispositivo(t))
             # col fuoco sul menu: Spazio registra (non apre il menu), Esc lascia il menu (non chiude l'app)
             cb.bind("<space>", lambda e: (self.root.focus_set(), self._spazio(), "break")[-1])
             cb.bind("<Escape>", lambda e: (self.root.focus_set(), "break")[-1])
             self.menu_dispositivi[tipo] = cb
             self._mostra_dispositivo(tipo)
-        tk.Frame(sx, bg=pal.sfondo, height=8).pack()
-        self.l_scene: list[tk.Label] = []
-        for _ in self.tl.scene:
-            lbl = tk.Label(sx, font=self.f_piccolo, bg=pal.sfondo, fg=pal.testo, anchor="w", padx=8)
-            lbl.pack(fill="x")
-            self.l_scene.append(lbl)
 
-        # centro: il reel con il volto live
-        w, h = self.dim_reel
-        self.c_reel = tk.Canvas(root, width=w, height=h, bg="black", highlightthickness=0)
-        self.c_reel.grid(row=0, column=1, padx=pad, pady=pad)
-        self.foto_reel = ImageTk.PhotoImage(Image.new("RGB", self.dim_reel, (0, 0, 0)))
-        self.c_reel.create_image(0, 0, anchor="nw", image=self.foto_reel)
-        self.t_conto = self.c_reel.create_text(w // 2, h // 2, text="", font=self.f_conto, fill=pal.accento)
-        self.t_rec = self.c_reel.create_text(w - 14, 16, text="", font=self.f_medio, fill=self.colori["rec"], anchor="ne")
-
-        # destra: karaoke
-        dx = tk.Frame(root, bg=pal.sfondo, width=560)
-        dx.grid(row=0, column=2, sticky="n", padx=(0, pad), pady=pad)
-        self.l_intestazione = tk.Label(dx, text="", font=self.f_medio, fg=pal.attenuato, bg=pal.sfondo, anchor="w")
-        self.l_intestazione.pack(fill="x")
-        self.c_barra = tk.Canvas(dx, width=560, height=6, bg=pal.sfondo, highlightthickness=0)
-        self.c_barra.pack(fill="x", pady=(4, 12))
-        self.barra = self.c_barra.create_rectangle(0, 0, 0, 6, fill=pal.accento, outline="")
-        self.t_karaoke = tk.Text(dx, width=26, height=13, wrap="word", font=self.f_karaoke, bg=pal.sfondo, fg=pal.testo,
-                                 bd=0, highlightthickness=0, padx=4, pady=4, cursor="arrow", spacing1=6, spacing3=6)
-        self.t_karaoke.pack(fill="both")
-        self.t_karaoke.tag_configure("attenuata", foreground=pal.attenuato)
-        self.t_karaoke.tag_configure("corrente", foreground=pal.testo)
-        self.t_karaoke.tag_configure("accesa", foreground=pal.accento, font=self.f_karaoke_b)
-        self.t_karaoke.tag_configure("nota", foreground=pal.secondario, font=self.f_piccolo)
-        self.t_karaoke.configure(state="disabled")
-
-        # in basso: stato e tasti
-        self.l_stato = tk.Label(root, text="", font=self.f_medio, fg=pal.testo, bg=pal.sfondo, anchor="w", wraplength=1400, justify="left")
-        self.l_stato.grid(row=1, column=0, columnspan=3, sticky="we", padx=pad)
-        tk.Label(root, text=TASTI, font=self.f_piccolo, fg=pal.attenuato, bg=pal.sfondo, anchor="w").grid(
-            row=2, column=0, columnspan=3, sticky="we", padx=pad, pady=(4, pad))
+        self.l_stato = tk.Label(comandi, text="", font=self.f_medio, fg=pal.testo, bg=pal.sfondo, anchor="w",
+                                wraplength=larghezza_totale, justify="left")
+        self.l_stato.pack(fill="x", pady=(4, 0))
+        tk.Label(comandi, text="Il cerchio sulla webcam è ciò che va nel riquadro: volto al centro, spazio sopra la testa.\n" + TASTI,
+                 font=self.f_piccolo, fg=pal.attenuato, bg=pal.sfondo, anchor="w", justify="left").pack(fill="x", pady=(4, 0))
 
         root.bind_all("<space>", lambda e: self._spazio())
         root.bind_all("<Left>", lambda e: self._cambia_scena(-1))
@@ -166,6 +203,13 @@ class AppRegistra:
         root.bind_all("<Escape>", lambda e: self._esc())
         root.protocol("WM_DELETE_WINDOW", self._esc)
         root.focus_set()
+
+    def _clic(self, azione):
+        """Un pulsante non tiene il fuoco: dopo il clic Spazio e le frecce tornano alla finestra."""
+        def f():
+            azione()
+            self.root.focus_set()
+        return f
 
     def esegui(self) -> int:
         self._avvia_anteprima()
@@ -202,7 +246,7 @@ class AppRegistra:
             return False
 
     def _spazio(self) -> None:
-        if self._menu_aperto():
+        if self._menu_aperto() or self.stato == "modifica":     # nel testo Spazio è uno spazio
             return
         if self.stato == "pronto":
             self._avvia_presa()
@@ -210,10 +254,23 @@ class AppRegistra:
             self._ferma_presa("stop")
         elif self.stato in ("apertura", "conto"):
             self._annulla_presa("presa annullata")
+        elif self.stato == "prova":
+            self._ferma_prova("prova fermata")
         elif self.stato == "errore":
             self.stato = "pronto"
             self.messaggio = ""
             self._avvia_anteprima()
+            self._mostra_fermo()
+
+    def _ferma(self) -> None:
+        """Il pulsante ■: ferma la presa o la prova, annulla il conto alla rovescia."""
+        if self.stato in ("presa", "apertura", "conto", "prova"):
+            self._spazio()
+
+    def _scegli_scena(self, n: int) -> None:
+        if self.stato == "pronto":
+            self.da_scena = n
+            self._disegna_elenco()
             self._mostra_fermo()
 
     def _cambia_scena(self, delta: int) -> None:
@@ -226,10 +283,17 @@ class AppRegistra:
             self._mostra_fermo()
 
     def _tasto(self, e) -> None:
+        if self.stato == "prova" and e.char and e.char.lower() == "e":
+            self._apri_modifica()
+            return
         if self.stato != "pronto" or not e.char:
             return
         c = e.char.lower()
-        if c.isdigit() and int(c) in [s.n for s in self.tl.scene]:
+        if c == "p":
+            self._prova()
+        elif c == "e":
+            self._apri_modifica()
+        elif c.isdigit() and int(c) in [s.n for s in self.tl.scene]:
             self.da_scena = int(c)
             self._disegna_elenco()
             self._mostra_fermo()
@@ -314,6 +378,12 @@ class AppRegistra:
     def _esc(self) -> None:
         if self._menu_aperto():
             return                     # Esc chiude la tendina, non l'app
+        if self.stato == "modifica":
+            self._annulla_modifica()
+            return
+        if self.stato == "prova":
+            self._ferma_prova("")
+            return
         if self.stato == "presa":
             self.chiudi_dopo = True
             self._ferma_presa("esc")
@@ -363,6 +433,87 @@ class AppRegistra:
         self.stato = "apertura"
         self.t_apertura = time.monotonic()
         self.messaggio = "In attesa della fotocamera… se macOS chiede il permesso, concedilo."
+
+    # --- prova senza registrare --------------------------------------------------------------------
+
+    def _prova(self) -> None:
+        """Il reel dalla scena scelta con il volto live e il karaoke, come in una presa, ma niente file e niente
+        microfono: per provare il ritmo della lettura. L'anteprima della webcam resta quella di sempre."""
+        if self.stato != "pronto" or self._menu_aperto():
+            return
+        self.t_reel0 = self.tl.scena_n(self.da_scena).t_inizio_s - float(self.opz["preroll_s"])
+        t0 = snap_fotogramma(self.t_reel0, self.tl.fps)
+        self.riproduttore = Riproduttore(comando_riproduzione(self.tl.reel, t0, self.dim_reel), self.dim_reel, t0, self.tl.fps)
+        self.riproduttore.avvia()
+        self.T0 = time.monotonic()
+        self.stato = "prova"
+        self.messaggio = ""
+
+    def _ferma_prova(self, messaggio: str) -> None:
+        if self.riproduttore:
+            self.riproduttore.ferma()
+            self.riproduttore = None
+        self.stato = "pronto"
+        self.messaggio = messaggio
+        self._mostra_fermo()
+
+    # --- il testo si corregge qui (fuori dalla presa) ---------------------------------------------------
+    # Il pannello del karaoke diventa modificabile con le righe della scena scelta, una per frase. Al salvataggio
+    # le righe vanno in contenuti/media/<slug>/parlato.json e nella timeline: la presa dopo le mostra nel karaoke e
+    # le scrive nel sidecar, e il montaggio ne fa le caption.
+
+    def _modifica_o_salva(self) -> None:
+        self._salva_modifica() if self.stato == "modifica" else self._apri_modifica()
+
+    def _apri_modifica(self) -> None:
+        if self.stato == "prova":
+            scena = self.tl.scena_a(self.t_reel0 + (time.monotonic() - self.T0))
+            self._ferma_prova("")
+            if scena is not None:
+                self.da_scena = scena.n
+        if self.stato != "pronto" or self._menu_aperto():
+            return
+        s = self.tl.scena_n(self.da_scena)
+        self.stato = "modifica"
+        self.messaggio = ""
+        t = self.t_karaoke
+        t.configure(state="normal", cursor="xterm", font=self.f_piccolo_editor)
+        t.delete("1.0", "end")
+        t.insert("1.0", "\n".join(f.grezzo or f.testo for f in s.frasi))
+        t.bind("<Command-Return>", lambda e: (self._salva_modifica(), "break")[-1])
+        t.focus_set()
+        self._disegna_elenco()
+
+    def _chiudi_editor(self) -> None:
+        t = self.t_karaoke
+        t.unbind("<Command-Return>")
+        t.configure(state="disabled", cursor="arrow", font=self.f_karaoke)
+        self._chiave_karaoke = None
+        self.stato = "pronto"
+        self.root.focus_set()
+        self._disegna_elenco()
+        self._mostra_fermo()
+
+    def _salva_modifica(self) -> None:
+        if self.stato != "modifica":
+            return
+        n = self.da_scena
+        righe = [x.strip() for x in self.t_karaoke.get("1.0", "end").split("\n") if x.strip()]
+        attese = len(self.tl.scena_n(n).frasi)
+        if len(righe) != attese:
+            self.messaggio = (f"scena {n}: servono {attese} righe, una per frase (ne hai scritte {len(righe)}): "
+                              "i beat dell'animazione sono legati alle frasi")
+            return
+        voce_md = list(self.r.scena(n).voce) if self.r.scena(n) else []
+        clipmod.salva_parlato(self.r.slug, n, None if righe == voce_md else righe)
+        self.tl = con_voce(self.tl, n, righe)
+        self._chiudi_editor()
+        self.messaggio = f"testo della scena {n} salvato" + (" (è tornato quello della sceneggiatura)" if righe == voce_md else "")
+
+    def _annulla_modifica(self) -> None:
+        if self.stato == "modifica":
+            self._chiudi_editor()
+            self.messaggio = "modifica annullata"
 
     def _annulla_presa(self, messaggio: str) -> None:
         self._ferma_mic()
@@ -498,6 +649,18 @@ class AppRegistra:
                 self.c_reel.itemconfig(self.t_conto, text="")
             else:
                 self.c_reel.itemconfig(self.t_conto, text=str(math.ceil(resto)))
+        if self.stato == "prova":
+            t = self.t_reel0 + (adesso - self.T0)
+            fr = self.riproduttore.prossimo_fino_a(t)
+            scena = self.tl.scena_a(t)
+            if fr is not None:
+                self.foto_reel.paste(self._componi(fr, webcam[1] if webcam else None, scena))
+            self._disegna_karaoke(karaoke(self.tl, t))
+            self.messaggio = (f"▶ PROVA (non registra) · reel {max(0.0, t):.1f} s / {self.tl.durata_s:.1f} s"
+                              + (f" · scena {scena.n}/{len(self.tl.scene)}" if scena else " · pre-roll")
+                              + "   —   Spazio o ■ per fermare")
+            if t >= self.tl.durata_s:
+                self._ferma_prova("prova finita")
         if self.stato == "presa":
             t = self.t_reel0 + (adesso - self.T0)
             fr = self.riproduttore.prossimo_fino_a(t)
@@ -540,13 +703,15 @@ class AppRegistra:
         self._disegna_karaoke(Karaoke(s, None, 0, 0.0, None, s.frasi[0] if s.frasi else None, 0.0), pronto=True)
 
     def _disegna_karaoke(self, k: Karaoke, pronto: bool = False) -> None:
+        if self.stato == "modifica":
+            return
         principale = k.frase or k.prossima
         chiave = (id(k.scena), id(principale), k.accese, id(k.precedente), round(k.attesa_s, 1) if k.attesa_s > 0.5 else 0, pronto)
         if k.scena:
             self.l_intestazione.configure(text=f"Scena {k.scena.n}/{len(self.tl.scene)} · {k.scena.tipo}")
         else:
             self.l_intestazione.configure(text="Prima del reel")
-        self.c_barra.coords(self.barra, 0, 0, int(560 * k.frazione_scena), 6)
+        self.c_barra.coords(self.barra, 0, 0, int(self.larga_barra * k.frazione_scena), 6)
         if chiave == self._chiave_karaoke:
             return
         self._chiave_karaoke = chiave
@@ -576,6 +741,7 @@ class AppRegistra:
 
     def _disegna_elenco(self) -> None:
         pal = self.colori
+        cambiate = clipmod.carica_parlato(self.r.slug)
         for lbl, s in zip(self.l_scene, self.tl.scene):
             c = clipmod.trova(self.r.slug, s.n)
             presa = ""
@@ -583,12 +749,16 @@ class AppRegistra:
                 if s.n in p.scene:
                     presa = f" · {p.nome}"
             segno = "✔" if c else "✘"
-            lbl.configure(text=f"{segno}  scena {s.n:02d}  {s.tipo:<12} {s.durata_s:5.1f} s{presa}",
+            lbl.configure(text=f"{segno} scena {s.n:02d}{' ✎' if s.n in cambiate else ''}{presa}\n{s.tipo} · {s.durata_s:.1f} s",
                           fg=pal["testo"] if c else pal["attenuato"],
                           bg=pal["secondario"] if s.n == self.da_scena else pal["sfondo"])
 
     def _disegna_stato(self) -> None:
-        if self.stato == "pronto" and not self.messaggio:
+        if self.stato == "modifica":
+            n = self.da_scena
+            testo = (f"✎ Testo della scena {n}: una riga per frase ({len(self.tl.scena_n(n).frasi)} righe), ==parola== per "
+                     "l'evidenza nelle caption.   ⌘↩ salva · Esc annulla") + (f"\n{self.messaggio}" if self.messaggio else "")
+        elif self.stato == "pronto" and not self.messaggio:
             testo = f"Pronto · Spazio registra dalla scena {self.da_scena} (parte {self.opz['preroll_s']:.0f} s prima, dopo il conto alla rovescia)"
         elif self.stato == "pronto":
             testo = self.messaggio + f"   —   Spazio registra dalla scena {self.da_scena}"
@@ -597,6 +767,16 @@ class AppRegistra:
         if self.avvisi and self.stato == "pronto":
             testo += "\n⚠ " + " · ".join(self.avvisi)
         self.l_stato.configure(text=testo, fg=self.colori["rec"] if self.stato in ("errore", "presa") else self.colori["testo"])
+        pronto = self.stato == "pronto"
+        self.b_registra.configure(text="● Registra  (Spazio)" if self.stato != "errore" else "↻ Riprova  (Spazio)",
+                                  state="normal" if self.stato in ("pronto", "errore") else "disabled")
+        for b in (self.b_prova, self.b_prima, self.b_dopo):
+            b.configure(state="normal" if pronto else "disabled")
+        self.b_ferma.configure(state="normal" if self.stato in ("presa", "apertura", "conto", "prova") else "disabled")
+        modifica = self.stato == "modifica"
+        self.b_modifica.configure(text="✔ Salva testo  (⌘↩)" if modifica else "✎ Modifica testo  (E)",
+                                  state="normal" if self.stato in ("pronto", "prova", "modifica") else "disabled")
+        self.b_annulla.configure(state="normal" if modifica else "disabled")
 
     @staticmethod
     def _mmss(s: float) -> str:

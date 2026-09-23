@@ -27,6 +27,13 @@ class Sorgenti:
     filmato: bool = False                    # scena [broll]: `grafica` è materiale esterno a tutta tela, non Manim
     caption: tuple[tuple[Path, float, float], ...] = ()   # (png, t0, t1) dei blocchi di sottotitolo, bruciati sopra tutto
     caption_xy: tuple[int, int] | None = None             # angolo in alto a sinistra della fascia (tools/reel/caption.fascia)
+    # raccordo fra volto pieno e riquadro (2026-09-22): solo a `riquadro == PIENO`. `uscita_a_riquadro` è la posizione
+    # del riquadro della scena DOPO ("si" o "alto-destra"…): negli ultimi `durata_raccordo_s` il volto a tutta tela si
+    # rimpicciolisce fino a coincidere con quel riquadro, prendendone la forma. `entrata_da_riquadro` è il contrario
+    # nei primi secondi, col riquadro della scena PRIMA. None (vicino senza riquadro, o assente) = stacco secco.
+    uscita_a_riquadro: str | None = None
+    entrata_da_riquadro: str | None = None
+    durata_raccordo_s: float = 0.5
 
 
 def posizione_riquadro(cfg: Config, riquadro: str) -> tuple[int, int, int]:
@@ -70,6 +77,100 @@ def maschera_schermo(cfg: Config) -> Path:
     return dest
 
 
+# --- raccordo fra volto pieno e riquadro -------------------------------------------------------------------------
+# Il volto a tutta tela si rimpicciolisce fino a diventare il cerchio del riquadro (e viceversa in chiusura). Il
+# raccordo vive DENTRO la scena a volto pieno, così il montaggio resta un concat.
+#
+# Come: la finestra visibile del presentatore va dal ritaglio 9:16 a tutta tela al quadrato del riquadro, passando
+# per rettangoli intermedi. Si ottiene con un solo `scale` a misura variabile (`eval=frame`, che `overlay` con
+# `eval=frame` segue: `overlay_w/h` si aggiornano a ogni fotogramma) e con l'alpha disegnata da `geq` PRIMA dello
+# scale, cioè a risoluzione della sorgente e a misura fissa (geq non propaga a valle i cambi di misura: applicarlo
+# dopo lo scale lascia a schermo il fotogramma di prima).
+# La forma è un rettangolo arrotondato il cui raggio cresce fino a metà del lato: a raccordo finito è il cerchio del
+# riquadro. Fuori dalla finestra di tempo `geq` è spento (alpha opaca) e lo scale è identico a quello di sempre:
+# la scena resta quella di prima, fotogramma per fotogramma.
+
+DURATA_RACCORDO_S = 0.5
+
+
+def _fasi_raccordo(src: Sorgenti, cfg: Config) -> list[tuple[str, float, float, int, int, int]]:
+    """(verso, t0, span, x, y, lato) dei raccordi di questa scena; `span` è il tempo in cui il volto si muove."""
+    if src.riquadro != PIENO or not (src.video_presentatore or src.avatar):
+        return []
+    versi = [("entrata", src.entrata_da_riquadro), ("uscita", src.uscita_a_riquadro)]
+    quanti = sum(1 for _, r in versi if r)
+    passo = 1.0 / cfg.fps
+    if not quanti or src.durata_raccordo_s < 2 * passo:
+        return []
+    dur = max(passo * 2, min(src.durata_raccordo_s, src.durata_s / quanti))
+    span = max(passo, dur - passo)     # l'ultimo fotogramma della scena è già il riquadro esatto
+    fasi = []
+    for verso, riq in versi:
+        if not riq:
+            continue
+        x, y, d = posizione_riquadro(cfg, riq)
+        fasi.append((verso, 0.0 if verso == "entrata" else src.durata_s - dur, span, x, y, d))
+    return fasi
+
+
+def _geometria_raccordo(fasi: list, cfg: Config, v: str) -> tuple[str, str, str, str]:
+    """(larghezza, altezza, x, y) della finestra del volto, come espressioni ffmpeg nella variabile tempo `v`
+    ("t" nei filtri, "T" in geq). A raccordo fermo valgono la tela intera in (0, 0)."""
+    W, H = cfg.larghezza, cfg.altezza
+
+    def una(fase) -> tuple[str, str, str, str]:
+        verso, t0, span, x, y, d = fase
+        p = (f"clip(({v}-{t0:.4f})/{span:.4f},0,1)" if verso == "uscita"
+             else f"clip(({t0 + span:.4f}-{v})/{span:.4f},0,1)")
+        e = f"(({p})*({p})*(3-2*({p})))"        # smoothstep: parte e arriva morbido
+        return (f"({W}-{W - d}*{e})", f"({H}-{H - d}*{e})", f"({x}*{e})", f"({y}*{e})")
+
+    if len(fasi) == 1:
+        return una(fasi[0])
+    dentro, fuori = una(fasi[0]), una(fasi[1])
+    mezzo = (fasi[0][1] + fasi[0][2] + fasi[1][1]) / 2
+    return tuple(f"if(lt({v},{mezzo:.4f}),{a},{b})" for a, b in zip(dentro, fuori, strict=True))
+
+
+def _alpha_raccordo(fasi: list, cfg: Config) -> str:
+    """L'espressione dell'alpha per `geq`: il rettangolo arrotondato, disegnato nelle coordinate della sorgente.
+
+    W, H in geq sono le misure della sorgente; `f` è il fattore con cui lo scale la porterà a coprire la finestra,
+    quindi la finestra vista dalla sorgente è (larghezza/f x altezza/f), centrata, con raggio raggio/f.
+
+    Le variabili di `st()` sono dieci (0-9) e oltre la nona ffmpeg le sovrascrive in silenzio: qui ci stanno tutte.
+    """
+    ow, oh, _, _ = _geometria_raccordo(fasi, cfg, "T")
+    d = int(cfg.dati["riquadro"]["dimensione_px"])
+    e = f"((1-ld(0)/{cfg.larghezza})/(1-{d}/{cfg.larghezza}))"    # l'avanzamento, ricavato dalla larghezza
+    corpo = ";".join([
+        f"st(0,{ow})", f"st(1,{oh})",
+        "st(2,max(ld(0)/W,ld(1)/H))",                       # f: quanto lo scale ingrandisce la sorgente
+        "st(3,ld(0)/ld(2))", "st(4,ld(1)/ld(2))",           # finestra vista dalla sorgente
+        "st(5,(W-ld(3))/2)", "st(6,(H-ld(4))/2)",           # angolo alto-sinistra della finestra
+        f"st(7,{e}*min(ld(0),ld(1))/2/ld(2))",              # raggio degli angoli, nella sorgente
+        "st(8,max(max(ld(5)+ld(7)-X,X-(ld(5)+ld(3)-1-ld(7))),0))",
+        "st(9,max(max(ld(6)+ld(7)-Y,Y-(ld(6)+ld(4)-1-ld(7))),0))",
+    ])
+    bordo_x = "clip(min(X-ld(5)+1,ld(5)+ld(3)-X),0,1)"      # bordi della finestra, con un pixel di sfumatura
+    bordo_y = "clip(min(Y-ld(6)+1,ld(6)+ld(4)-Y),0,1)"
+    angolo = "if(lte(ld(7),0),1,clip(ld(7)+0.5-hypot(ld(8),ld(9)),0,1))"
+    return f"{corpo};255*clip(min(min({bordo_x},{bordo_y}),{angolo}),0,1)"
+
+
+def _filtri_raccordo(fasi: list, cfg: Config, ingresso: int, sfondo: int, uscita: str) -> list[str]:
+    """I due filtri del volto che si rimpicciolisce: la sorgente mascherata e scalata, e l'overlay sullo sfondo."""
+    ow, oh, ox, oy = _geometria_raccordo(fasi, cfg, "t")
+    finestre = "+".join(f"between(t,{t0 - 0.05:.4f},{t0 + span + 0.05:.4f})" for _, t0, span, _, _, _ in fasi)
+    return [
+        f"[{ingresso}:v]fps={cfg.fps},setsar=1,format=rgba,"
+        f"geq=r='r(X,Y)':g='g(X,Y)':b='b(X,Y)':a='{_alpha_raccordo(fasi, cfg)}':enable='{finestre}',"
+        f"scale=w='{ow}':h='{oh}':force_original_aspect_ratio=increase:eval=frame:flags=lanczos[raccordo]",
+        f"[{sfondo}:v][raccordo]overlay=x='({ox})-(overlay_w-({ow}))/2':y='({oy})-(overlay_h-({oh}))/2':"
+        f"eval=frame:format=auto[{uscita}]",
+    ]
+
+
 def comando_scena(src: Sorgenti, dest: Path, cfg: Config | None = None, anteprima: bool = False) -> list[str]:
     """Costruisce il comando ffmpeg (senza eseguirlo) per una scena."""
     cfg = cfg or carica()
@@ -96,8 +197,14 @@ def comando_scena(src: Sorgenti, dest: Path, cfg: Config | None = None, anteprim
     if src.riquadro == PIENO and (src.video_presentatore or src.avatar):
         i_pres_base = aggiungi("-i", str(src.video_presentatore)) if src.video_presentatore \
             else aggiungi("-loop", "1", "-t", d_img, "-i", str(src.avatar))
-        filtri.append(f"[{i_pres_base}:v]scale={W}:{H}:force_original_aspect_ratio=increase:flags=lanczos,"
-                      f"crop={W}:{H},fps={fps},setsar=1[volto]")
+        fasi = _fasi_raccordo(src, cfg)
+        if fasi:
+            i_sfondo = aggiungi("-f", "lavfi", "-i",
+                                f"color=c={cfg.palette.sfondo}:s={W}x{H}:r={fps}:d={src.durata_s:.3f}")
+            filtri += _filtri_raccordo(fasi, cfg, i_pres_base, i_sfondo, "volto")
+        else:
+            filtri.append(f"[{i_pres_base}:v]scale={W}:{H}:force_original_aspect_ratio=increase:flags=lanczos,"
+                          f"crop={W}:{H},fps={fps},setsar=1[volto]")
         if src.grafica is None:
             filtri.append("[volto]null[v0]")     # l'apertura: solo lui, le caption arrivano sopra
         else:

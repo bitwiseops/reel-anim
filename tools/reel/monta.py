@@ -20,7 +20,7 @@ from .contact_sheet import genera as contact
 from .ffmpeg import ffprobe
 from .manim_render import (AnimazioneMancante, carica_modulo, classe_scena, file_animazione, hash_sorgenti, lint_animazione,
                            renderizza)
-from .model import Diagnostica, Reel, Scena, avviso, errore
+from .model import PIENO, Diagnostica, Reel, Scena, avviso, errore
 from .stima import CODA_S as CODA_STIMA_S
 from .stima import durata_stimata_s
 from .voce import CODA_VOCE_S, VoceNonDisponibile, sintetizza_frasi
@@ -154,20 +154,61 @@ def anima(r: Reel, diag: list[Diagnostica], out: Path, qualita: str = "l", solo:
     return info
 
 
+def voce_recitata(r: Reel, s: Scena, t: TempiScena) -> list[str]:
+    """Il testo delle caption: quello che il presentatore ha recitato. In ordine: la `voce` del sidecar della presa
+    (clip vera con i tempi della presa), le righe corrette in `reel registra` (parlato.json, anche con --prova:
+    l'anteprima rifatta dopo una correzione mostra il testo nuovo), la VOCE della sceneggiatura. Sempre tante righe
+    quante le VOCE: i tempi delle frasi sono legati a quelle."""
+    if t.origine_tempi == "presa":
+        v = clipmod.voce_presa(clipmod.trova(r.slug, s.n))
+        if v is not None and len(v) == len(s.voce):
+            return v
+    v = clipmod.carica_parlato(r.slug).get(s.n)
+    if v is not None and len(v) == len(s.voce):
+        return v
+    return list(s.voce)
+
+
+def raccordi_riquadro(r: Reel, s: Scena) -> tuple[str | None, str | None]:
+    """(entrata, uscita) di una scena a volto pieno: il riquadro della scena prima e di quella dopo, quando ce l'hanno.
+
+    Serve al raccordo del 2026-09-22: fra l'apertura a volto pieno e la prima scena col riquadro (e fra l'ultima
+    scena col riquadro e la chiusura) il volto non stacca, si rimpicciolisce fino al cerchio del riquadro. Se la
+    scena vicina non ha riquadro (o non c'è) resta lo stacco secco.
+    """
+    if not s.a_volto_pieno:
+        return None, None
+    i = next(k for k, x in enumerate(r.scene) if x.n == s.n)
+
+    def riquadro(k: int) -> str | None:
+        if not 0 <= k < len(r.scene):
+            return None
+        q = r.scene[k].riquadro_effettivo()
+        return q if q not in ("no", PIENO) else None
+
+    return riquadro(i - 1), riquadro(i + 1)
+
+
 def _caption(r: Reel, s: Scena, t: TempiScena, out: Path, cfg: Config) -> tuple[tuple, tuple[int, int] | None, list[dict]]:
     """I blocchi di caption della scena: (per il filtergraph, angolo della fascia, per il report).
 
     Si bruciano qui e non in Manim perché i tempi che contano sono quelli della presa: con `--prova` sono quelli
-    della voce sintetica e servono a far vedere l'ingombro prima di registrare.
+    della voce sintetica e servono a far vedere l'ingombro prima di registrare. Il testo è quello recitato
+    (`voce_recitata`), non per forza la VOCE del .md.
     """
     dove = captionmod.attiva(cfg, s.caption_effettiva())
     if dove is None or not s.voce:
         return (), None, []
-    coppie = captionmod.prepara(s.voce, t.inizi_frasi_s, t.durata_s, out / "_caption", cfg, dove)
+    coppie = captionmod.prepara(voce_recitata(r, s, t), t.inizi_frasi_s, t.durata_s, out / "_caption", cfg, dove)
     x, y, _, _ = captionmod.fascia(cfg, dove)
     per_ffmpeg = tuple((png, b.t0, b.t1) for png, b in coppie)
     per_report = [{"testo": b.piano, "t0": b.t0, "t1": b.t1, "frase": b.frase} for _, b in coppie]
     return per_ffmpeg, (x, y), per_report
+
+
+def _voce_report(r: Reel, s: Scena, t: TempiScena) -> dict:
+    v = voce_recitata(r, s, t)
+    return {"voce_recitata": v, "voce_cambiata": v != list(s.voce)}
 
 
 def _scena_broll(r: Reel, s: Scena, t: TempiScena, out: Path, avatar: Path, args, cfg: Config,
@@ -197,12 +238,13 @@ def _scena_broll(r: Reel, s: Scena, t: TempiScena, out: Path, avatar: Path, args
                                filmato=True, caption=cap, caption_xy=cap_xy)
     dest = compositing.componi_scena(src, out / "_scene" / f"{s.n:02d}.mp4", cfg, anteprima=args.anteprima)
     tc = time.time() - t2
-    png = fotogrammi.fotogramma_chiave(dest, t.durata_s, out / "scene" / f"{s.n:02d}.png")
-    fs = fotogrammi.filmstrip_scena(dest, t.durata_s, out / "fotogrammi" / f"{s.n:02d}-filmstrip.png")
-    return {"ordine": s.n, "tipo": "png", "file": str(png.relative_to(out)), "scena": s.n, "tipo_scena": s.tipo,
+    cop = fotogrammi.copri_volto(cfg, riq, avatar, cap_report) if c else None   # il volto lo guarda solo lui
+    png = fotogrammi.fotogramma_chiave(dest, t.durata_s, out / "scene" / f"{s.n:02d}.png", copri=cop)
+    fs = fotogrammi.filmstrip_scena(dest, t.durata_s, out / "fotogrammi" / f"{s.n:02d}-filmstrip.png", copri=cop)
+    return {"ordine": s.n, "clip_vera": c is not None, "tipo": "png", "file": str(png.relative_to(out)), "scena": s.n, "tipo_scena": s.tipo,
             "durata_s": t.durata_s, "parole_voce": s.parole_voce, "durata_stimata_s": durata_stimata_s(s, cfg),
             "origine_durata": t.origine, "inizi_frasi_s": t.inizi_frasi_s, "origine_tempi": t.origine_tempi,
-            "caption": cap_report,
+            "caption": cap_report, **_voce_report(r, s, t),
             "avvisi_tempi": avvisi_tempi, "controlli": [], "riquadro": riq, "schermo": s.schermo, "filmato": True,
             "filmstrip": str(fs.relative_to(out)), "grafica": str(filmato.relative_to(RADICE)) if filmato.is_relative_to(RADICE) else str(filmato),
             "video": str(dest.relative_to(out)), "tempo_manim_s": 0.0, "tempo_ffmpeg_s": round(tc, 1)}
@@ -292,19 +334,25 @@ def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None 
         t2 = time.time()
         c = clipmod.trova(r.slug, s.n) if t.origine == "clip" else None
         cap, cap_xy, cap_report = _caption(r, s, t, out, cfg)
+        entrata, uscita = raccordi_riquadro(r, s)
         src = compositing.Sorgenti(grafica=grafica, durata_s=t.durata_s, riquadro=riq, video_presentatore=c,
                                    avatar=avatar if (c is None and riq != "no" and avatar.exists()) else None, audio=t.audio,
-                                   schermo=schermo, caption=cap, caption_xy=cap_xy)
+                                   schermo=schermo, caption=cap, caption_xy=cap_xy,
+                                   entrata_da_riquadro=entrata, uscita_a_riquadro=uscita,
+                                   durata_raccordo_s=float(cfg.dati["transizioni"].get("raccordo_riquadro_s",
+                                                                                       compositing.DURATA_RACCORDO_S)))
         dest = compositing.componi_scena(src, out / "_scene" / f"{s.n:02d}.mp4", cfg, anteprima=args.anteprima)
         tc = time.time() - t2
         tempi["compositing"] += tc
-        png = fotogrammi.fotogramma_chiave(dest, t.durata_s, out / "scene" / f"{s.n:02d}.png")
-        fs = fotogrammi.filmstrip_scena(dest, t.durata_s, out / "fotogrammi" / f"{s.n:02d}-filmstrip.png")
-        elementi.append({"ordine": s.n, "tipo": "png", "file": str(png.relative_to(out)), "scena": s.n, "tipo_scena": s.tipo,
+        cop = fotogrammi.copri_volto(cfg, riq, avatar, cap_report) if c else None   # il volto lo guarda solo lui
+        png = fotogrammi.fotogramma_chiave(dest, t.durata_s, out / "scene" / f"{s.n:02d}.png", copri=cop)
+        fs = fotogrammi.filmstrip_scena(dest, t.durata_s, out / "fotogrammi" / f"{s.n:02d}-filmstrip.png", copri=cop)
+        elementi.append({"ordine": s.n, "clip_vera": c is not None, "tipo": "png", "file": str(png.relative_to(out)), "scena": s.n, "tipo_scena": s.tipo,
                          "durata_s": t.durata_s, "parole_voce": s.parole_voce, "durata_stimata_s": durata_stimata_s(s, cfg),
                          "origine_durata": t.origine, "inizi_frasi_s": t.inizi_frasi_s, "origine_tempi": t.origine_tempi,
                          "avvisi_tempi": avvisi_tempi, "controlli": controlli, "riquadro": riq, "schermo": s.schermo,
-                         "caption": cap_report,
+                         "raccordo_riquadro": "+".join(v for v, q in (("entrata", entrata), ("uscita", uscita)) if q) or None,
+                         "caption": cap_report, **_voce_report(r, s, t),
                          "filmstrip": str(fs.relative_to(out)),
                          "grafica": str(grafica.relative_to(out)) if grafica else "",
                          "video": str(dest.relative_to(out)), "tempo_manim_s": round(tm, 1), "tempo_ffmpeg_s": round(tc, 1)})
@@ -316,10 +364,16 @@ def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None 
         tr = cfg.dati["transizioni"]
         tipo_tr, d_tr = str(tr.get("tipo", "dissolvenza")), float(tr.get("durata_s", 0.25))
         # fra animazione e filmato si stacca: grafica scura e filmato chiaro sciolti insieme lasciano il fantasma
-        # dei testi sopra l'immagine ([transizioni] filmato = "dissolvenza" per riavere la dissolvenza ovunque)
+        # dei testi sopra l'immagine ([transizioni] filmato = "dissolvenza" per riavere la dissolvenza ovunque).
+        # Dove c'è il raccordo del riquadro si stacca sempre: il volto arriva sul cerchio esattamente all'ultimo
+        # fotogramma, e una dissolvenza incrociata di 0,25 s se lo mangerebbe sciogliendolo nella scena dopo.
+        def _raccordo(e: dict, verso: str) -> bool:
+            return verso in (e.get("raccordo_riquadro") or "")
+
         tagli = frozenset(k for k in range(1, len(elementi))
-                          if (elementi[k - 1].get("filmato") or elementi[k].get("filmato"))
-                          and str(tr.get("filmato", "taglio")) == "taglio")
+                          if ((elementi[k - 1].get("filmato") or elementi[k].get("filmato"))
+                              and str(tr.get("filmato", "taglio")) == "taglio")
+                          or _raccordo(elementi[k - 1], "uscita") or _raccordo(elementi[k], "entrata"))
         finale = compositing.concatena(pezzi, out / "reel-9x16.mp4", tipo_tr, d_tr, cfg, anteprima=args.anteprima, tagli=tagli)
         durata_tot = compositing.durata_concat(pezzi, tipo_tr, d_tr, tagli)
         tempi["concat"] = time.time() - t3
@@ -329,7 +383,8 @@ def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None 
             sciolta = tipo_tr == "dissolvenza" and (k + 1) not in tagli
             t_acc += e["durata_s"] - (d_tr if sciolta else 0)
             e["t_fine_s"] = round(e["t_inizio_s"] + e["durata_s"], 2)
-        fs = fotogrammi.filmstrip(finale, fotogrammi.tempi_campione(durata_tot, 10), out / "fotogrammi" / "reel-filmstrip.png", 220)
+        fs = fotogrammi.filmstrip(finale, fotogrammi.tempi_campione(durata_tot, 10), out / "fotogrammi" / "reel-filmstrip.png", 220,
+                                  copri=fotogrammi.copri_reel(cfg, elementi, avatar))
         hook = elementi[0]
         # a filmato e a volto pieno il titolo non è a schermo: la copertina ce lo mette sopra (vive solo lì)
         s_hook = r.hook if r.hook is not None and (hook.get("filmato") or r.hook.a_volto_pieno) else None
@@ -371,7 +426,11 @@ def _chiudi(r: Reel, diag, out: Path, elementi, clip_info, reel_info, tempi, pro
     celle = [{"file": out / e["file"], "etichetta": f"{e['scena']:02d} · {e['tipo_scena']}\n{e['durata_s']:.1f} s · {e['origine_durata']}",
               "animata": True, "problema": any(d.scena == e["scena"] and d.livello == "errore" for d in diag)} for e in elementi]
     if reel_info:
-        celle.append({"file": out / reel_info["copertina_4x5"], "etichetta": "cover 4:5", "animata": False})
+        # con le clip vere la copertina è il suo volto: nel contact sheet (che legge Claude) va un cartello
+        cop = out / reel_info["copertina_4x5"]
+        if any(e.get("clip_vera") for e in elementi):
+            cop = fotogrammi.cartello(out / "_copertina-coperta.png", "copertina\n(la guarda il presentatore)")
+        celle.append({"file": cop, "etichetta": "cover 4:5", "animata": False})
         celle.append({"file": out / reel_info["filmstrip"], "etichetta": f"reel · {reel_info['durata_s']:.0f} s", "animata": True})
     if celle:
         contact(celle, diag, out / "contact-sheet.png")
@@ -393,6 +452,10 @@ def _chiudi(r: Reel, diag, out: Path, elementi, clip_info, reel_info, tempi, pro
     for d in diag:
         if d.livello == "errore":
             print(d, file=sys.stderr)
+    cambiate = [str(e["scena"]) for e in elementi if e.get("voce_cambiata")]
+    if cambiate:
+        print(f"testo cambiato in registrazione: scene {', '.join(cambiate)} (caption dal testo recitato; "
+              f"`uv run reel parlato {args.file}` per vederlo, `--applica` per riportarlo nel .md)")
     n_err = sum(1 for d in diag if d.livello == "errore")
     n_avv = len(diag) - n_err
     if reel_info:

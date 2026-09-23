@@ -20,6 +20,7 @@ from tools.reel.ffmpeg import esegui, ffprobe, trova_ffmpeg
 from tools.reel.model import Diagnostica, avviso
 
 from .fornitori import Candidato, pexels
+from .immagini import ImmaginiMancanti, componi
 from .piano import ScenaBroll
 from .scelta import confini
 
@@ -75,9 +76,26 @@ def comando(sorgenti: list[Path], tagli: list[dict], finestre: list[tuple[float,
             "-movflags", "+faststart", str(dest)]
 
 
+def file_immagini(s: ScenaBroll) -> list[Path]:
+    """Le immagini generate della scena, nell'ordine del piano. I percorsi sono relativi alla radice."""
+    fuori: list[Path] = []
+    for t in s.scelti:
+        f = Path(t.get("file") or "")
+        fuori.append(f if f.is_absolute() else RADICE / f)
+    return fuori
+
+
 def rendi_scena(slug: str, s: ScenaBroll, cfg: Config | None = None, *, dest: Path | None = None,
                 procura: Callable[[dict], Path] = procura) -> tuple[Path, list[Diagnostica]]:
-    """Rende la scena e controlla che il file rispetti il contratto. Aggiorna `s` (sha256, stato)."""
+    """Rende la scena e controlla che il file rispetti il contratto. Aggiorna `s` (sha256, stato).
+
+    Due registri, un solo contratto verso il montaggio: un file per scena, 1080×1920, muto, lungo quanto
+    la scena al fotogramma. Le scene a `immagini` non scaricano niente — le immagini le ha già generate
+    `broll genera` — e si compongono con la dissolvenza sugli inizi frase.
+    """
+    if s.registro == "immagini":
+        return _rendi_immagini(slug, s, cfg or carica(), dest=dest)
+
     cfg = cfg or carica()
     diag: list[Diagnostica] = []
     dest = dest or cartella_media(slug) / (s.file or f"broll-scena-{s.n:02d}.mp4")
@@ -102,6 +120,41 @@ def rendi_scena(slug: str, s: ScenaBroll, cfg: Config | None = None, *, dest: Pa
         tmp.unlink(missing_ok=True)
         raise
     tmp.replace(dest)
+    s.file, s.stato = dest.name, "reso"
+    return dest, diag
+
+
+def _rendi_immagini(slug: str, s: ScenaBroll, cfg: Config, *,
+                    dest: Path | None = None) -> tuple[Path, list[Diagnostica]]:
+    """Le immagini generate della scena, montate sugli inizi frase con la dissolvenza fra l'una e l'altra."""
+    diag: list[Diagnostica] = []
+    dest = dest or cartella_media(slug) / (s.file or f"broll-scena-{s.n:02d}.mp4")
+    sorgenti = file_immagini(s)
+    if not sorgenti:
+        raise ResaFallita(f"scena {s.n}: nessuna immagine nel piano (prima `broll genera {slug} --scena {s.n}`)")
+    if not s.inizi_frasi_s:
+        diag.append(avviso("nessun inizio frase nel piano: un'immagine sola per tutta la scena "
+                           "(prima `uv run reel monta … --prova`, poi `broll piano`)", scena=s.n))
+
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    tmp = dest.with_name(dest.stem + ".tmp" + dest.suffix)
+    try:
+        _, tenute = componi(sorgenti, s.inizi_frasi_s, s.durata_s, tmp, cfg)
+        _verifica(tmp, round(s.durata_s * cfg.fps), cfg)
+    except ImmaginiMancanti as e:
+        tmp.unlink(missing_ok=True)
+        raise ResaFallita(str(e)) from e
+    except RuntimeError:
+        tmp.unlink(missing_ok=True)
+        raise
+    tmp.replace(dest)
+    if len(sorgenti) < len(tenute):
+        diag.append(avviso(f"{len(tenute)} frasi e {len(sorgenti)} immagini: le immagini si ripetono "
+                           f"(`broll genera {slug} --scena {s.n} --quante {len(tenute)}`)", scena=s.n))
+    elif len(sorgenti) > len(tenute):
+        diag.append(avviso(f"{len(tenute)} frasi e {len(sorgenti)} immagini: le ultime "
+                           f"{len(sorgenti) - len(tenute)} non si vedono (una immagine per frase)",
+                           scena=s.n))
     s.file, s.stato = dest.name, "reso"
     return dest, diag
 

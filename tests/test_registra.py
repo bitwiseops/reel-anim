@@ -200,6 +200,54 @@ def test_inquadratura(tmp_path):
     assert reg.carica_inquadratura(tmp_path, "1920x1080", 360)["lato"] == 1080
 
 
+def test_parlato_corretto_in_registrazione(tmp_path, monkeypatch):
+    """Il testo cambiato nella finestra (parlato.json) sostituisce la VOCE nel karaoke e finisce nel sidecar; i tempi
+    restano quelli dell'anteprima. Una correzione con un altro numero di righe non vale."""
+    r, _ = parse_testo(MD)
+    cfg = carica()
+    tl = reg.timeline_da_report(REPORT, r, cfg, {2: ["Uno ==nuovo==.", "Due.", "Tre."], 3: ["solo una riga"]})
+    s2 = tl.scena_n(2)
+    assert [f.testo for f in s2.frasi] == ["Uno nuovo.", "Due.", "Tre."] and s2.frasi[0].grezzo == "Uno ==nuovo==."
+    assert s2.frasi[1].t_inizio_s == _timeline().scena_n(2).frasi[1].t_inizio_s
+    assert [f.testo for f in tl.scena_n(3).frasi] == ["Scrivilo nella richiesta.", "Fine."]
+    tl2 = reg.con_voce(_timeline(), 3, ["Scrivilo tu.", "Basta."])
+    assert [f.grezzo for f in tl2.scena_n(3).frasi] == ["Scrivilo tu.", "Basta."] and tl2.scena_n(2) == _timeline().scena_n(2)
+    with pytest.raises(ValueError):
+        reg.con_voce(_timeline(), 3, ["una sola"])
+    p = reg.nuova_presa("presa-01", 2, 3.89, 12, 0.02, reg.opzioni(cfg), 21.61, "abc")
+    d = json.loads(reg.scrivi_sidecar(tmp_path / "scena-02.mov", s2, p).read_text())
+    assert d["voce"] == ["Uno ==nuovo==.", "Due.", "Tre."]
+    (tmp_path / "scena-02.mov").write_bytes(b"")
+    assert clipmod.voce_presa(tmp_path / "scena-02.mov") == d["voce"] and clipmod.voce_presa(None) is None
+    monkeypatch.setattr(clipmod, "RADICE", tmp_path)
+    clipmod.salva_parlato("x", 4, ["a", "b"])
+    clipmod.salva_parlato("x", 2, ["c"])
+    assert clipmod.carica_parlato("x") == {2: ["c"], 4: ["a", "b"]}
+    clipmod.salva_parlato("x", 4, None)
+    assert clipmod.carica_parlato("x") == {2: ["c"]} and clipmod.carica_parlato("y") == {}
+
+
+def test_caption_dal_testo_recitato(tmp_path, monkeypatch):
+    """In ordine: la voce del sidecar (presa), parlato.json, la VOCE del .md."""
+    from tools.reel import monta
+    r, _ = parse_testo(MD)
+    s = r.scene[1]
+    media = tmp_path / "contenuti" / "media" / r.slug
+    media.mkdir(parents=True)
+    monkeypatch.setattr(clipmod, "RADICE", tmp_path)
+    presa = monta.TempiScena(8.0, "clip", None, [0.0, 2.1, 5.6], "presa")
+    stima = monta.TempiScena(8.0, "stima", None, [0.0, 2.1, 5.6], "parole-stima")
+    assert monta.voce_recitata(r, s, stima) == s.voce
+    clipmod.salva_parlato(r.slug, 2, ["P1.", "P2.", "P3."])
+    assert monta.voce_recitata(r, s, stima) == ["P1.", "P2.", "P3."]
+    (media / "scena-02.mov").write_bytes(b"")
+    (media / "scena-02.json").write_text(json.dumps({"inizi_frasi_s": [0.0, 2.1, 5.6], "voce": ["S1.", "S2.", "S3."]}))
+    assert monta.voce_recitata(r, s, presa) == ["S1.", "S2.", "S3."]
+    assert monta._voce_report(r, s, presa)["voce_cambiata"] is True
+    (media / "scena-02.json").write_text(json.dumps({"inizi_frasi_s": [0.0, 2.1, 5.6]}))    # presa di prima: niente voce
+    assert monta.voce_recitata(r, s, presa) == ["P1.", "P2.", "P3."]
+
+
 def test_sidecar_e_registro(tmp_path):
     tl = _timeline()
     opz = reg.opzioni(carica())
@@ -299,6 +347,47 @@ def test_cattura_lavfi_file_e_pipe_allineati(tmp_path):
     fr = rp.prossimo_fino_a(0.6)
     assert fr is not None and len(fr) == 80 * 60 * 3
     rp.ferma()
+
+
+@pytest.mark.slow
+@pytest.mark.skipif(not shutil.which("ffmpeg"), reason="serve ffmpeg")
+def test_app_modifica_il_testo_fuori_dalla_presa(tmp_path, monkeypatch):
+    """E apre la modifica: Spazio e le cifre non fanno niente, un numero di righe sbagliato non si salva, il
+    salvataggio aggiorna la timeline e parlato.json; Esc annulla."""
+    import tkinter as tk
+    from tools.reel.registra_app import AppRegistra
+    try:
+        tk.Tk().destroy()
+    except tk.TclError:
+        pytest.skip("Tk senza schermo")
+    monkeypatch.setattr(clipmod, "RADICE", tmp_path)
+    r, _ = parse_testo(MD)
+    tl = _timeline()
+    render, media = tmp_path / "render", tmp_path / "media"
+    render.mkdir()
+    media.mkdir()
+    app = AppRegistra(r, tl, {**_opz_test(), "sorgente": LAVFI}, carica(), media, render, [], da_scena=2)
+    app.root.withdraw()
+    evento = type("E", (), {"char": "e"})()
+    app._tasto(evento)
+    assert app.stato == "modifica" and app.t_karaoke.get("1.0", "end").strip().split("\n")[0] == "Prima frase della due."
+    app._spazio()
+    app._tasto(type("E", (), {"char": "3"})())
+    assert app.stato == "modifica" and app.da_scena == 2 and app.cattura is None     # niente presa, niente cambio scena
+    app.t_karaoke.delete("1.0", "end")
+    app.t_karaoke.insert("1.0", "Solo una riga.")
+    app._salva_modifica()
+    assert app.stato == "modifica" and "servono 3 righe" in app.messaggio
+    app.t_karaoke.delete("1.0", "end")
+    app.t_karaoke.insert("1.0", "Prima ==nuova==.\n\nSeconda.\nTerza.\n")
+    app._salva_modifica()
+    assert app.stato == "pronto" and [f.testo for f in app.tl.scena_n(2).frasi] == ["Prima nuova.", "Seconda.", "Terza."]
+    assert clipmod.carica_parlato(r.slug) == {2: ["Prima ==nuova==.", "Seconda.", "Terza."]}
+    app._tasto(evento)
+    app.t_karaoke.insert("1.0", "rovinata ")
+    app._esc()
+    assert app.stato == "pronto" and app.tl.scena_n(2).frasi[0].grezzo == "Prima ==nuova==."
+    app._chiudi()
 
 
 @pytest.mark.slow

@@ -45,6 +45,47 @@ def tempi_presa(clip: Path) -> list[float] | None:
     return [float(x) for x in inizi] if isinstance(inizi, list) else None
 
 
+def voce_presa(clip: Path | None) -> list[str] | None:
+    """Il testo mostrato nel karaoke durante la presa (righe grezze, con ==evidenzia==), se il sidecar lo ha: è quello
+    che il presentatore ha recitato, e le caption si fanno da qui. None per le prese di prima del 2026-09-22."""
+    if clip is None or not sidecar(clip).exists():
+        return None
+    try:
+        voce = json.loads(sidecar(clip).read_text(encoding="utf-8")).get("voce")
+    except (json.JSONDecodeError, AttributeError):
+        return None
+    return [str(x) for x in voce] if isinstance(voce, list) else None
+
+
+# --- il testo corretto in registrazione -------------------------------------------------------------------------
+# contenuti/media/<slug>/parlato.json = {"3": ["riga", ...]}: solo le scene che il presentatore ha cambiato nella
+# finestra di `reel registra`, righe grezze, tante quante le VOCE della scena (i beat sono legati alle frasi).
+
+def file_parlato(slug: str) -> Path:
+    return cartella(slug) / "parlato.json"
+
+
+def carica_parlato(slug: str) -> dict[int, list[str]]:
+    try:
+        dati = json.loads(file_parlato(slug).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    return {int(k): [str(x) for x in v] for k, v in dati.items() if isinstance(v, list)}
+
+
+def salva_parlato(slug: str, n: int, righe: list[str] | None) -> Path:
+    """Scrive le righe della scena n (None = torna alla VOCE della sceneggiatura)."""
+    dati = carica_parlato(slug)
+    if righe is None:
+        dati.pop(n, None)
+    else:
+        dati[n] = list(righe)
+    p = file_parlato(slug)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps({str(k): v for k, v in sorted(dati.items())}, ensure_ascii=False, indent=1), encoding="utf-8")
+    return p
+
+
 def stato(slug: str, scene_n: list[int]) -> list[dict]:
     """Per ogni scena: file trovato, durata, probe e da dove vengono i tempi delle frasi (presa | stimati)."""
     out = []

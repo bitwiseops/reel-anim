@@ -25,6 +25,7 @@ VERSIONE = 1
 # ripiego quando per quella scena non esiste né una clip filmata né una animata: si montano sui beat,
 # una per frase, per richiamare quello che il presentatore sta dicendo in quel momento.
 REGISTRI = ("animazione", "filmato", "immagini")
+ESTERNI = ("filmato", "immagini")       # i registri che producono un file per la scena
 STATI_SCENA = ("da-scegliere", "scelto", "reso")
 # i tipi di scena che possono andare a filmato. La chiusura è la CTA, e una scena [schermo] ha già il suo
 # materiale nella finestra 900x980. **Nemmeno l'hook, dal 2026-09-21**: l'apertura è il presentatore a
@@ -114,6 +115,11 @@ class Piano:
     @property
     def filmati(self) -> list[ScenaBroll]:
         return [s for s in self.scene if s.registro == "filmato"]
+
+    @property
+    def esterne(self) -> list[ScenaBroll]:
+        """Le scene che hanno un file da rendere: a filmato o a immagini generate. Non le animate."""
+        return [s for s in self.scene if s.registro in ESTERNI]
 
     def scena(self, n: int) -> ScenaBroll | None:
         return next((s for s in self.scene if s.n == n), None)
@@ -277,15 +283,23 @@ def da_sceneggiatura(md: Path, cfg: Config | None = None) -> tuple[Piano, list[D
 def eredita(nuovo: Piano, vecchio: Piano, fps: int = 30) -> list[int]:
     """Rifare il piano non deve disfare le decisioni: porta nel nuovo candidati e scelte del vecchio.
 
-    Una scena eredita se è ancora a filmato e dice ancora le stesse frasi (la VOCE è congelata da prima
-    della tappa: se è cambiata, il filmato scelto rispondeva a un'altra scena). Se nel frattempo è cambiata
-    la durata — è arrivata la presa vera al posto della stima — la scelta resta ma la resa no: si torna a
-    `scelto`, e `broll rendi` la rifà lunga giusta. Ritorna le scene che hanno ereditato.
+    Una scena eredita se è ancora a materiale esterno e dice ancora le stesse frasi (la VOCE è congelata da
+    prima della tappa: se è cambiata, il filmato scelto rispondeva a un'altra scena). Se nel frattempo è
+    cambiata la durata — è arrivata la presa vera al posto della stima — la scelta resta ma la resa no: si
+    torna a `scelto`, e `broll rendi` la rifà lunga giusta. Ritorna le scene che hanno ereditato.
+
+    Il registro `immagini` non lo propone nessuna euristica: lo decide `broll genera` perché su Pexels non
+    c'era niente. Quindi **vince sul piano nuovo**: rifare il piano non deve buttare le immagini generate,
+    che sono costate.
     """
     ereditate: list[int] = []
     for s in nuovo.scene:
         v = vecchio.scena(s.n)
-        if v is None or s.registro != "filmato" or v.registro != "filmato" or v.voce != s.voce:
+        if v is None or v.registro not in ESTERNI or v.voce != s.voce:
+            continue
+        if v.registro == "immagini":
+            s.registro = "immagini"
+        elif s.registro != "filmato":
             continue
         s.query = v.query or s.query
         s.candidati, s.scelti, s.file = v.candidati, v.scelti, v.file or s.file
@@ -304,7 +318,8 @@ def controlla(p: Piano) -> list[Diagnostica]:
     """L'alternanza regge? Gli stessi limiti editoriali del resto del repo, nello stesso formato."""
     d: list[Diagnostica] = []
     filmati = [s.n for s in p.filmati]
-    if not filmati:
+    generate = [s for s in p.scene if s.registro == "immagini"]
+    if not filmati and not generate:
         d.append(avviso("nessuna scena a filmato: il piano non cambia niente rispetto a oggi"))
     # L'equilibrio fra i due registri (regola del presentatore, 2026-09-21): metà delle scene a filmato, ± una.
     corpo = [s for s in p.scene if s.registro == "filmato" or s.tipo not in ("hook", "chiusura")]
@@ -325,6 +340,10 @@ def controlla(p: Piano) -> list[Diagnostica]:
             d.append(avviso(f"scena [{s.tipo}] proposta a filmato: ammesse solo {' | '.join(AMMESSE)}", scena=s.n))
         if s.registro == "filmato" and not s.query:
             d.append(avviso("scena a filmato senza query di ricerca", scena=s.n))
+    for s in generate:
+        if not s.scelti:
+            d.append(avviso("scena a immagini generate ma senza immagini nel piano: `broll genera`",
+                            scena=s.n))
     return d
 
 

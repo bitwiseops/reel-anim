@@ -52,6 +52,31 @@ def _etichetta(c: dict) -> str:
     return "\n".join(pezzi)
 
 
+def provini_immagini(slug: str, n: int, scelti: list[dict]) -> tuple[Path | None, list[Diagnostica]]:
+    """Il contact sheet delle immagini generate di una scena: si guardano **prima** di rendere.
+
+    Le immagini sono già su disco (la cache di `broll genera`), quindi non si scarica niente: serve solo a
+    vederle in fila, con il prompt sotto, nell'ordine in cui andranno sui beat.
+    """
+    diag: list[Diagnostica] = []
+    elementi = []
+    for i, t in enumerate(scelti, start=1):
+        f = Path(t.get("file") or "")
+        f = f if f.is_absolute() else RADICE / f
+        if not f.exists():
+            diag.append(avviso(f"immagine {i} non trovata ({f.name})", scena=n))
+            continue
+        prompt = (t.get("prompt") or "").strip()
+        elementi.append({"file": str(f), "animata": True,
+                         "etichetta": f"{i}. {t.get('modello') or 'meshy'}\n{prompt[:160]}"})
+    if not elementi:
+        diag.append(avviso("nessuna immagine da mostrare", scena=n))
+        return None, diag
+    dest = contact(elementi, diag, cartella(slug) / f"immagini-scena-{n:02d}.png",
+                   colonne=min(3, len(elementi)), larghezza_cella=300)
+    return dest, diag
+
+
 def provini_scena(slug: str, n: int, candidati: list[dict], durata_s: float = 0.0,
                   scelto: str | None = None) -> tuple[Path | None, list[Diagnostica]]:
     """Contact sheet dei candidati di una scena. Segna in rosso quelli che non reggono la scena."""

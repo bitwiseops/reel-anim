@@ -71,7 +71,10 @@ mano (§4); in quel caso il gobbo è `uv run reel gobbo <file> --scrivi` → `co
 
 Un'app desktop (Tkinter + ffmpeg avfoundation) con tre pannelli: **la webcam** con il cerchio del riquadro, **il reel
 con te dentro** (l'anteprima `--prova` con il tuo volto live nel riquadro, dove lo metterà il montaggio) e **il testo
-karaoke** (la frase in corso con le parole che si accendono, la frase prima e quella dopo attenuate).
+karaoke** (la frase in corso con le parole che si accendono, la frase prima e quella dopo attenuate). I tre pannelli
+stanno in fila **sopra** e prendono l'altezza che lo schermo lascia libera (`altezza_pannelli_px` in `[registrazione]`
+per forzarla); **sotto** ci sono le scene (cliccabili), i pulsanti (● Registra, ▶ Prova, ■ Ferma, ◀ ▶ scena), i menu di
+microfono e fotocamera e la riga di stato (2026-09-22: prima i pannelli non entravano nello schermo di un portatile).
 
 Come funziona:
 1. Scegli la scena di partenza con ← → o una cifra (default: la prima senza clip). Il pannello centrale mostra il
@@ -81,8 +84,17 @@ Come funziona:
    e la registrazione è continua. Il reel è muto: il microfono registra te.
 3. La presa finisce a fine reel (o con **Spazio** per fermarla prima). L'app taglia subito le scene **coperte per
    intero** dalla presa in `scena-NN.mov` + `scena-NN.json`; una scena interrotta a metà non viene salvata.
+Prima della presa puoi fare una **prova senza registrare** (`P` o ▶ Prova): il reel scorre dalla scena scelta con il
+   volto live e il karaoke, ma non si apre il microfono e non si salva niente; Spazio, ■ o Esc la fermano.
 4. Sbagliato qualcosa? Scegli la scena e rifai da lì: la presa nuova sostituisce solo le scene che copre.
    **Esc** esce (in presa: ferma, taglia, poi esce).
+
+**Il testo si corregge qui** (2026-09-22): fuori dalla presa, da fermo o durante la prova, `E` (o ✎ Modifica testo)
+rende modificabile il pannello del karaoke con le righe della scena scelta, una per frase (`==parola==` per l'evidenza
+nelle caption). ⌘↩ salva, Esc annulla. Le righe devono restare tante quante le VOCE (i beat sono legati alle frasi);
+vanno in `parlato.json` e la presa successiva le mostra nel karaoke e le scrive nel sidecar (`voce`). Il montaggio fa
+le caption dal testo recitato; `uv run reel parlato <file>` mostra le differenze con la sceneggiatura e `--applica` ce
+le riporta. Le scene con il testo cambiato hanno «✎» nella striscia e nel riepilogo finale.
 
 Dove finiscono le cose, in `contenuti/media/<slug>/` (gitignored):
 - `scena-NN.mov` (h264, quadrato dell'inquadratura scelta, audio PCM: lossless, lo ricodifica il montaggio) e

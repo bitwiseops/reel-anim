@@ -73,6 +73,9 @@ pausa_frasi_s = 0.3       # silenzio tra le frasi: una frase alla volta, così g
 tipo = "dissolvenza"      # taglio | dissolvenza
 durata_s = 0.25
 filmato = "taglio"        # taglio | dissolvenza: le giunzioni che toccano una scena a filmato ([broll], hook a filmato)
+raccordo_riquadro_s = 0.5 # il volto a tutta tela che si rimpicciolisce fino al cerchio del riquadro della scena dopo
+                          # (e il contrario prima della chiusura): sta dentro la scena a volto pieno, e quella
+                          # giunzione resta sempre un taglio. 0 = stacco secco come prima
 
 [registrazione]           # `uv run reel registra`: presa unica sull'anteprima --prova (i default sono in tools/reel/registra.py)
 video = 0                 # fotocamera avfoundation: indice o parte del nome (`uv run reel registra --dispositivi`)

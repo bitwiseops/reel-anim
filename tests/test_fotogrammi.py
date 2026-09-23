@@ -30,7 +30,9 @@ def test_tempi_dal_report_e_ripiego_sul_report_di_prova(tmp_path):
     assert tempi_dal_report(tmp_path) == {}
     elementi = [{"scena": 1, "durata_s": 6.3, "inizi_frasi_s": [0.0, 4.8]}, {"scena": 2, "durata_s": 3.0}]
     (tmp_path / "report-prova.json").write_text(json.dumps({"elementi": elementi}), encoding="utf-8")
-    assert tempi_dal_report(tmp_path) == {1: {"durata_s": 6.3, "inizi_frasi_s": [0.0, 4.8]}, 2: {"durata_s": 3.0, "inizi_frasi_s": []}}
+    t = tempi_dal_report(tmp_path)
+    assert {n: (v["durata_s"], v["inizi_frasi_s"]) for n, v in t.items()} == {1: (6.3, [0.0, 4.8]), 2: (3.0, [])}
+    assert t[1]["clip_vera"] is None and t[1]["caption"] == []          # report vecchio: `strisce` nel dubbio copre
     (tmp_path / "report.json").write_text(json.dumps({"elementi": elementi[:1]}), encoding="utf-8")
     assert list(tempi_dal_report(tmp_path)) == [1]                      # report.json, se c'è, vince
 
@@ -91,3 +93,54 @@ def test_cmd_strisce_senza_report_fa_solo_la_scena_intera(clip, tmp_path, capsys
     assert main(["strisce", str(md), "--out", str(tmp_path), "--sorgente", "anima", "--json"]) == 0
     nomi = [Path(p).name for p in json.loads(capsys.readouterr().out)["scene"][0]["strisce"]]
     assert nomi == ["02-fitti-anima-b0.png", "02-fitti-anima-b1.png", "02-fitti-anima-scena.png"]
+
+
+# --- il volto del presentatore nelle immagini di controllo (regola del 2026-09-22) -----------------------------
+
+def _tela_rossa(cfg, scala=1.0):
+    from PIL import Image
+    return Image.new("RGB", (int(cfg.larghezza * scala), int(cfg.altezza * scala)), (255, 0, 0))
+
+
+def test_copri_volto_mette_l_avatar_nel_riquadro(tmp_path):
+    from PIL import Image
+    from tools.anim.config import carica
+    from tools.reel.compositing import posizione_riquadro
+    from tools.reel.fotogrammi import copri_volto
+    cfg = carica()
+    avatar = tmp_path / "avatar.png"
+    Image.new("RGB", (64, 64), (0, 0, 255)).save(avatar)
+    for scala in (1.0, 0.5):
+        im = copri_volto(cfg, "si", avatar)(_tela_rossa(cfg, scala), 1.0)
+        x, y, lato = (round(v * scala) for v in posizione_riquadro(cfg, "si"))
+        assert im.getpixel((x + lato // 2, y + lato // 2)) == (0, 0, 255)      # il centro del riquadro è l'avatar
+        assert im.getpixel((10, im.height // 2)) == (255, 0, 0)                 # fuori dal riquadro non cambia
+
+
+def test_copri_volto_a_volto_pieno_non_lascia_niente_della_clip(tmp_path):
+    from tools.anim.config import carica
+    from tools.reel.fotogrammi import copri_volto
+    cfg = carica()
+    im = copri_volto(cfg, "pieno", tmp_path / "manca.png", [{"testo": "ciao a tutti", "t0": 0.0, "t1": 2.0}])(_tela_rossa(cfg), 1.0)
+    assert all(px[:3] != (255, 0, 0) for px in im.getdata())
+
+
+def test_senza_riquadro_non_si_copre():
+    from tools.anim.config import carica
+    from tools.reel.fotogrammi import copri_volto
+    assert copri_volto(carica(), "no", None) is None
+
+
+def test_copri_reel_sceglie_la_scena_dall_istante(tmp_path):
+    from PIL import Image
+    from tools.anim.config import carica
+    from tools.reel.fotogrammi import copri_reel
+    cfg = carica()
+    avatar = tmp_path / "avatar.png"
+    Image.new("RGB", (64, 64), (0, 0, 255)).save(avatar)
+    elementi = [{"t_inizio_s": 0.0, "t_fine_s": 5.0, "riquadro": "pieno", "clip_vera": True, "caption": []},
+                {"t_inizio_s": 5.0, "t_fine_s": 9.0, "riquadro": "no", "clip_vera": False}]
+    f = copri_reel(cfg, elementi, avatar)
+    assert f(_tela_rossa(cfg), 7.0).getpixel((10, 10)) == (255, 0, 0)      # scena senza clip vera: intatta
+    assert f(_tela_rossa(cfg), 1.0).getpixel((10, 10)) != (255, 0, 0)      # scena a volto pieno: coperta
+    assert copri_reel(cfg, elementi[1:], avatar) is None

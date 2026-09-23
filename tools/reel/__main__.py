@@ -80,12 +80,38 @@ def _tabella_clip(r: Reel, poi: str = "") -> int:
             delta = (d - target) / target * 100 if target else 0
             nota = "  ← durata molto diversa dalla stima" if abs(delta) > 30 else ""
             beat = " · beat dalla presa" if c.get("tempi") == "presa" else " · beat stimati"
-            print(f"scena {s.n}: ✔ {c['file']}  {d:.1f}s (stima {target:.0f}s, {delta:+.0f} %){beat}{nota}")
+            v = clip.voce_presa(clip.trova(r.slug, s.n))
+            testo = " · ✎ testo cambiato" if v is not None and v != list(s.voce) else ""
+            print(f"scena {s.n}: ✔ {c['file']}  {d:.1f}s (stima {target:.0f}s, {delta:+.0f} %){beat}{testo}{nota}")
         else:
             mancanti += 1
             print(f"scena {s.n}: ✘ manca {c['atteso']}  (target ~{target:.0f}s)")
     print(f"-> {len(st) - mancanti}/{len(st)} clip presenti in contenuti/media/{r.slug}/{poi if not mancanti else ''}")
+    if clip.carica_parlato(r.slug):
+        print(f"   testo corretto in registrazione per le scene {', '.join(map(str, sorted(clip.carica_parlato(r.slug))))}: "
+              "`uv run reel parlato <file>` lo confronta con la sceneggiatura, `--applica` ce lo riporta")
     return 1 if mancanti else 0
+
+
+def cmd_parlato(args) -> int:
+    from . import parlato
+    path = Path(args.file)
+    r, _ = _carica(path)
+    cambi = parlato.recitato(r)
+    if not cambi:
+        print("-> il testo recitato coincide con la VOCE della sceneggiatura")
+        return 0
+    print(parlato.confronto(r, cambi))
+    if not args.applica:
+        print(f"-> {len(cambi)} scene con il testo cambiato in registrazione: `uv run reel parlato {args.file} --applica` "
+              "lo riporta nel .md")
+        return 0
+    n = parlato.applica(path, cambi)
+    r2, diag = _carica(path)
+    _stampa(diag)
+    print(f"-> {n} righe VOCE riscritte in {path}. Se hai cambiato numeri o fatti, passa quelle frasi al revisore; "
+          "l'anteprima --prova resta valida (cambia solo il testo) anche se `registra` la segnala come vecchia")
+    return 1 if ha_errori(diag) else 0
 
 
 def cmd_clip(args) -> int:
@@ -218,8 +244,11 @@ def cmd_monta(args) -> int:
 def cmd_strisce(args) -> int:
     import json
     from .ffmpeg import ffprobe
-    from .fotogrammi import strisce_fitte, tempi_dal_report, video_scena
+    from ..anim.config import carica
+    from . import clip
+    from .fotogrammi import copri_volto, strisce_fitte, tempi_dal_report, video_scena
     r, _ = _carica(Path(args.file))
+    cfg = carica()
     out = Path(args.out) if args.out else RADICE / "contenuti" / "render" / r.slug   # come monta.out_dir, senza importare Manim
     tempi = tempi_dal_report(out)
     scene: list[dict] = []
@@ -244,7 +273,11 @@ def cmd_strisce(args) -> int:
             scene.append({"scena": s.n, "video": str(video), "strisce": [], "avvisi": avvisi})
             continue
         inizi = t["inizi_frasi_s"] if t else []
-        png = strisce_fitte(video, durata, inizi, out / "fotogrammi", s.n, args.fps, args.finestra, args.sorgente)
+        cop = None
+        if args.sorgente == "scene" and clip.trova(r.slug, s.n) is not None and (t is None or t.get("clip_vera") is not False):
+            # il volto lo guarda solo lui: nel dubbio (report vecchio o assente) si copre
+            cop = copri_volto(cfg, s.riquadro_effettivo(), RADICE / cfg.presentatore.avatar, t["caption"] if t else None)
+        png = strisce_fitte(video, durata, inizi, out / "fotogrammi", s.n, args.fps, args.finestra, args.sorgente, copri=cop)
         scene.append({"scena": s.n, "video": str(video), "durata_s": durata, "inizi_frasi_s": inizi,
                       "strisce": [str(p) for p in png], "avvisi": avvisi})
     if not scene:
@@ -421,6 +454,9 @@ def main(argv: list[str] | None = None) -> int:
     p.set_defaults(fn=cmd_gobbo)
     p = sub.add_parser("clip", help="stato delle clip registrate per scena"); p.add_argument("file")
     p.set_defaults(fn=cmd_clip)
+    p = sub.add_parser("parlato", help="il testo recitato in registrazione contro la VOCE; --applica lo riporta nel .md")
+    p.add_argument("file"); p.add_argument("--applica", action="store_true")
+    p.set_defaults(fn=cmd_parlato)
     p = sub.add_parser("voce", help="genera le voci sintetiche di prova"); comune(p)
     p.set_defaults(fn=cmd_voce)
     p = sub.add_parser("anima", help="solo Manim: fotogrammi chiave e filmstrip per l'animatore"); comune(p)

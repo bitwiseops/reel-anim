@@ -72,9 +72,24 @@ def confini(quanti: int, inizi_frasi_s: list[float], durata_s: float) -> list[tu
     return [(a, b - a) for a, b in zip(bordi, bordi[1:])]
 
 
+def controlla_immagini(s: ScenaBroll) -> list[Diagnostica]:
+    """Le immagini generate ci sono ancora? La cache sta fuori da git: si rigenerano, non si recuperano."""
+    from .rendi import file_immagini
+
+    if not s.scelti:
+        return [errore(f"nessuna immagine generata: `broll genera <slug> --scena {s.n}`", scena=s.n)]
+    mancanti = [f.name for f in file_immagini(s) if not f.exists()]
+    if mancanti:
+        return [errore(f"{len(mancanti)} immagini non sono più nella cache ({', '.join(mancanti)}): "
+                       f"`broll genera <slug> --scena {s.n}` le rifà", scena=s.n)]
+    return []
+
+
 def controlla_scelta(s: ScenaBroll) -> list[Diagnostica]:
     """I tagli scelti reggono la scena? Un filmato che finisce prima lascerebbe un fermo immagine."""
     d: list[Diagnostica] = []
+    if s.registro == "immagini":
+        return controlla_immagini(s)
     if not s.scelti:
         return [errore("nessun filmato scelto: `broll scegli`", scena=s.n)]
     for taglio, (_, durata) in zip(s.scelti, confini(len(s.scelti), s.inizi_frasi_s, s.durata_s)):

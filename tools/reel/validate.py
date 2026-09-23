@@ -13,9 +13,9 @@ LIMITI = {
     "scene_max": 10,   # dal 2026-09-21: i due registri a metà vogliono più scene, non più minuti
     "scene_tipiche": (6, 9),
     "parole_voce_max": 50,        # per scena (≈ 18 s a 2,8 parole/s): parlato vero, non titoli (dal 2026-09-15; era 35)
-    "parole_voce_hook_max": 20,
+    "parole_voce_hook_max": 25,   # dal 2026-09-22: l'hook parlato fa una domanda e la rilancia («Ok. Ma prima…»)
     "parole_voce_chiusura_max": 18,   # la chiusura è un payoff, non un riassunto (docs/linguaggio-reel.md §8)
-    "beat_max": 5,                # righe VOCE per scena (una riga = un beat = un pezzo di parlato)
+    "beat_max": 6,                # righe VOCE per scena (una riga = un beat); 6 dal 2026-09-22: le frasi corte del parlato
     "parole_titolo_max": 10,
     "parole_messaggio_max": 25,
     "parole_messaggio_consigliate": 12,   # una frase grande a schermo; il resto in caption
@@ -26,9 +26,9 @@ LIMITI = {
     "scena_min_s": 2.5,
     "scena_max_s": 19,
     "reel_min_s": 30,
-    "reel_max_s": 90,             # Instagram non penalizza i video lunghi (docs/linguaggio-reel.md §0); era 60 fino al 2026-09-15
+    "reel_max_s": 100,            # Instagram non penalizza i video lunghi (docs/linguaggio-reel.md §0); 90 → 100 il 2026-09-22
     "reel_errore_s": 120,
-    "frasi_titolo_reel_max": 1,   # un solo aforisma per reel fuori dalla chiusura (la battuta finale è a parte)
+    "frasi_titolo_reel_max": 2,   # aforismi per reel fuori dalla chiusura (le eco non contano: vedi frasi_titolo)
     "parole_figura_max": 20,      # FIGURA: cosa si capisce guardando, in una riga
 }
 
@@ -206,7 +206,7 @@ def check(r: Reel) -> list[Diagnostica]:
                             dopo.riga, dopo.n))
     if len(titoli_reel) > L["frasi_titolo_reel_max"]:
         d.append(avviso(f"{len(titoli_reel)} frasi da titolo nel reel ({' / '.join('«' + t + '»' for t in titoli_reel)}): "
-                        "al massimo un aforisma, ed è la battuta finale"))
+                        f"al massimo {L['frasi_titolo_reel_max']} fuori dalla chiusura, e un'eco della frase prima non conta"))
     if totale > L["reel_errore_s"]:
         d.append(errore(f"reel stimato {totale:.0f} s, oltre {L['reel_errore_s']} s: taglia scene o voce"))
     elif totale > L["reel_max_s"]:
@@ -239,11 +239,27 @@ def frasi_di(righe: list[str]) -> list[str]:
     return [f.strip() for f in _RE_FRASE.findall(testo_piano(" ".join(righe))) if f.strip()]
 
 
+def _eco(frase: str, prima: str | None) -> bool:
+    """Una frase corta che **riprende una parola** di quella prima non è un titolo: è il respiro del parlato
+    («Che sono quasi quattro ore al giorno. Ogni giorno.»), e dà peso al dato invece di recitarlo (2026-09-22)."""
+    if not prima:
+        return False
+    parole = {p.lower().strip(".,;:!?…»«\"'") for p in frase.split() if len(p) > 3}
+    return bool(parole & {p.lower().strip(".,;:!?…»«\"'") for p in prima.split() if len(p) > 3})
+
+
 def frasi_titolo(frasi: list[str]) -> list[str]:
-    """Le frasi «da titolo»: ≤ 4 parole, non una domanda, senza un «tu» né un «io». Lette a camera suonano recitate
-    (docs/linguaggio-reel.md §2); ne è ammessa una per reel, la battuta. Euristica: un verbo alla terza persona in
-    tre parole («Lo scrive lei.») viene contato lo stesso."""
-    return [f for f in frasi if "?" not in f and conta_parole(f) <= 4 and not _RE_TU.search(f) and not _RE_IO.search(f)]
+    """Le frasi «da titolo»: ≤ 4 parole, non una domanda, senza un «tu» né un «io», e che non siano l'**eco** della
+    frase prima. Lette a camera suonano recitate (docs/linguaggio-reel.md §2). Euristica: un verbo alla terza persona
+    in tre parole («Lo scrive lei.») viene contato lo stesso."""
+    out = []
+    for i, f in enumerate(frasi):
+        if "?" in f or conta_parole(f) > 4 or _RE_TU.search(f) or _RE_IO.search(f):
+            continue
+        if _eco(f, frasi[i - 1] if i else None):
+            continue
+        out.append(f)
+    return out
 
 
 def schema_si_no(frase: str) -> bool:

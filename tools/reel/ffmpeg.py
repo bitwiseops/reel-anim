@@ -5,6 +5,7 @@ import json
 import os
 import shutil
 import subprocess
+from collections.abc import Callable
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
@@ -71,26 +72,29 @@ def _font(size: int):
         return ImageFont.load_default()
 
 
-def estrai_fotogramma(video: Path, t_s: float, dest: Path) -> Path:
-    """Un PNG del video all'istante t_s."""
+def estrai_fotogramma(video: Path, t_s: float, dest: Path, copri: Callable | None = None) -> Path:
+    """Un PNG del video all'istante t_s. `copri(immagine, t_s) -> immagine` lo passa prima di lasciarlo su disco
+    (il volto del presentatore nelle immagini di controllo: `fotogrammi.copri_volto`)."""
     ff, _ = trova_ffmpeg()
     dest.parent.mkdir(parents=True, exist_ok=True)
     for t in (t_s, t_s - 0.1, t_s - 0.5):   # a fine file ffmpeg può non trovare fotogrammi: arretra un po'
         esegui([ff, "-y", "-loglevel", "error", "-ss", f"{max(0.0, t):.3f}", "-i", str(video), "-frames:v", "1", str(dest)], "ffmpeg (fotogramma)")
         if dest.exists():
+            if copri is not None:
+                copri(Image.open(dest).convert("RGB"), t_s).save(dest)
             return dest
     raise RuntimeError(f"nessun fotogramma estraibile da {video} a {t_s:.2f} s")
 
 
 def filmstrip(video: Path, tempi_s: list[float], dest: Path, larghezza: int = 300, per_riga: int | None = None,
-              decimali: int = 1) -> Path:
+              decimali: int = 1, copri: Callable | None = None) -> Path:
     """Striscia di fotogrammi del video agli istanti dati, con l'etichetta del tempo sopra ciascuno.
     Con `per_riga` va a capo su più righe (le strisce fitte: tante miniature in un'immagine che resti leggibile)."""
     imgs = []
     tmp = dest.parent / f"_{dest.stem}"
     tmp.mkdir(parents=True, exist_ok=True)
     for k, t in enumerate(tempi_s):
-        p = estrai_fotogramma(video, t, tmp / f"{k:02d}.png")
+        p = estrai_fotogramma(video, t, tmp / f"{k:02d}.png", copri)
         im = Image.open(p).convert("RGB")
         # ridotta subito: una striscia fitta ha decine di fotogrammi, a piena risoluzione sono centinaia di MB
         imgs.append(im.resize((larghezza, int(larghezza * im.height / im.width)), Image.LANCZOS))

@@ -153,18 +153,18 @@ Limiti (fonte unica: `tools/reel/validate.py::LIMITI`; oltre il limite è un avv
 | Cosa | Limite |
 |---|---|
 | scene | 6-9 (minimo 5, massimo 10): il numero lo decide l'equilibrio fra i due registri |
-| parole di `VOCE:` per scena | ≤ 50 (hook ≤ 20) |
-| righe `VOCE:` per scena | ≤ 5 |
+| parole di `VOCE:` per scena | ≤ 50 (hook ≤ 25, dal 2026-09-22) |
+| righe `VOCE:` per scena | ≤ 6 (dal 2026-09-22: le frasi corte del parlato vogliono un beat in più) |
 | `TITOLO:` / `MESSAGGIO:` | ≤ 10 / ≤ 25 parole (MESSAGGIO consigliato ≤ 12: è la frase memorabile della caption del post) |
 | VOCE dell'hook | un «tu» o una domanda: l'hook è una promessa a chi guarda (`docs/linguaggio-reel.md` §1) |
 | VOCE della chiusura | ≤ 18 parole (~6-7 s): un payoff, non un riassunto |
-| lingua parlata | niente frasi da titolo in fila (≤ 4 parole, senza «tu» né «io»), al massimo una nel reel fuori dalla chiusura; niente «X, sì. Y, no.»; niente due punti come snodo (valgono solo per citare: «scrive: …») |
+| lingua parlata | niente frasi da titolo in fila (≤ 4 parole, senza «tu» né «io»), al massimo due nel reel fuori dalla chiusura; **l'eco non conta** (una frase corta che riprende una parola di quella prima: «…quasi quattro ore al giorno. Ogni giorno.»); niente «X, sì. Y, no.»; niente due punti come snodo (valgono solo per citare: «scrive: …») |
 | `TESTO:` | ≤ 2 per scena, ≤ 2 parole ciascuno (numeri e percentuali non contano); avviso se ripete parole della VOCE |
 | `FIGURA:` | obbligatoria nelle scene animate, ≤ 20 parole |
 | testo a schermo (animazione) | mai più di **2 parole di fila**: lo fa rispettare il controllo `parole-leggibili` |
 | `==evidenzia==` / emoji | 1 per scena |
 | una scena | 2,5-19 s stimati |
-| il reel | 30-90 s stimati (oltre 120 s è un errore) |
+| il reel | 30-100 s stimati (dal 2026-09-22; oltre 120 s è un errore) |
 | `SCHERMO:` | il file deve esistere (errore in una scena `[schermo]`; in una scena a filmato è un avviso, «non ancora reso», e l'errore lo dà `monta`); il riquadro non deve coprire la cornice (avviso) |
 
 ## 5. Come si scrive la VOCE: prima il monologo, poi i beat
@@ -190,7 +190,9 @@ funzionano, detti suonano recitati: nessuno parla per aforismi. Da allora:
    terne, ogni frase che chiude un pensiero — è ancora scritto: scioglilo. Il parlato vero è **asimmetrico**.
    E poi: lo diresti così al bar? Se una riga si può leggere solo come un titolo, riscrivila con un verbo.
    Punta a un solo aforisma, la battuta finale: nella chiusura è libera, fuori `valida` ne tollera uno.
-4. `valida` avvisa sulle frasi da titolo in fila, sullo schema «X, sì. Y, no.» e sui due punti usati come snodo; lo
+4. La revisione a voce la fa il presentatore **registrando** (2026-09-22): nella finestra di `reel registra` corregge le
+   righe fuori dalla presa, le caption usano il testo recitato e `reel parlato --applica` lo riporta qui.
+5. `valida` avvisa sulle frasi da titolo in fila, sullo schema «X, sì. Y, no.» e sui due punti usati come snodo; lo
    sceneggiatore li porta a zero. La verifica vera è il presentatore che la legge in `reel registra`.
 
 Esempio (scena 4 del primo reel). Scritto: «A ogni bivio, di solito, vince la strada più battuta. Il testo non lo

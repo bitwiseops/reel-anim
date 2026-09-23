@@ -89,3 +89,47 @@ def test_filmato_non_ancora_reso_anima_procede_e_monta_si_ferma(tmp_path, monkey
     assert "filmato 'broll-scena-03.mp4' non trovato" in err and "broll rendi esempio-reel" in err
     report = json.loads((out / "report.json").read_text())
     assert report["elementi"] == [] and report["reel"] is None and not (out / "reel-9x16.mp4").exists()
+
+
+def test_raccordi_del_riquadro_fra_volto_pieno_e_scena_vicina():
+    """Il raccordo del 2026-09-22 vive nella scena a volto pieno e guarda la scena vicina: se quella ha il riquadro
+    il volto ci si rimpicciolisce dentro, altrimenti resta lo stacco secco."""
+    from tools.reel.monta import raccordi_riquadro
+    from tools.reel.parser import parse_testo
+
+    testo = """---
+titolo: Prova
+slug: prova
+data_creazione: 2026-09-22
+stato: animato
+formato: reel
+tipo: pillola
+pilastro: come funziona
+messaggio_centrale: Una prova.
+---
+
+# Prova
+
+## Scena 1 [hook, durata=5s]
+TITOLO: Uno
+SOTTOTITOLO: Due
+VOCE: Prima riga.
+
+## Scena 2 [spiegazione, durata=10s]
+VOCE: Seconda riga.
+ANIMAZIONE: qualcosa
+
+## Scena 3 [spiegazione, durata=10s]
+RIQUADRO: no
+VOCE: Terza riga.
+ANIMAZIONE: qualcosa
+
+## Scena 4 [chiusura, durata=5s]
+MESSAGGIO: Tre
+CTA: Quattro
+VOCE: Quarta riga.
+"""
+    r, _ = parse_testo(testo)
+    assert raccordi_riquadro(r, r.scene[0]) == (None, "si")      # l'apertura si rimpicciolisce nella scena 2
+    assert raccordi_riquadro(r, r.scene[1]) == (None, None)      # non è a volto pieno: niente raccordo
+    assert raccordi_riquadro(r, r.scene[3]) == (None, None)      # prima della chiusura c'è una scena senza riquadro

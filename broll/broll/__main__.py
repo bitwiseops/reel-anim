@@ -46,9 +46,11 @@ def cmd_piano(args) -> int:
             pass
     dest = salva(p)
 
-    print(f"{p.slug} · {len(p.scene)} scene · {len(p.filmati)} a filmato")
+    generate = [s for s in p.scene if s.registro == "immagini"]
+    print(f"{p.slug} · {len(p.scene)} scene · {len(p.filmati)} a filmato"
+          + (f" · {len(generate)} a immagini generate" if generate else ""))
     for s in p.scene:
-        segno = "▣" if s.registro == "filmato" else "◻"
+        segno = {"filmato": "▣", "immagini": "▤"}.get(s.registro, "◻")
         coda = f" · «{s.query[0]}»" if s.query else ""
         if s.n in ereditate:
             coda += f" · {s.stato}, dal piano di prima" + (f" ({s.note})" if s.stato == "scelto" and s.note else "")
@@ -75,12 +77,12 @@ def cmd_stato(args) -> int:
         print(json.dumps(esito(p, diag), ensure_ascii=False, indent=2))
         return 0
     print(f"{p.slug} · piano del {p.quando or '?'} · sceneggiatura {p.hash_md}")
-    for s in p.scene:
-        if s.registro != "filmato":
-            continue
+    for s in p.esterne:
         f = RADICE / "contenuti" / "media" / p.slug / (s.file or "")
         segno = "✔" if s.file and f.exists() else "✘"
-        print(f"  {segno} scena {s.n} · {s.stato} · {len(s.candidati)} candidati · {s.file or '—'}")
+        quanti = (f"{len(s.scelti)} immagini" if s.registro == "immagini"
+                  else f"{len(s.candidati)} candidati")
+        print(f"  {segno} scena {s.n} · {s.registro} · {s.stato} · {quanti} · {s.file or '—'}")
     _stampa(diag)
     return 0
 
@@ -94,8 +96,9 @@ def cmd_cerca(args) -> int:
     except PianoMancante as e:
         print(f"-> {e}", file=sys.stderr)
         return 1
-    scene = [s for s in p.scene if s.registro in ("filmato", "immagini")
-             and (args.scena is None or s.n == args.scena)]
+    # le scene già risolte con immagini generate non si cercano: non c'è niente da trovare su Pexels
+    scene = [s for s in p.esterne if (args.scena is None or s.n == args.scena)
+             and not any(t.get("generata") for t in s.scelti)]
     if not scene:
         print("-> nessuna scena a filmato in questo piano", file=sys.stderr)
         return 1
@@ -126,7 +129,7 @@ def cmd_cerca(args) -> int:
 
 def cmd_provini(args) -> int:
     from .piano import PianoMancante, carica_piano
-    from .provini import provini_scena
+    from .provini import provini_immagini, provini_scena
 
     try:
         p = carica_piano(args.slug)
@@ -134,17 +137,20 @@ def cmd_provini(args) -> int:
         print(f"-> {e}", file=sys.stderr)
         return 1
     fatti = 0
-    for s in p.scene:
-        if s.registro == "animazione" or (args.scena is not None and s.n != args.scena):
+    for s in p.esterne:
+        if args.scena is not None and s.n != args.scena:
             continue
-        scelto = s.scelti[0].get("candidato") if s.scelti else None
-        foglio, diag = provini_scena(args.slug, s.n, s.candidati, s.durata_s, scelto)
+        if s.registro == "immagini":
+            foglio, diag = provini_immagini(args.slug, s.n, s.scelti)
+        else:
+            scelto = s.scelti[0].get("candidato") if s.scelti else None
+            foglio, diag = provini_scena(args.slug, s.n, s.candidati, s.durata_s, scelto)
         _stampa(diag)
         if foglio:
             print(f"  scena {s.n}: {_rel(foglio)}")
             fatti += 1
     if not fatti:
-        print("-> nessun provino: prima `broll cerca`", file=sys.stderr)
+        print("-> nessun provino: prima `broll cerca` (o `broll genera`)", file=sys.stderr)
         return 1
     print("-> guardali e scegli con `broll scegli <slug> --scena N --candidato <fornitore:id>`")
     return 0
@@ -182,12 +188,55 @@ def cmd_scegli(args) -> int:
     return 0
 
 
+def cmd_genera(args) -> int:
+    from .fornitori import FornitoreNonConfigurato, RichiestaFallita
+    from .genera import PromptMancante, genera_scena
+    from .piano import PianoMancante, carica_piano, salva
+    from .provini import provini_immagini
+
+    try:
+        p = carica_piano(args.slug)
+    except PianoMancante as e:
+        print(f"-> {e}", file=sys.stderr)
+        return 1
+    s = p.scena(args.scena)
+    if s is None:
+        print(f"-> la scena {args.scena} non è nel piano", file=sys.stderr)
+        return 2
+    try:
+        schede, diag = genera_scena(s, args.prompt, quante=args.quante, forza=args.forza)
+    except PromptMancante as e:
+        print(f"-> {e}", file=sys.stderr)
+        return 2
+    except FornitoreNonConfigurato as e:
+        print(f"-> {e}", file=sys.stderr)
+        return 1
+    except RichiestaFallita as e:
+        print(f"-> {e}", file=sys.stderr)
+        return 1
+
+    print(f"  scena {s.n} · {s.durata_s:.1f}s · {len(schede)} immagini generate")
+    for i, scheda in enumerate(schede, start=1):
+        segno = "·" if scheda.get("da_cache") else "✚"
+        print(f"  {segno} {i}. {scheda['file']}")
+        print(f"      «{scheda['prompt'][:120]}»")
+    _stampa(diag)
+    foglio, avvisi = provini_immagini(p.slug, s.n, schede)
+    _stampa(avvisi)
+    print(f"-> {_rel(salva(p))}")
+    if foglio:
+        print(f"-> {_rel(foglio)}  (guardalo prima di rendere)")
+    print(f"-> poi `broll rendi {p.slug} --scena {s.n}`")
+    return 0
+
+
 def cmd_rendi(args) -> int:
     from tools.reel.clip import cartella as cartella_media
     from tools.reel.ffmpeg import FfmpegMancante, filmstrip, tempi_campione, trova_ffmpeg
 
     from .crediti import scrivi as scrivi_crediti
     from .fornitori import RichiestaFallita
+    from .immagini import finestre
     from .piano import PianoMancante, carica_piano, hash_sceneggiatura, salva
     from .provini import cartella as cartella_provini
     from .rendi import rendi_scena
@@ -204,9 +253,9 @@ def cmd_rendi(args) -> int:
         print(f"  ⚠ {p.sorgente} è cambiata dopo il piano: le durate delle scene possono non valere più "
               "(rifai `broll piano`)", file=sys.stderr)
 
-    scene = [s for s in p.filmati if args.scena is None or s.n == args.scena]
+    scene = [s for s in p.esterne if args.scena is None or s.n == args.scena]
     if not scene:
-        print("-> nessuna scena a filmato da rendere", file=sys.stderr)
+        print("-> nessuna scena a filmato o a immagini da rendere", file=sys.stderr)
         return 1
     falliti = 0
     for s in scene:
@@ -229,11 +278,16 @@ def cmd_rendi(args) -> int:
         salva(p)                                # una scena alla volta: se la prossima fallisce, questa resta
         # si guarda subito: l'inizio, la fine, e un fotogramma prima e dopo ogni stacco
         tempi = tempi_campione(s.durata_s, 5)
-        for inizio, _ in confini(len(s.scelti), s.inizi_frasi_s, s.durata_s)[1:]:
+        if s.registro == "immagini":
+            cambi = [i for i, _ in finestre(s.inizi_frasi_s, s.durata_s)[1:]]
+        else:
+            cambi = [i for i, _ in confini(len(s.scelti), s.inizi_frasi_s, s.durata_s)[1:]]
+        for inizio in cambi:
             tempi += [max(0.0, inizio - 0.1), min(s.durata_s - 0.05, inizio + 0.1)]
         strip = filmstrip(video, sorted(tempi), cartella_provini(p.slug) / f"reso-scena-{s.n:02d}.png", 220)
-        print(f"  ▣ scena {s.n}: {_rel(video)} · {s.durata_s:.2f}s · "
-              + " + ".join(t["candidato"] for t in s.scelti))
+        etichette = [t.get("candidato") or Path(t.get("file") or "?").name for t in s.scelti]
+        print(f"  {'▤' if s.registro == 'immagini' else '▣'} scena {s.n}: {_rel(video)} · "
+              f"{s.durata_s:.2f}s · " + " + ".join(etichette))
         print(f"    {_rel(strip)}")
     print(f"-> {_rel(scrivi_crediti(p))}")
     if falliti:
@@ -282,7 +336,7 @@ def cmd_scrivi(args) -> int:
 def cmd_prova_immagini(args) -> int:
     from tools.reel.ffmpeg import FfmpegMancante, filmstrip, trova_ffmpeg
 
-    from .immagini import ImmaginiMancanti, componi
+    from .immagini import ImmaginiMancanti, componi, dissolvenza_s
     from .piano import _durate_dal_report
 
     try:
@@ -307,7 +361,8 @@ def cmd_prova_immagini(args) -> int:
         print(f"-> {e}", file=sys.stderr)
         return 1
 
-    print(f"scena {args.scena} · {d['durata_s']:.2f}s · beat da {d['origine_tempi'] or 'ignoto'}")
+    print(f"scena {args.scena} · {d['durata_s']:.2f}s · beat da {d['origine_tempi'] or 'ignoto'} · "
+          f"dissolvenza {dissolvenza_s(tenute):.2f}s")
     for i, (inizio, durata) in enumerate(tenute):
         print(f"  immagine {i + 1}: da {inizio:6.2f}s per {durata:5.2f}s")
     # campiona subito prima e subito dopo ogni cambio: è lì che si vede se lo stacco cade sul beat
@@ -397,6 +452,16 @@ def main() -> int:
     p.add_argument("--ancora", default="centro", help="sinistra | centro | destra | 0-1: dove ritagliare un orizzontale")
     p.add_argument("--aggiungi", action="store_true", help="un taglio in più nella stessa scena, invece di sostituire")
     p.set_defaults(fn=cmd_scegli)
+
+    p = sub.add_parser("genera", help="genera con Meshy le immagini di una scena e le mette nel piano")
+    p.add_argument("slug")
+    p.add_argument("--scena", type=int, required=True)
+    p.add_argument("--prompt", action="append", default=[],
+                   help="un prompt per immagine, ripetibile; senza, si ricava dal brief ANIMAZIONE:")
+    p.add_argument("--quante", type=int, default=3,
+                   help="quante immagini quando i prompt non li passi (default 3)")
+    p.add_argument("--forza", action="store_true", help="rigenera anche quello che è già in cache (costa)")
+    p.set_defaults(fn=cmd_genera)
 
     p = sub.add_parser("rendi", help="scarica i filmati scelti e scrive broll-scena-NN.mp4")
     p.add_argument("slug")

@@ -200,3 +200,27 @@ def test_i_due_estremi_sono_del_presentatore():
     scene[0] += "\nRIQUADRO: si"                       # si torna al riquadro dichiarandolo
     r2, _ = parse_testo(FM + "\n\n".join(scene))
     assert not r2.hook.a_volto_pieno and r2.hook.riquadro_effettivo() == "si"
+
+
+# --- limiti larghi e frasi corte del parlato (2026-09-22) ---------------------------------------------
+
+def test_eco_non_e_una_frase_da_titolo():
+    from tools.reel.validate import frasi_titolo
+    frasi = ["Che sono quasi quattro ore al giorno.", "Ogni giorno.", "Prezzo pieno."]
+    assert frasi_titolo(frasi) == ["Prezzo pieno."]          # «giorno» riprende la frase prima: è il respiro, non un titolo
+    assert frasi_titolo(["Ogni giorno."]) == ["Ogni giorno."]
+
+
+def test_limiti_larghi_del_2026_09_22():
+    from tools.reel.validate import LIMITI
+    assert (LIMITI["parole_voce_hook_max"], LIMITI["beat_max"], LIMITI["reel_max_s"]) == (25, 6, 100)
+    md = ("---\ntitolo: T\nslug: limiti\nformato: reel\nmessaggio_centrale: M\n---\n\n"
+          "## Scena 1 [hook]\nTITOLO: T\n"
+          "VOCE: Stai pensando di comprare una scheda video per far girare l'IA a casa?\nVOCE: Ok. Ma prima: quante ore al mese la userai davvero?\n\n"
+          "## Scena 2 [spiegazione]\nVOCE: Uno.\nVOCE: Due.\nVOCE: Tre.\nVOCE: Quattro.\nVOCE: Cinque.\nVOCE: Sei.\n"
+          "ANIMAZIONE: x\nFIGURA: una figura\n\n"
+          "## Scena 3 [chiusura]\nMESSAGGIO: M\nCTA: Scrivimi.\nVOCE: Fine del reel.\n")
+    r, diag = parse_testo(md)
+    testi = " ".join(str(x) for x in diag + check(r))
+    assert "hook" not in testi.lower() or "parole" not in testi.lower()      # 23 parole: dentro i 25
+    assert "troppi beat" not in testi                                        # sei righe VOCE: ammesse

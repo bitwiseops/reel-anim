@@ -17,7 +17,7 @@ import json
 import math
 import re
 import subprocess
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from datetime import datetime
 from pathlib import Path
 
@@ -39,7 +39,8 @@ REGISTRAZIONE_DEFAULT = {
     "latenza_s": 0.10,                      # sensore + fps + pipe: quanto il fotogramma letto è più vecchio dell'istante di lettura
     "coda_presa_s": 0.5,                    # a fine reel si continua a registrare questi secondi
     "codec": "h264_videotoolbox", "bitrate": "8M",
-    "anteprima_webcam_px": 480, "anteprima_reel_px": 405, "fps_pannelli": 30,
+    "altezza_pannelli_px": None,            # None = quanta ne lascia lo schermo sopra i comandi
+    "fps_pannelli": 30,
     "timeout_apertura_s": 20.0,             # macOS può chiedere il permesso per la fotocamera: si aspetta
 }
 
@@ -84,6 +85,7 @@ class Frase:
     parole: tuple[str, ...]
     t_inizio_s: float      # assoluti nel reel
     t_fine_s: float
+    grezzo: str = ""       # la riga con i segni (==evidenzia==): va nel sidecar, le caption si fanno da qui
 
 
 @dataclass(frozen=True)
@@ -138,8 +140,23 @@ def hash_sceneggiatura(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()[:16]
 
 
-def timeline_da_report(report: dict, r: Reel, cfg: Config) -> Timeline:
-    """Timeline dal report.json di `monta --prova`; ReportNonPronto se l'anteprima non c'è o non corrisponde alla sceneggiatura."""
+def _frase(riga: str, t_inizio: float, t_fine: float) -> Frase:
+    piano = testo_piano(riga)
+    return Frase(piano, tuple(piano.split()), t_inizio, t_fine, riga)
+
+
+def con_voce(tl: Timeline, n: int, righe: list[str]) -> Timeline:
+    """La timeline con il testo della scena n cambiato (la correzione fatta nella finestra): i tempi restano."""
+    s = tl.scena_n(n)
+    if len(righe) != len(s.frasi):
+        raise ValueError(f"scena {n}: {len(righe)} righe per {len(s.frasi)} frasi")
+    frasi = tuple(_frase(v, f.t_inizio_s, f.t_fine_s) for v, f in zip(righe, s.frasi))
+    return replace(tl, scene=tuple(replace(x, frasi=frasi) if x.n == n else x for x in tl.scene))
+
+
+def timeline_da_report(report: dict, r: Reel, cfg: Config, parlato: dict[int, list[str]] | None = None) -> Timeline:
+    """Timeline dal report.json di `monta --prova`; ReportNonPronto se l'anteprima non c'è o non corrisponde alla sceneggiatura.
+    `parlato` = le righe corrette in registrazione (clip.carica_parlato), al posto della VOCE: i tempi restano del report."""
     if not report.get("prova"):
         raise ReportNonPronto("il report non è di un'anteprima --prova")
     reel = report.get("reel") or {}
@@ -159,12 +176,14 @@ def timeline_da_report(report: dict, r: Reel, cfg: Config) -> Timeline:
         inizi = [float(x) for x in e.get("inizi_frasi_s") or []]
         if len(inizi) != len(s.voce):
             raise ReportNonPronto(f"scena {s.n}: {len(inizi)} tempi nel report per {len(s.voce)} frasi: rifai monta --prova")
+        righe = (parlato or {}).get(s.n)
+        if righe is None or len(righe) != len(s.voce):   # una correzione vecchia con un altro numero di frasi non vale
+            righe = s.voce
         frasi = []
-        for j, (v, i) in enumerate(zip(s.voce, inizi)):
+        for j, (v, i) in enumerate(zip(righe, inizi)):
             fine = (inizi[j + 1] - pausa) if j + 1 < len(inizi) else d - CODA_VOCE_S
             fine = max(fine, i + 0.2)
-            piano = testo_piano(v)
-            frasi.append(Frase(piano, tuple(piano.split()), round(t0 + i, 3), round(t0 + fine, 3)))
+            frasi.append(_frase(v, round(t0 + i, 3), round(t0 + fine, 3)))
         scene.append(ScenaTL(s.n, s.tipo, t0, d, str(e.get("riquadro") or s.riquadro_effettivo()), tuple(frasi)))
     return Timeline(tuple(scene), float(reel.get("durata_s") or scene[-1].t_fine_s), int(reel.get("fps") or cfg.fps),
                     Path(report["cartella"]) / reel["file"], str(report.get("hash_md") or ""), sovr)
@@ -178,7 +197,7 @@ def carica_timeline(r: Reel, out: Path, cfg: Config) -> tuple[Timeline, list[Dia
         p = out / "report.json"
     if not p.exists():
         raise ReportNonPronto(f"manca {p}")
-    tl = timeline_da_report(json.loads(p.read_text(encoding="utf-8")), r, cfg)
+    tl = timeline_da_report(json.loads(p.read_text(encoding="utf-8")), r, cfg, clipmod.carica_parlato(r.slug))
     if not tl.reel.exists():
         raise ReportNonPronto(f"manca il video dell'anteprima {tl.reel}")
     diag: list[Diagnostica] = []
@@ -391,7 +410,8 @@ def comando_taglio(p: Presa, s: ScenaTL, presa: Path, dest: Path, opz: dict, aud
 def scrivi_sidecar(clip: Path, s: ScenaTL, p: Presa) -> Path:
     dati = {"inizi_frasi_s": [round(f.t_inizio_s - s.t_inizio_s, 3) for f in s.frasi], "origine_tempi": "presa",
             "presa": p.file, "t_reel_s": s.t_inizio_s, "t_presa_s": round(p.t_file(s.t_inizio_s), 3),
-            "durata_s": s.durata_s, "hash_md": p.hash_md, "quando": p.quando}
+            "durata_s": s.durata_s, "hash_md": p.hash_md, "quando": p.quando,
+            "voce": [f.grezzo or f.testo for f in s.frasi]}   # il testo recitato: le caption si fanno da qui
     dest = clipmod.sidecar(clip)
     dest.write_text(json.dumps(dati, ensure_ascii=False, indent=1), encoding="utf-8")
     return dest
