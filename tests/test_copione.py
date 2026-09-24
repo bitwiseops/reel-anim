@@ -214,12 +214,6 @@ def test_ogni_risposta_si_archivia_anche_scartata():
     assert salvate == [("gpt", "prima"), ("gpt", "correzione"), ("deep", "prima")]
 
 
-def test_taratura_delle_parole_per_modello():
-    assert cp.parole_per("gpt-5.4", 235, {"gpt-5.4": 0.8}) == 188
-    assert cp.parole_per("claude", 235, {"gpt-5.4": 0.8}) == 235
-    assert cp.parole_per("gpt-5.4", 235, None) == 235
-
-
 def test_la_taratura_scala_anche_i_limiti_per_scena():
     idea = leggi_idea(IDEA)
     p = componi_prompt(cp.TEMPLATE.read_text(encoding="utf-8"), idea, [], 188, fattore=0.8)

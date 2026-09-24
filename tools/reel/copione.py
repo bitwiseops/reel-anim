@@ -150,11 +150,6 @@ def componi_prompt(template: str, idea: Idea, trascrizioni: list[tuple[str, str]
     return out.strip() + "\n"
 
 
-def parole_per(modello: str, parole: int, taratura: dict | None = None) -> int:
-    """Le parole da chiedere a un modello perché ne consegni circa `parole` (`[copione] taratura`)."""
-    return round(parole * float((taratura or {}).get(modello, 1.0)))
-
-
 def prompt_correzione(scene: dict[int, str], problemi: list[str], parole: int) -> str:
     """La seconda chiamata allo stesso modello: il suo testo e cosa sistemare, senza trascrizioni (costa poco)."""
     testo = "\n".join(f"## Scena {n}\n{t}" for n, t in sorted(scene.items()))
@@ -389,3 +384,59 @@ def chiama_claude(prompt: str, modello: str = "opus", timeout_s: float = TIMEOUT
             return uscite.estrai_result(uscite.lancia(cmd, Path(tmp), timeout_s))
     except uscite.ErroreUscite as e:
         raise ErroreChiamata(str(e)) from e
+
+
+class Corsa:
+    """Una generazione del copione: l'idea, le impostazioni di `[copione]`, il prompt base e quelli tarati per
+    modello, e i tre gesti che `catena` chiede (saltare, chiamare, archiviare)."""
+
+    def __init__(self, idea_p: Path, cfg, parole: int | None = None, nota: str = ""):
+        from .stile import trascrizioni
+        from .stima import parole_al_secondo
+        self.idea_p, self.nota = idea_p, nota
+        self.testo_idea = idea_p.read_text(encoding="utf-8")
+        self.idea = leggi_idea(self.testo_idea)
+        self.conf = dict(cfg.dati.get("copione", {}))
+        self.parole = int(parole or self.conf.get("parole", 235))
+        self.parole_al_s = parole_al_secondo(cfg)
+        self.voci = scegli_trascrizioni(trascrizioni(cfg, lingua="it"), idea_p.stem, int(self.conf.get("trascrizioni", 6)),
+                                        secondi_per(self.parole, self.parole_al_s))
+        self.trascrizioni = [(v["id"], v["file"].read_text(encoding="utf-8")) for v in self.voci]
+        self.modelli = list(self.conf.get("modelli", ["gpt-5.4", CLAUDE]))
+        chiave = chiave_poe()
+        self.poe = Poe(chiave, int(self.conf.get("token_uscita", 6000)), int(self.conf.get("punti_minimi", 1500))) if chiave else None
+        self._prompti: dict[float, str] = {}
+        self.prompt = self.prompt_per(None)
+
+    def prompt_per(self, modello: str | None) -> str:
+        """Il prompt con parole e limiti tarati per quel modello (`[copione] taratura`)."""
+        fattore = float((self.conf.get("taratura") or {}).get(modello, 1.0)) if modello else 1.0
+        if fattore not in self._prompti:
+            self._prompti[fattore] = componi_prompt(TEMPLATE.read_text(encoding="utf-8"), self.idea, self.trascrizioni,
+                                                    round(self.parole * fattore), self.nota, self.parole_al_s, fattore)
+        return self._prompti[fattore]
+
+    def _tarato(self, modello: str, prompt: str) -> str:
+        # la correzione è un altro prompt e resta com'è; il prompt base si sostituisce con quello tarato
+        return self.prompt_per(modello) if prompt == self.prompt else prompt
+
+    def salta(self, modello: str, prompt: str) -> str | None:
+        if modello == CLAUDE:
+            return None
+        if self.poe is None:
+            return "manca POE_API_KEY (ambiente o .env)"
+        return self.poe.salta(modello, self._tarato(modello, prompt))
+
+    def chiama(self, modello: str, prompt: str) -> str:
+        prompt = self._tarato(modello, prompt)
+        if modello == CLAUDE:
+            return chiama_claude(prompt, str(self.conf.get("claude_modello", "opus")))
+        return self.poe.chiama(modello, prompt)
+
+    def archivia(self, modello: str, fase: str, testo: str) -> None:
+        """Ogni risposta si salva, anche scartata: i punti spesi non si buttano."""
+        from datetime import date
+        cartella = CARTELLA / f"{self.idea_p.stem}.tentativi"
+        cartella.mkdir(parents=True, exist_ok=True)
+        k = len(list(cartella.glob("*.md"))) + 1
+        (cartella / f"{date.today().isoformat()}-{k:02d}-{modello}-{fase}.md").write_text(testo, encoding="utf-8")

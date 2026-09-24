@@ -183,7 +183,6 @@ def test_rendi_a_immagini_con_una_sola_immagine_copre_tutta_la_scena(tmp_path):
     assert any("si ripetono" in str(d) for d in diag)
 
 
-@pytest.mark.slow
 def test_rendi_a_immagini_senza_immagini_si_rifiuta(tmp_path):
     s = _scena(registro="immagini")
     with pytest.raises(ResaFallita, match="nessuna immagine"):

@@ -1,17 +1,21 @@
-"""CLI: uv run reel <comando> <file.md> [opzioni]"""
+"""CLI: uv run reel <comando> <file.md> [opzioni]. I moduli pesanti (Manim, Tk, compositing) si importano
+dentro il comando che li usa, così `valida` e gli altri comandi leggeri partono subito."""
 from __future__ import annotations
 
 import argparse
+import json
+import shlex
+import shutil
 import sys
 from pathlib import Path
 
+from ..anim.config import RADICE, carica
+from . import clip
 from .model import Diagnostica, Reel, errore
 from .parser import ErroreParse, parse
-from . import clip
 from .percorsi import elementi_del_report, relativo, riepilogo
+from .stima import durata_stimata_s
 from .validate import check, ha_errori
-
-from ..anim.config import RADICE
 
 
 def _stampa(diagnostiche: list[Diagnostica]) -> None:
@@ -37,7 +41,6 @@ def _riepilogo(diag: list[Diagnostica]) -> tuple[str, int, int]:
 
 def cmd_valida(args) -> int:
     from collections import Counter
-    from .stima import durata_stimata_s
     r, diag = _carica(Path(args.file))
     _stampa(diag)
     stato, n_err, n_avv = _riepilogo(diag)
@@ -70,7 +73,6 @@ def cmd_gobbo(args) -> int:
 
 
 def _tabella_clip(r: Reel, poi: str = "") -> int:
-    from .stima import durata_stimata_s
     st = clip.stato(r.slug, [s.n for s in r.scene])
     mancanti = 0
     for s, c in zip(r.scene, st):
@@ -120,7 +122,6 @@ def cmd_clip(args) -> int:
 
 
 def cmd_registra(args) -> int:
-    from ..anim.config import carica
     from .ffmpeg import FfmpegMancante, trova_ffmpeg
     from .registra import (ReportNonPronto, carica_timeline, elenca_dispositivi, indice_dispositivo, opzioni,
                            presa_dal_registro, spezza)
@@ -190,7 +191,6 @@ def cmd_voce(args) -> int:
 
 
 def cmd_anima(args) -> int:
-    import json
     from .manim_render import AnimazioneMancante
     from .monta import anima
     r, diag = _carica(Path(args.file))
@@ -241,9 +241,7 @@ def cmd_monta(args) -> int:
 
 
 def cmd_strisce(args) -> int:
-    import json
     from .ffmpeg import ffprobe
-    from ..anim.config import carica
     from .fotogrammi import copri_volto, strisce_fitte, video_scena
     from .percorsi import lavoro_per
     r, _ = _carica(Path(args.file))
@@ -298,9 +296,7 @@ def cmd_strisce(args) -> int:
 
 
 def cmd_uscite(args) -> int:
-    import shlex
     from datetime import date
-    from ..anim.config import carica
     from . import uscite
     idea = Path(args.file)
     modelli = [m.strip() for m in args.modelli.split(",") if m.strip()]
@@ -345,104 +341,53 @@ def cmd_uscite(args) -> int:
 
 def cmd_copione(args) -> int:
     from datetime import date
-    from ..anim.config import carica
     from . import copione as cp
-    from .stile import trascrizioni
-    from .stima import parole_al_secondo
     from .validate import LIMITI
-    cfg = carica()
-    conf = cfg.dati.get("copione", {})
-    idea_p = Path(args.file)
     try:
-        testo_idea = idea_p.read_text(encoding="utf-8")
-        idea = cp.leggi_idea(testo_idea)
+        corsa = cp.Corsa(Path(args.file), carica(), args.parole, args.nota or "")
     except (OSError, cp.ErroreCopione) as e:
         print(f"-> {e}", file=sys.stderr)
         return 1
-    parole = int(args.parole or conf.get("parole", 235))
-    pas = parole_al_secondo(cfg)
-    voci = cp.scegli_trascrizioni(trascrizioni(cfg, lingua="it"), idea_p.stem, int(conf.get("trascrizioni", 6)),
-                                  cp.secondi_per(parole, pas))
-    if not voci:
+    modelli = [args.modello] if args.modello else corsa.modelli
+    dest = cp.CARTELLA / f"{corsa.idea_p.stem}.md"
+    secondi = cp.secondi_per(corsa.parole, corsa.parole_al_s)
+    scelte = ", ".join(f"{v['id']} ({v['account']})" for v in corsa.voci) or "nessuna"
+    riepilogo = (f"{len(corsa.idea.tappe)} tappe · {corsa.parole} parole (~{secondi} s) · trascrizioni {scelte} · "
+                 f"prompt {len(corsa.prompt)} caratteri")
+    if not corsa.voci:
         print("   ⚠ nessuna trascrizione di reelkit ([stile] indice e trascrizioni): il prompt parte senza l'orecchio", file=sys.stderr)
-    tr = [(v["id"], v["file"].read_text(encoding="utf-8")) for v in voci]
-    prompt = cp.componi_prompt(cp.TEMPLATE.read_text(encoding="utf-8"), idea, tr, parole, args.nota or "", pas)
-    modelli = [args.modello] if args.modello else list(conf.get("modelli", ["gpt-5.4", cp.CLAUDE]))
-    chiave = cp.chiave_poe()
-    poe = cp.Poe(chiave, int(conf.get("token_uscita", 6000)), int(conf.get("punti_minimi", 1500))) if chiave else None
-    dest = cp.CARTELLA / f"{idea_p.stem}.md"
-    scelte = ", ".join(f"{v['id']} ({v['account']})" for v in voci) or "nessuna"
-    riepilogo = (f"{len(idea.tappe)} tappe · {parole} parole (~{cp.secondi_per(parole, pas)} s) · trascrizioni "
-                 f"{scelte} · prompt {len(prompt)} caratteri")
     if args.prova_a_secco:
-        print(prompt)
+        print(corsa.prompt)
         print(f"-> a secco: {riepilogo}", file=sys.stderr)
         for m in modelli:
-            if m == cp.CLAUDE:
-                print(f"   {m}: claude -p --model {conf.get('claude_modello', 'opus')}, niente punti", file=sys.stderr)
-            elif poe is None:
-                print(f"   {m}: manca POE_API_KEY (ambiente o .env)", file=sys.stderr)
-            else:
-                perche = poe.salta(m, prompt)
-                print(f"   {m}: stima {poe.stima_punti(m, prompt) or '?'} punti · "
-                      f"{'si salterebbe: ' + perche if perche else 'si chiamerebbe'}", file=sys.stderr)
-        if poe is not None:
-            print(f"   saldo Poe: {poe.saldo()} punti", file=sys.stderr)
+            perche = corsa.salta(m, corsa.prompt)
+            stima = corsa.poe.stima_punti(m, corsa.prompt_per(m)) if corsa.poe and m != cp.CLAUDE else None
+            print(f"   {m}: {'claude -p, niente punti' if m == cp.CLAUDE else f'stima {stima or "?"} punti'} · "
+                  f"{'si salterebbe: ' + perche if perche else 'si chiamerebbe'}", file=sys.stderr)
+        if corsa.poe is not None:
+            print(f"   saldo Poe: {corsa.poe.saldo()} punti", file=sys.stderr)
         print(f"   il file sarebbe {dest}{' (ESISTE: serve --forza o --nota)' if dest.exists() else ''}", file=sys.stderr)
         return 0
     if dest.exists() and not (args.forza or args.nota):
         print(f"-> {dest} esiste già: --forza per rigenerarlo, o --nota \"…\" per una versione con una richiesta", file=sys.stderr)
         return 1
-
-    def salta(m: str, p: str) -> str | None:
-        if m == cp.CLAUDE:
-            return None
-        return "manca POE_API_KEY (ambiente o .env)" if poe is None else poe.salta(m, per_modello(m, p))
-
-    taratura = dict(conf.get("taratura") or {})
-    prompti: dict[str, str] = {}
-
-    def per_modello(m: str, p: str) -> str:
-        """Il prompt base con le parole tarate per quel modello; la correzione (un altro prompt) resta com'è."""
-        if p != prompt or cp.parole_per(m, parole, taratura) == parole:
-            return p
-        if m not in prompti:
-            prompti[m] = cp.componi_prompt(cp.TEMPLATE.read_text(encoding="utf-8"), idea, tr,
-                                           cp.parole_per(m, parole, taratura), args.nota or "", pas,
-                                           fattore=float(taratura.get(m, 1.0)))
-        return prompti[m]
-
-    def chiama(m: str, p: str) -> str:
-        p = per_modello(m, p)
-        if m == cp.CLAUDE:
-            return cp.chiama_claude(p, str(conf.get("claude_modello", "opus")))
-        return poe.chiama(m, p)
-
     print(f"copione: {riepilogo}\n   catena: {' → '.join(modelli)}", file=sys.stderr)
-    saldo_prima = poe.saldo() if poe is not None else None
+    saldo_prima = corsa.poe.saldo() if corsa.poe else None
     try:
-        tentativi_dir = cp.CARTELLA / f"{idea_p.stem}.tentativi"
-
-        def archivia(m: str, fase: str, testo: str) -> None:
-            tentativi_dir.mkdir(parents=True, exist_ok=True)
-            k = len(list(tentativi_dir.glob("*.md"))) + 1
-            (tentativi_dir / f"{date.today().isoformat()}-{k:02d}-{m}-{fase}.md").write_text(testo, encoding="utf-8")
-
-        esito = cp.catena(prompt, modelli, len(idea.tappe), parole, chiama, salta,
-                          lambda s: print(f"   {s}", file=sys.stderr), tetto=int(LIMITI["reel_errore_s"] * pas),
-                          archivia=archivia)
+        esito = cp.catena(corsa.prompt, modelli, len(corsa.idea.tappe), corsa.parole, corsa.chiama, corsa.salta,
+                          lambda riga: print(f"   {riga}", file=sys.stderr), tetto=int(LIMITI["reel_errore_s"] * corsa.parole_al_s),
+                          archivia=corsa.archivia)
     except cp.ErroreCopione as e:
         print(f"-> {e}", file=sys.stderr)
         return 1
-    spesi = saldo_prima - poe.saldo() if poe is not None and saldo_prima is not None else None
-    rel = lambda q: relativo(q.resolve())
+    spesi = saldo_prima - corsa.poe.saldo() if saldo_prima is not None else None
     dest.parent.mkdir(parents=True, exist_ok=True)
-    dest.write_text(cp.componi_file(rel(idea_p.resolve()), idea, esito, date.today().isoformat(), spesi, args.nota or ""),
-                    encoding="utf-8")
-    dest.with_suffix(".prompt.md").write_text(prompt, encoding="utf-8")
-    idea_p.write_text(cp.riga_copione(testo_idea, rel(dest)), encoding="utf-8")
+    dest.write_text(cp.componi_file(relativo(corsa.idea_p.resolve()), corsa.idea, esito, date.today().isoformat(), spesi,
+                                    corsa.nota), encoding="utf-8")
+    dest.with_suffix(".prompt.md").write_text(corsa.prompt, encoding="utf-8")
+    corsa.idea_p.write_text(cp.riga_copione(corsa.testo_idea, relativo(dest.resolve())), encoding="utf-8")
     print(f"-> {dest}: {esito.modello}, {cp.parole_totali(esito.scene)} parole"
-          f"{f' · {spesi} punti Poe' if spesi is not None else ''} · riga **Copione:** in {idea_p}")
+          f"{f' · {spesi} punti Poe' if spesi is not None else ''} · riga **Copione:** in {corsa.idea_p}")
     for a in esito.esame.avvisi:
         print(f"   ⚠ {a}")
     return 0
@@ -450,7 +395,6 @@ def cmd_copione(args) -> int:
 
 def cmd_pulisci(args) -> int:
     """Svuota il lavoro transitorio (tools/reel/percorsi.py): il riepilogo in contenuti/render/ resta."""
-    import shutil
     from .percorsi import lavoro, radice_lavoro
     radice = radice_lavoro()
     if args.tutto:
@@ -479,7 +423,6 @@ def cmd_pulisci(args) -> int:
 def cmd_audio(args) -> int:
     """Il prima/dopo della catena audio su un pezzo di presa: si ascolta, non si guarda (niente video)."""
     from . import compositing
-    from ..anim.config import carica
     from .ffmpeg import esegui
     r, _ = _carica(Path(args.file))
     cfg = carica()
@@ -521,13 +464,11 @@ def cmd_setup(args) -> int:
     else:
         print(f"avatar: {avatar}")
     print(f"maschere: {maschera_riquadro(cfg).name}, {maschera_schermo(cfg).name}")
-    import shutil
     print(f"voce sintetica ({cfg.dati['voce_sintetica'].get('comando')}): {'ok' if shutil.which(cfg.dati['voce_sintetica'].get('comando', 'say')) else 'non disponibile'}")
     return 0
 
 
 def cmd_stile(args) -> int:
-    from ..anim.config import carica
     from .stile import stato, trascrizioni
     cfg = carica()
     if args.trascrizioni:

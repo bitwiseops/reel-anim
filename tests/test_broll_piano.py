@@ -12,13 +12,6 @@ def _scene(tipi: list[str]) -> list[Scena]:
     return [Scena(n=i + 1, tipo=t) for i, t in enumerate(tipi)]
 
 
-def test_proponi_alterna_e_non_supera_la_meta():
-    scene = _scene(["hook", "spiegazione", "spiegazione", "spiegazione", "spiegazione", "chiusura"])
-    proposte = _proponi(scene)
-    assert proposte == {2, 4}                      # una sì una no, mai due di fila
-    assert len(proposte) <= len(scene) // 2
-
-
 def test_proponi_salta_hook_chiusura_e_schermo():
     scene = _scene(["hook", "schermo", "chiusura"])
     assert _proponi(scene) == set()
@@ -130,8 +123,8 @@ def test_i_tempi_dei_brief_non_sono_quantita():
     assert _marcatori(quantita) == ["una quantità"]
 
 
-def test_l_hook_non_va_mai_a_filmato():
-    """Dal 2026-09-21 l'apertura è il presentatore a tutta tela: non si propone, nemmeno con un brief filmabile."""
+def test_proponi_alterna_e_salta_l_hook():
+    """Una sì una no, mai due di fila; l'apertura è il presentatore: non si propone nemmeno con un brief filmabile."""
     scene = _scene(["hook", "spiegazione", "spiegazione", "spiegazione", "spiegazione", "chiusura"])
     scene[0].animazione = ["Una persona apre la posta il lunedì mattina, la casella è piena."]
     assert _proponi(scene) == {2, 4}                    # solo le scene in mezzo, alternate

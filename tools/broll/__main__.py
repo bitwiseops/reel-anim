@@ -13,6 +13,10 @@ from tools.reel import clip
 from tools.reel.percorsi import impronta, relativo
 
 
+from tools.reel.ffmpeg import FfmpegMancante
+
+from .piano import PianoMancante
+
 def _stampa(diag) -> None:
     for d in diag:
         print(f"  {'✗' if d.livello == 'errore' else '⚠'} {d}", file=sys.stderr)
@@ -60,13 +64,9 @@ def cmd_piano(args) -> int:
 
 
 def cmd_stato(args) -> int:
-    from .piano import PianoMancante, carica_piano, controlla, esito
+    from .piano import carica_piano, controlla, esito
 
-    try:
-        p = carica_piano(args.slug)
-    except PianoMancante as e:
-        print(f"-> {e}", file=sys.stderr)
-        return 1
+    p = carica_piano(args.slug)
     diag = controlla(p)
     if args.json:
         import json
@@ -85,13 +85,9 @@ def cmd_stato(args) -> int:
 
 def cmd_cerca(args) -> int:
     from .fornitori import FornitoreNonConfigurato, RichiestaFallita, pexels
-    from .piano import PianoMancante, carica_piano, salva
+    from .piano import carica_piano, salva
 
-    try:
-        p = carica_piano(args.slug)
-    except PianoMancante as e:
-        print(f"-> {e}", file=sys.stderr)
-        return 1
+    p = carica_piano(args.slug)
     # le scene già risolte con immagini generate non si cercano: non c'è niente da trovare su Pexels
     scene = [s for s in p.esterne if (args.scena is None or s.n == args.scena)
              and not any(t.get("generata") for t in s.scelti)]
@@ -124,14 +120,10 @@ def cmd_cerca(args) -> int:
 
 
 def cmd_provini(args) -> int:
-    from .piano import PianoMancante, carica_piano
+    from .piano import carica_piano
     from .provini import provini_immagini, provini_scena
 
-    try:
-        p = carica_piano(args.slug)
-    except PianoMancante as e:
-        print(f"-> {e}", file=sys.stderr)
-        return 1
+    p = carica_piano(args.slug)
     fatti = 0
     for s in p.esterne:
         if args.scena is not None and s.n != args.scena:
@@ -153,14 +145,10 @@ def cmd_provini(args) -> int:
 
 
 def cmd_scegli(args) -> int:
-    from .piano import PianoMancante, carica_piano, salva
+    from .piano import carica_piano, salva
     from .scelta import SceltaNonValida, ancora, controlla_scelta, scegli
 
-    try:
-        p = carica_piano(args.slug)
-    except PianoMancante as e:
-        print(f"-> {e}", file=sys.stderr)
-        return 1
+    p = carica_piano(args.slug)
     s = p.scena(args.scena)
     if s is None:
         print(f"-> la scena {args.scena} non è nel piano", file=sys.stderr)
@@ -187,14 +175,10 @@ def cmd_scegli(args) -> int:
 def cmd_genera(args) -> int:
     from .fornitori import FornitoreNonConfigurato, RichiestaFallita
     from .genera import PromptMancante, genera_scena
-    from .piano import PianoMancante, carica_piano, salva
+    from .piano import carica_piano, salva
     from .provini import provini_immagini
 
-    try:
-        p = carica_piano(args.slug)
-    except PianoMancante as e:
-        print(f"-> {e}", file=sys.stderr)
-        return 1
+    p = carica_piano(args.slug)
     s = p.scena(args.scena)
     if s is None:
         print(f"-> la scena {args.scena} non è nel piano", file=sys.stderr)
@@ -228,22 +212,18 @@ def cmd_genera(args) -> int:
 
 def cmd_rendi(args) -> int:
     from tools.reel.clip import cartella as cartella_media
-    from tools.reel.ffmpeg import FfmpegMancante, filmstrip, tempi_campione, trova_ffmpeg
+    from tools.reel.ffmpeg import filmstrip, tempi_campione, trova_ffmpeg
 
     from .crediti import scrivi as scrivi_crediti
     from .fornitori import RichiestaFallita
     from .immagini import finestre
-    from .piano import PianoMancante, carica_piano, salva
+    from .piano import carica_piano, salva
     from .provini import cartella as cartella_provini
     from .rendi import rendi_scena
     from .scelta import confini, controlla_scelta
 
-    try:
-        trova_ffmpeg()
-        p = carica_piano(args.slug)
-    except (FfmpegMancante, PianoMancante) as e:
-        print(f"-> {e}", file=sys.stderr)
-        return 1
+    trova_ffmpeg()
+    p = carica_piano(args.slug)
     md = RADICE / p.sorgente
     if md.is_file() and impronta(md) != p.hash_md:
         print(f"  ⚠ {p.sorgente} è cambiata dopo il piano: le durate delle scene possono non valere più "
@@ -293,16 +273,12 @@ def cmd_rendi(args) -> int:
 
 
 def cmd_scrivi(args) -> int:
-    from .piano import PianoMancante, carica_piano, salva
+    from .piano import carica_piano, salva
     from tools.reel.clip import cartella as cartella_media
 
     from .scrivi import scrivi
 
-    try:
-        p = carica_piano(args.slug)
-    except PianoMancante as e:
-        print(f"-> {e}", file=sys.stderr)
-        return 1
+    p = carica_piano(args.slug)
     md = RADICE / p.sorgente
     if not md.is_file():
         print(f"-> {p.sorgente} non esiste più: rifai `broll piano`", file=sys.stderr)
@@ -347,15 +323,11 @@ def cmd_chiavi(args) -> int:
 
 
 def cmd_prova_inquadratura(args) -> int:
-    from tools.reel.ffmpeg import FfmpegMancante, trova_ffmpeg
+    from tools.reel.ffmpeg import trova_ffmpeg
 
     from .inquadratura import prova_inquadratura
 
-    try:
-        trova_ffmpeg()
-    except FfmpegMancante as e:
-        print(f"-> {e}", file=sys.stderr)
-        return 1
+    trova_ffmpeg()
     filmato = Path(args.filmato)
     if not filmato.exists():
         print(f"-> {filmato} non esiste", file=sys.stderr)
@@ -440,7 +412,11 @@ def main() -> int:
     p.set_defaults(fn=cmd_prova_inquadratura)
 
     args = ap.parse_args()
-    return args.fn(args)
+    try:
+        return args.fn(args)
+    except (PianoMancante, FfmpegMancante) as e:   # errori attesi: un messaggio, niente traceback
+        print(f"-> {e}", file=sys.stderr)
+        return 1
 
 
 if __name__ == "__main__":

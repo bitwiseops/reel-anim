@@ -23,6 +23,7 @@ from .model import PIENO, Diagnostica, Reel, Scena, avviso, errore
 from .stima import CODA_S as CODA_STIMA_S
 from .percorsi import impronta, lavoro_per, relativo
 from .stima import durata_stimata_s
+from .validate import ha_errori
 from .voce import CODA_VOCE_S, VoceNonDisponibile, sintetizza_frasi
 
 from ..anim.config import RADICE
@@ -208,59 +209,119 @@ def _voce_report(r: Reel, s: Scena, t: TempiScena) -> dict:
     return {"voce_recitata": v, "voce_cambiata": v != list(s.voce)}
 
 
+def _componi(r: Reel, s: Scena, t: TempiScena, out: Path, avatar: Path, args, cfg: Config,
+             **sorgenti) -> tuple[Path, dict]:
+    """Compone una scena (grafica o filmato, riquadro, caption), salva fotogramma chiave e filmstrip nel riepilogo e
+    ritorna il video con i campi del report comuni a ogni scena."""
+    t0 = time.time()
+    lav = lavoro_per(r.slug, out, cfg)
+    riq = s.riquadro_effettivo()
+    c = clipmod.trova(r.slug, s.n) if t.origine == "clip" else None
+    cap, cap_xy, cap_report = _caption(r, s, t, lav, cfg)
+    src = compositing.Sorgenti(durata_s=t.durata_s, riquadro=riq, video_presentatore=c,
+                               avatar=avatar if (c is None and riq != "no" and avatar.exists()) else None,
+                               audio=t.audio, caption=cap, caption_xy=cap_xy, **sorgenti)
+    dest = compositing.componi_scena(src, lav / "_scene" / f"{s.n:02d}.mp4", cfg, anteprima=args.anteprima)
+    tc = time.time() - t0
+    cop = fotogrammi.copri_volto(cfg, riq, avatar, cap_report) if c else None   # il volto lo guarda solo lui
+    png = fotogrammi.fotogramma_chiave(dest, t.durata_s, out / "scene" / f"{s.n:02d}.png", copri=cop)
+    fs = fotogrammi.filmstrip_scena(dest, t.durata_s, out / "fotogrammi" / f"{s.n:02d}-filmstrip.png", copri=cop)
+    return dest, {"ordine": s.n, "clip_vera": c is not None, "tipo": "png", "file": str(png.relative_to(out)),
+                  "scena": s.n, "tipo_scena": s.tipo, "durata_s": t.durata_s, "parole_voce": s.parole_voce,
+                  "durata_stimata_s": durata_stimata_s(s, cfg), "origine_durata": t.origine,
+                  "inizi_frasi_s": t.inizi_frasi_s, "origine_tempi": t.origine_tempi,
+                  "caption": cap_report, **_voce_report(r, s, t), "riquadro": riq, "schermo": s.schermo,
+                  "filmstrip": str(fs.relative_to(out)), "video": relativo(dest, out), "tempo_ffmpeg_s": round(tc, 1)}
+
+
 def _scena_broll(r: Reel, s: Scena, t: TempiScena, out: Path, avatar: Path, args, cfg: Config,
-                 diag: list[Diagnostica]) -> dict | None:
-    """Una scena a filmato ([broll], o l'hook con `SCHERMO:`): niente Manim, il file di `SCHERMO:` fa da grafica a
-    tutta tela, col riquadro sopra."""
+                 diag: list[Diagnostica]) -> tuple[Path, dict] | None:
+    """Una scena a filmato: niente Manim, il file di `SCHERMO:` fa da grafica a tutta tela, col riquadro sopra."""
     filmato = clipmod.cartella(r.slug) / (s.schermo or "")
     if not s.schermo or not filmato.exists():
         diag.append(errore(f"filmato '{s.schermo}' non trovato in contenuti/media/{r.slug}/ "
                            f"(`uv run broll rendi {r.slug}`)", s.riga, s.n))
         return None
     avvisi_tempi: list[str] = []
-    video = filmato.suffix.lower() in clipmod.ESTENSIONI
-    durata_filmato = (ffprobe(filmato).get("durata_s") or 0.0) if video else None
-    if durata_filmato is not None and durata_filmato < t.durata_s - 1.5 / cfg.fps:
-        # il filmato è stato reso sulla durata di prima (stima, voce di prova): la presa vera è più lunga
-        avvisi_tempi.append(f"il filmato dura {durata_filmato:.2f} s, la scena {t.durata_s:.2f} s: l'ultimo fotogramma resta "
-                            f"fermo per {t.durata_s - durata_filmato:.2f} s. Rifai `broll piano` e `broll rendi`")
-    for a in avvisi_tempi:
-        diag.append(avviso(a, s.riga, s.n))
-    t2 = time.time()
-    riq = s.riquadro_effettivo()
-    c = clipmod.trova(r.slug, s.n) if t.origine == "clip" else None
-    lav = lavoro_per(r.slug, out, cfg)
-    cap, cap_xy, cap_report = _caption(r, s, t, lav, cfg)
-    src = compositing.Sorgenti(grafica=filmato, durata_s=t.durata_s, riquadro=riq, video_presentatore=c,
-                               avatar=avatar if (c is None and riq != "no" and avatar.exists()) else None, audio=t.audio,
-                               filmato=True, caption=cap, caption_xy=cap_xy)
-    dest = compositing.componi_scena(src, lav / "_scene" / f"{s.n:02d}.mp4", cfg, anteprima=args.anteprima)
-    tc = time.time() - t2
-    cop = fotogrammi.copri_volto(cfg, riq, avatar, cap_report) if c else None   # il volto lo guarda solo lui
-    png = fotogrammi.fotogramma_chiave(dest, t.durata_s, out / "scene" / f"{s.n:02d}.png", copri=cop)
-    fs = fotogrammi.filmstrip_scena(dest, t.durata_s, out / "fotogrammi" / f"{s.n:02d}-filmstrip.png", copri=cop)
-    return {"ordine": s.n, "clip_vera": c is not None, "tipo": "png", "file": str(png.relative_to(out)), "scena": s.n, "tipo_scena": s.tipo,
-            "durata_s": t.durata_s, "parole_voce": s.parole_voce, "durata_stimata_s": durata_stimata_s(s, cfg),
-            "origine_durata": t.origine, "inizi_frasi_s": t.inizi_frasi_s, "origine_tempi": t.origine_tempi,
-            "caption": cap_report, **_voce_report(r, s, t),
-            "avvisi_tempi": avvisi_tempi, "controlli": [], "riquadro": riq, "schermo": s.schermo, "filmato": True,
-            "filmstrip": str(fs.relative_to(out)), "grafica": relativo(filmato),
-            "video": relativo(dest, out), "tempo_manim_s": 0.0, "tempo_ffmpeg_s": round(tc, 1)}
+    durata = (ffprobe(filmato).get("durata_s") or 0.0) if filmato.suffix.lower() in clipmod.ESTENSIONI else None
+    if durata is not None and durata < t.durata_s - 1.5 / cfg.fps:
+        # reso sulla durata di prima (stima, voce di prova): la presa vera è più lunga
+        avvisi_tempi.append(f"il filmato dura {durata:.2f} s, la scena {t.durata_s:.2f} s: l'ultimo fotogramma resta "
+                            f"fermo per {t.durata_s - durata:.2f} s. Rifai `broll piano` e `broll rendi`")
+    diag.extend(avviso(a, s.riga, s.n) for a in avvisi_tempi)
+    dest, e = _componi(r, s, t, out, avatar, args, cfg, grafica=filmato, filmato=True)
+    return dest, {**e, "avvisi_tempi": avvisi_tempi, "controlli": [], "filmato": True, "grafica": relativo(filmato),
+                  "tempo_manim_s": 0.0}
+
+
+def _grafica_scena(cls, s: Scena, t: TempiScena, lav: Path, cache: dict, chiave: str, qualita: str,
+                   trasparente: bool, cfg: Config) -> tuple[Path, list[str], list[str]]:
+    """Il video Manim della scena: dalla cache se la chiave è la stessa (animazioni, libreria, config, tempi), sennò
+    lo rende e aggiorna la cache. Solleva l'eccezione del render."""
+    voce = cache.get(f"{s.n:02d}")
+    if isinstance(voce, dict) and voce.get("chiave") == chiave and voce.get("grafica") and (lav / voce["grafica"]).exists():
+        return lav / voce["grafica"], list(voce.get("avvisi", [])), list(voce.get("controlli", []))
+    res = renderizza(cls, t.durata_s, dati_scena(s, t), lav / "_manim", f"scena-{s.n:02d}", qualita,
+                     trasparente=trasparente, cfg=cfg)
+    cache[f"{s.n:02d}"] = {"chiave": chiave, "grafica": relativo(res.video, lav), "avvisi": res.avvisi,
+                           "controlli": res.controlli}
+    _salva_cache(lav, cache)
+    return res.video, res.avvisi, res.controlli
+
+
+def _tagli(elementi: list[dict], tr: dict) -> frozenset[int]:
+    """Le giunzioni a stacco secco: accanto a un filmato (grafica scura e filmato chiaro sciolti insieme lasciano il
+    fantasma dei testi) e dove c'è il raccordo del riquadro (la dissolvenza si mangerebbe il volto sul cerchio)."""
+    def raccordo(e: dict, verso: str) -> bool:
+        return verso in (e.get("raccordo_riquadro") or "")
+    filmato_taglia = str(tr.get("filmato", "taglio")) == "taglio"
+    return frozenset(k for k in range(1, len(elementi))
+                     if (filmato_taglia and (elementi[k - 1].get("filmato") or elementi[k].get("filmato")))
+                     or raccordo(elementi[k - 1], "uscita") or raccordo(elementi[k], "entrata"))
+
+
+def _reel_finale(r: Reel, elementi: list[dict], pezzi: list[tuple[Path, float]], out: Path, avatar: Path, args,
+                 cfg: Config, diag: list[Diagnostica]) -> dict:
+    """Concatena le scene, porta l'audio al bersaglio, fa filmstrip e copertine; ritorna le info del reel."""
+    tr = cfg.dati["transizioni"]
+    tipo_tr, d_tr = str(tr.get("tipo", "dissolvenza")), float(tr.get("durata_s", 0.25))
+    tagli = _tagli(elementi, tr)
+    finale = compositing.concatena(pezzi, out / "reel-9x16.mp4", tipo_tr, d_tr, cfg, anteprima=args.anteprima, tagli=tagli)
+    durata_tot = compositing.durata_concat(pezzi, tipo_tr, d_tr, tagli)
+    volume = compositing.normalizza_audio(finale, cfg)
+    t_acc = 0.0
+    for k, e in enumerate(elementi):
+        e["t_inizio_s"] = round(t_acc, 2)
+        sciolta = tipo_tr == "dissolvenza" and (k + 1) not in tagli
+        t_acc += e["durata_s"] - (d_tr if sciolta else 0)
+        e["t_fine_s"] = round(e["t_inizio_s"] + e["durata_s"], 2)
+    fs = fotogrammi.filmstrip(finale, fotogrammi.tempi_campione(durata_tot, 10), out / "fotogrammi" / "reel-filmstrip.png",
+                              220, copri=fotogrammi.copri_reel(cfg, elementi, avatar))
+    hook = elementi[0]
+    # a filmato e a volto pieno il titolo non è a schermo: lo mette sopra la copertina
+    s_hook = r.hook if r.hook is not None and (hook.get("filmato") or r.hook.a_volto_pieno) else None
+    cop, cop45 = fotogrammi.cover(_hook_senza_caption(r, hook, out, avatar, cfg), hook["durata_s"], out, cfg,
+                                  titolo=s_hook.titolo if s_hook else None,
+                                  sottotitolo=s_hook.sottotitolo if s_hook else None)
+    probe = ffprobe(finale)
+    _verifica_probe(probe, cfg, durata_tot, diag)
+    return {"file": "reel-9x16.mp4", "formato": "9:16", "durata_s": durata_tot, "fps": cfg.fps, "transizione": tipo_tr,
+            "filmstrip": str(fs.relative_to(out)), "copertina": cop.name, "copertina_4x5": cop45.name, "ffprobe": probe,
+            "audio": volume}
 
 
 def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None = None) -> int:
+    """Tempi, grafica e composizione di ogni scena, poi il reel intero e il report."""
     cfg = cfg or carica()
-    out.mkdir(parents=True, exist_ok=True)
-    lav = lavoro_per(r.slug, out, cfg)     # il transitorio fuori dal progetto (tools/reel/percorsi.py)
-    for sub in ("scene", "fotogrammi"):
-        (out / sub).mkdir(exist_ok=True)
-    for sub in ("_manim", "_scene"):
-        (lav / sub).mkdir(parents=True, exist_ok=True)
+    lav = lavoro_per(r.slug, out, cfg)     # il transitorio sta fuori dal progetto
+    for d in (out / "scene", out / "fotogrammi", lav / "_manim", lav / "_scene"):
+        d.mkdir(parents=True, exist_ok=True)
     prova = bool(args.prova)
     qualita = args.qualita or ("l" if args.anteprima else "h")
     solo = getattr(args, "scena", None)
+    anim = file_animazione(r.slug)
     try:
-        mod = carica_modulo(file_animazione(r.slug))
+        mod = carica_modulo(anim)
     except AnimazioneMancante as e:
         print(f"-> {e}", file=sys.stderr)
         return 1
@@ -268,18 +329,17 @@ def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None 
     t0 = time.time()
     tempi = {"manim": 0.0, "compositing": 0.0, "concat": 0.0}
     elementi: list[dict] = []
-    clip_info = clipmod.stato(r.slug, [s.n for s in r.scene])
     pezzi: list[tuple[Path, float]] = []
-    cache = _cache(lav)
-    firma = hash_sorgenti(file_animazione(r.slug))
-    for n, msg in lint_animazione(file_animazione(r.slug)):
-        diag.append(avviso(f"{file_animazione(r.slug).name}:{n}: {msg}"))
+    clip_info = clipmod.stato(r.slug, [s.n for s in r.scene])
+    cache, firma = _cache(lav), hash_sorgenti(anim)
+    diag.extend(avviso(f"{anim.name}:{n}: {msg}") for n, msg in lint_animazione(anim))
+    raccordo_s = float(cfg.dati["transizioni"].get("raccordo_riquadro_s", compositing.DURATA_RACCORDO_S))
     usa_prova = False
     for s in r.scene:
         if solo and s.n != solo:
             continue
         try:
-            t = tempi_scena(r, s, prova, lav, cfg, ignora_clip=prova)   # --prova: sempre voce sintetica e avatar, anche con le clip
+            t = tempi_scena(r, s, prova, lav, cfg, ignora_clip=prova)   # --prova: voce sintetica e avatar, anche con le clip
         except VoceNonDisponibile as e:
             diag.append(errore(str(e), s.riga, s.n))
             return _chiudi(r, diag, out, elementi, clip_info, None, tempi, prova, args)
@@ -291,114 +351,47 @@ def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None 
                                "registra di nuovo la scena", s.riga, s.n))
         usa_prova = usa_prova or t.origine in ("voce-sintetica", "stima")
         if s.a_filmato:
-            pezzo = _scena_broll(r, s, t, out, avatar, args, cfg, diag)
-            if pezzo:
-                elementi.append(pezzo)
-                pezzi.append((out / pezzo["video"], t.durata_s))
+            fatto = _scena_broll(r, s, t, out, avatar, args, cfg, diag)
+            if fatto:
+                pezzi.append((fatto[0], t.durata_s))
+                elementi.append(fatto[1])
             continue
         try:
             cls = classe_scena(mod, s.n)
         except AnimazioneMancante as e:
-            # una scena a volto pieno può non avere grafica: è lui e basta (l'apertura, dal 2026-09-21)
-            if not s.a_volto_pieno:
+            if not s.a_volto_pieno:          # una scena a volto pieno può non avere grafica: è lui e basta
                 diag.append(errore(str(e), s.riga, s.n))
                 continue
             cls = None
         schermo = (clipmod.cartella(r.slug) / s.schermo) if s.schermo else None
-        riq = s.riquadro_effettivo()
-        # la grafica va sopra un video (b-roll nella finestra, o il presentatore a tutta tela): serve l'alpha
-        sopra_video = bool(schermo) or s.a_volto_pieno
-        dati = dati_scena(s, t)
-        chiave = f"{firma}:{cls.__name__ if cls else '-'}:{t.durata_s}:{qualita}:{sopra_video}:{json.dumps(dati, sort_keys=True)}"
-        voce_cache = cache.get(f"{s.n:02d}")
+        sopra_video = bool(schermo) or s.a_volto_pieno     # grafica sopra un video: serve l'alpha
         t1 = time.time()
-        if cls is None:
-            grafica, avvisi_tempi, controlli = None, [], []
-        elif (isinstance(voce_cache, dict) and voce_cache.get("chiave") == chiave and voce_cache.get("grafica")
-                and (lav / voce_cache["grafica"]).exists()):
-            grafica = lav / voce_cache["grafica"]
-            avvisi_tempi, controlli = list(voce_cache.get("avvisi", [])), list(voce_cache.get("controlli", []))
-        else:
+        grafica, avvisi_tempi, controlli = None, [], []
+        if cls is not None:
+            chiave = (f"{firma}:{cls.__name__}:{t.durata_s}:{qualita}:{sopra_video}:"
+                      f"{json.dumps(dati_scena(s, t), sort_keys=True)}")
             try:
-                res = renderizza(cls, t.durata_s, dati, lav / "_manim", f"scena-{s.n:02d}", qualita, trasparente=sopra_video, cfg=cfg)
+                grafica, avvisi_tempi, controlli = _grafica_scena(cls, s, t, lav, cache, chiave, qualita, sopra_video, cfg)
             except Exception as e:  # noqa: BLE001 — l'errore di una scena non deve fermare le altre
                 diag.append(errore(f"render fallito: {type(e).__name__}: {e}", s.riga, s.n))
                 continue
-            grafica, avvisi_tempi, controlli = res.video, res.avvisi, res.controlli
-            cache[f"{s.n:02d}"] = {"chiave": chiave, "grafica": relativo(grafica, lav), "avvisi": avvisi_tempi,
-                                   "controlli": controlli}
-            _salva_cache(lav, cache)
-        for a in avvisi_tempi + controlli:
-            diag.append(avviso(a, s.riga, s.n))
+        diag.extend(avviso(a, s.riga, s.n) for a in avvisi_tempi + controlli)
         tm = time.time() - t1
-        tempi["manim"] += tm
-        t2 = time.time()
-        c = clipmod.trova(r.slug, s.n) if t.origine == "clip" else None
-        cap, cap_xy, cap_report = _caption(r, s, t, lav, cfg)
         entrata, uscita = raccordi_riquadro(r, s)
-        src = compositing.Sorgenti(grafica=grafica, durata_s=t.durata_s, riquadro=riq, video_presentatore=c,
-                                   avatar=avatar if (c is None and riq != "no" and avatar.exists()) else None, audio=t.audio,
-                                   schermo=schermo, caption=cap, caption_xy=cap_xy,
-                                   entrata_da_riquadro=entrata, uscita_a_riquadro=uscita,
-                                   durata_raccordo_s=float(cfg.dati["transizioni"].get("raccordo_riquadro_s",
-                                                                                       compositing.DURATA_RACCORDO_S)))
-        dest = compositing.componi_scena(src, lav / "_scene" / f"{s.n:02d}.mp4", cfg, anteprima=args.anteprima)
-        tc = time.time() - t2
-        tempi["compositing"] += tc
-        cop = fotogrammi.copri_volto(cfg, riq, avatar, cap_report) if c else None   # il volto lo guarda solo lui
-        png = fotogrammi.fotogramma_chiave(dest, t.durata_s, out / "scene" / f"{s.n:02d}.png", copri=cop)
-        fs = fotogrammi.filmstrip_scena(dest, t.durata_s, out / "fotogrammi" / f"{s.n:02d}-filmstrip.png", copri=cop)
-        elementi.append({"ordine": s.n, "clip_vera": c is not None, "tipo": "png", "file": str(png.relative_to(out)), "scena": s.n, "tipo_scena": s.tipo,
-                         "durata_s": t.durata_s, "parole_voce": s.parole_voce, "durata_stimata_s": durata_stimata_s(s, cfg),
-                         "origine_durata": t.origine, "inizi_frasi_s": t.inizi_frasi_s, "origine_tempi": t.origine_tempi,
-                         "avvisi_tempi": avvisi_tempi, "controlli": controlli, "riquadro": riq, "schermo": s.schermo,
+        dest, e = _componi(r, s, t, out, avatar, args, cfg, grafica=grafica, schermo=schermo,
+                           entrata_da_riquadro=entrata, uscita_a_riquadro=uscita, durata_raccordo_s=raccordo_s)
+        tempi["manim"] += tm
+        tempi["compositing"] += e["tempo_ffmpeg_s"]
+        elementi.append({**e, "avvisi_tempi": avvisi_tempi, "controlli": controlli,
                          "raccordo_riquadro": "+".join(v for v, q in (("entrata", entrata), ("uscita", uscita)) if q) or None,
-                         "caption": cap_report, **_voce_report(r, s, t),
-                         "filmstrip": str(fs.relative_to(out)),
-                         "grafica": relativo(grafica, out) if grafica else "",
-                         "video": relativo(dest, out), "tempo_manim_s": round(tm, 1), "tempo_ffmpeg_s": round(tc, 1)})
+                         "grafica": relativo(grafica, out) if grafica else "", "tempo_manim_s": round(tm, 1)})
         pezzi.append((dest, t.durata_s))
 
     reel_info = None
-    if pezzi and not solo and not any(d.livello == "errore" for d in diag):
+    if pezzi and not solo and not ha_errori(diag):
         t3 = time.time()
-        tr = cfg.dati["transizioni"]
-        tipo_tr, d_tr = str(tr.get("tipo", "dissolvenza")), float(tr.get("durata_s", 0.25))
-        # fra animazione e filmato si stacca: grafica scura e filmato chiaro sciolti insieme lasciano il fantasma
-        # dei testi sopra l'immagine ([transizioni] filmato = "dissolvenza" per riavere la dissolvenza ovunque).
-        # Dove c'è il raccordo del riquadro si stacca sempre: il volto arriva sul cerchio esattamente all'ultimo
-        # fotogramma, e una dissolvenza incrociata di 0,25 s se lo mangerebbe sciogliendolo nella scena dopo.
-        def _raccordo(e: dict, verso: str) -> bool:
-            return verso in (e.get("raccordo_riquadro") or "")
-
-        tagli = frozenset(k for k in range(1, len(elementi))
-                          if ((elementi[k - 1].get("filmato") or elementi[k].get("filmato"))
-                              and str(tr.get("filmato", "taglio")) == "taglio")
-                          or _raccordo(elementi[k - 1], "uscita") or _raccordo(elementi[k], "entrata"))
-        finale = compositing.concatena(pezzi, out / "reel-9x16.mp4", tipo_tr, d_tr, cfg, anteprima=args.anteprima, tagli=tagli)
-        durata_tot = compositing.durata_concat(pezzi, tipo_tr, d_tr, tagli)
-        volume = compositing.normalizza_audio(finale, cfg)   # una volta sola, sul reel intero ([audio])
+        reel_info = _reel_finale(r, elementi, pezzi, out, avatar, args, cfg, diag)
         tempi["concat"] = time.time() - t3
-        t_acc = 0.0
-        for k, e in enumerate(elementi):
-            e["t_inizio_s"] = round(t_acc, 2)
-            sciolta = tipo_tr == "dissolvenza" and (k + 1) not in tagli
-            t_acc += e["durata_s"] - (d_tr if sciolta else 0)
-            e["t_fine_s"] = round(e["t_inizio_s"] + e["durata_s"], 2)
-        fs = fotogrammi.filmstrip(finale, fotogrammi.tempi_campione(durata_tot, 10), out / "fotogrammi" / "reel-filmstrip.png", 220,
-                                  copri=fotogrammi.copri_reel(cfg, elementi, avatar))
-        hook = elementi[0]
-        # a filmato e a volto pieno il titolo non è a schermo: la copertina ce lo mette sopra (vive solo lì)
-        s_hook = r.hook if r.hook is not None and (hook.get("filmato") or r.hook.a_volto_pieno) else None
-        video_cop = _hook_senza_caption(r, hook, out, avatar, cfg)
-        cop, cop45 = fotogrammi.cover(video_cop, hook["durata_s"], out, cfg,
-                                      titolo=s_hook.titolo if s_hook else None,
-                                      sottotitolo=s_hook.sottotitolo if s_hook else None)
-        probe = ffprobe(finale)
-        _verifica_probe(probe, cfg, durata_tot, diag)
-        reel_info = {"file": "reel-9x16.mp4", "formato": "9:16", "durata_s": durata_tot, "fps": cfg.fps, "transizione": tipo_tr,
-                     "filmstrip": str(fs.relative_to(out)), "copertina": cop.name, "copertina_4x5": cop45.name, "ffprobe": probe,
-                     "audio": volume}
     tempi = {k: round(v, 1) for k, v in tempi.items()}
     tempi["totale"] = round(time.time() - t0, 1)
     return _chiudi(r, diag, out, elementi, clip_info, reel_info, tempi, usa_prova, args)

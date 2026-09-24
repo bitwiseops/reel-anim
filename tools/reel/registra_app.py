@@ -156,7 +156,21 @@ class AppRegistra:
         self.f_medio = tkfont.Font(family=famiglia, size=16, weight="bold")
         self.f_conto = tkfont.Font(family=famiglia, size=max(60, self.dim_reel[0] // 3), weight="bold")
 
-        # sopra: i tre pannelli in fila, alti uguali
+        self._costruisci_pannelli(pal)
+        self._costruisci_comandi(pal, self.dim_webcam[0] + self.dim_reel[0] + lk + 2 * PAD)
+
+        root.bind_all("<space>", lambda e: self._spazio())
+        root.bind_all("<Left>", lambda e: self._cambia_scena(-1))
+        root.bind_all("<Right>", lambda e: self._cambia_scena(+1))
+        root.bind_all("<Key>", self._tasto)
+        root.bind_all("<Escape>", lambda e: self._esc())
+        root.protocol("WM_DELETE_WINDOW", self._esc)
+        root.focus_set()
+
+    def _costruisci_pannelli(self, pal) -> None:
+        """Sopra: webcam, karaoke al centro (sotto la fotocamera), reel; alti uguali."""
+        root = self.root
+        lk, alto = self.dim_karaoke
         pannelli = tk.Frame(root, bg=pal.sfondo)
         pannelli.grid(row=0, column=0, sticky="w", padx=PAD, pady=(PAD, 8))
         w, h = self.dim_webcam
@@ -198,9 +212,10 @@ class AppRegistra:
         self.t_karaoke.tag_configure("accesa", foreground=pal.accento, font=self.f_karaoke_b)
         self.t_karaoke.tag_configure("nota", foreground=pal.secondario, font=self.f_piccolo)
         self.t_karaoke.configure(state="disabled")
-        larghezza_totale = self.dim_webcam[0] + self.dim_reel[0] + lk + 2 * PAD
 
-        # sotto: le scene, i comandi di registrazione e riproduzione, i dispositivi, lo stato
+    def _costruisci_comandi(self, pal, larghezza_totale: int) -> None:
+        """Sotto: scene, pulsanti, dispositivi e vu-meter, riga di stato, tasti."""
+        root = self.root
         comandi = tk.Frame(root, bg=pal.sfondo)
         comandi.grid(row=1, column=0, sticky="we", padx=PAD, pady=(0, PAD))
         riga_scene = tk.Frame(comandi, bg=pal.sfondo)
@@ -258,13 +273,10 @@ class AppRegistra:
         tk.Label(comandi, text="Il cerchio sulla webcam è ciò che va nel riquadro: volto al centro, spazio sopra la testa.\n" + TASTI,
                  font=self.f_piccolo, fg=pal.attenuato, bg=pal.sfondo, anchor="w", justify="left").pack(fill="x", pady=(4, 0))
 
-        root.bind_all("<space>", lambda e: self._spazio())
-        root.bind_all("<Left>", lambda e: self._cambia_scena(-1))
-        root.bind_all("<Right>", lambda e: self._cambia_scena(+1))
-        root.bind_all("<Key>", self._tasto)
-        root.bind_all("<Escape>", lambda e: self._esc())
-        root.protocol("WM_DELETE_WINDOW", self._esc)
-        root.focus_set()
+
+    def _ridisegna(self) -> None:
+        self._disegna_elenco()
+        self._mostra_fermo()
 
     def _clic(self, azione):
         """Un pulsante non tiene il fuoco: dopo il clic Spazio e le frecce tornano alla finestra."""
@@ -276,8 +288,7 @@ class AppRegistra:
     def esegui(self) -> int:
         self._avvia_anteprima()
         self._avvia_livello()
-        self._disegna_elenco()
-        self._mostra_fermo()
+        self._ridisegna()
         self.root.after(1000 // int(self.opz["fps_pannelli"]), self._tick)
         self.root.mainloop()
         return 0
@@ -333,8 +344,7 @@ class AppRegistra:
     def _scegli_scena(self, n: int) -> None:
         if self.stato == "pronto":
             self.da_scena = n
-            self._disegna_elenco()
-            self._mostra_fermo()
+            self._ridisegna()
 
     def _cambia_scena(self, delta: int) -> None:
         if self.stato != "pronto":
@@ -342,8 +352,7 @@ class AppRegistra:
         i = self.tl.indice(self.da_scena) + delta
         if 0 <= i < len(self.tl.scene):
             self.da_scena = self.tl.scene[i].n
-            self._disegna_elenco()
-            self._mostra_fermo()
+            self._ridisegna()
 
     def _tasto(self, e) -> None:
         if self.stato == "prova" and e.char and e.char.lower() == "e":
@@ -358,8 +367,7 @@ class AppRegistra:
             self._apri_modifica()
         elif c.isdigit() and int(c) in [s.n for s in self.tl.scene]:
             self.da_scena = int(c)
-            self._disegna_elenco()
-            self._mostra_fermo()
+            self._ridisegna()
         elif c in ("+", "="):
             self._zoom(-1)
         elif c == "-":
@@ -586,8 +594,7 @@ class AppRegistra:
         self._chiave_karaoke = None
         self.stato = "pronto"
         self.root.focus_set()
-        self._disegna_elenco()
-        self._mostra_fermo()
+        self._ridisegna()
 
     def _salva_modifica(self) -> None:
         if self.stato != "modifica":
@@ -700,8 +707,7 @@ class AppRegistra:
         self.stato = "pronto"
         self.da_scena = self._prima_senza_clip() if fatte else self.da_scena
         self._avvia_anteprima()
-        self._disegna_elenco()
-        self._mostra_fermo()
+        self._ridisegna()
 
     # --- disegno -----------------------------------------------------------------------------------
 
