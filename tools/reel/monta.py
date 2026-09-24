@@ -1,7 +1,6 @@
 """Montaggio del reel: per ogni scena tempi (clip o voce sintetica) → Manim → compositing; poi concat, fotogrammi, report."""
 from __future__ import annotations
 
-import hashlib
 import json
 import shutil
 import sys
@@ -22,7 +21,7 @@ from .manim_render import (AnimazioneMancante, carica_modulo, classe_scena, file
                            renderizza)
 from .model import PIENO, Diagnostica, Reel, Scena, avviso, errore
 from .stima import CODA_S as CODA_STIMA_S
-from .percorsi import lavoro_per, relativo
+from .percorsi import impronta, lavoro_per, relativo
 from .stima import durata_stimata_s
 from .voce import CODA_VOCE_S, VoceNonDisponibile, sintetizza_frasi
 
@@ -441,8 +440,8 @@ def _chiudi(r: Reel, diag, out: Path, elementi, clip_info, reel_info, tempi, pro
     path = Path(args.file)
     anim = file_animazione(r.slug)
     report = {
-        "slug": r.slug, "formato": "reel-manim", "sorgente": str(path), "hash_md": hashlib.sha256(path.read_bytes()).hexdigest()[:16],
-        "hash_animazione": hashlib.sha256(anim.read_bytes()).hexdigest()[:16] if anim.exists() else None,
+        "slug": r.slug, "formato": "reel-manim", "sorgente": str(path), "hash_md": impronta(path),
+        "hash_animazione": impronta(anim) if anim.exists() else None,
         "generato_il": datetime.now().isoformat(timespec="seconds"), "cartella": str(out), "lavoro": str(lavoro_per(r.slug, out)), "prova": bool(prova),
         "elementi": elementi, "clip": clip_info, "reel": reel_info, "diagnostica": [d.to_dict() for d in diag],
         "tempi_s": tempi, "ordine_upload": ["reel-9x16.mp4"] if reel_info else [],

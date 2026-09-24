@@ -12,7 +12,6 @@ montaggio usa al posto della stima a parole).
 """
 from __future__ import annotations
 
-import hashlib
 import json
 import math
 import re
@@ -26,6 +25,7 @@ from . import clip as clipmod
 from .compositing import posizione_riquadro
 from .ffmpeg import esegui, trova_ffmpeg
 from .model import PIENO, Diagnostica, Reel, avviso, testo_piano
+from .percorsi import impronta
 from .voce import CODA_VOCE_S
 
 from ..anim.config import RADICE
@@ -136,10 +136,6 @@ class ReportNonPronto(RuntimeError):
     pass
 
 
-def hash_sceneggiatura(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()[:16]
-
-
 def _frase(riga: str, t_inizio: float, t_fine: float) -> Frase:
     piano = testo_piano(riga)
     return Frase(piano, tuple(piano.split()), t_inizio, t_fine, riga)
@@ -201,7 +197,7 @@ def carica_timeline(r: Reel, out: Path, cfg: Config) -> tuple[Timeline, list[Dia
     if not tl.reel.exists():
         raise ReportNonPronto(f"manca il video dell'anteprima {tl.reel}")
     diag: list[Diagnostica] = []
-    if r.sorgente and tl.hash_md and hash_sceneggiatura(r.sorgente) != tl.hash_md:
+    if r.sorgente and tl.hash_md and impronta(r.sorgente) != tl.hash_md:
         diag.append(avviso("l'anteprima è di una versione precedente della sceneggiatura: rifai `monta --prova --anteprima`"))
     return tl, diag
 

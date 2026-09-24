@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Callable, NamedTuple
 
 from ..anim.config import Config
+from .parser import riga_sotto_stato, sezione
 
 from ..anim.config import RADICE
 CARTELLA = RADICE / "contenuti" / "idee" / "uscite"
@@ -49,12 +50,11 @@ _RICHIESTA = re.compile(r"^- \*\*([A-Z]) · (.+?):\*\*\s*(`+)(.+?)\3", re.M | re
 def richieste(testo_idea: str) -> list[Richiesta]:
     """Le richieste da generare: in `## Note per il reel`, dopo «Testi del modello: richieste da generare», i bullet
     ``- **A · nome:** `testo esatto` ``. Un a capo dentro i backtick è l'a capo del markdown, cioè uno spazio."""
-    note = re.search(r"^## Note per il reel\s*$", testo_idea, re.M)
-    m = _INTESTAZIONE.search(testo_idea, note.end() if note else 0)
+    note = sezione(testo_idea, "Note per il reel") or ""
+    m = _INTESTAZIONE.search(note)
     if not m:
         raise ErroreUscite("l'idea non elenca richieste: manca «**Testi del modello: richieste da generare**» nelle Note per il reel")
-    fine = re.search(r"^## ", testo_idea[m.end():], re.M)
-    blocco = testo_idea[m.end():m.end() + fine.start()] if fine else testo_idea[m.end():]
+    blocco = note[m.end():]
     out = [Richiesta(sigla, nome.strip(), re.sub(r"\s*\n\s*", " ", t).strip()) for sigla, nome, _, t in _RICHIESTA.findall(blocco)]
     if not out:
         raise ErroreUscite("nessuna richiesta nella forma «- **A · nome:** `testo`» dopo «Testi del modello: richieste da generare»")
@@ -261,10 +261,5 @@ def scrivi_file(dest: Path, slug: str, data: str, versione: str, rr: list[Richie
 
 
 def riga_uscite(testo_idea: str, percorso: str) -> str:
-    """L'idea con `**Uscite:** <percorso>` sotto la riga `**Stato:**`; se la riga c'è già, si aggiorna e non si duplica."""
-    riga = f"**Uscite:** {percorso}"
-    if re.search(r"^\*\*Uscite:\*\*.*$", testo_idea, re.M):
-        return re.sub(r"^\*\*Uscite:\*\*.*$", lambda _: riga, testo_idea, count=1, flags=re.M)
-    if not re.search(r"^\*\*Stato:\*\*.*$", testo_idea, re.M):
-        raise ErroreUscite("l'idea non ha la riga «**Stato:**» sotto cui scrivere «**Uscite:**»")
-    return re.sub(r"^(\*\*Stato:\*\*.*)$", lambda m: f"{m.group(1)}\n{riga}", testo_idea, count=1, flags=re.M)
+    """L'idea con `**Uscite:** <percorso>` sotto `**Stato:**` (aggiornata, non duplicata)."""
+    return riga_sotto_stato(testo_idea, "Uscite", percorso, ErroreUscite)

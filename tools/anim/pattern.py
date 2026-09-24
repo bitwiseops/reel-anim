@@ -13,19 +13,14 @@ Esce con 1 se una scena ha avvisi di tempo o violazioni dei controlli.
 """
 from __future__ import annotations
 
-import argparse
 import sys
-from pathlib import Path
 
 from manim import DOWN, UP, FadeIn, FadeOut, Rectangle, VGroup
 
 from .base import ScenaReel
 from .componenti import Fila, Icona, Sagome, testo
-from .config import RADICE, carica
 from .misure import px, tratto
 
-DURATA_S = 6.0
-SCENA = {"voce": ["uno due tre", "quattro cinque sei", "sette otto nove"], "riquadro": "si"}
 
 
 # --- pattern 1: finestre (un solo oggetto alla volta, senza accavallamenti) --------------------------------
@@ -171,36 +166,8 @@ SCENE = [PatternFinestre, PatternRimbalzo, PatternGrande, PatternRiflesso, Patte
 
 
 def main(argv: list[str] | None = None) -> int:
-    from ..reel.contact_sheet import genera as contact
-    from ..reel.fotogrammi import filmstrip_scena, fotogramma_chiave
-    from ..reel.manim_render import renderizza
-    ap = argparse.ArgumentParser(prog="pattern", description="scene di prova dei pattern di docs/pattern-manim.md")
-    ap.add_argument("--solo", help="solo i pattern il cui nome contiene questo testo")
-    ap.add_argument("--qualita", choices="lmh", default="l")
-    ap.add_argument("--out", default=str(RADICE / "contenuti" / "render" / "_pattern"))
-    a = ap.parse_args(argv)
-    cfg = carica()
-    out = Path(a.out)
-    celle, problemi = [], 0
-    for k, cls in enumerate(SCENE, 1):
-        nome = cls.__name__.removeprefix("Pattern")
-        if a.solo and a.solo.lower() not in nome.lower():
-            continue
-        base = f"{k:02d}-{nome.lower()}"
-        res = renderizza(cls, DURATA_S, dict(SCENA), out / "_manim", base, a.qualita, cfg=cfg)
-        png = fotogramma_chiave(res.video, DURATA_S, out / f"{base}.png", frazione=0.97)
-        filmstrip_scena(res.video, DURATA_S, out / f"{base}-filmstrip.png")
-        guai = res.avvisi + res.controlli
-        problemi += len(guai)
-        print(f"{nome}: {png}" + ("" if guai else "  ok"))
-        for g in guai:
-            print(f"   ✗ {g}")
-        celle.append({"file": png, "etichetta": nome, "animata": True, "problema": bool(guai)})
-    if celle:
-        contact(celle, [], out / "contact-sheet.png")
-        print(f"-> {out / 'contact-sheet.png'}")
-    return 1 if problemi else 0
-
+    from .vetrina import mostra
+    return mostra(SCENE, "Pattern", "scene di prova dei pattern di docs/pattern-manim.md", "_pattern", argv)
 
 if __name__ == "__main__":
     sys.exit(main())

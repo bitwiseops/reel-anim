@@ -6,7 +6,6 @@ perché il piano porta url e sha256 e si riscaricano.
 """
 from __future__ import annotations
 
-import hashlib
 import json
 import re
 from dataclasses import dataclass, field
@@ -14,7 +13,8 @@ from datetime import datetime
 from pathlib import Path
 
 from tools.anim.config import Config, carica
-from tools.reel.percorsi import relativo, riepilogo
+from tools.reel.validate import equilibrio_registri
+from tools.reel.percorsi import elementi_del_report, impronta, relativo, riepilogo
 from tools.reel.model import Diagnostica, Scena, avviso
 from tools.reel.parser import parse
 from tools.reel.stima import durata_stimata_s
@@ -149,11 +149,6 @@ def file_piano(slug: str) -> Path:
 
 
 
-def hash_sceneggiatura(md: Path) -> str:
-    """Lo stesso calcolo di monta.py, così i due hash si confrontano."""
-    return hashlib.sha256(md.read_bytes()).hexdigest()[:16]
-
-
 # --- lettura e scrittura --------------------------------------------------------------------------
 
 def carica_piano(slug: str) -> Piano:
@@ -175,29 +170,6 @@ def salva(p: Piano) -> Path:
 
 
 # --- durate ---------------------------------------------------------------------------------------
-
-def _durate_dal_report(slug: str) -> dict[int, dict]:
-    """Durate e **inizi delle frasi** dall'ultimo montaggio, se c'è: report.json o report-prova.json.
-
-    Gli inizi frase servono al registro `immagini`: un'immagine per beat, così il montaggio segue quello
-    che il presentatore sta dicendo. Sono esatti con la voce di prova e con le prese di `reel registra`.
-    """
-    out = riepilogo(slug)
-    for nome in ("report.json", "report-prova.json"):
-        f = out / nome
-        if not f.exists():
-            continue
-        try:
-            dati = json.loads(f.read_text(encoding="utf-8"))
-        except json.JSONDecodeError:
-            continue
-        return {int(e["scena"]): {"durata_s": float(e["durata_s"]),
-                                  "inizi_frasi_s": list(e.get("inizi_frasi_s") or []),
-                                  "origine_tempi": e.get("origine_tempi") or "",
-                                  "parole_voce": e.get("parole_voce")}
-                for e in dati.get("elementi", []) if e.get("scena")}
-    return {}
-
 
 # --- costruzione ----------------------------------------------------------------------------------
 
@@ -245,7 +217,7 @@ def da_sceneggiatura(md: Path, cfg: Config | None = None) -> tuple[Piano, list[D
     from .query import query_scena
 
     r, diag = parse(md)
-    durate = _durate_dal_report(r.slug)
+    durate = elementi_del_report(riepilogo(r.slug))   # durate e inizi frase dell'ultimo montaggio
     proposte = _proponi(r.scene)
 
     scene: list[ScenaBroll] = []
@@ -259,7 +231,7 @@ def da_sceneggiatura(md: Path, cfg: Config | None = None) -> tuple[Piano, list[D
                         durata_s=round(d["durata_s"] if d else durata_stimata_s(s, cfg), 2),
                         origine_durata="report" if d else "stima",
                         inizi_frasi_s=d["inizi_frasi_s"] if d else [],
-                        origine_tempi=d["origine_tempi"] if d else "",
+                        origine_tempi=(d.get("origine_tempi") or "") if d else "",
                         voce=list(s.voce), brief=list(s.animazione))
         # una scena già [broll] nel .md è una decisione presa: si rispetta
         if s.tipo == "broll" or s.n in proposte:
@@ -271,7 +243,7 @@ def da_sceneggiatura(md: Path, cfg: Config | None = None) -> tuple[Piano, list[D
         scene.append(sb)
 
     sc = cfg.dati["schermo"]
-    p = Piano(slug=r.slug, sorgente=relativo(md), hash_md=hash_sceneggiatura(md), scene=scene,
+    p = Piano(slug=r.slug, sorgente=relativo(md), hash_md=impronta(md), scene=scene,
               cornice={"pieno": [cfg.larghezza, cfg.altezza],
                        "finestra": [int(sc["larghezza"]), int(sc["altezza"])]})
     return p, diag + controlla(p)
@@ -320,24 +292,12 @@ def eredita(nuovo: Piano, vecchio: Piano, fps: int = 30) -> list[int]:
 def controlla(p: Piano) -> list[Diagnostica]:
     """L'alternanza regge? Gli stessi limiti editoriali del resto del repo, nello stesso formato."""
     d: list[Diagnostica] = []
-    filmati = [s.n for s in p.filmati]
+    esterne = [s.n for s in p.scene if s.registro in ESTERNI]
     generate = [s for s in p.scene if s.registro == "immagini"]
-    if not filmati and not generate:
+    if not esterne:
         d.append(avviso("nessuna scena a filmato: il piano non cambia niente rispetto a oggi"))
-    # L'equilibrio fra i due registri (regola del presentatore, 2026-09-21): metà delle scene a filmato, ± una.
-    corpo = [s for s in p.scene if s.registro == "filmato" or s.tipo not in ("hook", "chiusura")]
-    meta = len(corpo) / 2
-    if len(filmati) > meta + 1:
-        d.append(avviso(f"{len(filmati)} scene su {len(corpo)} a filmato (senza apertura e chiusura): troppo "
-                        "materiale esterno (metà ± una), è uno stock video e non un reel spiegato"))
-    elif filmati and len(filmati) < meta - 1:
-        d.append(avviso(f"{len(filmati)} scene su {len(corpo)} a filmato (senza apertura e chiusura): troppo poche "
-                        "(metà ± una). Le scene con "
-                        "numeri, conti o termini tecnici restano a Manim: se ne restano troppe, la sceneggiatura non "
-                        "sta dividendo i registri (voce generica sul filmato, spiegazione nelle animazioni)"))
-    for a, b in zip(filmati, filmati[1:]):
-        if b == a + 1:
-            d.append(avviso(f"scene {a} e {b} entrambe a filmato: l'alternanza si vede solo se si alterna", scena=b))
+    corpo = [s for s in p.scene if s.tipo not in ("hook", "chiusura")]
+    d += equilibrio_registri(esterne, len(corpo))
     for s in p.scene:
         if s.registro == "filmato" and s.tipo not in AMMESSE and s.tipo != "broll":
             d.append(avviso(f"scena [{s.tipo}] proposta a filmato: ammesse solo {' | '.join(AMMESSE)}", scena=s.n))

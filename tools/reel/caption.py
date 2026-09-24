@@ -24,9 +24,8 @@ from PIL import Image, ImageDraw
 
 from ..anim.config import Config, carica
 from .fotogrammi import font_pesato
-from .model import testo_piano
+from .model import RE_EVIDENZA, testo_piano
 
-_RE_EV = re.compile(r"==(.+?)==")
 _RE_MARK = re.compile(r"\*\*|\*")
 
 
@@ -148,7 +147,7 @@ def _parole_accento(s: str) -> list[tuple[str, bool]]:
     resto = _RE_MARK.sub("", s)
     marcati: list[tuple[str, bool]] = []
     i = 0
-    for m in _RE_EV.finditer(resto):
+    for m in RE_EVIDENZA.finditer(resto):
         marcati += [(c, False) for c in resto[i:m.start()]]
         marcati += [(c, True) for c in m.group(1)]
         i = m.end()

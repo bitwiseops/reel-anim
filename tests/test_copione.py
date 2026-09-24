@@ -2,6 +2,7 @@ from pathlib import Path
 
 import pytest
 
+from tools.reel import percorsi
 from tools.reel import copione as cp
 from tools.reel.copione import (ErroreChiamata, ErroreCopione, catena, componi_file, componi_prompt,
                                 esamina, leggi_copione, leggi_idea, leggi_uscita, riga_copione, scegli_trascrizioni)
@@ -168,7 +169,7 @@ def test_file_copione_si_rilegge():
 
 def test_chiave_poe_da_env(tmp_path, monkeypatch):
     monkeypatch.delenv("POE_API_KEY", raising=False)
-    monkeypatch.setattr(cp, "RADICE", tmp_path)
+    monkeypatch.setattr(percorsi, "RADICE", tmp_path)
     assert cp.chiave_poe() is None
     (tmp_path / ".env").write_text("ALTRO=1\nexport POE_API_KEY=\"abc\"\n")
     assert cp.chiave_poe() == "abc"

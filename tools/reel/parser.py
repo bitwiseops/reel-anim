@@ -208,3 +208,24 @@ def parse_testo(testo: str, sorgente: Path | None = None) -> tuple[Reel, list[Di
 def parse(path: str | Path) -> tuple[Reel, list[Diagnostica]]:
     p = Path(path)
     return parse_testo(p.read_text(encoding="utf-8"), p)
+
+
+# --- markdown dell'idea ---------------------------------------------------------------------------------
+
+def sezione(testo: str, titolo: str) -> str | None:
+    """Il corpo di `## titolo`, fino al `##` dopo; None se la sezione non c'è."""
+    m = re.search(rf"^## {re.escape(titolo)}\s*$", testo, re.M)
+    if not m:
+        return None
+    fine = re.search(r"^## ", testo[m.end():], re.M)
+    return (testo[m.end():m.end() + fine.start()] if fine else testo[m.end():]).strip()
+
+
+def riga_sotto_stato(testo: str, etichetta: str, valore: str, errore: type[Exception] = ValueError) -> str:
+    """Scrive `**etichetta:** valore` sotto la riga `**Stato:**`, o la aggiorna se c'è già."""
+    riga = f"**{etichetta}:** {valore}"
+    if re.search(rf"^\*\*{etichetta}:\*\*.*$", testo, re.M):
+        return re.sub(rf"^\*\*{etichetta}:\*\*.*$", lambda _: riga, testo, count=1, flags=re.M)
+    if not re.search(r"^\*\*Stato:\*\*.*$", testo, re.M):
+        raise errore(f"l'idea non ha la riga «**Stato:**» sotto cui scrivere «**{etichetta}:**»")
+    return re.sub(r"^(\*\*Stato:\*\*.*)$", lambda m: f"{m.group(1)}\n{riga}", testo, count=1, flags=re.M)

@@ -228,20 +228,22 @@ SCENE = [VetrinaFila, VetrinaSagome, VetrinaGesto, VetrinaVerdetto, VetrinaPrima
          VetrinaIcone, VetrinaContatore, VetrinaPunch, VetrinaZoom]
 
 
-def main(argv: list[str] | None = None) -> int:
+def mostra(scene: list, prefisso: str, descrizione: str, cartella: str, argv: list[str] | None = None) -> int:
+    """Rende ogni scena di prova, stampa i controlli falliti e fa il contact sheet; 1 se qualcosa non passa.
+    La usano questa vetrina e quella dei pattern (`tools/anim/pattern.py`)."""
     from ..reel.contact_sheet import genera as contact
     from ..reel.fotogrammi import filmstrip_scena, fotogramma_chiave
     from ..reel.manim_render import renderizza
-    ap = argparse.ArgumentParser(prog="vetrina", description="scene di prova dei componenti, con i controlli automatici")
-    ap.add_argument("--solo", help="solo i componenti il cui nome contiene questo testo")
+    ap = argparse.ArgumentParser(prog=prefisso.lower(), description=descrizione)
+    ap.add_argument("--solo", help="solo le scene il cui nome contiene questo testo")
     ap.add_argument("--qualita", choices="lmh", default="l")
-    ap.add_argument("--out", default=str(RADICE / "contenuti" / "render" / "_vetrina"))
+    ap.add_argument("--out", default=str(RADICE / "contenuti" / "render" / cartella))
     a = ap.parse_args(argv)
     cfg = carica()
     out = Path(a.out)
     celle, problemi = [], 0
-    for k, cls in enumerate(SCENE, 1):
-        nome = cls.__name__.removeprefix("Vetrina")
+    for k, cls in enumerate(scene, 1):
+        nome = cls.__name__.removeprefix(prefisso)
         if a.solo and a.solo.lower() not in nome.lower():
             continue
         base = f"{k:02d}-{nome.lower()}"
@@ -259,6 +261,9 @@ def main(argv: list[str] | None = None) -> int:
         print(f"-> {out / 'contact-sheet.png'}")
     return 1 if problemi else 0
 
+
+def main(argv: list[str] | None = None) -> int:
+    return mostra(SCENE, "Vetrina", "scene di prova dei componenti, con i controlli automatici", "_vetrina", argv)
 
 if __name__ == "__main__":
     sys.exit(main())

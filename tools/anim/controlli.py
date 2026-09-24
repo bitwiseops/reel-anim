@@ -8,7 +8,6 @@ quando (quale beat) e dove (px dello schermo, origine in alto a sinistra). Misur
 """
 from __future__ import annotations
 
-import re
 from collections.abc import Callable
 from dataclasses import dataclass
 
@@ -16,6 +15,7 @@ import numpy as np
 from manim import DL, UR, ManimColor, MarkupText, Mobject, Text, VMobject
 from manim.utils.family import extract_mobject_family_members
 
+from ..reel.model import RE_NUMERO
 from .componenti import Riga
 from .misure import FATTORE_FONT_SIZE, MINIMO_PX, PX_PER_UNITA
 
@@ -26,7 +26,6 @@ DISTANZA_COLORE = 2.5 / 255  # tolleranza sul canale per riconoscere un colore d
 PAROLE_DI_FILA_MAX = 2       # i reel si guardano muti: a spiegare è la caption, non il testo a schermo
                              # (numeri e percentuali non contano; le etichette si marcano con componenti.etichetta)
 
-_RE_NUMERO = re.compile(r"^[+\-−]?[\d.,]+\s*(%|°|€|\$|x|×)?$", re.IGNORECASE)
 _PAROLINE = {"su", "di", "e", "o", "a", "in", "per", "col", "con", "da", "il", "la", "lo", "i", "le", "un", "una"}
 
 Rett = tuple[float, float, float, float]   # x0, y0, x1, y1 in unità Manim
@@ -60,7 +59,7 @@ def parole_di_contenuto(s: str) -> list[str]:
     fuori = []
     for w in s.split():
         nudo = w.strip(".,;:!?«»\"'()[]…-–—").lower()
-        if not nudo or _RE_NUMERO.match(nudo) or nudo in _PAROLINE:
+        if not nudo or RE_NUMERO.match(nudo) or nudo in _PAROLINE:
             continue
         fuori.append(nudo)
     return fuori

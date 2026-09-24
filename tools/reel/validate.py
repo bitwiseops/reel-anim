@@ -6,7 +6,7 @@ import re
 
 from . import clip
 from .percorsi import relativo
-from .model import STATI, Diagnostica, Reel, avviso, conta_emoji, conta_parole, errore, evidenziate, testo_piano
+from .model import RE_NUMERO, STATI, Diagnostica, Reel, avviso, conta_emoji, conta_parole, errore, evidenziate, testo_piano
 from .stima import durata_stimata_s
 
 LIMITI = {
@@ -34,13 +34,12 @@ LIMITI = {
     "parole_figura_max": 20,      # FIGURA: cosa si capisce guardando, in una riga
 }
 
-_RE_NUMERO = re.compile(r"^[+\-−]?[\d.,]+\s*(%|°|€|\$|x|×)?$", re.IGNORECASE)
 
 
 def _parole_pesanti(s: str) -> int:
     """Le parole che chi guarda deve leggere: numeri e percentuali non contano (stessa regola del controllo
     `parole-leggibili` in tools/anim/controlli.py)."""
-    return len([w for w in testo_piano(s).split() if not _RE_NUMERO.match(w.strip(".,;:!?«»\"'()").lower())])
+    return len([w for w in testo_piano(s).split() if not RE_NUMERO.match(w.strip(".,;:!?«»\"'()").lower())])
 
 
 
@@ -180,27 +179,9 @@ def check(r: Reel) -> list[Diagnostica]:
             a(f"scena stimata {sec:.1f} s (max {L['scena_max_s']} s): troppa voce per una scena")
         elif sec < L["scena_min_s"]:
             a(f"scena stimata {sec:.1f} s, sotto i {L['scena_min_s']} s")
-    # L'equilibrio fra i due registri (regola del presentatore, 2026-09-21): **metà delle scene a filmato, ± una**.
-    # Manim porta la spiegazione, il filmato tiene l'attenzione e sotto ci va la voce più generica. Il conto vale
-    # solo quando i filmati sono già stati scelti (`broll scrivi`, tappa T2b): prima nessuna scena è a filmato e
-    # sarebbe un avviso su ogni sceneggiatura appena scritta. Lì l'equilibrio lo controlla `broll piano`.
-    # I due estremi del reel sono del presentatore (apertura e chiusura a volto pieno) e non sono né animazione né
-    # filmato: l'equilibrio si misura sul corpo, cioè sulle scene in mezzo.
+    # l'equilibrio si misura sulle scene in mezzo: apertura e chiusura sono il presentatore a volto pieno
     corpo = [s for s in r.scene if not s.a_volto_pieno]
-    filmati = [s for s in corpo if s.a_filmato]
-    if filmati:
-        meta = len(corpo) / 2
-        if len(filmati) > meta + 1:
-            d.append(avviso(f"scene a filmato: {len(filmati)} su {len(corpo)} (senza apertura e chiusura) — troppo "
-                            "materiale esterno, l'equilibrio fra i due registri è metà ± una"))
-        elif len(filmati) < meta - 1:
-            d.append(avviso(f"scene a filmato: {len(filmati)} su {len(corpo)} (senza apertura e chiusura) — troppo "
-                            "poche, l'equilibrio fra i due registri è metà ± una: le scene d'attenzione a filmato "
-                            "con la voce generica, la spiegazione nelle animazioni"))
-    for prima, dopo in zip(r.scene, r.scene[1:]):
-        if prima.a_filmato and dopo.a_filmato:
-            d.append(avviso(f"scene {prima.n} e {dopo.n} entrambe a filmato: l'alternanza si vede solo se si alterna",
-                            dopo.riga, dopo.n))
+    d += equilibrio_registri([s.n for s in r.scene if s.a_filmato], len(corpo))
     if len(titoli_reel) > L["frasi_titolo_reel_max"]:
         d.append(avviso(f"{len(titoli_reel)} frasi da titolo nel reel ({' / '.join('«' + t + '»' for t in titoli_reel)}): "
                         f"al massimo {L['frasi_titolo_reel_max']} fuori dalla chiusura, e un'eco della frase prima non conta"))
@@ -274,6 +255,23 @@ def due_punti_snodo(riga: str) -> bool:
             continue
         return True
     return False
+
+
+def equilibrio_registri(filmati: list[int], n_corpo: int) -> list[Diagnostica]:
+    """Metà delle scene in mezzo a filmato, ± una, e mai due filmati di fila (regole editoriali §3).
+    Senza filmati non dice niente: prima di `broll scrivi` nessuna scena è ancora a filmato."""
+    d: list[Diagnostica] = []
+    meta = n_corpo / 2
+    if filmati and len(filmati) > meta + 1:
+        d.append(avviso(f"scene a filmato: {len(filmati)} su {n_corpo} (senza apertura e chiusura) — troppo "
+                        "materiale esterno, l'equilibrio fra i due registri è metà ± una"))
+    elif filmati and len(filmati) < meta - 1:
+        d.append(avviso(f"scene a filmato: {len(filmati)} su {n_corpo} (senza apertura e chiusura) — troppo poche, "
+                        "l'equilibrio fra i due registri è metà ± una: voce generica sul filmato, spiegazione nelle animazioni"))
+    for a, b in zip(filmati, filmati[1:]):
+        if b == a + 1:
+            d.append(avviso(f"scene {a} e {b} entrambe a filmato: l'alternanza si vede solo se si alterna", scena=b))
+    return d
 
 
 def ha_errori(diagnostiche: list[Diagnostica]) -> bool:

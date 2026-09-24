@@ -8,7 +8,7 @@ from pathlib import Path
 from .model import Diagnostica, Reel, errore
 from .parser import ErroreParse, parse
 from . import clip
-from .percorsi import relativo, riepilogo
+from .percorsi import elementi_del_report, relativo, riepilogo
 from .validate import check, ha_errori
 
 from ..anim.config import RADICE
@@ -244,13 +244,13 @@ def cmd_strisce(args) -> int:
     import json
     from .ffmpeg import ffprobe
     from ..anim.config import carica
-    from .fotogrammi import copri_volto, strisce_fitte, tempi_dal_report, video_scena
+    from .fotogrammi import copri_volto, strisce_fitte, video_scena
     from .percorsi import lavoro_per
     r, _ = _carica(Path(args.file))
     cfg = carica()
     out = riepilogo(r.slug, args.out)
     lav = lavoro_per(r.slug, out, cfg)      # video delle scene e strisce fitte: transitori, fuori dal progetto
-    tempi = tempi_dal_report(out)
+    tempi = elementi_del_report(out)
     scene: list[dict] = []
     for s in r.scene:
         if args.scena and s.n != args.scena:

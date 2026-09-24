@@ -1,7 +1,6 @@
 """Fotogrammi chiave, filmstrip e cover: ciò che Claude Code (che non vede il video) guarda al posto del video."""
 from __future__ import annotations
 
-import json
 from collections.abc import Callable
 from pathlib import Path
 
@@ -135,20 +134,6 @@ def video_scena(out: Path, n: int, sorgente: str = "scene") -> Path | None:
         return p if p.exists() else None
     trovati = sorted((out / "_anima" / "videos").glob(f"*/scena-{n:02d}.mp4"), key=lambda p: p.stat().st_mtime)
     return trovati[-1] if trovati else None
-
-
-def tempi_dal_report(out: Path) -> dict[int, dict]:
-    """Per scena `durata_s` e `inizi_frasi_s` dell'ultimo montaggio (report.json, poi report-prova.json): sono gli
-    stessi tempi che usa `anima`. Vuoto se non c'è nessun report leggibile."""
-    for nome in ("report.json", "report-prova.json"):
-        try:
-            elementi = json.loads((out / nome).read_text(encoding="utf-8")).get("elementi", [])
-        except (OSError, ValueError):
-            continue
-        return {int(e["scena"]): {"durata_s": float(e["durata_s"]), "inizi_frasi_s": list(e.get("inizi_frasi_s") or []),
-                                  "clip_vera": e.get("clip_vera"), "caption": e.get("caption") or []}
-                for e in elementi if e.get("scena") is not None and e.get("durata_s")}
-    return {}
 
 
 VELO = 0.58             # quanto si scurisce il fotogramma sotto il titolo: deve leggersi in una griglia di miniature

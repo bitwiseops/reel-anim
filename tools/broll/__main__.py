@@ -10,7 +10,7 @@ from pathlib import Path
 
 from tools.anim.config import RADICE
 from tools.reel import clip
-from tools.reel.percorsi import relativo
+from tools.reel.percorsi import impronta, relativo
 
 
 def _stampa(diag) -> None:
@@ -233,7 +233,7 @@ def cmd_rendi(args) -> int:
     from .crediti import scrivi as scrivi_crediti
     from .fornitori import RichiestaFallita
     from .immagini import finestre
-    from .piano import PianoMancante, carica_piano, hash_sceneggiatura, salva
+    from .piano import PianoMancante, carica_piano, salva
     from .provini import cartella as cartella_provini
     from .rendi import rendi_scena
     from .scelta import confini, controlla_scelta
@@ -245,7 +245,7 @@ def cmd_rendi(args) -> int:
         print(f"-> {e}", file=sys.stderr)
         return 1
     md = RADICE / p.sorgente
-    if md.is_file() and hash_sceneggiatura(md) != p.hash_md:
+    if md.is_file() and impronta(md) != p.hash_md:
         print(f"  ⚠ {p.sorgente} è cambiata dopo il piano: le durate delle scene possono non valere più "
               "(rifai `broll piano`)", file=sys.stderr)
 
@@ -293,7 +293,7 @@ def cmd_rendi(args) -> int:
 
 
 def cmd_scrivi(args) -> int:
-    from .piano import PianoMancante, carica_piano, hash_sceneggiatura, salva
+    from .piano import PianoMancante, carica_piano, salva
     from tools.reel.clip import cartella as cartella_media
 
     from .scrivi import scrivi
@@ -314,7 +314,7 @@ def cmd_scrivi(args) -> int:
     if not scritte:
         print(f"-> niente da scrivere in {p.sorgente}")
         return 0
-    p.hash_md = hash_sceneggiatura(md)          # il piano resta allineato al file che ha appena cambiato
+    p.hash_md = impronta(md)          # il piano resta allineato al file che ha appena cambiato
     salva(p)
     print(f"  scene {', '.join(str(n) for n in scritte)} → [broll] con la loro riga SCHERMO:")
     print(f"-> {p.sorgente}  (si torna indietro con `git checkout`)")

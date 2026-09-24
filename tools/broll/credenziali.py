@@ -12,8 +12,7 @@ from __future__ import annotations
 import os
 
 from tools.anim.config import Config, carica
-
-from tools.anim.config import RADICE
+from tools.reel.percorsi import da_env
 
 # fornitore -> (chiave principale, chiavi di riserva…)
 FORNITORI: dict[str, tuple[str, ...]] = {
@@ -32,30 +31,9 @@ def configurati(ruolo: str, cfg: Config | None = None) -> list[str]:
     return [f for f, r in RUOLI.items() if r == ruolo and chiavi(f, cfg)]
 
 
-def _da_env_file(nome: str) -> str | None:
-    """Legge una riga `NOME=valore` dal `.env` della radice. Nessuna dipendenza: il formato che serve
-    qui è una riga per chiave, come in `3d-models-ai/.env`."""
-    f = RADICE / ".env"
-    if not f.exists():
-        return None
-    try:
-        righe = f.read_text(encoding="utf-8").splitlines()
-    except OSError:
-        return None
-    for riga in righe:
-        riga = riga.strip()
-        if riga.startswith(f"{nome}=") and not riga.startswith("#"):
-            v = riga.split("=", 1)[1].strip().strip("'\"")
-            return v or None
-    return None
-
-
 def chiave(nome: str, cfg: Config | None = None) -> str | None:
     """Il valore di una chiave, o None. Non stamparlo: per mostrarlo usa `mascherata`."""
-    v = os.environ.get(nome)
-    if v:
-        return v
-    v = _da_env_file(nome)
+    v = da_env(nome)
     if v:
         return v
     cfg = cfg or carica()
@@ -78,7 +56,7 @@ def mascherata(v: str | None) -> str:
 def dove(nome: str) -> str:
     if os.environ.get(nome):
         return "ambiente"
-    if _da_env_file(nome):
+    if da_env(nome):
         return ".env"
     return "config.local.toml" if chiave(nome) else "—"
 

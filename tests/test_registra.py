@@ -12,6 +12,7 @@ from tools.reel import clip as clipmod
 from tools.reel import registra as reg
 from tools.reel.ffmpeg import ffprobe, trova_ffmpeg
 from tools.reel.parser import parse, parse_testo
+from tools.reel.percorsi import impronta
 
 MD = ("---\ntitolo: T\nslug: prova-registra\nformato: reel\nmessaggio_centrale: M\n---\n\n"
       "## Scena 1 [hook]\nTITOLO: T\nVOCE: L'IA scrive quello che ti aspetti?\nVOCE: Non è creativa.\nVOCE: Vuol dire ==probabile==.\n\n"
@@ -65,14 +66,14 @@ def test_timeline_rifiuta_report_non_pronto(tmp_path):
     (tmp_path / "report.json").write_text(json.dumps({**REPORT, "cartella": str(tmp_path)}), encoding="utf-8")
     tl, diag = reg.carica_timeline(r2, tmp_path, cfg)
     assert tl.reel == tmp_path / "reel-9x16.mp4" and len(diag) == 1 and "versione precedente" in diag[0].msg
-    (tmp_path / "report.json").write_text(json.dumps({**REPORT, "cartella": str(tmp_path), "hash_md": reg.hash_sceneggiatura(md)}))
+    (tmp_path / "report.json").write_text(json.dumps({**REPORT, "cartella": str(tmp_path), "hash_md": impronta(md)}))
     assert reg.carica_timeline(r2, tmp_path, cfg)[1] == []
     # dopo il montaggio con le clip vere report.json non è più --prova: vale la copia stabile report-prova.json
     (tmp_path / "report.json").write_text(json.dumps({**REPORT, "prova": False, "cartella": str(tmp_path)}))
     with pytest.raises(reg.ReportNonPronto):
         reg.carica_timeline(r2, tmp_path, cfg)
     (tmp_path / "reel-prova.mp4").write_bytes(b"")
-    (tmp_path / "report-prova.json").write_text(json.dumps({**REPORT, "cartella": str(tmp_path), "hash_md": reg.hash_sceneggiatura(md),
+    (tmp_path / "report-prova.json").write_text(json.dumps({**REPORT, "cartella": str(tmp_path), "hash_md": impronta(md),
                                                             "reel": {**REPORT["reel"], "file": "reel-prova.mp4"}}))
     tl, diag = reg.carica_timeline(r2, tmp_path, cfg)
     assert tl.reel.name == "reel-prova.mp4" and diag == []

@@ -163,6 +163,8 @@ class Reel:
 
 
 _INLINE = re.compile(r"\*\*(.+?)\*\*|\*(.+?)\*|==(.+?)==")
+RE_EVIDENZA = re.compile(r"==(.+?)==")
+RE_NUMERO = re.compile(r"^[+\-−]?[\d.,]+\s*(%|°|€|\$|x|×)?$", re.IGNORECASE)   # «42», «+32 %», «0,53 €»
 
 
 def testo_piano(testo: str) -> str:
@@ -175,7 +177,7 @@ def conta_parole(testo: str) -> int:
 
 
 def evidenziate(testo: str) -> list[str]:
-    return re.findall(r"==(.+?)==", testo)
+    return RE_EVIDENZA.findall(testo)
 
 
 _EMOJI = re.compile("[\U0001F300-\U0001FAFF\U00002600-\U000027BF\U0001F1E6-\U0001F1FF]")

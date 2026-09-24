@@ -172,6 +172,14 @@ def _filtri_raccordo(fasi: list, cfg: Config, ingresso: int, sfondo: int, uscita
     ]
 
 
+def _codifica(anteprima: bool, profilo_alto: bool = False) -> list[str]:
+    """H.264 + AAC stereo 48 kHz (alcuni lettori non riproducono l'audio mono), veloce in anteprima."""
+    video = (["-preset", "ultrafast", "-crf", "28"] if anteprima
+             else ["-preset", "medium", "-crf", "18"] + (["-profile:v", "high"] if profilo_alto else []))
+    return ["-c:v", "libx264", *video, "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "128k", "-ar", "48000", "-ac", "2",
+            "-movflags", "+faststart"]
+
+
 def comando_scena(src: Sorgenti, dest: Path, cfg: Config | None = None, anteprima: bool = False) -> list[str]:
     """Costruisce il comando ffmpeg (senza eseguirlo) per una scena."""
     cfg = cfg or carica()
@@ -281,14 +289,7 @@ def comando_scena(src: Sorgenti, dest: Path, cfg: Config | None = None, anteprim
 
     cmd = [ff, "-y", "-loglevel", "error", *inputs, "-filter_complex", ";".join(filtri), "-map", "[v]", "-map", "[a]",
            "-t", f"{src.durata_s:.3f}", "-r", str(fps)]
-    if anteprima:
-        cmd += ["-c:v", "libx264", "-preset", "ultrafast", "-crf", "28"]
-    else:
-        cmd += ["-c:v", "libx264", "-preset", "medium", "-crf", "18", "-profile:v", "high"]
-    # audio sempre stereo: la voce sintetica e molte clip sono mono, e alcuni lettori non riproducono l'audio mono
-    cmd += ["-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "128k", "-ar", "48000", "-ac", "2", "-movflags", "+faststart",
-            str(dest)]
-    return cmd
+    return cmd + _codifica(anteprima, profilo_alto=True) + [str(dest)]
 
 
 def componi_scena(src: Sorgenti, dest: Path, cfg: Config | None = None, anteprima: bool = False) -> Path:
@@ -339,10 +340,7 @@ def comando_concat(scene: list[tuple[Path, float]], dest: Path, transizione: str
         filtri.append(f"{seg}concat=n={len(scene)}:v=1:a=1[v][a]")
         mappa = ["-map", "[v]", "-map", "[a]"]
     cmd = [ff, "-y", "-loglevel", "error", *inputs, "-filter_complex", ";".join(filtri), *mappa, "-r", str(cfg.fps)]
-    cmd += ["-c:v", "libx264", "-preset", "ultrafast" if anteprima else "medium", "-crf", "28" if anteprima else "18",
-            "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "128k", "-ar", "48000", "-ac", "2", "-movflags", "+faststart",
-            str(dest)]
-    return cmd
+    return cmd + _codifica(anteprima) + [str(dest)]
 
 
 def durata_concat(scene: list[tuple[Path, float]], transizione: str, durata_trans_s: float,

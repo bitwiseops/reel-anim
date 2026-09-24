@@ -22,10 +22,10 @@ from manim import (BOLD, DOWN, LEFT, ORIGIN, RIGHT, UL, UP, AnimationGroup, Arro
 from manim import Circle, Code, SVGMobject, Succession, ValueTracker, linear, rush_from
 from manim.constants import CapStyleType, LineJointType
 
+from ..reel.model import RE_EVIDENZA, testo_piano
 from .config import RADICE, Config, carica
 from .misure import CORPO_PX, font_size_per, px, tratto
 
-_RE_EV = re.compile(r"==(.+?)==")
 _RE_B = re.compile(r"\*\*(.+?)\*\*")
 _RE_I = re.compile(r"\*(.+?)\*")
 _RE_SPAZI = re.compile(r"\s")
@@ -40,14 +40,10 @@ def markup(testo: str, accento: str | None = None) -> str:
     """Da inline della sceneggiatura (==evidenzia==, **grassetto**, *corsivo*) a Pango markup."""
     acc = accento or _cfg().palette.accento
     s = html.escape(testo, quote=False)
-    s = _RE_EV.sub(lambda m: f'<span foreground="{acc}">{m.group(1)}</span>', s)
+    s = RE_EVIDENZA.sub(lambda m: f'<span foreground="{acc}">{m.group(1)}</span>', s)
     s = _RE_B.sub(r"<b>\1</b>", s)
     s = _RE_I.sub(r"<i>\1</i>", s)
     return s
-
-
-def piano(testo: str) -> str:
-    return _RE_I.sub(r"\1", _RE_B.sub(r"\1", _RE_EV.sub(r"\1", testo)))
 
 
 def _font_kw(ruolo: str, peso: str | None = None, mono: bool = False) -> dict:
@@ -91,7 +87,7 @@ class Riga(VGroup):
 
     def __init__(self, s: str, colore: str, kw: dict, **kwargs):
         super().__init__(**kwargs)
-        self.piano = piano(s)
+        self.piano = testo_piano(s)
         m = MarkupText("Hg" + markup(s), color=colore, disable_ligatures=True, **kw)
         self.allineata = len(m.submobjects) == len(_RE_SPAZI.sub("", self.piano)) + 2
         if self.allineata:
@@ -716,7 +712,7 @@ class Codice(VGroup):
         return Create(self.riquadro, **kw)
 
 
-__all__ = ["testo", "markup", "piano", "avvolgi", "tratto", "etichetta", "Riga", "Blocco", "Titolo", "Didascalia",
+__all__ = ["testo", "markup", "avvolgi", "tratto", "etichetta", "Riga", "Blocco", "Titolo", "Didascalia",
            "Sagome", "Fila", "Spunta", "Croce", "Indice", "Lente", "PrimaDopo", "Etichetta", "Barrato",
            "Freccia", "Carta", "Barra", "Classifica", "Token", "Frase", "Lista", "Contatore", "Evidenzia", "CorniceSchermo",
            "Piede", "Messaggio", "Punch", "Icona", "ContatoreScorre", "Codice", "FadeIn", "FadeOut", "FadeTransform", "Indicate", "LaggedStart", "AnimationGroup",

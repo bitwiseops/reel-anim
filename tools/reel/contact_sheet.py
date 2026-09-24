@@ -3,19 +3,11 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw
 
-from ..anim.config import RADICE
+from .ffmpeg import font_etichette
 from .model import Diagnostica
 
-FONT = RADICE / "assets" / "fonts" / "InterVariable.ttf"
-
-
-def _font(size: int):
-    try:
-        return ImageFont.truetype(str(FONT), size)
-    except OSError:
-        return ImageFont.load_default()
 
 
 def genera(elementi: list[dict], diagnostiche: list[Diagnostica], dest: Path, colonne: int = 3,
@@ -29,7 +21,7 @@ def genera(elementi: list[dict], diagnostiche: list[Diagnostica], dest: Path, co
     H = margine * 2 + righe * (h_cella + testa + gap) + h_diag
     img = Image.new("RGB", (W, H), (246, 243, 238))
     d = ImageDraw.Draw(img)
-    f_et, f_diag = _font(26), _font(24)
+    f_et, f_diag = font_etichette(26), font_etichette(24)
     for k, e in enumerate(elementi):
         r, c = divmod(k, colonne)
         x = margine + c * (larghezza_cella + gap)

@@ -13,7 +13,6 @@ La logica è pura; le chiamate stanno in `Poe` e `chiama_claude`, che i test sos
 from __future__ import annotations
 
 import hashlib
-import os
 import re
 import tempfile
 from pathlib import Path
@@ -22,6 +21,8 @@ from typing import Callable, NamedTuple
 import yaml
 
 from .model import conta_parole
+from .parser import riga_sotto_stato, sezione
+from .percorsi import da_env
 from .validate import LIMITI, due_punti_snodo, frasi_di, frasi_titolo, schema_si_no
 
 from ..anim.config import RADICE
@@ -69,20 +70,12 @@ class Esito(NamedTuple):
 
 # --- l'idea ------------------------------------------------------------------------------------------------
 
-def _sezione(testo: str, titolo: str) -> str | None:
-    m = re.search(rf"^## {re.escape(titolo)}\s*$", testo, re.M)
-    if not m:
-        return None
-    fine = re.search(r"^## ", testo[m.end():], re.M)
-    return (testo[m.end():m.end() + fine.start()] if fine else testo[m.end():]).strip()
-
-
 def leggi_idea(testo: str) -> Idea:
     """Tema (il titolo `# …`), `## Messaggio centrale` e `## Tappe del parlato`: una riga numerata per scena
     (`N. (apertura | filmato: … | animazione | chiusura) i fatti`), anche su più righe."""
     tema = re.search(r"^# (.+)$", testo, re.M)
-    messaggio = _sezione(testo, "Messaggio centrale")
-    blocco = _sezione(testo, "Tappe del parlato")
+    messaggio = sezione(testo, "Messaggio centrale")
+    blocco = sezione(testo, "Tappe del parlato")
     if blocco is None:
         raise ErroreCopione("l'idea non ha «## Tappe del parlato»: la scrive l'ideatore, una riga numerata per scena")
     tappe: list[Tappa] = []
@@ -105,14 +98,8 @@ def leggi_idea(testo: str) -> Idea:
 
 
 def riga_copione(testo_idea: str, percorso: str) -> str:
-    """L'idea con `**Copione:** <percorso>` sotto `**Stato:**` (aggiornata se c'è già) e lo stato `idea` → `copione`."""
-    riga = f"**Copione:** {percorso}"
-    if re.search(r"^\*\*Copione:\*\*.*$", testo_idea, re.M):
-        testo_idea = re.sub(r"^\*\*Copione:\*\*.*$", lambda _: riga, testo_idea, count=1, flags=re.M)
-    elif re.search(r"^\*\*Stato:\*\*.*$", testo_idea, re.M):
-        testo_idea = re.sub(r"^(\*\*Stato:\*\*.*)$", lambda m: f"{m.group(1)}\n{riga}", testo_idea, count=1, flags=re.M)
-    else:
-        raise ErroreCopione("l'idea non ha la riga «**Stato:**» sotto cui scrivere «**Copione:**»")
+    """L'idea con `**Copione:** <percorso>` sotto `**Stato:**`, e lo stato `idea` → `copione`."""
+    testo_idea = riga_sotto_stato(testo_idea, "Copione", percorso, ErroreCopione)
     return re.sub(r"^\*\*Stato:\*\*\s*idea\s*$", "**Stato:** copione", testo_idea, count=1, flags=re.M)
 
 
@@ -314,16 +301,7 @@ def leggi_copione(testo: str) -> dict[int, str]:
 # --- chiamate ----------------------------------------------------------------------------------------------
 
 def chiave_poe() -> str | None:
-    """`POE_API_KEY` dall'ambiente, poi da `.env` nella radice (gitignored), una riga `NOME=valore`."""
-    if os.environ.get("POE_API_KEY"):
-        return os.environ["POE_API_KEY"]
-    env = RADICE / ".env"
-    if env.is_file():
-        for riga in env.read_text(encoding="utf-8").splitlines():
-            nome, _, valore = riga.strip().removeprefix("export ").partition("=")
-            if nome.strip() == "POE_API_KEY" and valore.strip():
-                return valore.strip().strip("\"'")
-    return None
+    return da_env("POE_API_KEY")
 
 
 class Poe:

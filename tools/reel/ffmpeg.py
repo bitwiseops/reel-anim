@@ -65,7 +65,7 @@ def ffprobe(path: Path) -> dict:
             "fotogrammi": int(video["nb_frames"]) if str(video.get("nb_frames", "")).isdigit() else None}
 
 
-def _font(size: int):
+def font_etichette(size: int):
     try:
         return ImageFont.truetype(str(RADICE / "assets" / "fonts" / "InterVariable.ttf"), size)
     except OSError:
@@ -107,7 +107,7 @@ def filmstrip(video: Path, tempi_s: list[float], dest: Path, larghezza: int = 30
     W = colonne * larghezza + (colonne - 1) * gap
     out = Image.new("RGB", (W, righe * (h + testa) + (righe - 1) * gap), (246, 243, 238))
     d = ImageDraw.Draw(out)
-    f = _font(22)
+    f = font_etichette(22)
     for k, (im, t) in enumerate(zip(imgs, tempi_s)):
         x, y = (k % colonne) * (larghezza + gap), (k // colonne) * (h + testa + gap)
         out.paste(im, (x, y + testa))

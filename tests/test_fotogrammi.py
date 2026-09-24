@@ -7,7 +7,8 @@ import pytest
 from PIL import Image
 
 from tools.reel.ffmpeg import trova_ffmpeg
-from tools.reel.fotogrammi import strisce_fitte, tempi_dal_report, tempi_fitti, video_scena
+from tools.reel.fotogrammi import strisce_fitte, tempi_fitti, video_scena
+from tools.reel.percorsi import elementi_del_report as tempi_dal_report
 
 
 def test_tempi_fitti_finestra_attorno_a_ogni_beat():
@@ -32,7 +33,7 @@ def test_tempi_dal_report_e_ripiego_sul_report_di_prova(tmp_path):
     (tmp_path / "report-prova.json").write_text(json.dumps({"elementi": elementi}), encoding="utf-8")
     t = tempi_dal_report(tmp_path)
     assert {n: (v["durata_s"], v["inizi_frasi_s"]) for n, v in t.items()} == {1: (6.3, [0.0, 4.8]), 2: (3.0, [])}
-    assert t[1]["clip_vera"] is None and t[1]["caption"] == []          # report vecchio: `strisce` nel dubbio copre
+    assert t[1].get("clip_vera") is None and t[1]["caption"] == []          # report vecchio: `strisce` nel dubbio copre
     (tmp_path / "report.json").write_text(json.dumps({"elementi": elementi[:1]}), encoding="utf-8")
     assert list(tempi_dal_report(tmp_path)) == [1]                      # report.json, se c'è, vince
 

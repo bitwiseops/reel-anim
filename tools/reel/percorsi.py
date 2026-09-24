@@ -50,3 +50,41 @@ def relativo(p: Path, base: Path = RADICE) -> str:
         return str(p.relative_to(base))
     except ValueError:
         return str(p)
+
+
+def da_env(nome: str) -> str | None:
+    """Una chiave dall'ambiente, poi dal `.env` della radice (gitignored): righe `NOME=valore`, anche con `export `."""
+    import os
+    if os.environ.get(nome):
+        return os.environ[nome]
+    env = RADICE / ".env"
+    if not env.is_file():
+        return None
+    for riga in env.read_text(encoding="utf-8").splitlines():
+        riga = riga.strip()
+        if riga.startswith("#"):
+            continue
+        k, _, v = riga.removeprefix("export ").partition("=")
+        if k.strip() == nome and v.strip().strip("'\""):
+            return v.strip().strip("'\"")
+    return None
+
+
+def impronta(p: Path) -> str:
+    """Sha256 corto del contenuto: dice se una sceneggiatura o un file delle animazioni è cambiato."""
+    import hashlib
+    return hashlib.sha256(p.read_bytes()).hexdigest()[:16]
+
+
+def elementi_del_report(cartella: Path) -> dict[int, dict]:
+    """Gli elementi per scena dell'ultimo montaggio (report.json, poi report-prova.json); {} se non ce n'è uno."""
+    import json
+    for nome in ("report.json", "report-prova.json"):
+        try:
+            elementi = json.loads((cartella / nome).read_text(encoding="utf-8")).get("elementi", [])
+        except (OSError, ValueError):
+            continue
+        return {int(e["scena"]): {**e, "durata_s": float(e["durata_s"]), "inizi_frasi_s": list(e.get("inizi_frasi_s") or []),
+                                  "caption": e.get("caption") or []}
+                for e in elementi if e.get("scena") is not None and e.get("durata_s")}
+    return {}
