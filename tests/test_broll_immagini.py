@@ -4,7 +4,7 @@ import pytest
 
 from tools.anim.config import carica
 
-from broll.immagini import (DURATA_MIN_S, MARGINE_S, TENUTA_MIN_S, ImmaginiMancanti, comando,
+from tools.broll.immagini import (DURATA_MIN_S, MARGINE_S, TENUTA_MIN_S, ImmaginiMancanti, comando,
                             componi, dissolvenza_s, dividi_per_immagini, finestre, montaggio, mossa, transizioni)
 
 

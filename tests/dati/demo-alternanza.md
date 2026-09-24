@@ -17,11 +17,11 @@ Non è un reel da pubblicare: è il banco di prova di `broll piano → cerca →
 Sui reel veri il piano dà — correttamente — zero scene a filmato, perché ogni scena ha qualcosa da
 disegnare. Qui le scene 2 e 4 non nominano meccanismi, quantità né figure della libreria: sono scene
 d'attenzione, e il piano le propone a filmato.
-  uv run --project broll broll piano broll/esempi/demo-alternanza.md
+  uv run broll piano tests/dati/demo-alternanza.md
 
 Il file è versionato **dopo** `broll scrivi`: le scene 2 e 4 sono già [broll] con la loro riga SCHERMO:, che è lo
 stato da cui parte l'animatore. I filmati non sono in git (contenuti/media/ è ignorata): su una copia nuova
-`uv run --project broll broll rendi demo-alternanza` li riscarica e li rifà da contenuti/broll/demo-alternanza/piano.json.
+`uv run broll rendi demo-alternanza` li riscarica e li rifà da contenuti/broll/demo-alternanza/piano.json.
 Per rifare il giro da capo: riporta le due scene a [spiegazione], togli le righe SCHERMO: e lancia `broll piano --da-capo`.
 -->
 

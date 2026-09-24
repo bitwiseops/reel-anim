@@ -13,8 +13,7 @@ dependencies = [
 
 [project.scripts]
 reel = "tools.reel.__main__:main"
-cruscotto = "tools.cruscotto.server:main"
-pubblica = "tools.pubblica:main"
+broll = "tools.broll.__main__:main"
 
 [dependency-groups]
 dev = ["pytest>=8"]
@@ -28,5 +27,5 @@ packages = ["tools"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-markers = ["slow: test lenti con Manim e ffmpeg"]
+markers = ["slow: test lenti con Manim o ffmpeg"]
 filterwarnings = ["ignore::DeprecationWarning:sounddevice"]   # rumore interno di sounddevice con numpy 2

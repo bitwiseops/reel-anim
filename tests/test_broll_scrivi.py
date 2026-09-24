@@ -1,7 +1,9 @@
 from __future__ import annotations
 
-from broll.piano import Piano, ScenaBroll, eredita
-from broll.scrivi import applica
+from pathlib import Path
+
+from tools.broll.piano import Piano, ScenaBroll, eredita
+from tools.broll.scrivi import applica
 
 MD = """---
 slug: x
@@ -126,8 +128,7 @@ def test_senza_presto_una_scena_non_resa_resta_com_e(tmp_path):
 
 def _sceneggiatura(tmp_path):
     """Il banco di prova del sottosistema riportato a prima di `scrivi`, con uno slug che non ha media."""
-    from broll.piano import RADICE
-    testo = (RADICE / "broll" / "esempi" / "demo-alternanza.md").read_text(encoding="utf-8")
+    testo = (Path(__file__).parent / "dati" / "demo-alternanza.md").read_text(encoding="utf-8")
     testo = testo.replace("slug: demo-alternanza", "slug: prova-presto-senza-media")
     for n in (2, 4):
         testo = testo.replace(f"## Scena {n} [broll]\nSCHERMO: broll-scena-{n:02d}.mp4\n", f"## Scena {n} [spiegazione]\n")
@@ -138,7 +139,7 @@ def _sceneggiatura(tmp_path):
 
 def test_scrivi_presto_salva_e_la_sceneggiatura_regge_valida(tmp_path):
     """Il file che manca è un avviso di `valida`, non un errore: la ri-validazione passa e il `.md` si salva."""
-    from broll.scrivi import scrivi
+    from tools.broll.scrivi import scrivi
     from tools.reel.parser import parse
     from tools.reel.validate import check
     md, prima = _sceneggiatura(tmp_path)
@@ -156,7 +157,7 @@ def test_scrivi_presto_salva_e_la_sceneggiatura_regge_valida(tmp_path):
 
 
 def test_scrivi_presto_non_salva_se_il_risultato_non_passa_valida(tmp_path):
-    from broll.scrivi import scrivi
+    from tools.broll.scrivi import scrivi
     md, prima = _sceneggiatura(tmp_path)
     prima = prima.replace("## Scena 2 [spiegazione]\n", "## Scena 2 [spiegazione]\nRIQUADRO: pieno\n")   # [broll] + pieno: errore
     md.write_text(prima, encoding="utf-8")
@@ -168,8 +169,8 @@ def test_scrivi_presto_non_salva_se_il_risultato_non_passa_valida(tmp_path):
 
 def test_piano_rifatto_dopo_presto_rispetta_le_scene_e_non_perde_le_query(tmp_path):
     """Dopo `scrivi --presto` le scene sono [broll] nel `.md`: `broll piano` le tiene a filmato ed eredita query e candidati."""
-    from broll.piano import da_sceneggiatura
-    from broll.scrivi import scrivi
+    from tools.broll.piano import da_sceneggiatura
+    from tools.broll.scrivi import scrivi
     md, _ = _sceneggiatura(tmp_path)
     vecchio, _ = da_sceneggiatura(md)
     a_filmato = [s.n for s in vecchio.scene if s.registro == "filmato"]

@@ -6,8 +6,8 @@ import json
 import pytest
 import requests
 
-from broll.fornitori import FornitoreNonConfigurato, RichiestaFallita
-from broll.fornitori import meshy
+from tools.broll.fornitori import FornitoreNonConfigurato, RichiestaFallita
+from tools.broll.fornitori import meshy
 
 
 class _Risposta:

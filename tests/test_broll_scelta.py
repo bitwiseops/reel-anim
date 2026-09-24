@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import pytest
 
-from broll.crediti import testo as crediti
-from broll.piano import Piano, ScenaBroll
-from broll.scelta import TAGLIO_MIN_S, SceltaNonValida, ancora, confini, controlla_scelta, scegli
+from tools.broll.crediti import testo as crediti
+from tools.broll.piano import Piano, ScenaBroll
+from tools.broll.scelta import TAGLIO_MIN_S, SceltaNonValida, ancora, confini, controlla_scelta, scegli
 
 
 def _candidato(id_: str, durata_s: float = 20.0, larghezza: int = 1080, altezza: int = 1920, **altro) -> dict:

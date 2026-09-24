@@ -8,11 +8,11 @@ from pathlib import Path
 
 import pytest
 
-from broll import crediti
-from broll.genera import PromptMancante, genera_scena, prompt_da_brief, soggetto
-from broll.piano import Piano, ScenaBroll
-from broll.rendi import ResaFallita, file_immagini, rendi_scena
-from broll.scelta import controlla_scelta
+from tools.broll import crediti
+from tools.broll.genera import PromptMancante, genera_scena, prompt_da_brief, soggetto
+from tools.broll.piano import Piano, ScenaBroll
+from tools.broll.rendi import ResaFallita, file_immagini, rendi_scena
+from tools.broll.scelta import controlla_scelta
 from tools.reel.ffmpeg import ffprobe, trova_ffmpeg
 
 
@@ -107,7 +107,7 @@ def test_meno_immagini_che_frasi_avvisa(tmp_path):
 
 def test_il_piano_sopravvive_a_un_giro_di_broll_piano(tmp_path):
     """`broll piano` rifatto non deve buttare immagini che sono costate."""
-    from broll.piano import eredita
+    from tools.broll.piano import eredita
 
     vecchia = _scena()
     genera_scena(vecchia, ["uno", "due"], genera=_finto(tmp_path, []))
@@ -196,8 +196,8 @@ def test_fra_un_immagine_e_l_altra_c_e_davvero_una_dissolvenza(tmp_path, monkeyp
     transizioni «wow» di config ([transizioni] immagini) non mescolano il pixel centrale, lo spostano."""
     from PIL import Image
 
-    from broll import immagini
-    from broll.immagini import dissolvenza_s, finestre
+    from tools.broll import immagini
+    from tools.broll.immagini import dissolvenza_s, finestre
     from tools.reel.ffmpeg import estrai_fotogramma
 
     monkeypatch.setattr(immagini, "transizioni", lambda cfg: ("fade",))

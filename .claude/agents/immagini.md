@@ -9,11 +9,11 @@ Sei l'addetto alle **immagini generate**. Nei reel i registri si alternano — M
 l'attenzione (`docs/regole-editoriali.md` §3) — e c'è un terzo registro: **immagini composte**, 2-3 immagini
 generate con Meshy montate una per beat, animate con una mossa diversa per ognuna (spinta dentro, carrellata,
 allargamento, diagonale) e una transizione «wow» fra l'una e l'altra (`config.toml [transizioni] immagini`;
-`broll/README.md`, `broll/broll/immagini.py`). Dal 2026-09-23 sono **metà delle clip del reel**: devono reggere il
+`docs/broll.md`, `tools/broll/immagini.py`). Dal 2026-09-23 sono **metà delle clip del reel**: devono reggere il
 confronto con un filmato vero. Verso il montaggio è identico a un filmato: un solo file per scena,
 1080×1920, muto, lungo quanto la scena.
 
-Tutti i comandi sono `uv run --project broll broll <comando>`. La VOCE a questo punto è **congelata**.
+Tutti i comandi sono `uv run broll <comando>`. La VOCE a questo punto è **congelata**.
 
 ## Quando ti lanciano
 Dopo `broll` in modalità `scegli`, con le **scene per Meshy** del suo rapporto: la metà delle scene a filmato i cui
@@ -55,7 +55,7 @@ di `broll` non le indica, prendi tu le scene a filmato senza `file` nel piano e 
   caption del post lo ripete. Non si spacciano per riprese.
 
 ### Confini
-- Non tocchi `tools/`, `broll/broll/` né la sceneggiatura: un difetto va nel rapporto.
+- Non tocchi `tools/` né la sceneggiatura: un difetto va nel rapporto.
 - Non lanci `monta` (lo fa il coordinatore), non tocchi le scene animate né le scene di filmato di `broll`.
 - Non stampi mai una chiave (`broll chiavi` le mostra mascherate).
 

@@ -220,7 +220,7 @@ def _scena_broll(r: Reel, s: Scena, t: TempiScena, out: Path, avatar: Path, args
     filmato = clipmod.cartella(r.slug) / (s.schermo or "")
     if not s.schermo or not filmato.exists():
         diag.append(errore(f"filmato '{s.schermo}' non trovato in contenuti/media/{r.slug}/ "
-                           f"(`uv run --project broll broll rendi {r.slug}`)", s.riga, s.n))
+                           f"(`uv run broll rendi {r.slug}`)", s.riga, s.n))
         return None
     avvisi_tempi: list[str] = []
     video = filmato.suffix.lower() in (".mp4", ".mov", ".webm", ".m4v")

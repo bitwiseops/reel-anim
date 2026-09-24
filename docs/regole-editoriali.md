@@ -44,7 +44,7 @@ si alternano fra scene senza mai stare insieme.
   colpisce e che serve al racconto: schede e circuiti da vicino, ventole, server che lampeggiano, schermi, macchine
   in movimento. L'unico volto del reel è il presentatore.
 - Perché: Manim spiega, la clip tiene l'attenzione; cinque scene animate di fila stancano.
-- Dettaglio: `docs/sceneggiatura.md` §2 · `broll/README.md` · `valida` e `broll piano` avvisano anche sui *troppo pochi*.
+- Dettaglio: `docs/sceneggiatura.md` §2 · `docs/broll.md` · `valida` e `broll piano` avvisano anche sui *troppo pochi*.
 
 ## 4. Apertura e chiusura sono il presentatore, a tutto schermo (2026-09-21)
 I due estremi del reel sono lui a tutta tela che guarda in camera (`RIQUADRO: pieno`, default di `hook` e `chiusura`),

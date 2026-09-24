@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from broll.query import _parole, query_scena
+from tools.broll.query import _parole, query_scena
 from tools.reel.model import Scena
 
 

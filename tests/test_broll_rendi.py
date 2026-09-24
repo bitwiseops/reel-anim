@@ -4,9 +4,9 @@ import subprocess
 
 import pytest
 
-from broll.fornitori import Candidato
-from broll.piano import ScenaBroll
-from broll.rendi import ResaFallita, fotogrammi, rendi_scena
+from tools.broll.fornitori import Candidato
+from tools.broll.piano import ScenaBroll
+from tools.broll.rendi import ResaFallita, fotogrammi, rendi_scena
 from tools.reel.ffmpeg import ffprobe, trova_ffmpeg
 
 

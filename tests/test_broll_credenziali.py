@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from broll.credenziali import chiave, chiavi, dove, mascherata
+from tools.broll.credenziali import chiave, chiavi, dove, mascherata
 
 FINTA = "msy-" + "x" * 15          # finta, lunga 19: non è una chiave, serve solo a contare i caratteri
 
@@ -14,7 +14,7 @@ def test_mascherata_non_rivela_la_chiave():
 
 
 def test_ambiente_ha_la_precedenza_sul_file(tmp_path, monkeypatch):
-    import broll.credenziali as mod
+    import tools.broll.credenziali as mod
 
     monkeypatch.setattr(mod, "RADICE", tmp_path)
     (tmp_path / ".env").write_text("MESHY_API_KEY=dal-file\n", encoding="utf-8")
@@ -24,7 +24,7 @@ def test_ambiente_ha_la_precedenza_sul_file(tmp_path, monkeypatch):
 
 
 def test_ripiego_sul_file_env(tmp_path, monkeypatch):
-    import broll.credenziali as mod
+    import tools.broll.credenziali as mod
 
     monkeypatch.setattr(mod, "RADICE", tmp_path)
     monkeypatch.delenv("MESHY_API_KEY", raising=False)
@@ -34,7 +34,7 @@ def test_ripiego_sul_file_env(tmp_path, monkeypatch):
 
 
 def test_chiave_assente(tmp_path, monkeypatch):
-    import broll.credenziali as mod
+    import tools.broll.credenziali as mod
 
     monkeypatch.setattr(mod, "RADICE", tmp_path)
     monkeypatch.delenv("PEXELS_API_KEY", raising=False)
@@ -44,7 +44,7 @@ def test_chiave_assente(tmp_path, monkeypatch):
 
 def test_riserva_dopo_la_principale(tmp_path, monkeypatch):
     """Come `meshy_api_keys()` in 3d-models-ai: la riserva entra quando la prima esaurisce i crediti."""
-    import broll.credenziali as mod
+    import tools.broll.credenziali as mod
 
     monkeypatch.setattr(mod, "RADICE", tmp_path)
     monkeypatch.setenv("MESHY_API_KEY", "prima")
@@ -54,8 +54,8 @@ def test_riserva_dopo_la_principale(tmp_path, monkeypatch):
 
 def test_pixabay_e_un_di_piu_non_un_requisito(tmp_path, monkeypatch):
     """Serve almeno un fornitore di ricerca, non tutti: con Pexels si cerca anche senza Pixabay."""
-    import broll.credenziali as mod
-    from broll.credenziali import configurati
+    import tools.broll.credenziali as mod
+    from tools.broll.credenziali import configurati
 
     monkeypatch.setattr(mod, "RADICE", tmp_path)
     for n in ("PEXELS_API_KEY", "PIXABAY_API_KEY", "MESHY_API_KEY", "MESHY_API_KEY_FALLBACK"):

@@ -171,7 +171,7 @@ if (an.bloccato || an.stato !== 'animato') return ferma('animazione', an)
 
 // T3b: il montaggio con i filmati veri, poi un paio d'occhi per scena sui passaggi a 8 fps.
 phase('Fotogrammi')
-const MONTA = `Esegui \`uv run --project broll broll piano ${file}\` e, se una scena è tornata a «scelto», \`uv run --project broll broll rendi <slug>\`; ` +
+const MONTA = `Esegui \`uv run broll piano ${file}\` e, se una scena è tornata a «scelto», \`uv run broll rendi <slug>\`; ` +
   `poi \`uv run reel monta ${file} --prova --anteprima\`. Non modificare nessun file a mano. errori/avvisi = i conteggi del montaggio ` +
   `(da contenuti/render/<slug>/report.json), motivo = durata del reel e righe di errore, bloccato = true se il montaggio fallisce. stato = "animato", file = ${file}.`
 let mt = await tappa('Fotogrammi', MONTA, 'general-purpose', COMANDO)

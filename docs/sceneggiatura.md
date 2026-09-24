@@ -112,7 +112,7 @@ riquadro sopra una clip che richiamava il problema). La grammatica lo accetta an
 ma non è più lo standard e `broll piano` non propone più l'hook.
 
 Non si scrive `[broll]` a mano (né `SCHERMO:` nell'hook): lo sceneggiatore scrive la scena come `[spiegazione]` con un brief che descrive
-un'immagine filmabile; il sottosistema `broll` (`broll/README.md`) propone quali scene vanno a filmato, il
+un'immagine filmabile; il sottosistema `broll` (`docs/broll.md`) propone quali scene vanno a filmato, il
 presentatore sceglie dai provini, e `broll scrivi` cambia il tipo e aggiunge `SCHERMO:` **quando il file esiste già**.
 Con `broll scrivi --presto` le scene si marcano subito dopo `broll piano`, prima che il filmato sia scelto e reso:
 l'animatore parte intanto sulle altre scene (`reel anima` salta quelle a filmato) mentre si scelgono i filmati. Finché

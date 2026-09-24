@@ -30,9 +30,9 @@ Piano completo: `~/.claude/plans/dobbiamo-revisionare-il-modello-lovely-piglet.m
   `__main__` (CLI `uv run reel`)
 - `broll/` — sottosistema del materiale esterno (filmati che si alternano alle animazioni): **progetto `uv`
   a sé**, con proprio `pyproject.toml`, `uv.lock` e `.venv`, così le sue dipendenze non entrano mai in quelle
-  della radice. `uv run --project broll broll piano|stato|cerca|provini|genera|scegli|rendi|scrivi|prova-inquadratura` (`broll/README.md`):
+  della radice. `uv run broll piano|stato|cerca|provini|genera|scegli|rendi|scrivi|prova-inquadratura` (`docs/broll.md`):
   dal piano a `contenuti/media/<slug>/broll-scena-NN.mp4`, poi `scrivi` mette nel `.md` il tipo `[broll]` che `reel monta` legge;
-  banco di prova `broll/esempi/demo-alternanza.md`
+  banco di prova `tests/dati/demo-alternanza.md`
 - `contenuti/` — `spunti/` (link, righe o tema: il punto di partenza, `stato: spunto → ideato`), `idee/`,
   `copioni/` (il parlato scritto dal modello, `<idea>.md` + il prompt accanto), `sceneggiature/`, `bozze/ in-produzione/ pubblicati/ db/`, `archivio/<slug>/` (reel chiusi o abbandonati: si
   leggono, non girano), `animazioni/<slug>.py` (una classe

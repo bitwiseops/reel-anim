@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 
-from broll.piano import RADICE, Piano, ScenaBroll, _proponi, controlla, da_sceneggiatura, salva
+from tools.broll.piano import RADICE, Piano, ScenaBroll, _proponi, controlla, da_sceneggiatura, salva
 from tools.reel.model import Scena
 
 ESEMPIO = RADICE / "templates" / "esempio-reel.md"
@@ -72,7 +72,7 @@ def test_da_sceneggiatura_sull_esempio_del_repo():
 
 
 def test_giro_completo_su_disco(tmp_path, monkeypatch):
-    import broll.piano as mod
+    import tools.broll.piano as mod
 
     monkeypatch.setattr(mod, "RADICE", tmp_path)
     p = Piano(slug="prova", sorgente="x.md", hash_md="abc", scene=[
@@ -88,7 +88,7 @@ def test_giro_completo_su_disco(tmp_path, monkeypatch):
 
 
 def test_tecnica_riconosce_cosa_va_disegnato():
-    from broll.piano import _tecnica
+    from tools.broll.piano import _tecnica
 
     # un meccanismo, una figura della libreria, una quantità: si spiega disegnando
     assert _tecnica(Scena(n=2, tipo="spiegazione", voce=["Il modello sceglie la parola più probabile."]))
@@ -112,7 +112,7 @@ def test_proponi_lascia_animate_le_scene_tecniche():
 def test_marcatori_non_scattano_per_sottostringa():
     """«accento» non è «cento» e «barrata» non è «barra»: i brief di questo repo dicono l'una e l'altra
     a ogni riga, e senza confini di parola ogni scena risultava tecnica."""
-    from broll.piano import _marcatori
+    from tools.broll.piano import _marcatori
 
     s = Scena(n=2, tipo="spiegazione",
               animazione=["«Creativa» viene barrata; sotto compare la parola in accento."],
@@ -122,7 +122,7 @@ def test_marcatori_non_scattano_per_sottostringa():
 
 def test_i_tempi_dei_brief_non_sono_quantita():
     """«entro 0,5 s» è regia, non un numero da mostrare; «10 su 10» sì."""
-    from broll.piano import _marcatori
+    from tools.broll.piano import _marcatori
 
     regia = Scena(n=2, tipo="spiegazione", animazione=["Il titolo sale entro 0,5 s e tiene ~1 s."])
     quantita = Scena(n=3, tipo="spiegazione", animazione=["Sotto, l'etichetta «10 su 10»."])
@@ -149,7 +149,7 @@ def test_una_quantita_a_lettere_nel_brief_non_rende_tecnica_la_scena():
 def test_le_durate_del_report_valgono_solo_per_la_stessa_voce(tmp_path, monkeypatch):
     """Dopo una ristrutturazione la «scena 3» del montaggio di prima è un'altra scena (2026-09-21)."""
     import json as _json
-    import broll.piano as piano
+    import tools.broll.piano as piano
     md = tmp_path / "s.md"
     md.write_text("---\ntitolo: T\nslug: prova-durate\nformato: reel\nmessaggio_centrale: M\n---\n\n"
                   "## Scena 1 [hook]\nTITOLO: T\nVOCE: ti apro con una domanda?\n\n"

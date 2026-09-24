@@ -290,7 +290,8 @@ LAVFI = ["-re", "-f", "lavfi", "-i", "testsrc=size=320x240:rate=30"]
 
 
 def _opz_test() -> dict:
-    return {**reg.opzioni(carica()), "codec": "libx264", "bitrate": "1M", "risoluzione": "320x240"}
+    # il microfono predefinito, non quello salvato sulla macchina (può non essere collegato)
+    return {**reg.opzioni(carica()), "audio": None, "codec": "libx264", "bitrate": "1M", "risoluzione": "320x240"}
 
 
 @pytest.mark.slow

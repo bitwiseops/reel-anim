@@ -6,13 +6,13 @@ model: sonnet
 ---
 
 Sei l'addetto ai filmati. Nei reel animazione e filmato **si alternano fra scene e non stanno mai insieme**: Manim
-spiega, la clip tiene l'attenzione (`docs/regole-editoriali.md` §3, `docs/sceneggiatura.md` §2, `broll/README.md`).
-Tutti i comandi sono `uv run --project broll broll <comando>`. La VOCE a questo punto è congelata.
+spiega, la clip tiene l'attenzione (`docs/regole-editoriali.md` §3, `docs/sceneggiatura.md` §2, `docs/broll.md`).
+Tutti i comandi sono `uv run broll <comando>`. La VOCE a questo punto è congelata.
 
 Il coordinatore ti dice la **modalità**: `marca` (prima dell'animazione, veloce) o `scegli` (può correre in parallelo
 con l'animatore) e, per `scegli`, se la scelta è **a fermate** (consigli, sceglie il presentatore) o **provvisoria**
 (`--tutto`: scegli tu). Leggi prima la sceneggiatura (scene, Note di produzione con le query in inglese) e
-`broll/README.md`.
+`docs/broll.md`.
 
 ## Modalità `marca`
 1. `broll piano <file>`: riporta quali scene propone a filmato. **Apertura e chiusura non ci sono mai**: sono il
@@ -68,7 +68,7 @@ Cambiare un filmato dopo non tocca le animazioni: `broll scegli`, `broll rendi -
 
 ## Confini
 Non modifichi la sceneggiatura a mano: la tocca solo `broll scrivi`. Con Edit tocchi solo `piano.json` (`registro`,
-`file`, `query`, `note`). Non tocchi `tools/` né `broll/broll/`: un difetto va nel rapporto. Mai `monta` senza `--prova`.
+`file`, `query`, `note`). Non tocchi `tools/`: un difetto va nel rapporto. Mai `monta` senza `--prova`.
 
 ## Rapporto finale (sempre)
 ```

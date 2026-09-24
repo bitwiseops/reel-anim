@@ -3,19 +3,7 @@
 Sceglie e prepara i filmati che si alternano alle animazioni Manim: un piano visivo per scena, la
 ricerca sui banchi di filmati, i provini, il taglio e la resa a tutto schermo.
 
-**È un progetto `uv` a sé.** Ha il suo `pyproject.toml`, il suo `uv.lock` e il suo `.venv`: il lock e
-l'ambiente della radice non vedono mai le sue dipendenze. È la ragione per cui esiste questa cartella
-invece di un modulo dentro `tools/` — quando arriveranno torch e compagnia (M7, gruppo `ml`), `uv sync`
-alla radice continuerà a scaricare i 282 MB di oggi e `uv run reel` resterà istantaneo.
-
-```bash
-uv sync --project broll                 # la prima volta
-uv run --project broll broll <comando>  # sempre, dalla radice del repo
-uv run --directory broll pytest -q      # i suoi test (quelli della radice non li raccoglie)
-```
-
-`--project` e non `--directory`: il primo sceglie l'ambiente senza cambiare la cartella corrente, così i
-percorsi relativi che passi sulla riga di comando restano quelli che vedi.
+Il codice sta in `tools/broll/` e si lancia con `uv run broll <comando>` dalla radice del repo.
 
 ## Comandi
 
@@ -124,7 +112,7 @@ In parallelo con l'animazione: `piano → scrivi --presto` (da qui parte l'anima
 Dopo la registrazione le scene durano quanto le prese vere: se `monta` avvisa che un filmato è più corto della
 scena, `broll piano` (tiene le scelte) e `broll rendi` lo rifanno lungo giusto.
 
-Per provare tutto il giro c'è `broll/esempi/demo-alternanza.md`: sei scene, due d'attenzione. Sui reel
+Per provare tutto il giro c'è `tests/dati/demo-alternanza.md`: sei scene, due d'attenzione. Sui reel
 veri il piano dà — correttamente — zero scene a filmato, perché ogni scena ha qualcosa da disegnare.
 
 `rendi` si rifiuta se il filmato finisce prima del taglio: allungarlo con un fermo immagine sarebbe il

@@ -171,7 +171,7 @@ def test_filmato_non_ancora_reso_e_un_avviso():
     assert not ha_errori(d)
     dove = [x for x in d if "filmato 'nessuno.mp4' non ancora reso" in x.msg]
     assert len(dove) == 1 and dove[0].livello == "avviso" and dove[0].scena == 3
-    assert "uv run --project broll broll rendi" in dove[0].msg
+    assert "uv run broll rendi" in dove[0].msg
     scene[0] = "## Scena 1 [hook]\nTITOLO: Un titolo\nSCHERMO: nessuno.mp4\nVOCE: ti è mai arrivata una mail così?"
     d = _check(scene)                                           # vale anche per l'hook a filmato
     assert not ha_errori(d) and _msg(d).count("non ancora reso") == 2

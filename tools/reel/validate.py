@@ -172,7 +172,7 @@ def check(r: Reel) -> list[Diagnostica]:
                 # il filmato arriva dopo (`broll scrivi --presto` marca la scena prima che sia scelto e reso), e intanto
                 # l'animatore deve poter lavorare sulle altre: qui è un avviso, l'errore lo dà `monta` al montaggio
                 a(f"SCHERMO: filmato '{s.schermo}' non ancora reso in {dove}/: "
-                  f"`uv run --project broll broll rendi {r.slug}`")
+                  f"`uv run broll rendi {r.slug}`")
             elif not f.exists():
                 e(f"SCHERMO: file '{s.schermo}' non trovato in {dove}/")
         # in [broll] il presentatore sopra il filmato è il look voluto: la cornice della finestra non c'entra
