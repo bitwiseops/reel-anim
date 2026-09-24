@@ -5,30 +5,6 @@ riordino in «Regole in vigore». **Gli agenti non caricano questo file**: è la
 reel, cosa è stato superato e da cosa). Le lezioni nuove si aggiungono in fondo, con la data, quando serve ricordare
 il *perché* di una regola; la regola stessa vive nell'agente.
 
-## Dove è finita ogni lezione (riordino del 2026-09-21)
-| Lezione | Oggi |
-|---|---|
-| 09-13 · aggettivi sul caso mostrato, icone isolate | in vigore · «Claim visivi e figure» |
-| 09-13 · seconda passata: solo le righe cambiate | in vigore · «Seconda passata» |
-| 09-13 · il claim che esce dalla voce resta nell'animazione | in vigore · «Claim visivi e figure» |
-| 09-13 · «l'IA non sa / non cerca» contro i prodotti di oggi | in vigore · «Claim visivi e figure» |
-| 09-13 · un output scritto da noi pesa quanto è in vista | in vigore · «Testi del modello» |
-| 09-14 · uscite vere, una sola uscita per testo, conta gli attacchi | in vigore, **corretta** · «Testi del modello»: il file è in `contenuti/idee/uscite/`, non in `contenuti/media/<slug>/` |
-| 09-14 · le revisioni del presentatore hanno l'ultima parola | in vigore · «Testi del modello» + regole editoriali §7 |
-| 09-15 · claim nel parlato lungo, connettivi | in vigore · «Parlato e sfumature» |
-| 09-15 · fatti dall'articolo contro l'articolo | in vigore · «Fonti» (e punto 9) |
-| 09-15 · in `--tutto` riformulazioni dentro i limiti; le facoltative al presentatore | in vigore · «In `--tutto`» |
-| 09-15 · «cambia vestito», confronto fra modelli, plurali | in vigore · «Claim visivi e figure», «Testi del modello» |
-| 09-20 · scarica la pagina con `curl` | in vigore · «Fonti» |
-| 09-20 · artefatti dello strumento nelle uscite | in vigore · «Testi del modello» |
-| 09-20 · diagramma con conti veri, anche la forma | in vigore · «Claim visivi e figure» |
-| 09-20 · seconda passata: le aggiunte dello sceneggiatore | in vigore · «Seconda passata» |
-| 09-20 · si verificano le fonti ufficiali, non gli articoli letti | in vigore · «Fonti» + regole editoriali §5 |
-
-Nessuna lezione superata. Aggiunto il 2026-09-21: punto 10 (schede dei `verificatore-fonte`, elenco claim → fonte).
-Stesso giorno, dopo la verifica di conservazione: blocco «cosa cambia per te» (regole editoriali §1, §3, §4, §5, §7),
-punto 6 con la fonte **ufficiale**, punto 9 anche per `fonte: testo`/`tema`, punto 1 con copertina e caption del post.
-
 ## Lezioni dalle sessioni
 - 2026-09-13, primo reel: il ❌ utile è stato su un aggettivo detto del risultato («nuovo, sì» per un biglietto che
   esiste identico in migliaia di copie) e sulla metafora visiva (una lente isolata = «l'IA non cerca sul web»).
@@ -88,3 +64,8 @@ né «secondo X» né sue frasi come punch) e il credito va in caption. Tu verif
 che non presenti come propria invenzione o come fatto dimostrato ciò che è un'opinione sua (la mossa si presenta senza
 paternità, niente «l'ho scoperto io»); che le note per la caption abbiano il credito con il link. La pagina si legge
 comunque per intero, per sapere cosa viene da lì.
+
+## 2026-09-24 · refactoring degli agenti
+Tolti dall'agente i limiti vecchi nella riformulazione dei ❌ («VOCE ≤ 50 parole, hook ≤ 20, chiusura ≤ 18») e la
+durata «30-90 s», superati dai limiti larghi del 2026-09-23 (oggi fa fede `reel valida`); tolte le date e gli
+aneddoti (16 uscite, Opus 5 su 5 contro Sonnet 0 su 5, la «mossa nostra» scoperta con `curl`: restano qui sopra).

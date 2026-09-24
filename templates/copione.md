@@ -1,7 +1,6 @@
 <!--
 Il prompt del copione (`uv run reel copione <idea>`, tools/reel/copione.py): lo ricevono così com'è i modelli della
-catena di `config.toml [copione] modelli`. È il testo della prova alla cieca del 2026-09-23 (gpt-5.4 > deepseek >
-gemini > Claude), reso generale. I segnaposto {{…}} li riempie il comando; questo commento non parte.
+catena di `config.toml [copione] modelli`. I segnaposto {{…}} li riempie il comando; questo commento non parte.
 Si cambia qui, non nel codice: ogni riga costa punti Poe a ogni corsa, quindi niente regole che il modello non usa.
 -->
 Prima di scrivere, leggi queste trascrizioni di reel italiani veri (trascritte in automatico, possono avere errori): prendi il passo, il ritmo e il modo di parlare, non le frasi né i fatti.

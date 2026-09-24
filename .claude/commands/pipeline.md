@@ -52,22 +52,16 @@ poi `/pipeline <idea>`. A fermate T0b e T0c si fanno all'inizio di T1.
 
 **T0b · uscite vere** (un comando, senza agenti). Si fa se le «Note per il reel» dell'idea elencano richieste da
 generare e l'idea non ha ancora la riga `**Uscite:**`: `uv run reel uscite <idea>` (prima `--prova-a-secco` per vedere
-le richieste che ha trovato). Lancia in parallelo 5 uscite con Opus e 5 con Sonnet per richiesta, da una cartella
-neutra (`claude -p … --tools "" --no-session-persistence`), anonimizza nome ed email dell'account (più i termini di
-`config.local.toml [uscite] anonimizza`), scrive `contenuti/idee/uscite/<slug>-<data>.md` con le sigle (A1…A10, B1…;
-1-5 Opus, 6-10 Sonnet) e aggiunge `**Uscite:**` all'idea. Se fallisce, fermati: senza uscite vere lo sceneggiatore
-non scrive i testi del modello. **Da ricontrollare a mano**, perché lo strumento li segnala ma non li decide: le
-uscite marcate «da ricontrollare» (`--tools ""` non spegne i connettori dell'account: «Drive», «Gmail», commenti su
-città o ateneo) — sostituisci le inferenze personali, dichiara l'artefatto in testa al file e ricordalo al revisore:
-la caption dovrà dire che lo strumento passava nome, email e connettori. Se il nome di un'azienda sta dentro le
-richieste, l'omonimia si controlla **prima** di generare.
+le richieste che ha trovato; il comando scrive `contenuti/idee/uscite/<slug>-<data>.md` e la riga `**Uscite:**`). Se
+fallisce, fermati: senza uscite vere lo sceneggiatore non scrive i testi del modello. **Da ricontrollare a mano** le
+uscite marcate «da ricontrollare» (connettori dell'account, inferenze su città o ateneo): sostituisci le inferenze
+personali, dichiara l'artefatto in testa al file e ricordalo al revisore.
 
-**T0c · copione** (un comando, senza agenti; dal 2026-09-23). Il parlato lo scrive un modello esterno prima della
-sceneggiatura: `uv run reel copione <idea>` (se l'idea non ha già `**Copione:**`). Prima `--prova-a-secco`: dice saldo
-Poe, stima per anello e quali modelli si salterebbero; riportalo in una riga. La catena è in `config.toml [copione]`
-(gpt-5.4 → deepseek-v4-pro → gemini-3.1-pro → Claude): il comando scende da sé all'anello dopo quando uno fallisce, e
-scrive `contenuti/copioni/<idea>.md`, la riga `**Copione:**` e lo stato `copione`. **I punti Poe sono pochi** (10.000
-al giorno): non rilanciarlo per gusto. Se tutta la catena fallisce, fermati in entrambe le modalità. Nessuna fermata
+**T0c · copione** (un comando, senza agenti). Il parlato lo scrive un modello esterno prima della sceneggiatura:
+`uv run reel copione <idea>` (se l'idea non ha già `**Copione:**`; `docs/sceneggiatura.md` §5). Prima
+`--prova-a-secco`: dice saldo Poe, stima per anello e quali modelli si salterebbero; riportalo in una riga. La catena
+è in `config.toml [copione] modelli` e il comando scende da sé all'anello dopo. **I punti Poe sono pochi**: non
+rilanciarlo per gusto. Se tutta la catena fallisce, fermati in entrambe le modalità. Nessuna fermata
 propria: il copione si rivede alla FERMATA 2.
 
 **T1 · sceneggiatura.** Lancia `sceneggiatore` sull'idea: deve passare `uv run reel valida`
@@ -77,7 +71,7 @@ A fermate → FERMATA 2: percorso, il copione (modello che l'ha scritto, anelli 
 copione dichiarati dallo sceneggiatore, scene con tipo e durata stimata, durata del reel (dall'output di `valida`), il
 titolo alternativo, le frasi del copione che lo sceneggiatore segnala. Se il presentatore vuole un parlato diverso:
 `uv run reel copione <idea> --nota "…"` (o corregge a mano il copione), poi T1 sullo stesso file. Prossimo passo:
-il presentatore legge la VOCE ad alta voce (`uv run reel gobbo <file>`), corregge, poi `/pipeline <sceneggiatura>`.
+`/pipeline <sceneggiatura>` (la VOCE si rivede registrando, tasto `E` di `reel registra`).
 
 **T2 · revisione.** Due tempi, il secondo in parallelo.
 1. Raccogli l'elenco **fonte → claim**: dalla sezione `## Fonte` e dai «claim per il revisore» dell'idea, più i numeri
@@ -90,34 +84,25 @@ presentatore sceglie, lo sceneggiatore corregge, poi si rilancia; alla seconda p
 verificatori delle fonti nuove). Altrimenti prosegui.
 
 **T2b · filmati, primo tempo** (agente `broll`, modalità `marca`; in serie, è veloce). Va deciso **prima di animare**,
-perché una scena a filmato non ha una classe Manim e la scena dopo parte da uno stacco. L'agente lancia `broll piano`,
-controlla l'**equilibrio** (circa metà delle scene in mezzo, ± una, mai due di fila; apertura e chiusura non contano:
-sono il presentatore a tutto schermo), corregge i falsi positivi dell'euristica in `piano.json`, riscrive le query in
-inglese e marca le scene con `broll scrivi --presto`. Se chiude BLOCKED (la sceneggiatura non divide i registri, o un
-brief non descrive un'immagine) si rimanda allo sceneggiatore con il suo elenco, e si riparte da T2. Se `scrivi --presto` non ha convertito una scena scritta per
-il filmato (ha un `TESTO:`), **non far partire l'animatore**: la vedrebbe come scena sua. A fermate lo decide il
+perché una scena a filmato non ha una classe Manim e la scena dopo parte da uno stacco. Se `broll` chiude BLOCKED (la
+sceneggiatura non divide i registri, o un brief non descrive un'immagine) si rimanda allo sceneggiatore con il suo
+elenco, e si riparte da T2. Se `scrivi --presto` non ha convertito una scena scritta per il filmato (ha un `TESTO:`),
+**non far partire l'animatore**: la vedrebbe come scena sua. A fermate lo decide il
 presentatore; con `--tutto` fermati e riportalo. Zero scene a filmato: scrivilo nel report e prosegui.
 
 **(T2b secondo tempo → T2c) ∥ T3: in parallelo** (un solo messaggio con `broll` e `animatore`; `immagini` parte quando
 `broll` ha consegnato la classifica).
-- `broll` in modalità `scegli`: `cerca`, `provini`, guarda i contact sheet. A fermate → **FERMATA 2b**: per ogni scena i
-  due candidati consigliati e perché, con i comandi `broll scegli` pronti; il presentatore sceglie **mentre l'animatore
-  lavora**, poi `/pipeline <file>` riparte da `rendi`. Con `--tutto` l'agente sceglie da sé: la scelta è **provvisoria**
-  e va in testa ai punti «da confermare» del report. Poi `rendi`, `prova-inquadratura`, `scrivi`, `valida`.
-  Cambiare un filmato dopo costa poco: `broll scegli`, `broll rendi --forza`, `uv run reel monta`, senza rianimare.
-- **T2c · le clip generate** (agente `immagini`, `sonnet`), **dopo** `broll` `scegli` (mentre l'animatore continua).
-  Metà delle scene a filmato è fatta con Meshy (regole editoriali §3, 2026-09-23): 2-3 immagini generate per scena,
-  animate con zoom e carrellate e unite da transizioni «wow». Quali scene lo dice `broll` nel rapporto: la metà i cui
-  filmati convincono meno. Lancia `immagini` con quelle scene; costa chiamate a Meshy, e si rigenera solo se
-  un'immagine è inservibile. A fermate la FERMATA 2b mostra anche la classifica e le scene per Meshy (il presentatore
-  può spostarle). Alla fermata 3 i provini e i prompt vanno fra i punti da confermare.
-- **T3 · animazione.** `animatore`: `.py`, `anima --json` a zero ⚠ e zero ✗, fotogrammi, `stato: animato`. Se i filmati
-  non sono ancora resi il suo `monta --prova --anteprima` fallisce sulle scene `[broll]`: non è un suo errore, il
-  montaggio lo rifai tu in T4 quando `broll` ha finito.
+- `broll` in modalità `scegli`. A fermate → **FERMATA 2b**: per ogni scena i due candidati consigliati e perché, con i
+  comandi `broll scegli` pronti, la classifica e le scene per Meshy (il presentatore può spostarle); sceglie **mentre
+  l'animatore lavora**, poi `/pipeline <file>` riparte da `rendi`. Con `--tutto` l'agente sceglie da sé: la scelta è
+  **provvisoria** e va in testa ai punti «da confermare» del report.
+- **T2c · le clip generate** (agente `immagini`), **dopo** `broll scegli`, con le scene per Meshy del suo rapporto.
+  Alla fermata 3 i provini e i prompt vanno fra i punti da confermare.
+- **T3 · animazione** (`animatore`). Se i filmati non sono ancora resi il suo `monta --prova --anteprima` fallisce
+  sulle scene `[broll]`: non è un suo errore, il montaggio lo rifai tu in T4.
 
-**T3b · controllo dei fotogrammi, in parallelo.** Quando ci sono i `_scene/NN.mp4` montati (nella cartella di lavoro `~/Library/Caches/reel-anim/<slug>/`), lancia **un
-`controllore-fotogrammi` per scena animata, tutti insieme**: ognuno fa `uv run reel strisce <file> --scena N`, guarda i
-passaggi a 8 fps e riferisce i difetti con l'istante. I difetti **gravi** tornano all'animatore in un solo rimando con
+**T3b · controllo dei fotogrammi, in parallelo.** Quando ci sono i `_scene/NN.mp4` montati (nella cartella di lavoro
+`~/Library/Caches/reel-anim/<slug>/`), lancia **un `controllore-fotogrammi` per scena animata, tutti insieme**. I difetti **gravi** tornano all'animatore in un solo rimando con
 l'elenco per scena (al massimo **due** rimandi; dopo, i difetti rimasti vanno nel report); i «dubbi» li guardi tu sulla
 striscia indicata prima di rimandarli. Tu guardi comunque `contact-sheet.png`: le scene devono distinguersi a colpo
 d'occhio. Un testo tagliato o un beat vuoto si rimanda all'animatore, non al presentatore.
@@ -137,7 +122,7 @@ il report unico.
 3bis. **Filmati**: quali scene sono a filmato, il candidato scelto per ciascuna (con `--tutto` la scelta è provvisoria:
    dillo per primo), i provini da riguardare, cosa copre il riquadro, i crediti per la didascalia.
 4. **Avvisi**: residui di `valida`, ⚠️ del revisore (una riga ciascuno), rapporto dell'animatore (difetti della
-   libreria, cose che non ci stavano), difetti dei `controllore-fotogrammi` rimasti dopo i rimandi (scena, istante), frasi di cui lo sceneggiatore è meno sicuro, stato della guida di stile.
+   libreria, cose che non ci stavano), difetti dei `controllore-fotogrammi` rimasti dopo i rimandi (scena, istante), frasi di cui lo sceneggiatore è meno sicuro.
 5. **Da confermare**: i fatti presi dalla fonte (idee da un link), i testi attribuiti a un modello (con la sigla
    dell'uscita), lo schema narrativo e come è stato distribuito sulle scene.
 6. **Prossimo passo**: guardare l'anteprima e annotare leggibilità, tempi e beat; poi la registrazione in presa unica
@@ -153,12 +138,12 @@ il report unico.
   estratti a mano. Si controllano durate, `origine_tempi` e caption nel report.
 
 ## Chi gira su che modello
-`ideatore`, `sceneggiatore`, `revisore-tecnico`, `animatore`: il modello della sessione (il più forte: è
-lì che nasce la qualità). `broll`, `controllore-fotogrammi`, `verificatore-fonte`: `sonnet` (nel loro frontmatter).
+`ideatore`, `sceneggiatore`, `revisore-tecnico`, `animatore`: il modello della sessione (il più forte: è lì che nasce
+la qualità). `broll`, `immagini`, `controllore-fotogrammi`, `verificatore-fonte`: `sonnet` (nel loro frontmatter).
 T0b e T0c: nessun agente, sono comandi (T0c chiama i modelli esterni della catena). Gli agenti non lanciano altri agenti: il lavoro in parallelo lo apri tu, con più
 Agent nello stesso messaggio (T2 verificatori, T2b ∥ T3, T3b controllori; due reel insieme vanno benissimo).
 
 Prima di chiudere: le lezioni della corsa (rimandi del revisore, difetti trovati nei fotogrammi, note del presentatore)
-**modificano la regola in vigore** nel tema giusto dell'agente giusto, con la data fra parentesi; una regola superata
-si toglie, non si marca. La cronaca (chi, su quale reel, perché) va in `.claude/agents/storico/<agente>.md`. Una regola
+**modificano la regola in vigore** nel tema giusto dell'agente giusto, senza date; una regola superata si toglie, non
+si marca. La cronaca (chi, su quale reel, quando, perché) va in `.claude/agents/storico/<agente>.md`. Una regola
 del presentatore che vale per tutti si scrive in `docs/regole-editoriali.md`, e negli agenti solo «cosa cambia per te».

@@ -5,21 +5,6 @@ riordino in «Regole in vigore». **Gli agenti non caricano questo file**: è la
 reel, cosa è stato superato e da cosa). Le lezioni nuove si aggiungono in fondo, con la data, quando serve ricordare
 il *perché* di una regola; la regola stessa vive nell'agente.
 
-## Dove è finita ogni lezione (riordino del 2026-09-21)
-| Lezione | Oggi |
-|---|---|
-| 09-15 · conti grezzi senza plurali | in vigore · «Fonti e numeri» |
-| 09-15 · in `--tutto` consiglia un'opzione per domanda | in vigore · «In `--tutto`» |
-| 09-15 · set di testi con richieste identiche alle carte | in vigore · «Testi del modello» |
-| 09-19 · hook = frase + clip dietro, niente titolo a schermo | **superata la clip dietro** (09-21, estremi a volto pieno, regole editoriali §4). Resta in vigore · «Percorso e registri»: primi 5-10 s, hook = problema o domanda e non la tesi, titolo di copertina = tesi, test dell'immagine filmabile (ora sulle tappe a filmato) |
-| 09-19 · ogni reel è a sé stante | in vigore · «Situazione e nomi» + regole editoriali §6 |
-| 09-20 · la mossa del reel è della fonte? | in vigore, **corretta** · «Fonti e numeri»: il credito va in caption, il reel non attribuisce (superato «il reel la attribuisce», regole editoriali §5) |
-| 09-20 · omonimia anche nel settore dei personaggi | in vigore · «Situazione e nomi» |
-| 09-20 · query dei filmati in inglese | in vigore, **corretta** · «Percorso e registri»: per le tappe a filmato, non più per l'hook |
-| 09-20 · leggi tutto, traccia solo le fonti ufficiali (anche con `fonte: url`) | in vigore · «Fonti e numeri» + regole editoriali §5 |
-| 09-21 · i due registri stanno a metà | in vigore · «Percorso e registri» + regole editoriali §3 |
-| 09-21 · apertura e chiusura a tutto schermo | in vigore · «Percorso e registri» + regole editoriali §4 |
-
 ## Lezioni dalle sessioni
 - **2026-09-15, prima corsa** (spunto «testo», rifacimento del reel d'esempio `generativa-probabile`):
   - I conti grezzi del file delle uscite non contano i plurali («sveglie»): ogni numero che passi al reel va
@@ -119,3 +104,9 @@ data) serve un brief per scena: l'idea porta `## Tappe del parlato`, nel formato
 Prima corsa di `reel copione` su un'idea nuova: gpt-5.4 ha scritto 382 parole (345 dopo la correzione), oltre il
 tetto dei 120 s, e ha consumato quasi tutti i punti Poe; il copione l'ha scritto Claude. La tappa 6 portava in una
 riga istituzioni, anno, campione, due percentuali e una domanda. Regola «Tappe magre» nel tema «Percorso e registri».
+
+## 2026-09-24 · refactoring degli agenti
+Tolte dall'agente le date, gli aneddoti (Quattroassi, piedi nudi, le 382 parole di gpt-5.4: restano qui sopra) e le
+regole che ripetevano `docs/regole-editoriali.md` (resta «cosa cambia per te»). Superate e tolte: l'hook «≤ 20
+parole» nella tappa di apertura (il limite oggi è in `LIMITI`, 25) e il MESSAGGIO «≤ 12 parole» (in `LIMITI`);
+«nessun personaggio» e «né lode né stroncatura» vivono solo in regole §10.

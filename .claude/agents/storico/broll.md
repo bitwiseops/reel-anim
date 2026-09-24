@@ -28,3 +28,9 @@ Dopo `reel parlato --applica` (il presentatore aveva corretto la VOCE in 8 scene
 le scene 3, 5 e 8 come «da scegliere»: `eredita` voleva la VOCE identica, e con essa sparivano anche le immagini Meshy
 pagate. Ripristinato piano.json dal commit; corretto `piano.eredita`: una scena già `[broll]` eredita anche con la VOCE
 cambiata, con una nota «riguarda il filmato sul testo nuovo». Nessuna regola nuova per l'agente: era la libreria.
+
+## 2026-09-24 · refactoring degli agenti
+Tolti dall'agente date e aneddoti: `piano` che nel 2026-09-21 teneva animata una scena perché la VOCE diceva «qui vedi
+come funziona» (la promessa del canale, non un meccanismo); la query «piedi» del 2026-09-20 che dava otto filmati di
+piedi nudi. L'equilibrio e i criteri sui volti ora rimandano a regole §3. Tolta perché ripeteva regole §3: «con un
+numero dispari la scena di mezzo va a Meshy solo se il suo filmato è debole».

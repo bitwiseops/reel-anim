@@ -5,48 +5,6 @@ riordino in «Regole in vigore». **Gli agenti non caricano questo file**: è la
 reel, cosa è stato superato e da cosa). Le lezioni nuove si aggiungono in fondo, con la data, quando serve ricordare
 il *perché* di una regola; la regola stessa vive nell'agente.
 
-## Dove è finita ogni lezione (riordino del 2026-09-21)
-«In vigore» = sezione «Regole in vigore» di `sceneggiatore.md`; «cosa cambia per te» = il blocco in testa all'agente;
-«regole» = `docs/regole-editoriali.md`.
-
-| Lezione | Dove sta ora |
-|---|---|
-| 09-13 primo reel · filo visivo nelle Note | in vigore: Brief ANIMAZIONE e filmati |
-| 09-13 primo reel · aggettivo sul risultato («nuovo, sì») | in vigore: Numeri, conti e diagrammi |
-| 09-13 primo reel · chiusura a elenco non piaciuta, battuta sulla persona | in vigore: Apertura e chiusura · regole §8. «Payoff mostrato grande» (era la scena 6, non la chiusura): superato da regole §1 (niente frasi a schermo) |
-| 09-13 riscrittura · payoff e chiusura costano secondi | in vigore: Durata e tagli (il conto 55→60 s è cronaca) |
-| 09-13 riscrittura · claim tolto dalla VOCE lo porta un oggetto | in vigore: Numeri, conti e diagrammi |
-| 09-13 riscrittura · nel brief solo ciò che la libreria ha; fotogramma 0 pieno | in vigore: Brief ANIMAZIONE e filmati |
-| 09-13 riscrittura · controlli di linguaggio di `valida`, MESSAGGIO solo battuta, spiegazione dopo i due punti | in vigore: Apertura e chiusura (anche l'avviso sull'hook senza «tu» né domanda); limiti in «Regole di scrittura». Il resto è cronaca di `valida` |
-| 09-14 seconda anteprima · chiusura ~15 parole, pronome, la battuta non si taglia | in vigore: Apertura e chiusura |
-| 09-14 biglietti generati davvero · uscite vere, luogo comune che torna | in vigore: Testi del modello |
-| 09-14 · revisioni del presentatore, ultima parola | cosa cambia per te · regole §7 |
-| 09-14 · parole ripetute fra le richieste | in vigore: Testi del modello |
-| 09-15 VOCE «poco umana» · prima il monologo, verifica in `reel registra` | in vigore: VOCE e orecchio; la regola in «Regole di scrittura». Limiti 35→50 parole, 60→90 s: cronaca |
-| 09-15 reset · `## Fonte`, niente numeri in più | in vigore: Numeri, conti e diagrammi |
-| 09-15 reset · frasi incerte nel rapporto in `--tutto` | in vigore: In `--tutto` |
-| 09-15 reset · leggere `docs/stile-parlato.md` | letture obbligatorie |
-| 09-15 `generativa-probabile` · hook «fatto, poi domanda corta»; frasi col pronome | in vigore: Apertura e chiusura · VOCE e orecchio |
-| 09-19 apertura: hook a filmato, clip dietro, riga ANIMAZIONE che descrive la clip `[SUPERATA]` | **superata** da regole §4 (apertura a volto pieno, 09-21). Resta: hook = problema o domanda, primi 5-10 s, niente `TESTO:` né `RIQUADRO: no` nell'hook, VOCE che regge da sola, `TITOLO:` per la copertina → in vigore: Apertura e chiusura |
-| 09-19 scene a filmato `[broll]` · brief di una riga, nessun TESTO, mai due di fila | in vigore: I due registri (fusa con la regola del 09-21). «Il tetto» è diventato un obiettivo |
-| 09-19 «più umana e naturale» · prova dell'orecchio, tic, meno simmetrico | in vigore: VOCE e orecchio |
-| 09-19 ogni reel è a sé stante | cosa cambia per te · regole §6 |
-| 09-20 corse · contatore che cambia metro | in vigore: Numeri, conti e diagrammi |
-| 09-20 corse · conto accanto a una citazione | in vigore: Numeri, conti e diagrammi |
-| 09-20 corse · «la mossa della fonte si attribuisce» | **superata** da regole §5 (stesso giorno): credito in caption, nessuna paternità nel reel |
-| 09-20 corse · diagramma con conti veri | in vigore: Numeri, conti e diagrammi |
-| 09-20 corse · artefatti di `claude -p` | in vigore: Testi del modello |
-| 09-20 corse · query in inglese nelle Note | in vigore: I due registri · cosa cambia per te. «Per l'hook»: superato (l'hook non ha più filmato) |
-| 09-20 corse · obiettivo di durata, stima larga | in vigore: Durata e tagli |
-| 09-20 REGOLA · niente testo denso | cosa cambia per te · regole §2 |
-| 09-20 REGOLA · solo fonti ufficiali | cosa cambia per te · regole §5 |
-| 09-21 REGOLA · registri a metà e divisione del parlato | cosa cambia per te · regole §3 · in vigore: I due registri |
-| 09-21 REGOLA · apertura e chiusura a volto pieno | cosa cambia per te · regole §4 · «Regole di scrittura» (Hook, Chiusura) |
-
-Corretto nello stesso riordino, nelle «Regole di scrittura»: `TESTO:` da «≤ 4 parole» a due per scena di una-due
-parole; hook e chiusura senza `ANIMAZIONE:`/`FIGURA:`; `MESSAGGIO:`/`CTA:` = caption del post; `GRANDE:` solo nelle
-scene animate; componenti = quelli che spiegano senza parole; T0b = `uv run reel uscite`.
-
 ## Lezioni dalle sessioni
 - **2026-09-13, primo reel** (archiviato in `contenuti/archivio/generativa-non-creativa/sceneggiatura.md`):
   - Il **filo visivo** proposto nelle Note di produzione (carta «richiesta», biglietto, colonna delle candidate) ha
@@ -98,7 +56,7 @@ scene animate; componenti = quelli che spiegano senza parole; T0b = `uv run reel
   una sezione `## Fonte`, i fatti del reel vengono da lì e non si aggiungono numeri che la fonte non ha. Con
   `/pipeline … --tutto` nessuno rilegge la sceneggiatura prima del revisore: le frasi di cui sei meno sicuro vanno
   nel rapporto, perché il presentatore le legge solo nel report finale. Prima del monologo leggi
-  `docs/stile-parlato.md` (e le trascrizioni del corpus quando ci sono).
+  la guida di stile distillata dal corpus (poi tolta con la VOCE passata al copione).
 - **2026-09-15, `generativa-probabile`, prima sceneggiatura con la guida distillata dal corpus**: l'hook «fatto,
   poi domanda corta» della guida nuova sta nelle 20 parole. Il revisore ha segnalato due frasi che a voce si
   capiscono al contrario o dipendono da una scena prima: «Quindi scrivilo tu, nella richiesta» (si sente «scrivi tu
@@ -245,7 +203,7 @@ nel .md. Regole in docs/regole-editoriali.md §8-9; codice in fotogrammi.copri_v
 Un consulente ha riscritto la voce del reel GPU: troppo scritta, frasi lunghe, poche volte il «tu», nessuna
 micro-pausa. Flavio ha accettato la direzione e ha deciso: limiti più larghi (hook 25 parole, 6 beat, reel 100 s),
 «GPU» e «cloud» ammessi, l'eco che non conta come frase da titolo. Regole nel tema «VOCE e orecchio»; la sezione
-«Come suona il parlato da social» sta in docs/stile-parlato.md. Il reel GPU è stato riscritto e va registrato di nuovo.
+«Come suona il parlato da social» stava nella guida di stile, poi tolta. Il reel GPU è stato riscritto e va registrato di nuovo.
 
 ## 2026-09-23 · la VOCE passa al copione
 Flavio trovava che la VOCE scritta dai modelli Claude non suonasse abbastanza da social. Prova alla cieca sul reel
@@ -263,3 +221,10 @@ trasmette proprio bene l'idea della scarsità». Proposte tre figure (scaffale, 
 negozio; il revisore l'ha bocciato (❌: scarsità nei negozi senza fonte, NVIDIA Q4 FY2026 parla di scorte sane nei
 canali) e ha proposto la rastrelliera d'uscita della produzione, accettata. Regola nel tema «Numeri, conti e
 diagrammi»; icone Lucide `memory-stick` e `factory` aggiunte in `assets/icone/`.
+
+## 2026-09-24 · refactoring degli agenti
+Tolte dall'agente le date fra parentesi, i limiti numerici (li controlla `reel valida`, fonte `LIMITI`) e le regole
+che ripetevano `docs/regole-editoriali.md` o `docs/sceneggiatura.md` §5 (restano i rimandi). Superate e tolte: «nessun
+personaggio, le idee dei caroselli in chat diventano materiale per le animazioni» (regime vecchio; resta la regola
+generale in regole §10), «l'hook fatto + domanda corta della guida di stile» (guida tolta), il limite «chiusura più
+lunga di 18 parole» dello schema (oggi in LIMITI).

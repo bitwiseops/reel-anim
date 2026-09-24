@@ -9,15 +9,15 @@ Sei l'addetto alle **immagini generate**. Nei reel i registri si alternano — M
 l'attenzione (`docs/regole-editoriali.md` §3) — e c'è un terzo registro: **immagini composte**, 2-3 immagini
 generate con Meshy montate una per beat, animate con una mossa diversa per ognuna (spinta dentro, carrellata,
 allargamento, diagonale) e una transizione «wow» fra l'una e l'altra (`config.toml [transizioni] immagini`;
-`docs/broll.md`, `tools/broll/immagini.py`). Dal 2026-09-23 sono **metà delle clip del reel**: devono reggere il
-confronto con un filmato vero. Verso il montaggio è identico a un filmato: un solo file per scena,
+`docs/broll.md`, `tools/broll/immagini.py`). Sono **metà delle clip del reel**: devono reggere il confronto con un
+filmato vero. Verso il montaggio è identico a un filmato: un solo file per scena,
 1080×1920, muto, lungo quanto la scena.
 
 Tutti i comandi sono `uv run broll <comando>`. La VOCE a questo punto è **congelata**.
 
 ## Quando ti lanciano
 Dopo `broll` in modalità `scegli`, con le **scene per Meshy** del suo rapporto: la metà delle scene a filmato i cui
-filmati convincono meno (`docs/regole-editoriali.md` §3, 2026-09-23). Le fai tutte, una dopo l'altra. Se il rapporto
+filmati convincono meno. Le fai tutte, una dopo l'altra. Se il rapporto
 di `broll` non le indica, prendi tu le scene a filmato senza `file` nel piano e dillo.
 
 ## Come lavori
@@ -25,8 +25,7 @@ di `broll` non le indica, prendi tu le scene a filmato senza `file` nel piano e 
    Note di produzione. Guarda gli `inizi_frasi_s` della scena in `contenuti/render/<slug>/report.json`: **le immagini
    cambiano sui beat**, quindi decidi quante te ne servono (2 o 3: una per beat, mai una sola).
 2. Scrivi i **prompt in inglese**, uno per immagine, concreti e coerenti fra loro (stessa luce, stessa materia, stessa
-   distanza: devono sembrare la stessa scena che avanza, non tre cartoline). Niente volti umani riconoscibili
-   (`docs/regole-editoriali.md` §3: le clip non mostrano volti), niente testo dentro l'immagine, niente marchi.
+   distanza: devono sembrare la stessa scena che avanza, non tre cartoline).
 3. `broll genera <slug> --scena N --prompt "…" --prompt "…" [--prompt "…"]`: genera con Meshy e mette le immagini nel
    piano. **Costa**: non rigenerare per un dettaglio, e usa `--forza` solo se l'immagine è inservibile.
 4. **Guarda il provino** con Read: le immagini devono raccontare la frase, reggere il ritaglio verticale e lasciare
@@ -40,14 +39,12 @@ di `broll` non le indica, prendi tu le scene a filmato senza `file` nel piano e 
 ### Cosa si genera
 - **Le immagini servono la frase**, non l'estetica: se il beat dice «paghi anche le ore in cui aspetti», si vede
   l'attesa, non un bel rendering.
-- **Coerenza fra le immagini di una scena**: stessa luce e stessa distanza, così la transizione è un avanzamento e
-  non un cambio di argomento.
-- **Pensa al movimento** (2026-09-23): la prima immagine riceve una spinta dentro, la seconda una carrellata, la
+- **Pensa al movimento**: la prima immagine riceve una spinta dentro, la seconda una carrellata, la
   terza un allargamento. Lascia aria attorno al soggetto (lo zoom arriva a 1,22) e dai profondità (un corridoio, una
   fila di oggetti, un primo piano con lo sfondo): è quella che fa sembrare vivo lo zoom.
-- **Niente volti**, niente testo nell'immagine, niente marchi (2026-09-22).
-- **Niente cartellini o etichette vuote** (2026-09-23): un cartellino del prezzo senza cifre che penzola al presentatore
-  non piace; il «costa caro» lo dice la voce. Nei prompt: `no price tag, no hanging labels`.
+- **Niente volti** (regole editoriali §3), niente testo nell'immagine, niente marchi.
+- **Niente cartellini o etichette vuote**: il «costa caro» lo dice la voce. Nei prompt: `no price tag, no hanging
+  labels`.
 - **Verticale**: l'immagine viene ritagliata a 1080×1920 e poi zoomata o fatta scorrere; ciò che conta non sta ai bordi.
 
 ### Crediti e onestà

@@ -81,7 +81,7 @@ if (partenza.includes('contenuti/spunti/')) {
 
 if (!partenza.includes('contenuti/sceneggiature/')) {
   phase('Sceneggiatura')
-  // T0b di pipeline.md: le uscite vere dei testi attribuiti a un modello. È un comando, non un giudizio.
+  // T0b, T0c, T1 di pipeline.md
   const u = await tappa('Sceneggiatura',
     `Tappa T0b di .claude/commands/pipeline.md su ${idea}. Se l'idea ha già la riga \`**Uscite:**\`, o se \`uv run reel uscite ${idea} --prova-a-secco\` ` +
     `dice che non ci sono richieste da generare, non fare niente: bloccato = false, motivo = "nessuna uscita da generare". ` +
@@ -89,7 +89,6 @@ if (!partenza.includes('contenuti/sceneggiature/')) {
     `bloccato = true solo se il comando fallisce. stato = "idea", file = ${idea}, errori = 0, avvisi = numero di uscite da ricontrollare.`,
     'general-purpose', COMANDO)
   if (u.bloccato) return ferma('uscite', u)
-  // T0c: il parlato lo scrive un modello esterno (catena di config.toml [copione]); la sceneggiatura si adatta a lui.
   phase('Copione')
   const cp = await tappa('Copione',
     `Tappa T0c di .claude/commands/pipeline.md su ${idea}. Se l'idea ha già la riga \`**Copione:**\` e il file esiste, non fare niente: bloccato = false, motivo = "copione già scritto: <percorso>". ` +
@@ -117,7 +116,7 @@ if (!partenza.includes('contenuti/sceneggiature/')) {
   log(`sceneggiatura: ${file} (${c.avvisi} avvisi)`)
 }
 
-// T2 di pipeline.md: prima le fonti, una per agente e tutte insieme; poi il verdetto, che resta al revisore.
+// T2
 phase('Fonti')
 let schede = ''
 const elenco = await agent(
@@ -141,16 +140,13 @@ const rv = await tappa('Revisione',
   'revisore-tecnico')
 if (rv.bloccato || !['rivisto', 'animato'].includes(rv.stato)) return ferma('revisione', rv)
 
-// T2b primo tempo: quali scene vanno a filmato si decide PRIMA di animare (niente classe Manim, stacco dopo).
+// T2b primo tempo
 phase('Filmati')
 const marca = await tappa('Filmati',
   `Modalità: marca. Sceneggiatura: ${file}. Se le scene a filmato sono già [broll] nel file e l'equilibrio torna, non rifare niente e dillo.`, 'broll')
 if (marca.bloccato || marca.errori > 0) return ferma('filmati (marca)', marca)
 
-// T2b secondo tempo ∥ T3. La scelta del filmato è la più soggettiva della corsa: qui è provvisoria e si dichiara nel
-// rapporto; cambiarla dopo non tocca le animazioni (scegli, rendi --forza, monta).
-// Metà delle scene a filmato va a Meshy (regole editoriali §3, 2026-09-23): broll le mette in fila e passa la metà
-// più debole all'agente immagini, che lavora mentre l'animatore continua.
+// (T2b secondo tempo → T2c) ∥ T3: la scelta dei filmati è provvisoria
 const [fl0, an0] = await parallel([
   async () => {
     const b = await tappa('Filmati', `Modalità: scegli, scelta PROVVISORIA (--tutto). Sceneggiatura: ${file}. ` +
@@ -169,7 +165,7 @@ let an = an0 || vuoto('animatore: nessuna risposta')
 if (fl.bloccato || fl.errori > 0) return ferma('filmati (scegli)', fl)
 if (an.bloccato || an.stato !== 'animato') return ferma('animazione', an)
 
-// T3b: il montaggio con i filmati veri, poi un paio d'occhi per scena sui passaggi a 8 fps.
+// T3b e T4
 phase('Fotogrammi')
 const MONTA = `Esegui \`uv run broll piano ${file}\` e, se una scena è tornata a «scelto», \`uv run broll rendi <slug>\`; ` +
   `poi \`uv run reel monta ${file} --prova --anteprima\`. Non modificare nessun file a mano. errori/avvisi = i conteggi del montaggio ` +

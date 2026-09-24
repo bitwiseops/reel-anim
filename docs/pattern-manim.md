@@ -9,8 +9,9 @@ uv run python -m tools.anim.pattern              # tutte le scene, contact sheet
 uv run python -m tools.anim.pattern --solo zoom
 ```
 
-**Un pattern senza scena di prova non entra nel catalogo.** È la regola che impedisce a questo file di riempirsi di
-codice che nessuno ha visto girare.
+**Un pattern senza scena di prova non entra nel catalogo**, e la scena di prova si scrive **prima** del pattern: così
+questo file non si riempie di codice che nessuno ha visto girare. Le fonti della comunità Manim sono in
+`docs/animazioni.md` §13.
 
 **La regola del tre**: quando un aiuto locale compare per la **terza** volta in `contenuti/animazioni/*.py`, diventa
 un pattern (o un componente). Al massimo **due pattern nuovi per reel**: a fine lavoro l'animatore guarda gli aiuti
@@ -113,12 +114,3 @@ def fine_scena(mobs):
 ```
 
 Scena di prova: `PatternFineScena`.
-
----
-
-## Da dove vengono i pattern
-
-Questi sei sono gli aiuti locali che gli animatori si erano già riscritti a mano nei `.py` dei reel (`Tappe`,
-`rimbalzo_corto`, `grande`, il riflesso della scena 5 di `scrivere-con-ia`, `controlla_zoom`, `Tavolo.fine_5()`).
-Le fonti esplorate nella comunità Manim sono elencate in `docs/animazioni.md` §13; quando se ne aggiunge uno nuovo,
-la scena di prova va scritta **prima** del pattern.

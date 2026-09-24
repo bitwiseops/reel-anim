@@ -5,63 +5,6 @@ riordino in «Regole in vigore». **Gli agenti non caricano questo file**: è la
 reel, cosa è stato superato e da cosa). Le lezioni nuove si aggiungono in fondo, con la data, quando serve ricordare
 il *perché* di una regola; la regola stessa vive nell'agente.
 
-## Dove è finita ogni lezione (riordino del 2026-09-21)
-«In vigore: <tema>» = sezione «Regole in vigore» di `.claude/agents/animatore.md`. «§10» = `docs/animazioni.md` §10.
-
-| Lezione (data · punto) | Dove sta ora |
-|---|---|
-| 09-21 · apertura e chiusura senza classe Manim; stacco dopo l'apertura e prima della chiusura | in vigore: «Cosa cambia per te» + Raccordi, stacchi e stato di fine; `docs/regole-editoriali.md` §4 |
-| 09-21 sera · `anima` «manca Scena01», `monta` rotto su `_hook_senza_caption` | **superata**: corretto in `tools/reel/` il 09-21; resta «controlla la data dei file» in Cosa i controlli non vedono |
-| 09-21 sera · dopo un `[broll]` si riparte da `stato_fine_N`, posizioni in `bersagli_…` | in vigore: Raccordi |
-| 09-21 sera · richiamo ≥ 1,5 s in un beat stretto: due pezzi insieme, una `play` a finestre | in vigore: Tempi e beat |
-| 09-21 sera · chiusura a volto pieno, messaggio fra 232 e 714 px | **superata**: la chiusura non ha più messaggio a schermo né classe (stessa sera) |
-| 09-21 sera · `FadeIn(scale=1.9)` copre i vicini | in vigore: Passaggi; §10 «Ingressi che coprono i vicini» |
-| 09-21 · chiusura senza fascia caption, raccordo a pixel | **superata** (la chiusura non ha classe); il caso generale resta in §10 «Scene con aree diverse» e in Raccordi |
-| 09-21 · icone fuori dall'ingombro delle carte opache | in vigore: Cosa i controlli non vedono; §10 (riga nuova) |
-| 09-21 · due carte sulla stessa riga a finestre non accavallate | in vigore: Passaggi |
-| 09-21 · beat lungo con oggetto fermo: un mucchio che si divide | in vigore: Tempi e beat |
-| 09-21 · `set_opacity` su icona SVG fa scattare `colore` | §10 (c'era già); richiamo in Libreria: trappole |
-| 09-21 · forma irregolare disegnata una volta e scalata | in vigore: Raccordi |
-| 09-13 primo reel · il flusso è lo standard | in vigore: Raccordi |
-| 09-13 · titolo di carta sparito, fotogrammi fitti obbligatori | §10 («riquadro pieno… anche solo durante le animazioni»); in vigore: Cosa i controlli non vedono; ciclo passo 5 |
-| 09-13 · area 900×976 al limite, compatta il contesto | area **superata** (ora 900×752); «compatta il contesto» in vigore: Testo e densità |
-| 09-13 dopo l'anteprima · `GRANDE:`, `punch`, `zoom_su`, composizioni diverse, fotogramma vuoto, riquadro che cresce | in vigore: Zoom e punch, Mosse wow, Raccordi (ultimo punto) |
-| 09-13 seconda animazione · `punch` accorcia da solo, `zoom_su` al centro; `punch_fino`/`zoom_area` non servono | in vigore: Zoom e punch; aiuti locali del primo reel **superati** |
-| 09-13 · il ritorno dal punch è un taglio | in vigore: Zoom e punch |
-| 09-13 · lo zoom dentro un solo beat; zoom a tutta larghezza taglia ai bordi | in vigore: Zoom e punch |
-| 09-14 · zoom della scena 2 tolto: testi interi o fuori campo | in vigore: Zoom e punch |
-| 09-14 · chiusura lunga per colpa della voce; l'animazione porta ciò che la voce non dice; beat di 2-3 parole | in vigore: Tempi e beat (il caso «Scrivilo nella richiesta» resta qui) |
-| 09-14 · passaggi finali troppo veloci: uno per frase, ≥ 0,6 s | in vigore: Tempi e beat «Finale calmo» (ora vale per l'ultima scena animata); manuale §4 |
-| 09-14 · `Icona.entra()` a puntini; `punch` subito dopo `beat(i)` | §10 (c'erano già); richiamo in Libreria: trappole; `oltre_inizio` **superato** |
-| 09-14 · curve sfalsate in una sola `play`; una sola animazione per spostare e accendere; attesa prima del punch | in vigore: Passaggi, Zoom e punch |
-| 09-14 · non misurare testi al livello del modulo | §10 (riga nuova); richiamo in Libreria: trappole |
-| 09-15 · la VOCE diventa parlato: `len(voce)` e `beat(i)` | in vigore: Tempi e beat «VOCE riscritta» |
-| 09-15 · il `.py` del primo reel in archivio non gira; con `--tutto` sei l'ultimo agente | in vigore: Libreria: trappole (ultimo capoverso) e Confini |
-| 09-15 `generativa-probabile` · fitti anche sui `_scene` montati (cerchio) | in vigore: Cosa i controlli non vedono |
-| 09-15 · `attendi_fino(inizio)` | in vigore: Tempi e beat |
-| 09-15 · copie da dietro una carta scivolano; «cambia vestito»: il vecchio esce prima | in vigore: Passaggi; §10 «Ingressi che coprono i vicini» |
-| 09-15 · indici di `tempi(i)[n]` dopo una riformulazione | in vigore: Tempi e beat «VOCE riscritta» |
-| 09-16 · effetto wow, storyboard, livello 2 della libreria | in vigore: Mosse wow; ciclo passo 0 |
-| 09-16 · terzo GRANDE come contrasto di scala; zoom senza testi tagliati + `controlla_zoom`; muro dietro oggetto largo | in vigore: Zoom e punch, Mosse wow; `docs/pattern-manim.md` §5 |
-| 09-16 · una sola `MoveToTarget` col colore nel target | in vigore: Passaggi; §10 «due `.animate`» |
-| 09-16 · `Transform` glifo per glifo per rifare gli a capo | **corretta il 09-19** (`reimpagina`): §10 «Testi che si attraversano» (c); in vigore: Testo e densità, solo con `CAPTION: alto` |
-| 09-16 rimando · cambi di stato a 8 fps; ordine esce → riquadro → entra | in vigore: Passaggi, Cosa i controlli non vedono |
-| 09-19 · 8 fps obbligatorio su ogni passaggio, su `anima` e sui `_scene` | in vigore: Cosa i controlli non vedono; ciclo passo 5 (`reel strisce`) |
-| 09-19 · il render può essere più vecchio del `.py` | in vigore: Cosa i controlli non vedono |
-| 09-19 · cause (1) finestre accavallate (2) scambio in colonna (3) `reimpagina` (4) `FadeTransform` verso sagoma | §10 «Testi che si attraversano»; in vigore: Passaggi (1, 2), Testo e densità (3, 4) |
-| 09-19 · `ease_in_back` su corsa lunga | §10 (d); in vigore: Passaggi; `docs/pattern-manim.md` §2 |
-| 09-19 · ingresso `shift=UP * 0.8` sotto il cerchio | in vigore: Cosa i controlli non vedono; §10 «Ingressi che coprono i vicini» |
-| 09-19 · margine interno della carta, `blocco.scale`, `corpo_rigido=True` | margine: §10 (riga nuova) e in vigore: Cosa i controlli non vedono; `blocco.scale` e `corpo_rigido`: in vigore: Testo e densità (solo lì) |
-| 09-20 `scrivere-con-ia` · dopo un filmato taglio netto | in vigore: Raccordi |
-| 09-20 · `cfg.palette` → RecursionError | **superata**: corretto in `tools/anim/config.py` il 09-21 (§10 lo annota) |
-| 09-20 · passaggi a finestre non accavallate, `Tappe`, `punch_citazione` al livello 2 | finestre e `Tappe`: in vigore: Passaggi (il pattern `finestre` di `docs/pattern-manim.md` §1 è un'altra cosa: tappe in fila nello stesso posto); `punch_citazione` **superata** da `docs/regole-editoriali.md` §5 (nessuna frase di una persona come punch) |
-| 09-20 · mono a 36 px misura 34,6 | §10 (c'era già); richiamo in Libreria: trappole |
-| 09-20 · `Messaggio(cta=…)` con CTA lunga | §10 (c'era già); nell'agente **superata**: la chiusura non ha più classe |
-| 09-20 · testo lungo a 36 px riempie l'area: il wow si fa svuotando | in vigore: Testo e densità |
-| 09-20 · dichiara cosa non hai guardato a 8 fps | in vigore: Cosa i controlli non vedono; Rapporto finale |
-| 09-20 · REGOLA: niente testo denso | in vigore: Testo e densità; `docs/regole-editoriali.md` §2; §10 |
-
-
 ## Lezioni dalle sessioni
 - **2026-09-21, REGOLA DEL PRESENTATORE: apertura e chiusura a volto pieno** (`docs/animazioni.md` §5):
   - l'**apertura non ha classe Manim**: non scriverla, il montaggio la compone con lui a tutta tela e le caption;
@@ -281,3 +224,9 @@ si spegne e resta il server, che diventa il noleggio. Regola nel tema «Il reel 
 Dopo la prima presa Flavio: «non voglio che leggi i fotogrammi dove compare il mio volto»; la revisione della VOCE si
 fa in `reel registra` (tasto E, fuori dalla presa), le caption dal testo recitato, `reel parlato --applica` lo riporta
 nel .md. Regole in docs/regole-editoriali.md §8-9; codice in fotogrammi.copri_volto, registra_app, monta.voce_recitata.
+
+## 2026-09-24 · refactoring degli agenti
+Tolte dall'agente le date fra parentesi e le regole che ripetevano `docs/animazioni.md` (beat di 2-3 parole, finale
+calmo, ordine dei passaggi e scambi di posto, ingressi che coprono i vicini, zoom a testo intero, ritorno dal punch,
+scene con aree diverse, icone sopra le carte, margine interno, testo denso e `reimpagina`, trappole della libreria):
+resta il rimando al manuale. Nessuna regola tolta perché superata.

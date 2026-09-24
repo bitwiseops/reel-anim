@@ -18,9 +18,10 @@ usati in contenuti/animazioni/esempio-reel.py (una classe ScenaNN per scena).
 Prova senza presentatore:  uv run reel monta templates/esempio-reel.md --prova --anteprima
 Il b-roll della scena 6 è un'immagine versionata in contenuti/media/esempio-reel/.
 
-Rifatto il 2026-09-20 per la regola «il reel si guarda muto» (docs/sceneggiatura.md §0): sul video ci sono le
-caption con il parlato, quindi l'animazione non contiene frasi da leggere. A schermo restano numeri, etichette di
-una parola e figure. La scena 6 è l'esempio della **deroga** (`CAPTION: alto`): lì il testo è il contenuto.
+Il reel si guarda muto (docs/regole-editoriali.md §1): l'animazione non contiene frasi da leggere, a schermo restano
+numeri, etichette di una parola e figure. La scena 6 è l'esempio della **deroga** (`CAPTION: alto`). Per mostrare i
+componenti `Titolo` e `Messaggio`, qui l'hook è animato (`RIQUADRO: no`) e la chiusura ha grafica sopra il volto
+pieno: nei reel veri apertura e chiusura sono solo il presentatore con le caption (docs/regole-editoriali.md §4).
 -->
 
 ## Scena 1 [hook]
@@ -118,7 +119,7 @@ FIGURA: tre tessere da mettere nella richiesta, e il messaggio sopra.
 - Componenti usati: `Titolo`, `Barrato`, `Etichetta`, `Classifica` (barre con etichetta di una parola), `Sagome`
   (il biglietto che si vede ma non si legge), `ContatoreScorre`, `Indice` (il gesto che trascina), `Carta` con la
   sola linguetta, `CorniceSchermo`, `Messaggio`, `Didascalia`.
-- La scena 7 non ha caption (default della chiusura): il `MESSAGGIO:` è già la frase detta.
+- La scena 7 è a volto pieno (default della chiusura), con le caption: la grafica va sopra, su fondo trasparente.
 
 ## Pacchetto social
 **Caption Reel:**

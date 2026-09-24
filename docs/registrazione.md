@@ -21,7 +21,7 @@ mano (§4); in quel caso il gobbo è `uv run reel gobbo <file> --scrivi` → `co
   per lo zoom, `W A S D` per spostarlo, `0` per tornare al quadrato centrale): la scelta resta in
   `contenuti/media/<slug>/inquadratura.json` e vale per le prese successive. Non si può scendere sotto 360 px di
   lato: il riquadro non ingrandisce mai i pixel. Con clip esterne il montaggio prende il quadrato centrale.
-- **L'app registra in verticale, 1080×1920** (dal 2026-09-21: la fotocamera integrata la offre nativa). Serve per
+- **L'app registra in verticale, 1080×1920** (la fotocamera integrata la offre nativa). Serve per
   **apertura e chiusura, che sono a volto pieno**: lì si usa il fotogramma intero, senza ingrandire niente, e nella
   clip `scena-NN.mov` non c'è ritaglio. Nelle altre scene il montaggio ne prende il quadrato dell'inquadratura per il
   cerchio. Quindi inquadrati pensando a tutti e due: **nel fotogramma intero** (testa e spalle, spazio sopra la
@@ -40,8 +40,8 @@ mano (§4); in quel caso il gobbo è `uv run reel gobbo <file> --scrivi` → `co
   prova: sono i tempi su cui l'animatore ha agganciato i beat, quindi l'animazione resta sincronizzata con te.
 - Con il telefono: **mezzo secondo di silenzio** prima e dopo, **una breve pausa tra una frase e l'altra** (ogni frase
   è un beat).
-- Microfono vicino, stanza silenziosa; il volume lo uniforma il montaggio (loudnorm a −16 LUFS).
-- Leggi la frase così com'è scritta: se la cambi, va cambiata anche la sceneggiatura (e forse l'animazione).
+- Microfono vicino, stanza silenziosa; il volume lo uniforma il montaggio (catena `[audio]`, reel a −14 LUFS).
+- Una frase da cambiare si corregge nell'app fuori dalla presa (`E`, §6): le righe restano tante quante le VOCE.
 
 ## 4. I file
 
@@ -73,15 +73,14 @@ Un'app desktop (Tkinter + ffmpeg avfoundation) con tre pannelli: **la webcam** c
 con te dentro** (l'anteprima `--prova` con il tuo volto live nel riquadro, dove lo metterà il montaggio) e **il testo
 karaoke** (la frase in corso con le parole che si accendono, la frase prima e quella dopo attenuate). I tre pannelli
 stanno in fila **sopra**, con **il karaoke al centro** fra webcam e reel e la finestra centrata in alto: il testo
-cade sotto la fotocamera del portatile e leggendo lo sguardo resta in camera (2026-09-23). I pannelli e prendono l'altezza che lo schermo lascia libera (`altezza_pannelli_px` in `[registrazione]`
+cade sotto la fotocamera del portatile e leggendo lo sguardo resta in camera. I pannelli prendono l'altezza che lo schermo lascia libera (`altezza_pannelli_px` in `[registrazione]`
 per forzarla); **sotto** ci sono le scene (cliccabili), i pulsanti (● Registra, ▶ Prova, ■ Ferma, ◀ ▶ scena), su una
 riga a parte i menu di microfono e fotocamera, e la riga di stato ad altezza fissa. All'avvio l'app misura la finestra
-vera e, se sborda dallo schermo, rifà i pannelli più bassi (2026-09-23: sul portatile i comandi uscivano di sotto e di
-lato anche a tutto schermo).
-**Vu-meter** (2026-09-23): accanto ai menu dei dispositivi c'è il livello del microfono, acceso anche fuori dalla
+vera e, se sborda dallo schermo, rifà i pannelli più bassi.
+**Vu-meter**: accanto ai menu dei dispositivi c'è il livello del microfono, acceso anche fuori dalla
 presa: verde fra −18 e −3 dB di picco (il bersaglio), giallo se basso o alto, rosso se troppo basso o se satura
-(«ha saturato» resta scritto). Il 23/09 le prese erano a −37 LUFS: alza il volume d'ingresso in Impostazioni di Sistema
-→ Suono → Ingresso finché il parlato normale sta nel verde. Il montaggio pulisce la voce e la porta a −14 LUFS
+(«ha saturato» resta scritto). Se il parlato normale non sta nel verde, alza il volume d'ingresso in Impostazioni di
+Sistema → Suono → Ingresso. Il montaggio pulisce la voce e la porta a −14 LUFS
 (`config.toml [audio]`, `uv run reel audio <file>` per il prima/dopo), ma un segnale più alto in partenza porta meno
 rumore.
 
@@ -93,12 +92,12 @@ Come funziona:
    e la registrazione è continua. Il reel è muto: il microfono registra te.
 3. La presa finisce a fine reel (o con **Spazio** per fermarla prima). L'app taglia subito le scene **coperte per
    intero** dalla presa in `scena-NN.mov` + `scena-NN.json`; una scena interrotta a metà non viene salvata.
-Prima della presa puoi fare una **prova senza registrare** (`P` o ▶ Prova): il reel scorre dalla scena scelta con il
-   volto live e il karaoke, ma non si apre il microfono e non si salva niente; Spazio, ■ o Esc la fermano.
+   Prima della presa puoi fare una **prova senza registrare** (`P` o ▶ Prova): il reel scorre dalla scena scelta con
+   il volto live e il karaoke, ma non si apre il microfono e non si salva niente; Spazio, ■ o Esc la fermano.
 4. Sbagliato qualcosa? Scegli la scena e rifai da lì: la presa nuova sostituisce solo le scene che copre.
    **Esc** esce (in presa: ferma, taglia, poi esce).
 
-**Il testo si corregge qui** (2026-09-22): fuori dalla presa, da fermo o durante la prova, `E` (o ✎ Modifica testo)
+**Il testo si corregge qui** (`docs/regole-editoriali.md` §9): fuori dalla presa, da fermo o durante la prova, `E` (o ✎ Modifica testo)
 rende modificabile il pannello del karaoke con le righe della scena scelta, una per frase (`==parola==` per l'evidenza
 nelle caption). ⌘↩ salva, Esc annulla. Le righe devono restare tante quante le VOCE (i beat sono legati alle frasi);
 vanno in `parlato.json` e la presa successiva le mostra nel karaoke e le scrive nel sidecar (`voce`). Il montaggio fa

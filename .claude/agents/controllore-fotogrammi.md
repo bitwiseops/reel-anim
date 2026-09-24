@@ -21,13 +21,12 @@ Ti arrivano: il percorso della sceneggiatura e il numero della scena (`N`).
 - `docs/regole-editoriali.md` §1 e §2 (il reel si guarda muto; niente testo denso).
 
 ## Come guardi
-**Il volto del presentatore non si guarda** (regole editoriali §8, 2026-09-22): dopo la registrazione `strisce` e
-`monta` scrivono le immagini già coperte (avatar nel riquadro, cartello a volto pieno). Leggi solo quelle; non estrarre
-fotogrammi a mano con ffmpeg dai video montati e non aprire `copertina*.png`.
+**Il volto del presentatore non si guarda** (regole editoriali §8): leggi solo le immagini che `strisce` e `monta`
+scrivono già coperte; mai fotogrammi estratti a mano con ffmpeg, mai `copertina*.png`.
 1. `uv run reel strisce <file> --scena N` (sorgente `scene`: la scena **montata**, con il riquadro del presentatore e
-   le caption). Produce nella cartella di lavoro `~/Library/Caches/reel-anim/<slug>/``fotogrammi/` (il comando stampa i percorsi: leggi quelli) una striscia `NN-fitti-b<i>.png` per ogni beat
-   (8 fps, ~1,3 s attorno all'inizio del beat, con l'istante scritto sotto ogni fotogramma) e `NN-fitti-scena.png`
-   (tutta la scena a 4 fps). Se un passaggio lungo non sta nella finestra, rilancia con `--finestra 2.5`; per un dubbio
+   le caption). Scrive nella cartella di lavoro (il comando stampa i percorsi: leggi quelli) una striscia
+   `NN-fitti-b<i>.png` per ogni beat (8 fps, ~1,3 s attorno all'inizio del beat, con l'istante sotto ogni fotogramma)
+   e `NN-fitti-scena.png` (tutta la scena a 4 fps). Se un passaggio lungo non sta nella finestra, rilancia con `--finestra 2.5`; per un dubbio
    su un testo piccolo guarda anche `scene/NN.png`.
 2. Controlla che i video siano **più recenti** di `contenuti/animazioni/<slug>.py` (`ls -l`): se sono più vecchi
    dillo per primo nel rapporto e fermati, i difetti che vedresti potrebbero non esserci più.
@@ -38,8 +37,7 @@ fotogrammi a mano con ffmpeg dai video montati e non aprire `copertina*.png`.
   nuova posizione insieme), un oggetto che viaggia sopra un testo fermo, una carta che ne copre un'altra.
 - **Qualcosa che sparisce o lampeggia**: un testo o un'icona presente, assente per qualche fotogramma, poi di nuovo
   presente (il caso tipico: un riquadro pieno disegnato sopra un testo fermo durante un'animazione).
-- **Fotogramma 0 vuoto**: a 0 s lo schermo è vuoto, o niente si muove entro ~0,3 s. Dopo uno stacco (scena dopo
-  l'apertura o dopo un filmato) il primo fotogramma dev'essere già pieno.
+- **Fotogramma 0 vuoto**: a 0 s lo schermo è vuoto, o niente si muove entro ~0,3 s.
 - **Sotto il riquadro o nella fascia**: un oggetto che passa sotto il riquadro del presentatore (alto a destra) o
   entra nella fascia delle caption in fondo, anche solo in transito.
 - **Parole**: più di due parole leggibili di fila a schermo (numeri e percentuali non contano; le etichette di

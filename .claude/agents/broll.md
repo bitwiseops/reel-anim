@@ -17,17 +17,15 @@ con l'animatore) e, per `scegli`, se la scelta è **a fermate** (consigli, scegl
 ## Modalità `marca`
 1. `broll piano <file>`: riporta quali scene propone a filmato. **Apertura e chiusura non ci sono mai**: sono il
    presentatore a tutto schermo (se l'hook risulta a filmato qualcuno ha scritto `SCHERMO:` a mano: segnalalo).
-2. **Guarda l'equilibrio**: le scene a filmato devono essere circa metà delle scene **in mezzo** (senza apertura e
-   chiusura), ± una, e mai due di fila. Se `piano` ne propone meno (avviso «troppo poche»), **guarda perché** nella
-   colonna `note` di `piano.json` («animata: …»): l'euristica cerca parole, e sbaglia (2026-09-21: ha tenuto animata
-   una scena perché la VOCE diceva «qui vedi come **funziona**», la promessa del canale e non un meccanismo).
+2. **Guarda l'equilibrio** (regole editoriali §3). Se `piano` propone troppo poche scene a filmato, **guarda perché**
+   nella colonna `note` di `piano.json` («animata: …»): l'euristica cerca parole, e sbaglia (una parola come
+   «funziona» detta come promessa, non come meccanismo).
    - Falso positivo su una scena scritta per il filmato (brief di una riga che descrive un'immagine, nessun `TESTO:`,
      voce generica): mettila a filmato tu in `piano.json` (`registro`, `file`, una `note` che dice perché) e **non
      rilanciare `piano` prima di `scrivi`**: la rifarebbe animata. Dopo `scrivi` la scena è `[broll]` e `piano` la rispetta.
    - La scena ha davvero numeri, conti o termini tecnici: la sceneggiatura non sta dividendo i registri. Non
      scegliere filmati a caso: chiudi BLOCKED con l'elenco delle scene rimaste animate e il perché, per lo sceneggiatore.
-3. **Le query**: `piano` le ricava dalle parole italiane del brief e Pexels le capisce male (2026-09-20: «piedi» →
-   otto filmati di piedi nudi). Riscrivi `query` in `piano.json` con 2-3 query **in inglese** per scena (soggetto,
+3. **Le query**: `piano` le ricava dalle parole italiane del brief e Pexels le capisce male. Riscrivi `query` in `piano.json` con 2-3 query **in inglese** per scena (soggetto,
    azione, luogo), prese dalle Note di produzione o dall'idea. Se il brief è fatto di parole vaghe e non descrive
    un'immagine filmabile, si rimanda allo sceneggiatore: BLOCKED.
 4. `broll scrivi <slug> --presto`: marca subito le scene come `[broll]` con `SCHERMO: broll-scena-NN.mp4`, anche se il
@@ -38,15 +36,15 @@ con l'animatore) e, per `scegli`, se la scelta è **a fermate** (consigli, scegl
 
 ## Modalità `scegli`
 1. `broll chiavi` (se manca la chiave di ricerca: BLOCKED), `broll cerca <slug> --max 12`, `broll provini <slug>`.
-2. **Guarda tu** i contact sheet `candidati-scena-NN.png` che `broll provini` stampa (Read; stanno in `~/Library/Caches/reel-anim/<slug>/``broll/`, fuori dal progetto). Criteri, in ordine:
-   soggetto pertinente alla VOCE della scena; **spazio libero dove cade il riquadro** del presentatore (alto a destra);
-   **niente volti umani** se la sceneggiatura non chiede espressamente una persona (mani e sagome di spalle sì), e fra
-   i candidati pertinenti vince quello con un **«wow» tecnologico** che serve al racconto (§3 delle regole editoriali,
-   2026-09-22); niente persone che parlano o sorridono in camera; niente stock da catalogo (strette di mano, sorrisi in posa); movimento calmo, leggibile senza audio;
-   verticale nativo meglio di un 16:9 ritagliato. Scarta ciò che contraddice la VOCE anche di poco.
+2. **Guarda tu** i contact sheet `candidati-scena-NN.png` che `broll provini` stampa (Read; il percorso lo stampa il
+   comando, nella cartella di lavoro `~/Library/Caches/reel-anim/<slug>/broll/`). Criteri, in ordine: soggetto
+   pertinente alla VOCE della scena; **spazio libero dove cade il riquadro** del presentatore (alto a destra); clip
+   senza volti e con un «wow» tecnologico (regole editoriali §3); niente stock da catalogo (strette di mano, sorrisi in
+   posa); movimento calmo, leggibile senza audio; verticale nativo meglio di un 16:9 ritagliato. Scarta ciò che
+   contraddice la VOCE anche di poco.
    Un'immagine con **due oggetti in relazione** (telefono vecchio accanto al nuovo) su Pexels quasi non esiste: dopo
    un giro di query a vuoto, due tagli nella stessa scena (`--aggiungi`) e dillo nel rapporto. Le ricerche di spesa e
-   negozi pescano molte clip con le **mascherine**: scartale a vista, l'euristica non le vede (2026-09-22).
+   negozi pescano molte clip con le **mascherine**: scartale a vista, l'euristica non le vede.
 3. **A fermate**: per ogni scena i **due** candidati che consigli e perché, con i comandi `broll scegli` già pronti.
    Ti fermi qui: sceglie il presentatore. **Provvisoria** (`--tutto`): scegli tu il migliore con
    `broll scegli <slug> --scena N --candidato <fornitore:id> [--da S]` e prosegui; dichiarala provvisoria.
@@ -55,12 +53,11 @@ con l'animatore) e, per `scegli`, se la scelta è **a fermate** (consigli, scegl
    volto) **si cambia candidato** — con i filmati già verticali l'ancora non sposta niente.
 5. `broll scrivi <slug>` (conferma tipo e file; se `marca` è già passata non cambia niente) e `uv run reel valida`.
 6. `contenuti/broll/<slug>/CREDITI.md` va nel rapporto: i nomi servono in didascalia.
-7. **Metà delle scene a filmato va a Meshy** (regole editoriali §3, 2026-09-23): cerca e guarda i candidati per
-   **tutte**, poi mettile in fila da quella il cui miglior filmato convince di più a quella che convince meno
-   (pertinenza alla VOCE, riquadro libero, «wow»). La **metà più debole** passa all'agente `immagini`, che la fa con
-   2-3 immagini generate con Meshy e animate: per quelle non scegli né rendi niente, e nel rapporto scrivi perché il
-   filmato non convince. Con un numero dispari la scena di mezzo va a Meshy solo se il suo filmato è debole. Scegli,
-   rendi e scrivi solo la metà più forte. Non ripiegare mai su un filmato che non c'entra.
+7. **Metà delle scene a filmato va a Meshy** (regole editoriali §3): cerca e guarda i candidati per **tutte**, poi
+   mettile in fila dal miglior filmato che convince di più a quello che convince meno (pertinenza alla VOCE, riquadro
+   libero, «wow»). La **metà più debole** passa all'agente `immagini`: per quelle non scegli né rendi niente, e nel
+   rapporto scrivi perché il filmato non convince. Scegli, rendi e scrivi solo la metà più forte. Non ripiegare mai su
+   un filmato che non c'entra.
 
 I filmati sono resi sulla durata **di adesso**: dopo la prima anteprima (o dopo la registrazione vera) le durate
 cambiano; `broll piano` riporta la scena a `scelto` e `broll rendi` la rifà lunga giusta (solo ffmpeg, costa poco).

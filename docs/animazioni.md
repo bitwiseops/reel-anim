@@ -6,14 +6,13 @@ all'agente animatore; la sezione 11 serve anche allo sceneggiatore. Esempio comp
 
 ## 0. Il reel si guarda muto: la figura spiega, non il testo
 
-Regola del presentatore del 2026-09-20. Sul video vengono bruciate le **caption** (il parlato scritto, sincronizzato,
-in una fascia in fondo: `[caption]` nel config, `tools/reel/caption.py`), e chi guarda **non può leggere le caption e
-un testo dell'animazione insieme**. Quindi:
+Le regole sono in `docs/regole-editoriali.md` §1-2: sul video si bruciano le **caption** (fascia in fondo,
+`[caption]` nel config), e chi guarda non può leggerle insieme a un testo dell'animazione. Per te:
 
 - **Niente frasi a schermo.** Vanno bene numeri, percentuali, una parola (due solo se sono un'espressione sola:
   «Fondo Monetario», «19 punti»). Il controllo `parole-leggibili` dà ✗ sopra due parole di fila.
 - **La fascia delle caption è vietata al disegno**: `self.area.contenuto` la esclude già, e il controllo `caption`
-  segnala chi ci entra. L'area utile è più piccola di prima (900 × 752 px con il riquadro in alto a destra).
+  segnala chi ci entra. L'area utile è di 900 × 752 px con il riquadro in alto a destra.
 - **Il concetto lo porta la figura**: una quantità (`Fila`), un documento che si vede ma non si legge (`Sagome`), un
   gesto (`Indice`), un verdetto (`Spunta`/`Croce`), un prima/dopo (`PrimaDopo`), una lente (`Lente`). La riga
   `FIGURA:` della sceneggiatura dice cosa si deve capire guardando: è quella che devi rendere vera.
@@ -48,7 +47,7 @@ Si parte da una sceneggiatura in `stato: rivisto` (`uv run reel valida <file>` s
    visivo: la scena animata dopo un `[broll]` entra con un taglio netto, col fotogramma 0 **già pieno e uguale allo
    stato di fine della scena animata precedente** (`stato_fine_N()` condiviso: chi guarda riconosce quello che ha
    lasciato), e il primo cambiamento entro 0,3 s. Dopo l'apertura a volto pieno, invece, non c'è uno stato da
-   riprendere: il fotogramma 0 è pieno e si regge da solo (2026-09-20, 2026-09-21).
+   riprendere: il fotogramma 0 è pieno e si regge da solo.
 2. Renderizza in bassa qualità, una scena alla volta mentre la sistemi:
    ```
    uv run reel anima <file.md> --qualita l --scena 3
@@ -79,7 +78,8 @@ Si parte da una sceneggiatura in `stato: rivisto` (`uv run reel valida <file>` s
    ```
    uv run reel strisce <file.md> --scena 5 [--fps 8] [--finestra 1.3] [--sorgente anima|scene]
    ```
-   scrive in `~/Library/Caches/reel-anim/<slug>/``fotogrammi/05-fitti-*.png` (la cartella di lavoro, fuori dal progetto: il comando stampa i percorsi) (con `--sorgente anima`: `05-fitti-anima-*.png`) una striscia a 4 fps su tutta la scena e una striscia
+   scrive nella cartella di lavoro (`~/Library/Caches/reel-anim/<slug>/fotogrammi/05-fitti-*.png`, con `--sorgente
+   anima` `05-fitti-anima-*.png`: il comando stampa i percorsi) una striscia a 4 fps su tutta la scena e una striscia
    fitta (8 fps, finestra di ~1,3 s) attorno all'inizio di ogni beat. Guardale: nessun testo deve sparire, lampeggiare,
    finire coperto o attraversarne un altro fra un fotogramma e l'altro. I **passaggi** (l'inizio di ogni beat, ogni
    `play` che sposta o scambia testi) vogliono 8 fps o più: a 4 fps due testi uno sull'altro per 0,3 s non si vedono.
@@ -89,15 +89,6 @@ Si parte da una sceneggiatura in `stato: rivisto` (`uv run reel valida <file>` s
    Dopo la consegna il coordinatore fa riguardare le stesse strisce a un `controllore-fotogrammi` per scena.
 6. Scrivi le «Note di animazione» nella sceneggiatura (beat scelti, cosa non ci stava, tempi Manim) e porta lo
    stato a `animato`.
-
-Chiudi sempre con un rapporto breve:
-```
-Stato: DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT
-File: contenuti/animazioni/<slug>.py
-Comandi: anima ×N giri, monta --prova --anteprima (reel 51 s, 0 errori, 0 avvisi)
-Avvisi rimasti: …
-Cosa non ci stava / domande: …
-```
 
 ## 2bis. Controlli automatici
 
@@ -115,7 +106,7 @@ segnalata non si ripete nei beat dopo. **Zero violazioni prima di consegnare.**
 | `testo-coperto` | un testo sotto una forma piena disegnata dopo | ordine dentro `play`, `group=self`, `set_z_index` |
 | `testi-sovrapposti` | due testi uno sull'altro | `arrange`/`next_to` con `buff`; azzera il beat precedente |
 | `colore`, `gradiente` | colori fuori palette (spesso il bianco o il rosso di default di Manim), riempimenti a più colori | `self.cfg.palette` |
-| `fotogramma-vuoto` | hook con il primo fotogramma vuoto (è quello che vede chi scorre) | `self.add(titolo)` prima della prima animazione, poi un movimento entro 0,5 s |
+| `fotogramma-vuoto` | hook animato (`RIQUADRO: no`) con il primo fotogramma vuoto | `self.add(titolo)` prima della prima animazione, poi un movimento entro 0,5 s |
 
 Con la camera ingrandita (`zoom_su`) i controlli misurano quello che si vede sullo schermo: corpo del testo moltiplicato
 per lo zoom, safe area e riquadro fermi.
@@ -126,8 +117,8 @@ Prima del render, un controllo statico del file segnala con il numero di riga i 
 
 Limiti: i controlli guardano i riquadri di ingombro, non i pixel; non vedono il b-roll delle scene `schermo` né le
 immagini; il corpo del testo di `Codice` lo garantisce il componente (solleva un errore se non ci sta).
-**Lacuna** (2026-09-21): `fotogramma-vuoto` scatta solo sul tipo `hook`, che non ha più classe; nessun controllo
-guarda il fotogramma 0 delle scene che partono da uno stacco (dopo l'apertura, dopo un filmato): va guardato a occhio.
+Nessun controllo guarda il fotogramma 0 delle scene che partono da uno stacco (dopo l'apertura, dopo un filmato): va
+guardato a occhio.
 
 ## 3. Anatomia del file
 
@@ -190,8 +181,7 @@ scena già ingrandita (continuità con la precedente) imposta la camera senza an
 - **Zoom sul dettaglio isolato** (una riga e un cursore), non su una composizione a tutta larghezza: lì taglia
   sempre del testo ai bordi, e una parola tagliata a metà si legge come un errore. A zoom pieno **ogni testo
   nell'inquadratura è intero o del tutto fuori campo**: guardalo sul fotogramma a zoom pieno, perché i controlli
-  misurano la fine del beat, quando lo zoom è già tornato. Nel primo reel lo zoom 2× sul cursore della scena 2 è stato
-  tolto per una sola riga tagliata sopra («pensione di Marco. Lo fir…»).
+  misurano la fine del beat, quando lo zoom è già tornato.
 - **`punch` finisce da solo prima del beat dopo**: con la voce di prova «Lei no.» dura 0,7 s, e la tenuta si
   accorcia (mai sotto 0,3 s). Ciò che aggiungi o cambi **subito prima** di `punch` compare solo al ritorno, con il
   taglio: è il modo di far coincidere il cambio con la battuta («Lei no.» acceso nel biglietto).
@@ -212,12 +202,10 @@ Regole:
   dell'anteprima, 0,21 s diventano 0,27 s). Nei cicli usa `self.arrotonda(...)` oppure un'unica `play`.
 - **`run_time` di un gruppo** (`AnimationGroup`, `LaggedStart`) è la durata totale, non quella di ogni pezzo.
 - **Ritmo veloce-veloce-LENTO**: i beat di preparazione sono rapidi, il punto chiave ha più tempo.
-- **Finale calmo** (era «chiusura calma»: dal 2026-09-21 la chiusura non ha classe, e la regola vale per l'**ultima
-  scena animata**, che porta l'ultima figura del reel): al massimo un passaggio per frase della VOCE, ognuno di
-  almeno 0,6 s, e l'ultimo fotogramma pulito di ~1 s. Nel primo reel la chiusura, accorciata a 6,8 s, aveva sette
-  passaggi, quattro sotto il mezzo secondo, e al presentatore sono sembrati troppo veloci. Se il tempo non basta si
-  toglie un passaggio (un richiamo),
-  non si accorciano tutti. Le uscite rapide di pulizia (0,3 s) vanno bene nelle scene di spiegazione.
+- **Finale calmo** nell'**ultima scena animata**, che porta l'ultima figura del reel: al massimo un passaggio per
+  frase della VOCE, ognuno di almeno 0,6 s, e l'ultimo fotogramma pulito di ~1 s. Se il tempo non basta si toglie un
+  passaggio (un richiamo), non si accorciano tutti. Le uscite rapide di pulizia (0,3 s) vanno bene nelle scene di
+  spiegazione.
 - **Azzera e ricostruisci**: all'inizio del beat esce ciò che non serve più (0,3-0,5 s), poi entra il nuovo.
   L'ultimo beat non sgombera mai: il suo fotogramma resta fino alla fine (e fa da chiusura).
   ```python
@@ -243,30 +231,12 @@ Regole:
 - **Allineamento a sinistra** per il testo che si legge; centrato solo per un titolo isolato.
 - **Se non ci sta**, riduci il contenuto (meno parole, meno voci); scalare il gruppo intero è l'ultima risorsa e
   poi va ricontrollato il corpo minimo di 36 px.
-- **Apertura e chiusura a volto pieno** (dal 2026-09-21, `RIQUADRO: pieno` è il loro default): lì la tela è il
-  presentatore, che guarda in camera. Regole:
-  - **l'apertura non ha classe Manim**: è lui e basta, con le caption. Non scriverla (il montaggio la compone senza
-    grafica); il `TITOLO:` va solo in copertina.
-  - **nemmeno la chiusura ha classe Manim** (decisione del presentatore dopo la prima anteprima, 2026-09-21): è lui
-    che dice la conclusione, con le caption, e nient'altro — niente MESSAGGIO né CTA a schermo. Non scriverla.
-  - Le regole qui sotto valgono solo se un giorno una scena a volto pieno torna ad avere grafica (per ora nessuna):
-    la classe si renderizza **su fondo trasparente** sopra il video; mai un fondo pieno, mai un rettangolo a tutta
-    tela, mai il filo visivo delle scene prima: coprirebbero la faccia.
-  - **il testo sopra un video va su un appoggio**: un pannello scuro semitrasparente (`sfondo` a opacità ~0,75,
-    angoli arrotondati, tinta unita: niente gradienti) sotto al `Messaggio` e alla CTA. Sopra una faccia e uno
-    sfondo di casa qualunque il bianco da solo non ha contrasto garantito — sul segnaposto azzurro di `--prova` si
-    legge a fatica già adesso.
-  - **la faccia sta al centro**: tieni il messaggio in alto, largo e corto, e non farlo scendere sul volto. In
-    numeri (2026-09-21, prima chiusura montata): l'appoggio **finisce entro i 700 px della tela** (dall'alto); la
-    «metà alta» dell'area contenuto arriva a 788 px e sul segnaposto scende già sulla fronte. Se non ci sta, si
-    rimpicciolisce il messaggio (0,7 = 59 px, mai sotto i 36 px) invece di abbassarlo.
-  - l'area contenuto a volto pieno è più alta di quella delle scene col riquadro (manca la fascia del riquadro):
-    **non ricostruire lì l'ultimo fotogramma della scena prima**, perché non c'è continuità da tenere — l'arrivo
-    sulla faccia è uno stacco, ed è voluto.
-  - Nel `--prova` al posto del presentatore c'è l'avatar segnaposto a tutto schermo: la composizione si giudica lì.
-- **Hook animato** (solo se dichiarato con `RIQUADRO: no`, non è più lo standard): niente riquadro, l'area contenuto
-  è più alta; il titolo è anche la copertina (l'ultimo fotogramma dell'hook: deve essere completo) e il primo
-  fotogramma non è mai vuoto (controllo `fotogramma-vuoto`).
+- **Apertura e chiusura a volto pieno** (`docs/regole-editoriali.md` §4) **non hanno classe Manim**: non scriverle,
+  il montaggio le compone senza grafica. La scena che le segue o le precede è uno stacco: non ricostruire la faccia.
+  (Se una scena a volto pieno ha una classe, come nell'esempio della libreria, si rende su fondo trasparente sopra il
+  video: mai fondi pieni o rettangoli a tutta tela.)
+- **Hook animato** (`RIQUADRO: no`, solo nell'esempio della libreria): niente riquadro, area contenuto più alta, il
+  primo fotogramma non è mai vuoto (controllo `fotogramma-vuoto`).
 - **Scene `schermo`**: il b-roll sta in `self.area.schermo` (lo mette sotto il montaggio); disegna la
   `CorniceSchermo(self.area.schermo)` e le etichette sopra o accanto. Per indicare un punto dell'immagine usa
   `area_px(self.cfg, x0, y0, x1, y1)` in pixel della tela (l'immagine è posata in `[schermo] x, y` del config).
@@ -274,13 +244,11 @@ Regole:
   va in alto (`RIQUADRO: alto-destra` o `alto-sinistra`); `reel valida` avvisa se copre la cornice.
 - **Spazio vuoto**: meglio un'area ariosa che dieci elementi piccoli; ma una metà dello schermo vuota per tutta la
   scena è spreco: centra il gruppo nell'area (`a.metti(g, "centro", "sinistra")`).
-- **Filo visivo e continuità fra le scene** (il presentatore l'ha apprezzato nel primo reel): 2-3 oggetti che
-  ritornano per tutto il reel con lo stesso aspetto, e **ogni scena che parte dall'ultimo fotogramma della
-  precedente**, ricostruito con funzioni di impaginazione condivise nel file (`disposizione_NN()`,
-  `stato_finale_NN()`): la dissolvenza fra le scene non si vede e gli oggetti non saltano. Esempio:
-  `contenuti/archivio/generativa-non-creativa/animazioni.py` (archiviato: si legge, non gira). Per compattare o far
-  crescere una carta, tienila a pezzi (riquadro, titolo, righe) con il riquadro sotto (`set_z_index(-1)`) e passa da
-  uno stato all'altro con `Transform`.
+- **Filo visivo e continuità fra le scene**: 2-3 oggetti che ritornano per tutto il reel con lo stesso aspetto, e
+  **ogni scena che parte dall'ultimo fotogramma della precedente**, ricostruito con funzioni di impaginazione
+  condivise nel file (`disposizione_NN()`, `stato_finale_NN()`): la dissolvenza fra le scene non si vede e gli oggetti
+  non saltano. Per compattare o far crescere una carta, tienila a pezzi (riquadro, titolo, righe) con il riquadro sotto
+  (`set_z_index(-1)`) e passa da uno stato all'altro con `Transform`.
 
 ## 6. Testo
 
@@ -328,7 +296,7 @@ Import da `tools.anim.componenti`. Tutti sono `VGroup` posizionabili; i metodi r
 |---|---|---|
 | `Titolo(s, larghezza_px=900, maiuscolo=True)` | hook, titoli di sezione | `entra()`, `per_righe(lag)`, `.parola(w)` |
 | `Messaggio(s, cta=None)` | chiusura | `entra()`, `per_righe()` |
-| `Didascalia(s, area=None)` | didascalia attenuata in fondo all'area (era `Caption`, rinominata: «caption» ora sono i sottotitoli) | `entra()` |
+| `Didascalia(s, area=None)` | didascalia attenuata in fondo all'area | `entra()` |
 | `Etichetta(s, colore=None, pieno=True)` | parola chiave a pillola (`TESTO:`) | `entra()`; `.testo` |
 | `Barrato(parola)` | «non vuol dire X» (passa `blocco.parola(...)` o un `Blocco`) | `entra()` |
 | `Freccia(da, a, s=None, colore=None)` | causa → effetto, «da qui a lì» | `entra()` |
@@ -348,9 +316,9 @@ Note: `Evidenzia(buff=...)` è in **unità**, non in px: scrivi `buff=px(12)`. `
 `aggiorna()` usano l'indice originale della voce, anche dopo un riordino. `Frase.aggiungi(token, da=...)` fa
 volare il cartellino dal punto `da` (es. `cl.token(0)` dall'etichetta della barra).
 
-### Spiegare senza parole (dal 2026-09-20)
+### Spiegare senza parole
 
-Questi non contengono testo: sono il modo normale di spiegare, adesso.
+Questi non contengono testo: sono il modo normale di spiegare.
 
 | Componente | Quando | Animazioni |
 |---|---|---|
@@ -452,12 +420,7 @@ restare nello stesso posto della lista (è così che `Classifica.aggiorna` fa sc
 - **Opacità di un cartellino intero**: ogni riga di `testo()` ha un puntello invisibile (una `Line` larga zero che
   tiene costante l'altezza). Cambiando l'opacità o il colore del `Token` intero cambia anche il puntello, e il
   controllo lo segnala come «colore fuori palette». Tocca solo il riquadro (`t.box`) e i glifi (`t.testo`).
-- **`punch` subito dopo `beat(i)`** (corretto in `base.py` il 2026-09-14, test
-  `test_punch_subito_dopo_beat_non_accorcia_la_battuta`): se `beat(i)` si fermava una frazione di fotogramma prima
-  dell'inizio della frase, `punch` prendeva il beat in corso per quello dopo e portava la tenuta al minimo (0,3 s).
-  Ora un inizio entro un fotogramma da adesso non conta. L'aiuto `oltre_inizio(i)` del primo reel non serve più.
-  Guarda comunque la tenuta del punch sui fotogrammi fitti.
-- **Testi che si attraversano durante un passaggio** (2026-09-19; i controlli non li vedono, solo i fotogrammi a
+- **Testi che si attraversano durante un passaggio** (i controlli non li vedono, solo i fotogrammi a
   8 fps o più): (a) nella stessa `play` le finestre `squish_rate_func` di chi esce e di chi si muove non devono
   accavallarsi: prima escono i testi, poi cambiano i riquadri, poi entrano i testi nuovi; (b) due oggetti che si
   scambiano di posto nella stessa colonna si attraversano per forza: uno dei due si spegne dov'è e ricompare
@@ -465,44 +428,33 @@ restare nello stesso posto della lista (è così che `Classifica.aggiorna` fa sc
   sopra le righe vicine, le parole che cambiano riga: muovi prima in orizzontale restando sulla riga, poi in verticale;
   chi scende su una riga già occupata non viaggia: si spegne e si riaccende al suo posto; (d) `ease_in_back` arretra
   del 10 % della corsa: su una corsa di 9 unità sono 110 px, oltre il bordo della carta e della tela: usa una carica
-  che arretra del 3 %. Gli aiuti locali `fra`, `carica`, `a_tappe` (più stati in una sola animazione, con un tratto
-  trasparente) e `reimpagina` sono in `contenuti/archivio/generativa-probabile/animazioni.py` (si legge, non gira):
-  non sono in libreria.
+  che arretra del 3 % (pattern `rimbalzo`, `docs/pattern-manim.md` §2).
 - **Immagini** (`ImageMobject`): non sono vettoriali, vanno in un `Group` (non `VGroup`) ed entrano solo con
   dissolvenze o scala.
 - **`MoveAlongPath` su una copia di una freccia** segue anche la punta: usa un arco senza punta fra gli stessi
   punti (`ArcBetweenPoints`).
 - **`to_edge` e `to_corner`** misurano dal bordo della tela, non dall'area utile: finiscono sotto l'interfaccia.
-- **`cfg.palette` dentro un mobject → RecursionError su `copy()`** (2026-09-20; **corretto in `tools/anim/config.py`
-  il 2026-09-21**, con un test): `__getattr__` ricorreva su `_d` quando `deepcopy` creava l'oggetto senza `__init__`.
-  Nei file nuovi resta più semplice tenere le stringhe dei colori.
-- **Mono a 36 px misura 34,6 px** (2026-09-20): cifre, contatori e il ruolo `piede` con `mono=True` vanno a 40 px.
+- **Mono a 36 px misura 34,6 px**: cifre, contatori e il ruolo `piede` con `mono=True` vanno a 40 px.
 - **`Messaggio(cta=…)` con una CTA lunga** la riduce sotto i 36 px invece di andare a capo: spezzala su due righe.
-- **Testo denso che resta a schermo** (regola del presentatore, 2026-09-20). Un documento lungo (mail, richiesta,
-  elenco) si mostra intero solo per un istante (≤ 1-1,5 s); poi resta leggibile il frammento del beat e il resto
-  diventa **righe-sagoma** (barrette larghe come le righe vere), oppure si va in zoom sul frammento col resto a zero,
-  o la carta si accorcia. Attenuare a grigio non basta. A ogni fine beat: più di una ventina di parole leggibili,
-  esclusi titoli ed etichette, è troppo. Riguarda le scene con deroga `CAPTION: alto`: nelle altre vale
-  `parole-leggibili` (mai più di due di fila).
+- **Testo denso che resta a schermo** (`docs/regole-editoriali.md` §2), nelle scene con deroga `CAPTION: alto`
+  (nelle altre vale `parole-leggibili`): il documento intero solo per un istante, poi resta leggibile il frammento del
+  beat e il resto diventa **righe-sagoma** (`Sagome`: barrette larghe come le righe vere), oppure zoom sul frammento
+  col resto a zero, o la carta si accorcia.
 
-- **Scene con aree diverse** (2026-09-21, `ia-e-lavoro`): quando due scene hanno aree contenuto diverse — una ha la
-  fascia caption e l'altra no, una ha il riquadro e l'altra no — ricostruire l'ultimo fotogramma della prima dentro
-  la seconda con `self.area.contenuto` sposta tutto ciò che è ancorato al bordo (lì erano 224 px). Rimedio:
-  ricostruisci con l'area della scena da cui arrivi, e verifica a pixel l'ultimo fotogramma della prima contro il
-  primo della seconda (lì: 59 px su 518.400, solo antialias). Nessun controllo lo vede. Il caso che l'ha fatto
-  scoprire — la chiusura senza fascia caption — non c'è più: dalla sera stessa la chiusura è **a volto pieno** (§5),
-  ha le caption e non riprende la scena prima.
-- **Testi misurati al livello del modulo** (2026-09-14): una costante calcolata con `testo()` all'import viene
+- **Scene con aree diverse** (una con la fascia caption in fondo e l'altra in cima, una col riquadro e l'altra no):
+  ricostruire l'ultimo fotogramma della prima dentro la seconda con `self.area.contenuto` sposta tutto ciò che è
+  ancorato al bordo. Ricostruisci con l'area della scena da cui arrivi e verifica a pixel l'ultimo fotogramma della
+  prima contro il primo della seconda. Nessun controllo lo vede.
+- **Testi misurati al livello del modulo**: una costante calcolata con `testo()` all'import viene
   misurata prima che il font sia registrato; Manim scrive un avviso su stdout e `anima --json` non è più JSON. Misura
   dentro una funzione.
-- **Il margine interno di un riquadro non lo controlla nessuno** (2026-09-19): i controlli guardano l'ingombro della
+- **Il margine interno di un riquadro non lo controlla nessuno**: i controlli guardano l'ingombro della
   carta nell'area e i testi fra loro. Un `testo()` con a capo fissi (`\n`, senza `larghezza_px`) non va a capo da solo
-  e può finire a filo del bordo (9 px a destra contro 24 a sinistra, 0 controlli): misura
+  e può finire a filo del bordo: misura
   `destra(riquadro) − destra(riga più lunga)` con uno script che importa il `.py` dentro `tempconfig`.
-- **Un'icona disegnata sopra una carta opaca** sparisce per un secondo durante le animazioni della carta (2026-09-21;
-  è il caso del riquadro pieno, e i controlli a scena ferma non lo vedono): riserva alle icone una fascia fuori
+- **Un'icona disegnata sopra una carta opaca** sparisce per un secondo durante le animazioni della carta (è il caso del riquadro pieno, e i controlli a scena ferma non lo vedono): riserva alle icone una fascia fuori
   dall'ingombro delle carte.
-- **Ingressi che coprono i vicini** (2026-09-19, 2026-09-21): `FadeIn(scale=1.9)` copre per due fotogrammi le righe
+- **Ingressi che coprono i vicini**: `FadeIn(scale=1.9)` copre per due fotogrammi le righe
   accanto (fai crescere da `scale=0.4` con un rimbalzo corto); un ingresso da sotto con `shift=UP * 0.8` che finisce
   a 10 px dal riquadro del presentatore ci passa sotto (si vede solo sui `_scene` montati); copie che escono da dietro
   un oggetto in dissolvenza si vedono l'una attraverso l'altra: falle scivolare.
@@ -526,11 +478,9 @@ frase `VOCE:` quando i cambi sono più d'uno.
 
 ## 11bis. Mosse wow
 
-Il presentatore vuole animazioni che stupiscano (2026-09-16). Pulite e a tempo non basta: carte e cartellini sempre
-alla stessa scala, che entrano in dissolvenza e scivolano in linea retta, si leggono come slide. Ogni scena ha **un
-momento wow**, uno solo, sulla frase che conta, scelto da questo repertorio. Tutte le mosse si fanno con Manim e con la
-libreria di oggi; gli aiuti di libreria dedicati (effetti sonori, riquadro che cresce, `moltiplica`, `Muro`) sono il
-livello 2, non ancora fatto.
+Pulite e a tempo non basta: carte e cartellini sempre alla stessa scala, che entrano in dissolvenza e scivolano in
+linea retta, si leggono come slide. Ogni scena ha **un momento wow**, uno solo, sulla frase che conta, scelto da
+questo repertorio. Tutte le mosse si fanno con Manim e con la libreria di oggi.
 
 | Mossa | Cosa si vede | Quando | Come (Manim 0.21) |
 |---|---|---|---|
@@ -565,7 +515,7 @@ Regole:
 
 - Mentre lavori: `anima --qualita l --scena N` (540×960 a 15 fps: la leggibilità va giudicata sul PNG della
   scena, non sulla bassa qualità).
-- `monta` tiene nella cartella di lavoro (`config.toml [percorsi] lavoro`, dal 2026-09-23) `_manim/cache.json` una chiave per scena (file delle animazioni, libreria `tools/anim`,
+- `monta` tiene nella cartella di lavoro (`config.toml [percorsi] lavoro`) in `_manim/cache.json` una chiave per scena (file delle animazioni, libreria `tools/anim`,
   config, dati della scena con gli inizi delle frasi): se nulla è cambiato la grafica non si rifà. `anima` non usa
   la cache e scrive in `_anima/`.
 - Tempi misurati sull'esempio (7 scene, reel di 51 s, Mac M4 Pro):
