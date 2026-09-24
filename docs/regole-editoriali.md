@@ -79,7 +79,8 @@ misura alla lettera**.
 ## 6. Ogni reel è a sé stante
 Chi guarda un reel non ha visto gli altri: niente personaggi, aziende o vicende che proseguono, niente «come
 dicevamo» o «ricordi la mail?». Nomi e situazioni inventati sono nuovi a ogni reel; un concetto già spiegato altrove
-si ridice in una frase, come fosse la prima volta. Gli altri reel si leggono solo per **non ripetersi**.
+si ridice in una frase, come fosse la prima volta. Gli altri reel si leggono solo per **non ripetersi**: nessun
+agente prende a modello idee, sceneggiature o animazioni di reel passati, si parte da fonte, regole e `templates/`.
 
 ## 7. Le revisioni del presentatore hanno l'ultima parola
 Un suo ritocco, anche a un testo attribuito a un modello, si applica così com'è: non gli si oppone una regola. Si

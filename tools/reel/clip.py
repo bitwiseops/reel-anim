@@ -13,7 +13,9 @@ SILENZIO_S = 0.5   # silenzio che il gobbo chiede prima e dopo la voce: gli iniz
 
 
 def cartella(slug: str) -> Path:
-    return RADICE / "contenuti" / "media" / slug
+    """I media di un reel; un esempio versionato (`templates/<slug>/`) li tiene in `media/` accanto a sé."""
+    esempio = RADICE / "templates" / slug / "media"
+    return esempio if esempio.is_dir() else RADICE / "contenuti" / "media" / slug
 
 
 def nome_atteso(n: int) -> str:

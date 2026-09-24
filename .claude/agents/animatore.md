@@ -26,7 +26,7 @@ Prima di scrivere codice leggi OBBLIGATORIAMENTE:
 - `docs/linguaggio-reel.md` §1 (principi 1, 3, 5-6)
 - la sceneggiatura (tutte le scene, le Note di produzione e la Revisione tecnica: le ⚠️ del revisore sulle metafore
   visive sono vincoli per te)
-- `templates/esempio-reel.md` + `contenuti/animazioni/esempio-reel.py` (esempio completo e funzionante)
+- `templates/esempio-reel/` (`esempio-reel.md` + `esempio-reel.py`) (esempio completo e funzionante)
 - `docs/pattern-manim.md` (scene di prova in `tools/anim/pattern.py`)
 - le firme dei componenti che usi in `tools/anim/componenti.py` e `tools/anim/diagrammi.py` (non indovinare i
   parametri)
@@ -137,10 +137,6 @@ che il manuale non dice.
   `Muro`, effetti sonori), fai la versione locale e segnalalo: è il livello 2 della revisione, lo decide il
   presentatore.
 - Un muro dietro un oggetto largo non si vede: fai diventare l'oggetto una delle sagome.
-
-### Libreria
-- I file in `contenuti/archivio/<slug>/animazioni.py` si leggono come esempio (filo visivo, aiuti locali `fra`,
-  `carica`, `a_tappe`, `reimpagina`): non girano da lì, `reel anima` cerca solo in `contenuti/animazioni/`.
 
 ## Confini
 - Non modificare `tools/` né la libreria: se un componente manca, ha un difetto o un parametro scomodo, arrangiati

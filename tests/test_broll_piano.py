@@ -5,7 +5,7 @@ import json
 from tools.broll.piano import RADICE, Piano, ScenaBroll, _proponi, controlla, da_sceneggiatura, salva
 from tools.reel.model import Scena
 
-ESEMPIO = RADICE / "templates" / "esempio-reel.md"
+ESEMPIO = RADICE / "templates" / "esempio-reel" / "esempio-reel.md"
 
 
 def _scene(tipi: list[str]) -> list[Scena]:

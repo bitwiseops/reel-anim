@@ -76,7 +76,7 @@ def test_strisce_fitte_nomi_e_dimensioni(clip, tmp_path):
 @pytest.mark.slow
 def test_cmd_strisce_senza_report_fa_solo_la_scena_intera(clip, tmp_path, capsys):
     from tools.reel.__main__ import main
-    md = Path(__file__).resolve().parents[1] / "templates" / "esempio-reel.md"
+    md = Path(__file__).resolve().parents[1] / "templates" / "esempio-reel" / "esempio-reel.md"
     (tmp_path / "_scene").mkdir()
     (tmp_path / "_scene" / "02.mp4").write_bytes(clip.read_bytes())
     assert main(["strisce", str(md), "--out", str(tmp_path), "--json"]) == 0

@@ -30,7 +30,7 @@ def _msg(diag) -> str:
 
 
 def test_esempio_e_reel_base_senza_diagnostiche():
-    r, avvisi = parse(RADICE / "templates" / "esempio-reel.md")
+    r, avvisi = parse(RADICE / "templates" / "esempio-reel" / "esempio-reel.md")
     assert avvisi + check(r) == []
     assert _check(_base()) == []
 

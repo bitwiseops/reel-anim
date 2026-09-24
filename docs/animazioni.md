@@ -2,7 +2,7 @@
 
 Come si scrivono le animazioni dei reel: una classe Manim per scena, con la libreria di `tools/anim/`. Serve
 all'agente animatore; la sezione 11 serve anche allo sceneggiatore. Esempio completo e funzionante:
-`templates/esempio-reel.md` + `contenuti/animazioni/esempio-reel.py` (7 scene, tutti i componenti).
+`templates/esempio-reel/` (`esempio-reel.md` + `esempio-reel.py`) (7 scene, tutti i componenti).
 
 ## 0. Il reel si guarda muto: la figura spiega, non il testo
 

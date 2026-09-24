@@ -1,4 +1,4 @@
-"""Render programmatico di una scena Manim da contenuti/animazioni/<slug>.py."""
+"""Render programmatico di una scena Manim da contenuti/animazioni/<slug>.py (o dall'esempio in templates/<slug>/)."""
 from __future__ import annotations
 
 import hashlib
@@ -55,7 +55,9 @@ def lint_animazione(path: Path) -> list[tuple[int, str]]:
 
 
 def file_animazione(slug: str) -> Path:
-    return RADICE / "contenuti" / "animazioni" / f"{slug}.py"
+    """Le animazioni di un reel; un esempio versionato (`templates/<slug>/`) le tiene accanto alla sceneggiatura."""
+    esempio = RADICE / "templates" / slug / f"{slug}.py"
+    return esempio if esempio.exists() else RADICE / "contenuti" / "animazioni" / f"{slug}.py"
 
 
 def carica_modulo(path: Path) -> ModuleType:

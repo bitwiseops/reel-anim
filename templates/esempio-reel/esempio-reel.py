@@ -1,4 +1,4 @@
-"""Animazioni dell'esempio (templates/esempio-reel.md): una classe ScenaNN per scena.
+"""Animazioni dell'esempio (esempio-reel.md qui accanto): una classe ScenaNN per scena.
 
 Rifatto il 2026-09-20 per la regola «il reel si guarda muto» (docs/sceneggiatura.md §0): sul video vengono bruciate
 le caption con il parlato, quindi qui **non ci sono frasi da leggere**. A schermo restano figure, numeri ed etichette

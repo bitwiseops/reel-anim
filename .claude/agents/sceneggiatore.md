@@ -43,13 +43,12 @@ La fonte unica è `docs/regole-editoriali.md` (leggila): qui c'è solo la parte 
 ## Prima di scrivere leggi OBBLIGATORIAMENTE
 - `docs/regole-editoriali.md` e `docs/sceneggiatura.md` (grammatica, §5 copione → beat: è la tua bibbia)
 - `docs/linguaggio-reel.md` (hook come promessa al «tu», cambi grandi con `GRANDE:`, chiusura con un payoff)
-- `templates/reel.md` (usa ESATTAMENTE quella grammatica, frontmatter incluso) e `templates/esempio-reel.md` (per
+- `templates/reel.md` (usa ESATTAMENTE quella grammatica, frontmatter incluso) e `templates/esempio-reel/esempio-reel.md` (per
   il ritmo e la forma, non da copiare)
 - `docs/animazioni.md` §0, §8 (componenti) e §11 (brief ANIMAZIONE: male e bene)
 - **il copione** (`**Copione:**` dell'idea): frontmatter (modello, catena, avvisi) e scene
 - il file idea (`## Struttura narrativa`, `## Tappe del parlato` e, se c'è, il file delle `**Uscite:**`)
 - il file `pattern` di `config.toml [stile]`, per il significato dei tag dell'idea
-- 1-2 sceneggiature recenti in `contenuti/sceneggiature/` per coerenza (se esistono)
 
 ## Il formato
 - Nelle scene animate il presentatore spiega **con** l'animazione: ogni frase fa succedere qualcosa a schermo. Se

@@ -7,7 +7,7 @@ RADICE = Path(__file__).resolve().parents[1]
 
 
 def test_gobbo_dell_esempio():
-    r, _ = parse(RADICE / "templates" / "esempio-reel.md")
+    r, _ = parse(RADICE / "templates" / "esempio-reel" / "esempio-reel.md")
     g = gobbo(r)
     assert g.startswith("GOBBO · Generativa non vuol dire creativa")
     assert "── Scena 1 [hook]" in g and "scena-07.mov" in g and "da registrare" in g

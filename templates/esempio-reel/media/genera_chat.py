@@ -1,5 +1,5 @@
 """Rigenera chat-fotocopiatrice.png, il b-roll di esempio della scena 6: una chat generica (nessun marchio) grande
-quanto l'area [schermo] del config. Uso: uv run python contenuti/media/esempio-reel/genera_chat.py
+quanto l'area [schermo] del config. Uso: uv run python templates/esempio-reel/media/genera_chat.py
 Stampa le bolle in px dell'immagine: servono ad area_px() nella scena (immagine posata in [schermo] x, y)."""
 from pathlib import Path
 

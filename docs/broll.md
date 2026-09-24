@@ -25,7 +25,7 @@ Il codice sta in `tools/broll/` e si lancia con `uv run broll <comando>` dalla r
 Il giro: `piano → scrivi --presto` (da qui parte l'animatore) `→ cerca → provini → scegli → rendi`; per le scene che
 vanno a Meshy `genera → (contact sheet) → rendi`. Dopo la registrazione, se `monta` avvisa che un filmato è più corto
 della scena, `broll piano` (tiene le scelte) e `broll rendi` lo rifanno lungo giusto. Banco di prova:
-`tests/dati/demo-alternanza.md`.
+`templates/demo-alternanza/`.
 
 ## Le chiavi
 

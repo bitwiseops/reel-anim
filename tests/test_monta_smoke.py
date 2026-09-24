@@ -12,7 +12,7 @@ RADICE = Path(__file__).resolve().parents[1]
 @pytest.mark.slow
 @pytest.mark.skipif(not shutil.which("say"), reason="la voce di prova richiede macOS say")
 def test_monta_prova_una_scena_con_inizi_delle_frasi_e_cache(tmp_path):
-    args = ["monta", str(RADICE / "templates" / "esempio-reel.md"), "--prova", "--anteprima", "--scena", "2", "--out", str(tmp_path)]
+    args = ["monta", str(RADICE / "templates" / "esempio-reel" / "esempio-reel.md"), "--prova", "--anteprima", "--scena", "2", "--out", str(tmp_path)]
     assert main(args) == 0
     e = json.loads((tmp_path / "report.json").read_text())["elementi"][0]
     assert e["scena"] == 2 and e["origine_tempi"] == "voce-sintetica" and e["origine_durata"] == "voce-sintetica"
@@ -35,12 +35,12 @@ def test_monta_prova_una_scena_broll_senza_manim(tmp_path, monkeypatch):
     from tools.reel.ffmpeg import ffprobe, trova_ffmpeg
 
     media = tmp_path / "media"
-    shutil.copytree(RADICE / "contenuti" / "media" / "esempio-reel", media)     # il b-roll della scena 6
+    shutil.copytree(RADICE / "templates" / "esempio-reel" / "media", media)     # il b-roll della scena 6
     monkeypatch.setattr(clip, "cartella", lambda slug: media)
     subprocess.run([trova_ffmpeg()[0], "-y", "-loglevel", "error", "-f", "lavfi", "-i",
                     "testsrc2=size=1080x1920:rate=30:duration=2", "-pix_fmt", "yuv420p", str(media / "broll-scena-03.mp4")],
                    check=True)
-    testo = (RADICE / "templates" / "esempio-reel.md").read_text(encoding="utf-8")
+    testo = (RADICE / "templates" / "esempio-reel" / "esempio-reel.md").read_text(encoding="utf-8")
     md = tmp_path / "esempio-reel.md"
     testo = testo.replace("## Scena 3 [spiegazione]\n", "## Scena 3 [broll]\nSCHERMO: broll-scena-03.mp4\n")
     # sopra il filmato niente grafica: via TESTO e FIGURA della scena diventata [broll]
@@ -66,9 +66,9 @@ def test_filmato_non_ancora_reso_anima_procede_e_monta_si_ferma(tmp_path, monkey
     from tools.reel import clip
 
     media = tmp_path / "media"
-    shutil.copytree(RADICE / "contenuti" / "media" / "esempio-reel", media)
+    shutil.copytree(RADICE / "templates" / "esempio-reel" / "media", media)
     monkeypatch.setattr(clip, "cartella", lambda slug: media)
-    testo = (RADICE / "templates" / "esempio-reel.md").read_text(encoding="utf-8")
+    testo = (RADICE / "templates" / "esempio-reel" / "esempio-reel.md").read_text(encoding="utf-8")
     testo = testo.replace("## Scena 3 [spiegazione]\n", "## Scena 3 [broll]\nSCHERMO: broll-scena-03.mp4\n")
     testo = testo.replace("FIGURA: la stessa scelta ripetuta molte volte produce un testo intero.\nTESTO: 14\n", "")
     md = tmp_path / "esempio-reel.md"

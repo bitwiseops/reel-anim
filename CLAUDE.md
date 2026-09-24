@@ -22,13 +22,16 @@ markdown. **Senza brand**: identità (palette, font, handle, riquadro, voce di p
   `parlato`, `gobbo`, `clip`, `percorsi`
 - `tools/broll/` — le scene a filmato: `uv run broll piano|stato|cerca|provini|genera|scegli|rendi|scrivi|chiavi|prova-inquadratura`
   (Pexels/Pixabay e immagini Meshy animate → `contenuti/media/<slug>/broll-scena-NN.mp4`; `docs/broll.md`)
-- `contenuti/` — `spunti/` → `idee/` → `copioni/` → `sceneggiature/`; `animazioni/<slug>.py` (una classe
-  `ScenaNN(ScenaReel)` per scena); `media/<slug>/` (clip del presentatore e filmati, gitignored); `render/<slug>/`
-  (il riepilogo: reel, contact sheet, `scene/`, filmstrip, `report.json`; gitignored); `archivio/<slug>/` (reel
-  chiusi: si leggono, non girano). Il transitorio sta in `~/Library/Caches/reel-anim/<slug>/` (`reel pulisci`), la
-  cache dei filmati in `~/Library/Application Support/reel-anim/cache-broll`
-- `templates/` — `reel.md` (grammatica), `copione.md` (prompt del copione), `esempio-reel.md` (esempio completo, con
-  `contenuti/animazioni/esempio-reel.py`: `uv run reel monta templates/esempio-reel.md --prova --anteprima`)
+- `contenuti/` — i reel, una cartella per tappa: `spunti/` → `idee/` → `copioni/` → `sceneggiature/`;
+  `animazioni/<slug>.py` (una classe `ScenaNN(ScenaReel)` per scena); `broll/<slug>/` (piano e crediti dei filmati);
+  `media/<slug>/` (clip del presentatore e filmati, gitignored); `render/<slug>/` (il riepilogo: reel, contact sheet,
+  `scene/`, filmstrip, `report.json`; gitignored). Il transitorio sta in `~/Library/Caches/reel-anim/<slug>/`
+  (`reel pulisci`), la cache dei filmati in `~/Library/Application Support/reel-anim/cache-broll`. I reel chiusi
+  escono dal progetto (archivio compresso su disco esterno): gli agenti non guardano reel vecchi per farne di nuovi
+- `templates/` — `reel.md` (grammatica), `copione.md` (prompt del copione) e due esempi versionati, ognuno con
+  `.md`, `.py` e `media/` in una cartella: `esempio-reel/` (tutti i tipi di scena e i componenti:
+  `uv run reel monta templates/esempio-reel/esempio-reel.md --prova --anteprima`) e `demo-alternanza/` (banco di
+  prova delle scene a filmato). `anima` e `monta` li trovano per slug in `templates/<slug>/`
 - `docs/` — `regole-editoriali.md` (**fonte unica** delle regole del presentatore), `sceneggiatura.md` (grammatica),
   `animazioni.md` (manuale dell'animatore), `pattern-manim.md`, `registrazione.md`, `linguaggio-reel.md`, `broll.md`
 - `assets/` — font (Inter, JetBrains Mono), avatar segnaposto, icone Lucide (ISC)

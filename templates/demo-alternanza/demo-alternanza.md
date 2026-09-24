@@ -14,15 +14,12 @@ idea:
 
 <!--
 Non è un reel da pubblicare: è il banco di prova di `broll piano → cerca → provini → scegli → rendi`.
-Sui reel veri il piano dà — correttamente — zero scene a filmato, perché ogni scena ha qualcosa da
-disegnare. Qui le scene 2 e 4 non nominano meccanismi, quantità né figure della libreria: sono scene
-d'attenzione, e il piano le propone a filmato.
-  uv run broll piano tests/dati/demo-alternanza.md
+Le scene 2 e 4 non nominano meccanismi, quantità né figure della libreria: sono scene d'attenzione, e il piano le
+propone a filmato. Le animazioni sono in demo-alternanza.py qui accanto.
 
 Il file è versionato **dopo** `broll scrivi`: le scene 2 e 4 sono già [broll] con la loro riga SCHERMO:, che è lo
-stato da cui parte l'animatore. I filmati non sono in git (contenuti/media/ è ignorata): su una copia nuova
-`uv run broll rendi demo-alternanza` li riscarica e li rifà da contenuti/broll/demo-alternanza/piano.json.
-Per rifare il giro da capo: riporta le due scene a [spiegazione], togli le righe SCHERMO: e lancia `broll piano --da-capo`.
+stato da cui parte l'animatore. I filmati non sono in git: si rifanno con
+  uv run broll piano templates/demo-alternanza/demo-alternanza.md   (poi cerca → provini → scegli → rendi)
 -->
 
 ## Scena 1 [hook]

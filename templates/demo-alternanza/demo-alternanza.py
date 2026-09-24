@@ -1,4 +1,4 @@
-"""Animazioni di «Demo dell'alternanza» (broll/esempi/demo-alternanza.md): banco di prova delle scene [broll].
+"""Animazioni di «Demo dell'alternanza» (demo-alternanza.md qui accanto): banco di prova delle scene [broll].
 
 Le scene 2 e 4 sono [broll] (filmato a tutto schermo col riquadro sopra): non hanno una classe. Le scene 3 e 5
 arrivano da uno stacco su un filmato, quindi il loro fotogramma 0 è già pieno (self.add prima di ogni animazione) e

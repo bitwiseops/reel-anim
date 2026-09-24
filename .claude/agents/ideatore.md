@@ -18,8 +18,7 @@ Prima di scrivere leggi:
   condivise» (tag usati da account diversi), «Firme di un solo account», «Schemi riutilizzabili» (per account e reel,
   con lo schema fra `>`). Scelto lo schema, leggi anche l'analisi e la trascrizione del reel da cui viene:
   `analisi/<id>.md` e `trascrizioni/<id>.txt`, nella stessa cartella di `pattern.md`
-- le idee in `contenuti/idee/` e i titoli di `contenuti/archivio/*/idea.md`: per non rifare un tema già fatto
-- `contenuti/archivio/generativa-non-creativa/idea.md` come esempio di profondità (non di formato)
+- i titoli delle idee in `contenuti/idee/`, solo per non rifare un tema già fatto
 
 ## Per tipo di fonte
 - **url**: leggi l'articolo con WebFetch (se non si apre, `curl` o WebSearch del titolo, e dillo nel rapporto).
@@ -154,8 +153,6 @@ come ci si è arrivati è in `.claude/agents/storico/ideatore.md` (non serve leg
 - **Se non ci sono richieste la sottosezione si omette del tutto** e nel rapporto scrivi «Richieste da generare:
   nessuna»: il coordinatore salta T0b. Un titolo seguito da «Nessuna.» fa uscire il comando con un errore («nessuna
   richiesta nella forma…»), che si confonde con un bullet scritto male.
-- Quando si riusano uscite vere già in archivio, cerca per primo il set con le **richieste identiche alle carte a
-  schermo**.
 
 ### In `--tutto`
 - Chiudere con DONE_WITH_CONCERNS e domande al presentatore va bene, ma nessuno risponde prima della fine: per ogni

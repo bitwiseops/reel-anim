@@ -14,9 +14,9 @@ idea:
 
 <!--
 Esempio completo della grammatica (vedi templates/reel.md): 7 scene, una per tipo, e i componenti della libreria
-usati in contenuti/animazioni/esempio-reel.py (una classe ScenaNN per scena).
-Prova senza presentatore:  uv run reel monta templates/esempio-reel.md --prova --anteprima
-Il b-roll della scena 6 è un'immagine versionata in contenuti/media/esempio-reel/.
+usati in esempio-reel.py qui accanto (una classe ScenaNN per scena).
+Prova senza presentatore:  uv run reel monta templates/esempio-reel/esempio-reel.md --prova --anteprima
+Il materiale della scena 6 è un'immagine versionata in media/, qui accanto.
 
 Il reel si guarda muto (docs/regole-editoriali.md §1): l'animazione non contiene frasi da leggere, a schermo restano
 numeri, etichette di una parola e figure. La scena 6 è l'esempio della **deroga** (`CAPTION: alto`). Per mostrare i

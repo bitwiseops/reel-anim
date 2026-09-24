@@ -3,7 +3,7 @@
 La VOCE la rivede il presentatore mentre registra: nella finestra di `reel registra` corregge le righe
 (contenuti/media/<slug>/parlato.json) e la presa scrive nel sidecar `scena-NN.json` il testo che ha recitato. Le
 caption si fanno già da lì (`monta.voce_recitata`); questo comando mostra cosa è cambiato e, con `--applica`, lo
-riporta nelle righe `VOCE:` del .md, così la sceneggiatura resta uguale al parlato vero (pacchetto social, archivio).
+riporta nelle righe `VOCE:` del .md, così la sceneggiatura resta uguale al parlato vero (pacchetto social).
 Le revisioni del presentatore hanno l'ultima parola: le righe si copiano così come sono.
 """
 from __future__ import annotations

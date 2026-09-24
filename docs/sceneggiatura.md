@@ -2,7 +2,7 @@
 
 La sceneggiatura è un file markdown a grammatica rigida: da lì escono la validazione, il gobbo per registrare, le
 animazioni e il montaggio. La grammatica da copiare è in `templates/reel.md`; un esempio che passa tutti i controlli
-è `templates/esempio-reel.md`. Serve allo sceneggiatore e al revisore (persone o agenti).
+è `templates/esempio-reel/esempio-reel.md`. Serve allo sceneggiatore e al revisore (persone o agenti).
 
 ## 0. Il reel si guarda muto
 

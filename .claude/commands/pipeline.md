@@ -29,8 +29,7 @@ presentatore. Le decisioni le prende lui, alle fermate.
 
 ## Da dove si parte
 - **Nessun argomento** → elenca spunti (`stato:` in `contenuti/spunti/`), idee (`**Stato:**` in `contenuti/idee/`) e
-  sceneggiature (`stato:` in `contenuti/sceneggiature/`), con il comando per portare avanti ciascuno. L'archivio
-  (`contenuti/archivio/`) non si elenca. Ricorda come si scrive uno spunto (`contenuti/spunti/README.md`).
+  sceneggiature (`stato:` in `contenuti/sceneggiature/`), con il comando per portare avanti ciascuno. Ricorda come si scrive uno spunto (`contenuti/spunti/README.md`).
 - **`contenuti/spunti/…`**: `stato: spunto` → T0. `stato: ideato` → non rifare nulla: indica l'idea (`idea:`).
 - **`contenuti/idee/…`**: `**Stato:** idea` → T0b/T0c poi T1. `copione` → T1 (il copione c'è già: `**Copione:**`).
   `sceneggiata` → indica la sceneggiatura collegata.

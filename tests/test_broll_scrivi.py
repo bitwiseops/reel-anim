@@ -128,7 +128,7 @@ def test_senza_presto_una_scena_non_resa_resta_com_e(tmp_path):
 
 def _sceneggiatura(tmp_path):
     """Il banco di prova del sottosistema riportato a prima di `scrivi`, con uno slug che non ha media."""
-    testo = (Path(__file__).parent / "dati" / "demo-alternanza.md").read_text(encoding="utf-8")
+    testo = (Path(__file__).resolve().parents[1] / "templates" / "demo-alternanza" / "demo-alternanza.md").read_text(encoding="utf-8")
     testo = testo.replace("slug: demo-alternanza", "slug: prova-presto-senza-media")
     for n in (2, 4):
         testo = testo.replace(f"## Scena {n} [broll]\nSCHERMO: broll-scena-{n:02d}.mp4\n", f"## Scena {n} [spiegazione]\n")

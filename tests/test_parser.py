@@ -15,7 +15,7 @@ def _errori(corpo: str) -> str:
 
 
 def test_esempio_completo():
-    r, avvisi = parse(RADICE / "templates" / "esempio-reel.md")
+    r, avvisi = parse(RADICE / "templates" / "esempio-reel" / "esempio-reel.md")
     assert avvisi == [] and r.slug == "esempio-reel" and len(r.scene) == 7
     assert [s.tipo for s in r.scene] == ["hook"] + ["spiegazione"] * 4 + ["schermo", "chiusura"]
     hook, s2, s6, fine = r.scene[0], r.scene[1], r.scene[5], r.scene[6]
