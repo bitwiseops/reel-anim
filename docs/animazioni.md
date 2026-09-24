@@ -406,6 +406,14 @@ restare nello stesso posto della lista (è così che `Classifica.aggiorna` fa sc
   fondo prima, il testo dopo. Se serve, `mob.set_z_index(1)`.
 - **Due `.animate` sullo stesso oggetto nella stessa `play`: vale solo l'ultima.** Concatenale
   (`box.animate.set_fill(acc).set_stroke(acc)`) o usa `generate_target`.
+- **`.animate` riscrive `mob.target`**: `mob.animate` chiama da solo `generate_target()`, quindi
+  `mob.animate.become(mob.target)` o `move_to(mob.target…)` non muovono niente e non danno errore. Tieni i bersagli in
+  variabili tue.
+- **`FadeIn` e `.animate` sullo stesso oggetto nella stessa `play`**: l'opacità sfuma durante il movimento (l'oggetto
+  passa semitrasparente sopra gli altri); `FadeIn` + `FadeOut` nella stessa `play` lo rende invisibile. Separa le due
+  animazioni in finestre diverse.
+- **Scala misurata sull'ingombro di una forma che ruota**: i punti di controllo di un `Circle` ruotato cambiano
+  l'ingombro, e un updater che scala con `width` accumula errore a ogni fotogramma. Misura centro e raggio dai punti.
 - **`self.add(x)` e poi `self.play(Create(x))`**: non si vede nulla. O l'uno o l'altro.
 - **`AnimationGroup` vuota** solleva un errore: controlla le liste che possono essere vuote (es. `Piede`).
 - **LaTeX nascosto (vietato)**: `Brace.get_text()`, `BraceLabel`, `DecimalNumber`/`Integer`/`Variable` (per
@@ -414,8 +422,9 @@ restare nello stesso posto della lista (è così che `Classifica.aggiorna` fa sc
 - **Senza LaTeX e utilizzabili**: `Code` (Pygments + Pango; i colori solo da uno stile Pygments), `Table` e
   `MobjectTable` (Pango), `SVGMobject`.
 - **Icone SVG**: lo spessore del contorno non scala con `.scale()`, va fissato con `set_stroke(width=tratto(...))`.
-- **`Icona.entra()` con una curva sfalsata** (`squish_rate_func`, `LaggedStart`): a progresso zero ogni tratto con le
-  estremità tonde si disegna come un puntino, e le icone compaiono «a puntini» prima di entrare. Falle entrare in
+- **`Create`, `GrowFromCenter`, `ShowPassingFlash` e `Icona.entra()` con una curva sfalsata** (`squish_rate_func`,
+  `LaggedStart`; anche una `DashedLine`): a progresso zero ogni tratto con le estremità tonde si disegna come un
+  puntino, e le forme compaiono «a puntini» prima di entrare. Falle entrare in
   dissolvenza, oppure aggiungile solo quando la loro animazione parte.
 - **Opacità di un cartellino intero**: ogni riga di `testo()` ha un puntello invisibile (una `Line` larga zero che
   tiene costante l'altezza). Cambiando l'opacità o il colore del `Token` intero cambia anche il puntello, e il
