@@ -85,10 +85,9 @@ FIGURA: la chat rimbalza sul muro di casa; il cervello di casa, più piccolo di 
 ## Scena 9 [chiusura]
 MESSAGGIO: Non scappare dal cloud, sappi quale interruttore hai toccato.
 CTA: Senza aprire l'app, il tuo interruttore è acceso o spento? Scrivilo, poi vai a controllare.
-VOCE: Quindi io la vedo così.
-VOCE: Non scappare dal cloud, ==guarda l'interruttore==.
-VOCE: E quello che non diresti a un estraneo, tienilo in casa.
-VOCE: Stasera controllo io, prima della password del wifi.
+VOCE: Quindi sì, di solito sparisce, ma non subito e non sempre.
+VOCE: Dipende da impostazioni, tempi e ordini esterni.
+VOCE: Stasera apri le impostazioni della tua IA e controlla l'interruttore.
 
 ## Note di produzione
 <!-- Scelte di regia, b-roll da girare, dubbi. Non renderizzate. -->
@@ -96,6 +95,7 @@ VOCE: Stasera controllo io, prima della password del wifi.
 «gpt-5.4: ok»; avviso del copione: chiusura di 30 parole, massimo 25).
 
 **Scostamenti dal copione**
+- Scena 9, deciso dal presentatore alla fermata 3 (regola nuova: la chiusura risponde all'hook, niente battuta finale; testo proposto da gpt-5.4 via Poe): «Quindi io la vedo così. Non scappare dal cloud, ==guarda l'interruttore==. E quello che non diresti a un estraneo, tienilo in casa. Stasera controllo io, prima della password del wifi.» → «Quindi sì, di solito sparisce, ma non subito e non sempre. Dipende da impostazioni, tempi e ordini esterni. Stasera apri le impostazioni della tua IA e controlla l'interruttore.»
 - Scena 8, «Un modello aperto di OpenAI gira in sedici giga di memoria, cioè un computer di casa, se il programma non
   manda niente fuori.» → «Un modello aperto di OpenAI gira in sedici giga di memoria, cioè un computer di casa. E la
   chat resta lì se il programma non manda niente fuori.» Perché: nel copione la condizione si attacca a «gira», come
@@ -185,6 +185,7 @@ nella figura della scena 3 (l'interruttore fermo a metà per circa 1 s) e nella 
   incompetenza, merito non esaminato.
 
 **Cosa va in caption** (dalla revisione tecnica, oltre alle note dell'idea)
+- L'opinione uscita dalla chiusura: «Non scappare dal cloud: per quello che non diresti a un estraneo, c'è un modello che gira in casa.»
 - Dove sta l'interruttore: ChatGPT › Impostazioni › Controlli dati › «Migliora il modello per tutti»; Claude ›
   impostazioni della privacy. Spegnerlo vale per le conversazioni nuove.
 - Anche OpenAI cancella dai sistemi le chat cancellate entro 30 giorni (salvo dati de-identificati e obblighi di
@@ -335,6 +336,26 @@ riformulazioni applicate su una copia: 0 errori, stesso avviso.
 **valida**: 0 errori, 1 avviso (chiusura di 30 parole, max 25; accettato).
 
 **APPROVATO TECNICAMENTE** (2026-09-24)
+
+**Chiusura nuova** (2026-09-24, regole editoriali §10). Guardata solo la scena 9; fonti della prima passata
+(Help OpenAI 8809935 e 7039943, news e Privacy Center Anthropic, documenti S.D.N.Y.), nessuna riaperta.
+- ✅ Risponde all'apertura: l'hook chiede «se lo cancelli, sparisce o no?», la chiusura risponde e dice da cosa
+  dipende. Niente battuta finale.
+- ⚠️ «Quindi no, cancellare non vuol dire sempre far sparire»: il «sempre» regge (l'ordine del tribunale di New York ha
+  trattenuto chat cancellate, e i dati di aprile-settembre 2025 restano conservati; i 30 giorni dicono «non subito»).
+  Ma il «no» in testa, risposta secca a «sparisce o no?», lascia a chi guarda muto «cancellare non serve», e il caso
+  normale sparisce: per entrambi i provider una chat cancellata esce dai sistemi entro 30 giorni, salvo eccezioni. È
+  il lato «limite» senza il lato che funziona. Facoltativo al presentatore (passa `valida`, 28 parole):
+  `VOCE: Quindi sì, di solito sparisce, ma non subito e non sempre.`
+- ✅ «Dipende da impostazioni, tempi e ordini esterni»: impostazioni (l'interruttore e i 30 giorni contro i 5 anni di
+  Anthropic, scena 5), tempi (i 30 giorni), ordini esterni (scena 7). Tre parole in fila, non un elenco letto.
+- ✅ «Stasera apri le impostazioni della tua IA e controlla l'interruttore»: la mossa di «Cosa impara chi guarda» è
+  nella VOCE, applicabile oggi. Nota: l'interruttore governa l'addestramento, non la cancellazione (per OpenAI non
+  cambia i 30 giorni); lo dice già la scena 4 e la riga di caption «spegnerlo vale per le conversazioni nuove».
+- ✅ Nota in caption «L'opinione uscita dalla chiusura: Non scappare dal cloud…»: opinione dichiarata, nessun dato.
+
+**valida**: 0 errori, 1 avviso (chiusura di 26 parole, max 25).
+Esito della chiusura: nessun ❌, l'approvazione resta.
 
 ## Note di animazione
 **Storyboard** (scritto prima del codice, 2026-09-24). Nessuna deroga `CAPTION: alto`: a schermo solo etichette

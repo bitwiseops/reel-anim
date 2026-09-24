@@ -89,14 +89,14 @@ TESTO: esempio
 ## Scena 9 [chiusura]
 MESSAGGIO: Una RTX 5090 conviene comprarla oltre 170 ore al mese (esempio su tre anni) o se i dati non possono uscire. Prima affittala una sera.
 CTA: Mandalo a chi ha una scheda grafica nel carrello
-VOCE: La comprerei solo se lavora ore e ore, tutti i giorni, o i dati non possono uscire.
-VOCE: Affittala una sera.
-VOCE: Volevi una scheda, ti serviva un ==calendario==.
+VOCE: Con questi prezzi la compri solo se la usi più di centosettanta ore al mese, o se i dati non possono uscire.
+VOCE: Prima affittala una sera e conta le ore.
 
 ## Note di produzione
 - **VOCE dal copione di gpt-5.4, 2026-09-24** (`contenuti/copioni/2026-09-24-gpu-comprare-affittare.md`, catena
   `gpt-5.4: ok`, 239 parole), presa alla lettera e spezzata in beat; aggiunte solo le `==evidenze==`.
 - **Scostamenti dal copione** (decisioni del presentatore alla revisione tecnica del 2026-09-24, dalle riformulazioni
+- Scena 9, deciso dal presentatore alla fermata 3 (regola nuova: la chiusura risponde all'hook, niente battuta finale; testo proposto da gpt-5.4 via Poe): «La comprerei solo se lavora ore e ore, tutti i giorni, o i dati non possono uscire. Affittala una sera. Volevi una scheda, ti serviva un ==calendario==.» → «Con questi prezzi la compri solo se la usi più di centosettanta ore al mese, o se i dati non possono uscire. Prima affittala una sera e conta le ore.» («Con questi prezzi» dal ❌ del revisore: il 170 è un esempio)
   della revisione):
   - Scena 2: «Se punti a una scheda da circa trentadue giga,» → «Se punti a una scheda da trentadue giga,» (sono
     esattamente 32 GB, ⚠️ 1); «quella che serve ai modelli più grandi,» → «la più grande fra le schede da gioco,» (i
@@ -342,6 +342,25 @@ Restano i ⚠️ della prima passata già risolti in caption o nel brief. Cosa i
 `uv run reel valida`: 0 errori, 1 avviso (chiusura di 27 parole, accettato dal presentatore).
 
 **APPROVATO TECNICAMENTE** (2026-09-24).
+
+**Chiusura nuova** (2026-09-24, regole editoriali §10). Guardata solo la scena 9; fonti e conti della prima
+passata, nessuno riaperto.
+- ✅ Risponde all'apertura: l'hook chiede «la compri o la affitti?», la chiusura dà la risposta con il criterio del
+  reel. Niente battuta finale.
+- ❌ «La compri solo se ti serve per più di centosettanta ore al mese»: il 170 è il pareggio di **un esempio** (RTX
+  5090 a 5.300 €, ammortizzata su tre anni senza rivendita, affitto 1,06 €/h, corrente 0,18 €/h; il conto dà 168, da
+  cui il «circa» della scena 8). Nella chiusura perde sia il «circa» sia l'«esempio» e con «solo se» diventa una
+  regola generale; nel reel muto la caption bruciata la scrive così, a volto pieno, senza l'etichetta «esempio» che
+  aveva la figura della scena 8. Cambiano prezzo, affitto o anni e la soglia si sposta. Riformulazione minima (passa
+  `valida`, avviso di lunghezza, 30 parole):
+  `VOCE: Con questi prezzi la compri solo se la usi più di centosettanta ore al mese, o se i dati non possono uscire.`
+- ✅ «o i dati non possono uscire»: l'eccezione c'era già ed era approvata.
+- ✅ Mossa nella VOCE: «Prima affittala una sera e conta le ore», coerente con la scena 7 («sedersi e contarle») e
+  applicabile oggi (affitto al secondo).
+
+**valida**: 0 errori, 1 avviso (chiusura di 27 parole, max 25).
+Esito della chiusura: **DA CORREGGERE** (1 ❌, scena 9, riformulazione sopra). Lo stato resta `animato` su
+indicazione del coordinatore.
 
 ## Note di animazione
 File: `contenuti/animazioni/gpu-comprare-affittare.py` (classi `Scena02`, `Scena04`, `Scena06`, `Scena08`; 1 e 9 a volto

@@ -107,16 +107,15 @@ TESTO: 58,6%
 ## Scena 9 [chiusura]
 MESSAGGIO: L'IA per ora non toglie il lavoro: apre una forbice.
 CTA: Mandalo a chi lavora in una piccola azienda e teme per il suo posto.
-VOCE: Quindi no, non ti sta togliendo il lavoro.
-VOCE: Ti può lasciare nella corsia lenta.
-VOCE: Scegli una cosa settimanale, falla con l'intelligenza artificiale e falla vedere.
-VOCE: Al massimo si offende ==Excel==.
+VOCE: Per ora il rischio vero non è perdere il lavoro, è restare indietro mentre altri imparano prima.
+VOCE: Scegli una cosa settimanale, falla con l'IA e mostrala a chi lavora con te.
 
 ## Note di produzione
 - **VOCE dal copione di gpt-5.4, 2026-09-24** (`contenuti/copioni/2026-09-24-forbice-ia-lavoro.md`, catena
   `gpt-5.4: ok`). Scene 1-9 del copione = scene 1-9 della sceneggiatura, nessuna divisa o unita.
 
 **Scostamenti dal copione**
+- Scena 9, deciso dal presentatore alla fermata 3 (regola nuova: la chiusura risponde all'hook, niente battuta finale; testo proposto da gpt-5.4 via Poe): «Quindi no, non ti sta togliendo il lavoro. Ti può lasciare nella corsia lenta. Scegli una cosa settimanale, falla con l'intelligenza artificiale e falla vedere. Al massimo si offende ==Excel==.» → «Per ora il rischio vero non è perdere il lavoro, è restare indietro mentre altri imparano prima. Scegli una cosa settimanale, falla con l'IA e mostrala a chi lavora con te.»
 - Scena 5, deciso dal presentatore alla fermata 3: «In tanto digitale si stringe. / Qui no, si apre.» → «Su quasi tutto il resto del digitale, le piccole stanno recuperando. / Sull'IA no: la distanza si apre.» Perché: la frase del copione non diceva che cosa si stringe (la distanza fra grandi e PMI, Istat: «per la maggior parte degli indicatori … una riduzione dei divari dimensionali»). L'avviso sui due punti è accettato.
 - Scena 8, «E Istat dice che quasi sei imprese su dieci si fermano perché mancano competenze» → «E Istat dice che
   quasi sei imprese su dieci, ==tra quelle che ci hanno pensato==, si fermano perché mancano competenze». Perché: il
@@ -377,6 +376,25 @@ e resta abbastanza da vedere una sola sagoma in accento fra cento neutre.
 **valida**: 0 errori, 1 avviso (chiusura di 30 parole, max 25: accettato dal presentatore).
 
 **APPROVATO TECNICAMENTE** (2026-09-24)
+
+**Chiusura nuova** (2026-09-24, regole editoriali §10). Guardata solo la scena 9; fonti della prima passata
+(Istat, Banca d'Italia QEF 1005, Inapp WP 154), nessuna riaperta.
+- ✅ Risponde all'apertura: l'hook dice «il rischio vero è un altro», la chiusura lo nomina; «mentre altri imparano
+  prima» riassume la forbice delle scene 5 e 8. Niente battuta finale.
+- ⚠️ «Il rischio vero non è perdere il lavoro»: è la lettura del presentatore (dichiarata nell'hook, «io i dati li leggo
+  così»), ma rispetto al «Quindi no, non ti sta togliendo il lavoro» di prima perde il tempo: è detta senza limite,
+  come una previsione, mentre Banca d'Italia vede solo il breve periodo (un anno, 2023) su imprese con almeno 50
+  addetti, con gli operai in calo (circa −7%). Il «per ora» c'è in scena 7, nel TITOLO e nel MESSAGGIO; per chiudere
+  il cerchio, facoltativo al presentatore (passa `valida`, stesso avviso di lunghezza):
+  `VOCE: Per ora il rischio vero non è perdere il lavoro, è restare indietro mentre altri imparano prima.`
+- ✅ «restare indietro mentre altri imparano prima»: Istat e Inapp misurano chi la **usa**, non chi impara; il ponte
+  regge sul 58,6% di Istat (il freno più citato sono le competenze) e sul divario 30 contro 12 di Inapp. «Restare
+  indietro» è un rischio detto come tale, non un risultato misurato: onesto.
+- ✅ Mossa nella VOCE: «Scegli una cosa settimanale, falla con l'IA e mostrala a chi lavora con te», applicabile oggi
+  con qualsiasi assistente; recupera il «a chi lavora con te» che nella prima passata era un ⚠️.
+
+**valida**: 0 errori, 2 avvisi (scena 5, due punti come snodo, già accettato; chiusura di 29 parole, max 25).
+Esito della chiusura: nessun ❌, l'approvazione resta.
 
 ## Note di animazione
 **Storyboard** (prima del codice; file `contenuti/animazioni/forbice-ia-lavoro.py`, classi `Scena03`, `Scena05`,
