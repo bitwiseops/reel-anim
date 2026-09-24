@@ -25,7 +25,7 @@ from .immagini import ImmaginiMancanti, componi
 from .piano import ScenaBroll
 from .scelta import confini
 
-RADICE = Path(__file__).resolve().parents[2]
+from tools.anim.config import RADICE
 CACHE = cache_broll()   # config.toml [percorsi] cache_broll, fuori dal progetto (2026-09-23)
 FORNITORI = {pexels.NOME: pexels}
 MARGINE_S = 0.5         # si legge un po' oltre il taglio: a chiuderlo al fotogramma ci pensa `trim`
@@ -102,7 +102,7 @@ def rendi_scena(slug: str, s: ScenaBroll, cfg: Config | None = None, *, dest: Pa
 
     cfg = cfg or carica()
     diag: list[Diagnostica] = []
-    dest = dest or cartella_media(slug) / (s.file or f"broll-scena-{s.n:02d}.mp4")
+    dest = dest or cartella_media(slug) / s.nome_file()
     finestre = confini(len(s.scelti), s.inizi_frasi_s, s.durata_s)
 
     sorgenti: list[Path] = []
@@ -132,7 +132,7 @@ def _rendi_immagini(slug: str, s: ScenaBroll, cfg: Config, *,
                     dest: Path | None = None) -> tuple[Path, list[Diagnostica]]:
     """Le immagini generate della scena, montate sugli inizi frase con la dissolvenza fra l'una e l'altra."""
     diag: list[Diagnostica] = []
-    dest = dest or cartella_media(slug) / (s.file or f"broll-scena-{s.n:02d}.mp4")
+    dest = dest or cartella_media(slug) / s.nome_file()
     sorgenti = file_immagini(s)
     if not sorgenti:
         raise ResaFallita(f"scena {s.n}: nessuna immagine nel piano (prima `broll genera {slug} --scena {s.n}`)")

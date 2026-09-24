@@ -18,12 +18,12 @@ from __future__ import annotations
 from pathlib import Path
 
 from tools.reel.model import Diagnostica, avviso
+from tools.reel.percorsi import relativo
 
 from .fornitori import meshy
 from .piano import ScenaBroll
 from .query import _parole
 
-RADICE = Path(__file__).resolve().parents[2]
 QUANTE_PREDEFINITE = 3
 PAROLE_PER_PROMPT = 8
 
@@ -118,12 +118,6 @@ def prompt_da_brief(s: ScenaBroll, quante: int = QUANTE_PREDEFINITE) -> list[str
     return fuori
 
 
-def _rel(f: Path) -> str:
-    try:
-        return str(f.resolve().relative_to(RADICE))
-    except ValueError:
-        return str(f)
-
 
 def genera_scena(s: ScenaBroll, prompt: list[str] | None = None, *, quante: int = QUANTE_PREDEFINITE,
                  forza: bool = False, genera=None) -> tuple[list[dict], list[Diagnostica]]:
@@ -138,11 +132,11 @@ def genera_scena(s: ScenaBroll, prompt: list[str] | None = None, *, quante: int 
     schede: list[dict] = []
     for i, p in enumerate(prompts, start=1):
         f, scheda = genera(p, i, forza=forza)
-        schede.append({**scheda, "file": _rel(Path(f))})
+        schede.append({**scheda, "file": relativo(Path(f))})
     s.registro = "immagini"
     s.scelti = schede
     s.stato = "scelto"
-    s.file = s.file or f"broll-scena-{s.n:02d}.mp4"
+    s.file = s.nome_file()
     s.note = f"immagini generate: {len(schede)}"
 
     tenute = len(s.inizi_frasi_s) or 1

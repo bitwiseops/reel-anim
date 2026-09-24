@@ -10,11 +10,10 @@ progetti invece di esistere in due posti con due nomi diversi.
 from __future__ import annotations
 
 import os
-from pathlib import Path
 
 from tools.anim.config import Config, carica
 
-RADICE = Path(__file__).resolve().parents[2]
+from tools.anim.config import RADICE
 
 # fornitore -> (chiave principale, chiavi di riserva…)
 FORNITORI: dict[str, tuple[str, ...]] = {

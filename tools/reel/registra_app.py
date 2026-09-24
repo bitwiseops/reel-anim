@@ -314,7 +314,7 @@ class AppRegistra:
         if self.stato == "pronto":
             self._avvia_presa()
         elif self.stato == "presa":
-            self._ferma_presa("stop")
+            self._ferma_presa()
         elif self.stato in ("apertura", "conto"):
             self._annulla_presa("presa annullata")
         elif self.stato == "prova":
@@ -451,7 +451,7 @@ class AppRegistra:
             return
         if self.stato == "presa":
             self.chiudi_dopo = True
-            self._ferma_presa("esc")
+            self._ferma_presa()
         elif self.stato == "spezzo":
             self.chiudi_dopo = True
         else:
@@ -642,7 +642,7 @@ class AppRegistra:
         self.messaggio = f"{messaggio}\n{AIUTO_ERRORE}" + (f"\n{coda}" if coda else "") + "\nSpazio per riprovare, Esc per uscire."
         print(f"errore: {messaggio}\n{coda}", file=sys.stderr)
 
-    def _ferma_presa(self, motivo: str) -> None:
+    def _ferma_presa(self) -> None:
         t_stop = self.t_reel0 + (time.monotonic() - self.T0)
         self.riproduttore.ferma()
         self.riproduttore = None
@@ -768,7 +768,7 @@ class AppRegistra:
             self.messaggio = (f"● REC {self._mmss(adesso - self.T0)} · reel {max(0.0, t):.1f} s / {self.tl.durata_s:.1f} s"
                               + (f" · scena {scena.n}/{len(self.tl.scene)}" if scena else " · pre-roll"))
             if t >= self.tl.durata_s + float(self.opz["coda_presa_s"]):
-                self._ferma_presa("fine")
+                self._ferma_presa()
         else:
             self.c_reel.itemconfig(self.t_rec, text="")
         self._disegna_stato()

@@ -1,6 +1,6 @@
 """Meshy text-to-image: immagini generate, per le scene che su Pexels non hanno un candidato buono.
 
-È il terzo registro (`piano.REGISTRI`): quando una scena non si può animare e un filmato che la racconti
+È il terzo registro (il registro `immagini` di `piano.py`): quando una scena non si può animare e un filmato che la racconti
 non esiste, si generano 2-3 immagini e si montano una per frase con una dissolvenza fra l'una e l'altra
 (`immagini.componi`). Non è un ripiego grafico: è materiale nuovo fatto apposta per quella scena.
 
@@ -37,7 +37,6 @@ SCADENZA_S = 60
 INTERVALLO_S = 5.0
 ATTESA_MAX_S = 900.0
 
-RADICE = Path(__file__).resolve().parents[3]
 CACHE = cache_broll()   # fuori dal progetto e mai ripulita da sé: le immagini generate si pagano (2026-09-23)
 
 

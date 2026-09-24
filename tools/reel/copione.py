@@ -24,7 +24,7 @@ import yaml
 from .model import conta_parole
 from .validate import LIMITI, due_punti_snodo, frasi_di, frasi_titolo, schema_si_no
 
-RADICE = Path(__file__).resolve().parents[2]
+from ..anim.config import RADICE
 CARTELLA = RADICE / "contenuti" / "copioni"
 TEMPLATE = RADICE / "templates" / "copione.md"
 POE = "https://api.poe.com"

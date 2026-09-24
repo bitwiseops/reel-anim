@@ -1,10 +1,11 @@
 """Regole editoriali e strutturali del reel. Le costanti numeriche vivono SOLO qui (e vengono citate in CLAUDE.md)."""
 from __future__ import annotations
 
-from pathlib import Path
 
 import re
 
+from . import clip
+from .percorsi import relativo
 from .model import STATI, Diagnostica, Reel, avviso, conta_emoji, conta_parole, errore, evidenziate, testo_piano
 from .stima import durata_stimata_s
 
@@ -41,11 +42,6 @@ def _parole_pesanti(s: str) -> int:
     `parole-leggibili` in tools/anim/controlli.py)."""
     return len([w for w in testo_piano(s).split() if not _RE_NUMERO.match(w.strip(".,;:!?«»\"'()").lower())])
 
-RADICE = Path(__file__).resolve().parents[2]
-
-
-def cartella_media(r: Reel) -> Path:
-    return RADICE / "contenuti" / "media" / r.slug
 
 
 def _riquadro_su_schermo(riquadro: str) -> bool:
@@ -166,8 +162,8 @@ def check(r: Reel) -> list[Diagnostica]:
         if emoji > L["emoji_scena_max"]:
             a(f"{emoji} emoji nella scena (max {L['emoji_scena_max']})")
         if s.schermo:
-            f = cartella_media(r) / s.schermo
-            dove = f.parent.relative_to(RADICE) if f.parent.is_relative_to(RADICE) else f.parent
+            f = clip.cartella(r.slug) / s.schermo
+            dove = relativo(f.parent)
             if not f.exists() and s.a_filmato:
                 # il filmato arriva dopo (`broll scrivi --presto` marca la scena prima che sia scelto e reso), e intanto
                 # l'animatore deve poter lavorare sulle altre: qui è un avviso, l'errore lo dà `monta` al montaggio

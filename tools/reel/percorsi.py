@@ -17,8 +17,9 @@ LAVORO = "~/Library/Caches/reel-anim"
 CACHE_BROLL = "~/Library/Application Support/reel-anim/cache-broll"
 
 
-def riepilogo(slug: str) -> Path:
-    return RADICE / "contenuti" / "render" / slug
+def riepilogo(slug: str, out: str | Path | None = None) -> Path:
+    """La cartella del riepilogo di un reel (o quella data con `--out`)."""
+    return Path(out) if out else RADICE / "contenuti" / "render" / slug
 
 
 def radice_lavoro(cfg: Config | None = None) -> Path:
@@ -43,8 +44,8 @@ def cache_broll(cfg: Config | None = None) -> Path:
     return cfg.percorso("percorsi", "cache_broll") or Path(CACHE_BROLL).expanduser()
 
 
-def relativo(p: Path, base: Path) -> str:
-    """Per il report: relativo al riepilogo se ci sta dentro, altrimenti assoluto (e `base / assoluto` resta lui)."""
+def relativo(p: Path, base: Path = RADICE) -> str:
+    """Relativo a `base` (la radice del repo) se ci sta dentro, altrimenti assoluto: `base / assoluto` resta lui."""
     try:
         return str(p.relative_to(base))
     except ValueError:

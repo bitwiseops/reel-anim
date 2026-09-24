@@ -16,7 +16,7 @@ from typing import Callable, NamedTuple
 
 from ..anim.config import Config
 
-RADICE = Path(__file__).resolve().parents[2]
+from ..anim.config import RADICE
 CARTELLA = RADICE / "contenuti" / "idee" / "uscite"
 PROMPT_DI_SISTEMA = "Sei un assistente che scrive testi su richiesta."
 IN_PARALLELO = 6

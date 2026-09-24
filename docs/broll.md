@@ -20,7 +20,6 @@ Il codice sta in `tools/broll/` e si lancia con `uv run broll <comando>` dalla r
 | `broll scrivi <slug> --presto` | lo stesso, ma per **tutte** le scene a filmato (o a immagini) del piano, anche non ancora scelte né rese: `SCHERMO:` prende il nome che `rendi` scriverà. Serve a far correre in parallelo le due tappe: subito dopo `piano` le scene sono marcate, l'animatore sa quali non sono sue e parte (`reel anima` le salta), e intanto si scelgono i filmati. Finché il file manca `reel valida` avvisa («filmato non ancora reso») e `reel monta` si ferma con un errore. Dopo `rendi` non serve un altro `scrivi` |
 | `broll chiavi` | quali chiavi dei servizi esterni sono configurate, **mascherate** |
 | `broll prova-inquadratura <slug> --filmato <file>` | lo stesso fotogramma ritagliato a 9:16 in più punti, col riquadro del presentatore sopra |
-| `broll prova-immagini <slug> --scena N --immagini …` | immagini ferme montate sugli inizi frase della scena, con la filmstrip per verificare gli stacchi |
 
 ## Le chiavi
 

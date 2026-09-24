@@ -10,7 +10,7 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
-RADICE = Path(__file__).resolve().parents[2]
+from ..anim.config import RADICE
 
 
 class FfmpegMancante(RuntimeError):

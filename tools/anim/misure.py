@@ -1,7 +1,6 @@
 """Misure in pixel ↔ unità Manim e minimi di leggibilità sul telefono (1080 px di larghezza visti a ~400 px)."""
 from __future__ import annotations
 
-from .config import carica
 
 PX_PER_UNITA = 120.0   # con frame_width = 9 su 1080 px
 
@@ -28,11 +27,6 @@ FATTORE_FONT_SIZE = 1.5723   # misurato con calibra.py: "Hg" in Inter Variable, 
 def font_size_per(px_altezza: float) -> float:
     """font_size di Manim che produce un testo alto circa `px_altezza` pixel (righe di "Hg")."""
     return px_altezza / FATTORE_FONT_SIZE
-
-
-def safe_area_px() -> dict[str, int]:
-    s = carica().dati["safe_area"]
-    return {"alto": int(s["alto"]), "destra": int(s["destra"]), "basso": int(s["basso"]), "sinistra": int(s.get("sinistra", 60))}
 
 
 def tratto(n_px: float) -> float:

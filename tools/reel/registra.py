@@ -28,7 +28,7 @@ from .ffmpeg import esegui, trova_ffmpeg
 from .model import PIENO, Diagnostica, Reel, avviso, testo_piano
 from .voce import CODA_VOCE_S
 
-RADICE = Path(__file__).resolve().parents[2]
+from ..anim.config import RADICE
 PRESE = "_prese"
 
 REGISTRAZIONE_DEFAULT = {

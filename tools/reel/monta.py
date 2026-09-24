@@ -26,11 +26,7 @@ from .percorsi import lavoro_per, relativo
 from .stima import durata_stimata_s
 from .voce import CODA_VOCE_S, VoceNonDisponibile, sintetizza_frasi
 
-RADICE = Path(__file__).resolve().parents[2]
-
-
-def out_dir(r: Reel, out: str | None) -> Path:
-    return Path(out) if out else RADICE / "contenuti" / "render" / r.slug
+from ..anim.config import RADICE
 
 
 def _verifica_probe(probe: dict, cfg: Config, durata: float, diag: list[Diagnostica]) -> None:
@@ -223,7 +219,7 @@ def _scena_broll(r: Reel, s: Scena, t: TempiScena, out: Path, avatar: Path, args
                            f"(`uv run broll rendi {r.slug}`)", s.riga, s.n))
         return None
     avvisi_tempi: list[str] = []
-    video = filmato.suffix.lower() in (".mp4", ".mov", ".webm", ".m4v")
+    video = filmato.suffix.lower() in clipmod.ESTENSIONI
     durata_filmato = (ffprobe(filmato).get("durata_s") or 0.0) if video else None
     if durata_filmato is not None and durata_filmato < t.durata_s - 1.5 / cfg.fps:
         # il filmato è stato reso sulla durata di prima (stima, voce di prova): la presa vera è più lunga
@@ -249,7 +245,7 @@ def _scena_broll(r: Reel, s: Scena, t: TempiScena, out: Path, avatar: Path, args
             "origine_durata": t.origine, "inizi_frasi_s": t.inizi_frasi_s, "origine_tempi": t.origine_tempi,
             "caption": cap_report, **_voce_report(r, s, t),
             "avvisi_tempi": avvisi_tempi, "controlli": [], "riquadro": riq, "schermo": s.schermo, "filmato": True,
-            "filmstrip": str(fs.relative_to(out)), "grafica": str(filmato.relative_to(RADICE)) if filmato.is_relative_to(RADICE) else str(filmato),
+            "filmstrip": str(fs.relative_to(out)), "grafica": relativo(filmato),
             "video": relativo(dest, out), "tempo_manim_s": 0.0, "tempo_ffmpeg_s": round(tc, 1)}
 
 
@@ -395,7 +391,7 @@ def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None 
         hook = elementi[0]
         # a filmato e a volto pieno il titolo non è a schermo: la copertina ce lo mette sopra (vive solo lì)
         s_hook = r.hook if r.hook is not None and (hook.get("filmato") or r.hook.a_volto_pieno) else None
-        video_cop = _hook_senza_caption(r, hook, out, avatar, args, cfg)
+        video_cop = _hook_senza_caption(r, hook, out, avatar, cfg)
         cop, cop45 = fotogrammi.cover(video_cop, hook["durata_s"], out, cfg,
                                       titolo=s_hook.titolo if s_hook else None,
                                       sottotitolo=s_hook.sottotitolo if s_hook else None)
@@ -409,7 +405,7 @@ def monta(args, r: Reel, diag: list[Diagnostica], out: Path, cfg: Config | None 
     return _chiudi(r, diag, out, elementi, clip_info, reel_info, tempi, usa_prova, args)
 
 
-def _hook_senza_caption(r: Reel, hook: dict, out: Path, avatar: Path, args, cfg: Config) -> Path:
+def _hook_senza_caption(r: Reel, hook: dict, out: Path, avatar: Path, cfg: Config) -> Path:
     """Il video dell'hook da cui prendere la copertina. Le caption sono bruciate nelle scene, e una copertina con
     una riga di parlato sopra finirebbe nella griglia del profilo: se l'hook ne ha, la scena si ricompone una volta
     sola senza."""

@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from tools.anim.config import Config, _fondi, carica, opzioni_manim, registra_font
+from tools.anim.config import _fondi, carica, opzioni_manim, registra_font
 
 
 def test_config_default_e_misure():

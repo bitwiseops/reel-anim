@@ -28,10 +28,6 @@ class Candidato:
     def chiave(self) -> str:
         return f"{self.fornitore}:{self.id}"
 
-    @property
-    def verticale(self) -> bool:
-        return self.altezza > self.larghezza
-
     def resta_dopo_il_ritaglio(self, larghezza: int = 1080, altezza: int = 1920) -> float:
         """Quanta parte del campo sopravvive al ritaglio 9:16, fra 0 e 1."""
         if not self.larghezza or not self.altezza:

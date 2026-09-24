@@ -7,9 +7,11 @@ from pathlib import Path
 
 from .model import Diagnostica, Reel, errore
 from .parser import ErroreParse, parse
+from . import clip
+from .percorsi import relativo, riepilogo
 from .validate import check, ha_errori
 
-RADICE = Path(__file__).resolve().parents[2]
+from ..anim.config import RADICE
 
 
 def _stampa(diagnostiche: list[Diagnostica]) -> None:
@@ -35,7 +37,6 @@ def _riepilogo(diag: list[Diagnostica]) -> tuple[str, int, int]:
 
 def cmd_valida(args) -> int:
     from collections import Counter
-    from . import clip
     from .stima import durata_stimata_s
     r, diag = _carica(Path(args.file))
     _stampa(diag)
@@ -59,7 +60,7 @@ def cmd_gobbo(args) -> int:
     r, diag = _carica(Path(args.file))
     testo = gobbo(r)
     if args.scrivi:
-        dest = RADICE / "contenuti" / "media" / r.slug / "gobbo.txt"
+        dest = clip.cartella(r.slug) / "gobbo.txt"
         dest.parent.mkdir(parents=True, exist_ok=True)
         dest.write_text(testo, encoding="utf-8")
         print(f"-> {dest}")
@@ -69,7 +70,6 @@ def cmd_gobbo(args) -> int:
 
 
 def _tabella_clip(r: Reel, poi: str = "") -> int:
-    from . import clip
     from .stima import durata_stimata_s
     st = clip.stato(r.slug, [s.n for s in r.scene])
     mancanti = 0
@@ -121,7 +121,6 @@ def cmd_clip(args) -> int:
 
 def cmd_registra(args) -> int:
     from ..anim.config import carica
-    from . import clip
     from .ffmpeg import FfmpegMancante, trova_ffmpeg
     from .registra import (ReportNonPronto, carica_timeline, elenca_dispositivi, indice_dispositivo, opzioni,
                            presa_dal_registro, spezza)
@@ -158,7 +157,7 @@ def cmd_registra(args) -> int:
                 return 1
             print(f"-> {e}: uso il microfono predefinito", file=sys.stderr)   # il mic scelto l'altra volta non è collegato
             opz[k] = None
-    out = Path(args.out) if args.out else RADICE / "contenuti" / "render" / r.slug   # come monta.out_dir, senza importare Manim
+    out = riepilogo(r.slug, args.out)
     try:
         tl, avvisi = carica_timeline(r, out, cfg)
     except ReportNonPronto as e:
@@ -179,11 +178,10 @@ def cmd_registra(args) -> int:
 
 
 def cmd_voce(args) -> int:
-    from .monta import out_dir
     from .percorsi import lavoro_per
     from .voce import sintetizza_frasi
     r, _ = _carica(Path(args.file))
-    lav = lavoro_per(r.slug, out_dir(r, args.out))
+    lav = lavoro_per(r.slug, riepilogo(r.slug, args.out))
     for s in r.scene:
         if s.voce:
             v = sintetizza_frasi(s.voce, lav / "_voce" / f"{s.n:02d}.m4a")
@@ -194,11 +192,11 @@ def cmd_voce(args) -> int:
 def cmd_anima(args) -> int:
     import json
     from .manim_render import AnimazioneMancante
-    from .monta import anima, out_dir
+    from .monta import anima
     r, diag = _carica(Path(args.file))
     if not args.json:
         _stampa(diag)
-    out = out_dir(r, args.out)
+    out = riepilogo(r.slug, args.out)
     n0 = len(diag)
     info: list[dict] = []
     if ha_errori(diag):
@@ -233,25 +231,24 @@ def cmd_anima(args) -> int:
 
 
 def cmd_monta(args) -> int:
-    from .monta import monta, out_dir
+    from .monta import monta
     r, diag = _carica(Path(args.file))
     _stampa(diag)
     if ha_errori(diag):
         print("-> errori di validazione: nessun montaggio", file=sys.stderr)
         return 1
-    return monta(args, r, diag, out_dir(r, args.out))
+    return monta(args, r, diag, riepilogo(r.slug, args.out))
 
 
 def cmd_strisce(args) -> int:
     import json
     from .ffmpeg import ffprobe
     from ..anim.config import carica
-    from . import clip
     from .fotogrammi import copri_volto, strisce_fitte, tempi_dal_report, video_scena
     from .percorsi import lavoro_per
     r, _ = _carica(Path(args.file))
     cfg = carica()
-    out = Path(args.out) if args.out else RADICE / "contenuti" / "render" / r.slug   # come monta.out_dir, senza importare Manim
+    out = riepilogo(r.slug, args.out)
     lav = lavoro_per(r.slug, out, cfg)      # video delle scene e strisce fitte: transitori, fuori dal progetto
     tempi = tempi_dal_report(out)
     scene: list[dict] = []
@@ -334,7 +331,7 @@ def cmd_uscite(args) -> int:
                               lambda s, k, tot: print(f"   {s} ({k}/{tot})", file=sys.stderr))
         esito = uscite.scrivi_file(dest, slug, date.today().isoformat(), uscite.versione_claude(), rr, fatte, modelli, args.per_modello,
                                    uscite.termini_account(*uscite.account_git(), carica()), forza=args.forza)
-        percorso = str(dest.relative_to(RADICE)) if dest.is_relative_to(RADICE) else str(dest)
+        percorso = relativo(dest)
         idea.write_text(uscite.riga_uscite(idea.read_text(encoding="utf-8"), percorso), encoding="utf-8")
     except uscite.ErroreUscite as e:     # pipeline T0b: se `claude -p` fallisce ci si ferma, senza uscite vere non si scrive
         print(f"-> {e}", file=sys.stderr)
@@ -438,7 +435,7 @@ def cmd_copione(args) -> int:
         print(f"-> {e}", file=sys.stderr)
         return 1
     spesi = saldo_prima - poe.saldo() if poe is not None and saldo_prima is not None else None
-    rel = lambda q: str(q.relative_to(RADICE)) if q.resolve().is_relative_to(RADICE) else str(q)
+    rel = lambda q: relativo(q.resolve())
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(cp.componi_file(rel(idea_p.resolve()), idea, esito, date.today().isoformat(), spesi, args.nota or ""),
                     encoding="utf-8")
@@ -481,7 +478,7 @@ def cmd_pulisci(args) -> int:
 
 def cmd_audio(args) -> int:
     """Il prima/dopo della catena audio su un pezzo di presa: si ascolta, non si guarda (niente video)."""
-    from . import clip, compositing
+    from . import compositing
     from ..anim.config import carica
     from .ffmpeg import esegui
     r, _ = _carica(Path(args.file))
@@ -491,7 +488,7 @@ def cmd_audio(args) -> int:
     if c is None:
         print(f"-> nessuna clip registrata in contenuti/media/{r.slug}/ per le scene {scene}", file=sys.stderr)
         return 1
-    dest = RADICE / "contenuti" / "render" / r.slug / f"confronto-audio-{c.stem}.m4a"
+    dest = riepilogo(r.slug) / f"confronto-audio-{c.stem}.m4a"
     dest.parent.mkdir(parents=True, exist_ok=True)
     esegui(compositing.comando_confronto(c, dest, args.secondi, cfg), "ffmpeg (confronto audio)")
     print(f"-> {dest}\n   prima: solo il volume · un secondo di silenzio · dopo: {compositing.catena_voce(cfg) or 'catena spenta'}\n"

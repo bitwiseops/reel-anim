@@ -15,7 +15,7 @@ import requests
 from tools.reel.contact_sheet import genera as contact
 from tools.reel.model import Diagnostica, avviso
 
-RADICE = Path(__file__).resolve().parents[2]
+from tools.anim.config import RADICE
 SCADENZA_S = 30
 
 

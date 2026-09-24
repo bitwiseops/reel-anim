@@ -8,19 +8,15 @@ import argparse
 import sys
 from pathlib import Path
 
-RADICE = Path(__file__).resolve().parents[2]
+from tools.anim.config import RADICE
+from tools.reel import clip
+from tools.reel.percorsi import relativo
 
 
 def _stampa(diag) -> None:
     for d in diag:
         print(f"  {'✗' if d.livello == 'errore' else '⚠'} {d}", file=sys.stderr)
 
-
-def _rel(p: Path) -> str:
-    try:
-        return str(p.relative_to(RADICE))
-    except ValueError:
-        return str(p)
 
 
 def cmd_piano(args) -> int:
@@ -56,7 +52,7 @@ def cmd_piano(args) -> int:
             coda += f" · {s.stato}, dal piano di prima" + (f" ({s.note})" if s.stato == "scelto" and s.note else "")
         print(f"  {segno} scena {s.n} [{s.tipo}] {s.durata_s:.1f}s ({s.origine_durata}) · {s.registro}{coda}")
     _stampa(diag)
-    print(f"-> {_rel(dest)}")
+    print(f"-> {relativo(dest)}")
     if args.json:
         import json
         print(json.dumps(esito(p, diag), ensure_ascii=False, indent=2))
@@ -78,7 +74,7 @@ def cmd_stato(args) -> int:
         return 0
     print(f"{p.slug} · piano del {p.quando or '?'} · sceneggiatura {p.hash_md}")
     for s in p.esterne:
-        f = RADICE / "contenuti" / "media" / p.slug / (s.file or "")
+        f = clip.cartella(p.slug) / (s.file or "")
         segno = "✔" if s.file and f.exists() else "✘"
         quanti = (f"{len(s.scelti)} immagini" if s.registro == "immagini"
                   else f"{len(s.candidati)} candidati")
@@ -123,7 +119,7 @@ def cmd_cerca(args) -> int:
         if not s.candidati:
             print(f"  ⚠ scena {s.n}: nessun filmato per «{' / '.join(s.query)}» — "
                   "è un caso da immagini generate", file=sys.stderr)
-    print(f"-> {_rel(salva(p))}")
+    print(f"-> {relativo(salva(p))}")
     return 0
 
 
@@ -147,7 +143,7 @@ def cmd_provini(args) -> int:
             foglio, diag = provini_scena(args.slug, s.n, s.candidati, s.durata_s, scelto)
         _stampa(diag)
         if foglio:
-            print(f"  scena {s.n}: {_rel(foglio)}")
+            print(f"  scena {s.n}: {relativo(foglio)}")
             fatti += 1
     if not fatti:
         print("-> nessun provino: prima `broll cerca` (o `broll genera`)", file=sys.stderr)
@@ -180,7 +176,7 @@ def cmd_scegli(args) -> int:
     print(f"  {taglio['candidato']} · da {taglio['da_s']:.1f}s · ancora {taglio['ancora']:.0%} · "
           f"{taglio.get('autore') or 'autore non indicato'}")
     _stampa(diag)
-    print(f"-> {_rel(salva(p))}")
+    print(f"-> {relativo(salva(p))}")
     if any(d.livello == "errore" for d in diag):
         print("-> così `broll rendi` si rifiuta: correggi la scelta", file=sys.stderr)
         return 1
@@ -223,9 +219,9 @@ def cmd_genera(args) -> int:
     _stampa(diag)
     foglio, avvisi = provini_immagini(p.slug, s.n, schede)
     _stampa(avvisi)
-    print(f"-> {_rel(salva(p))}")
+    print(f"-> {relativo(salva(p))}")
     if foglio:
-        print(f"-> {_rel(foglio)}  (guardalo prima di rendere)")
+        print(f"-> {relativo(foglio)}  (guardalo prima di rendere)")
     print(f"-> poi `broll rendi {p.slug} --scena {s.n}`")
     return 0
 
@@ -259,9 +255,9 @@ def cmd_rendi(args) -> int:
         return 1
     falliti = 0
     for s in scene:
-        dest = cartella_media(p.slug) / (s.file or f"broll-scena-{s.n:02d}.mp4")
+        dest = cartella_media(p.slug) / s.nome_file()
         if s.stato == "reso" and dest.exists() and not args.forza:
-            print(f"  ✔ scena {s.n}: già resa ({_rel(dest)}), `--forza` per rifarla")
+            print(f"  ✔ scena {s.n}: già resa ({relativo(dest)}), `--forza` per rifarla")
             continue
         diag = controlla_scelta(s)
         _stampa(diag)
@@ -286,10 +282,10 @@ def cmd_rendi(args) -> int:
             tempi += [max(0.0, inizio - 0.1), min(s.durata_s - 0.05, inizio + 0.1)]
         strip = filmstrip(video, sorted(tempi), cartella_provini(p.slug) / f"reso-scena-{s.n:02d}.png", 220)
         etichette = [t.get("candidato") or Path(t.get("file") or "?").name for t in s.scelti]
-        print(f"  {'▤' if s.registro == 'immagini' else '▣'} scena {s.n}: {_rel(video)} · "
+        print(f"  {'▤' if s.registro == 'immagini' else '▣'} scena {s.n}: {relativo(video)} · "
               f"{s.durata_s:.2f}s · " + " + ".join(etichette))
-        print(f"    {_rel(strip)}")
-    print(f"-> {_rel(scrivi_crediti(p))}")
+        print(f"    {relativo(strip)}")
+    print(f"-> {relativo(scrivi_crediti(p))}")
     if falliti:
         print(f"-> {falliti} scene non rese", file=sys.stderr)
         return 1
@@ -300,7 +296,7 @@ def cmd_scrivi(args) -> int:
     from .piano import PianoMancante, carica_piano, hash_sceneggiatura, salva
     from tools.reel.clip import cartella as cartella_media
 
-    from .scrivi import nome_file, scrivi
+    from .scrivi import scrivi
 
     try:
         p = carica_piano(args.slug)
@@ -322,7 +318,7 @@ def cmd_scrivi(args) -> int:
     salva(p)
     print(f"  scene {', '.join(str(n) for n in scritte)} → [broll] con la loro riga SCHERMO:")
     print(f"-> {p.sorgente}  (si torna indietro con `git checkout`)")
-    da_rendere = [s.n for s in p.scene if s.n in scritte and not (cartella_media(p.slug) / nome_file(s)).exists()]
+    da_rendere = [s.n for s in p.scene if s.n in scritte and not (cartella_media(p.slug) / s.nome_file()).exists()]
     if da_rendere:
         # --presto: le scene sono marcate, i filmati no. L'animatore può partire (`reel anima` le salta), il
         # montaggio no: `reel monta` si ferma finché il file non c'è
@@ -330,49 +326,6 @@ def cmd_scrivi(args) -> int:
               f"intanto `uv run reel anima {p.sorgente}`; per il montaggio prima `broll scegli` e `broll rendi {p.slug}`")
         return 0
     print(f"-> poi `uv run reel valida {p.sorgente}` e `uv run reel monta {p.sorgente} --prova --anteprima`")
-    return 0
-
-
-def cmd_prova_immagini(args) -> int:
-    from tools.reel.ffmpeg import FfmpegMancante, filmstrip, trova_ffmpeg
-
-    from .immagini import ImmaginiMancanti, componi, dissolvenza_s
-    from .piano import _durate_dal_report
-
-    try:
-        trova_ffmpeg()
-    except FfmpegMancante as e:
-        print(f"-> {e}", file=sys.stderr)
-        return 1
-    d = _durate_dal_report(args.slug).get(args.scena)
-    if not d:
-        print(f"-> nessun report per {args.slug} scena {args.scena}: prima "
-              f"`uv run reel monta <sceneggiatura> --prova`", file=sys.stderr)
-        return 1
-
-    from tools.reel.percorsi import lavoro
-    out = lavoro(args.slug) / "broll"
-    try:
-        video, tenute = componi([Path(p) for p in args.immagini], d["inizi_frasi_s"],
-                                d["durata_s"], out / f"immagini-scena-{args.scena:02d}.mp4")
-    except ImmaginiMancanti as e:
-        print(f"-> {e}", file=sys.stderr)
-        return 2
-    except RuntimeError as e:
-        print(f"-> {e}", file=sys.stderr)
-        return 1
-
-    print(f"scena {args.scena} · {d['durata_s']:.2f}s · beat da {d['origine_tempi'] or 'ignoto'} · "
-          f"dissolvenza {dissolvenza_s(tenute):.2f}s")
-    for i, (inizio, durata) in enumerate(tenute):
-        print(f"  immagine {i + 1}: da {inizio:6.2f}s per {durata:5.2f}s")
-    # campiona subito prima e subito dopo ogni cambio: è lì che si vede se lo stacco cade sul beat
-    tempi = [0.2]
-    for inizio, _ in tenute[1:]:
-        tempi += [max(0.0, inizio - 0.15), min(d["durata_s"] - 0.05, inizio + 0.15)]
-    strip = filmstrip(video, tempi, out / f"immagini-scena-{args.scena:02d}-filmstrip.png", 220)
-    print(f"  {_rel(video)}")
-    print(f"-> {_rel(strip)}  (i cambi devono cadere sugli inizi frase)")
     return 0
 
 
@@ -413,9 +366,9 @@ def cmd_prova_inquadratura(args) -> int:
         print(f"-> {e}", file=sys.stderr)
         return 1
     for p in png:
-        print(f"  {_rel(p)}")
+        print(f"  {relativo(p)}")
     _stampa(diag)
-    print(f"-> {_rel(foglio)}  (guardalo e scegli dove ancorare il ritaglio)")
+    print(f"-> {relativo(foglio)}  (guardalo e scegli dove ancorare il ritaglio)")
     return 0
 
 
@@ -475,12 +428,6 @@ def main() -> int:
     p.add_argument("--presto", action="store_true",
                    help="marca anche le scene non ancora rese: l'animatore parte mentre si scelgono i filmati")
     p.set_defaults(fn=cmd_scrivi)
-
-    p = sub.add_parser("prova-immagini", help="immagini ferme montate sugli inizi frase di una scena")
-    p.add_argument("slug")
-    p.add_argument("--scena", type=int, required=True)
-    p.add_argument("--immagini", nargs="+", required=True, help="una o più immagini, in ordine")
-    p.set_defaults(fn=cmd_prova_immagini)
 
     p = sub.add_parser("chiavi", help="quali chiavi dei servizi esterni sono configurate (mascherate)")
     p.set_defaults(fn=cmd_chiavi)

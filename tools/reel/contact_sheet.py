@@ -5,9 +5,10 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
+from ..anim.config import RADICE
 from .model import Diagnostica
 
-FONT = Path(__file__).resolve().parents[2] / "assets" / "fonts" / "InterVariable.ttf"
+FONT = RADICE / "assets" / "fonts" / "InterVariable.ttf"
 
 
 def _font(size: int):

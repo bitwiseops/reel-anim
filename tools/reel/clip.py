@@ -7,7 +7,7 @@ from pathlib import Path
 
 from .ffmpeg import ffprobe
 
-RADICE = Path(__file__).resolve().parents[2]
+from ..anim.config import RADICE
 ESTENSIONI = (".mov", ".mp4", ".webm", ".m4v")
 SILENZIO_S = 0.5   # silenzio che il gobbo chiede prima e dopo la voce: gli inizi delle frasi si stimano tra questi margini
 

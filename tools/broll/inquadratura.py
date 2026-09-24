@@ -18,18 +18,14 @@ from tools.reel.contact_sheet import genera as contact
 from tools.reel.ffmpeg import esegui, ffprobe, trova_ffmpeg
 from tools.reel.model import Diagnostica, avviso
 
-RADICE = Path(__file__).resolve().parents[2]
+from tools.anim.config import RADICE
 
 # dove ancorare il ritaglio sull'asse lungo: 0 = tutto a sinistra, 1 = tutto a destra
 ANCORE = {"sinistra": 0.0, "centro": 0.5, "destra": 1.0}
 IMMAGINI = (".png", ".jpg", ".jpeg", ".webp")
 
 
-def render_dir(slug: str) -> Path:
-    return RADICE / "contenuti" / "render" / slug
-
-
-def avatar(cfg: Config) -> Path | None:
+def avatar() -> Path | None:
     p = RADICE / "assets" / "presentatore" / "avatar.png"
     return p if p.exists() else None
 
@@ -103,13 +99,13 @@ def prova_inquadratura(slug: str, filmato: Path, t: float = 1.0, riquadro: str =
     elif info.get("errore"):
         diag.append(avviso(f"non riesco a leggere {filmato.name}: {info['errore']}"))
 
-    faccia = avatar(cfg)
+    faccia = avatar()
     if not faccia:
         diag.append(avviso("manca assets/presentatore/avatar.png (`uv run reel setup`): "
                            "il riquadro non è disegnato e non si vede cosa copre"))
 
-    from tools.reel.percorsi import lavoro
-    dest_dir = lavoro(slug) / "broll"   # transitorio, fuori dal progetto
+    from .provini import cartella as cartella_provini
+    dest_dir = cartella_provini(slug)
     dest_dir.mkdir(parents=True, exist_ok=True)
     png: list[Path] = []
     for nome, a in ancore.items():

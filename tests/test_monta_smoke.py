@@ -31,13 +31,12 @@ def test_monta_prova_una_scena_broll_senza_manim(tmp_path, monkeypatch):
     """Una scena [broll] non ha una classe Manim: il filmato fa da grafica, e se è corto `monta` lo dice."""
     import subprocess
 
-    from tools.reel import clip, validate
+    from tools.reel import clip
     from tools.reel.ffmpeg import ffprobe, trova_ffmpeg
 
     media = tmp_path / "media"
     shutil.copytree(RADICE / "contenuti" / "media" / "esempio-reel", media)     # il b-roll della scena 6
     monkeypatch.setattr(clip, "cartella", lambda slug: media)
-    monkeypatch.setattr(validate, "cartella_media", lambda r: media)
     subprocess.run([trova_ffmpeg()[0], "-y", "-loglevel", "error", "-f", "lavfi", "-i",
                     "testsrc2=size=1080x1920:rate=30:duration=2", "-pix_fmt", "yuv420p", str(media / "broll-scena-03.mp4")],
                    check=True)
@@ -64,12 +63,11 @@ def test_monta_prova_una_scena_broll_senza_manim(tmp_path, monkeypatch):
 def test_filmato_non_ancora_reso_anima_procede_e_monta_si_ferma(tmp_path, monkeypatch, capsys):
     """Dopo `broll scrivi --presto` la scena è [broll] ma il file non c'è: `valida` avvisa, `anima` salta la scena
     e non si blocca, `monta` dà l'errore col comando da lanciare e non arriva al reel."""
-    from tools.reel import clip, validate
+    from tools.reel import clip
 
     media = tmp_path / "media"
     shutil.copytree(RADICE / "contenuti" / "media" / "esempio-reel", media)
     monkeypatch.setattr(clip, "cartella", lambda slug: media)
-    monkeypatch.setattr(validate, "cartella_media", lambda r: media)
     testo = (RADICE / "templates" / "esempio-reel.md").read_text(encoding="utf-8")
     testo = testo.replace("## Scena 3 [spiegazione]\n", "## Scena 3 [broll]\nSCHERMO: broll-scena-03.mp4\n")
     testo = testo.replace("FIGURA: la stessa scelta ripetuta molte volte produce un testo intero.\nTESTO: 14\n", "")

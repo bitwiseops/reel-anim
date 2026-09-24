@@ -29,7 +29,6 @@ from pathlib import Path
 from tools.anim.config import Config, carica
 from tools.reel.ffmpeg import esegui, trova_ffmpeg
 
-RADICE = Path(__file__).resolve().parents[2]
 
 SOVRAMISURA = 1.18      # lo zoom delle carrellate: è lo spazio in cui l'inquadratura scorre
 ZOOM = 0.22             # quanto entra (o esce) la spinta: 1 → 1,22

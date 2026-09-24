@@ -118,7 +118,6 @@ def registra_font(cfg: Config) -> list[Path]:
     return ok
 
 
-QUALITA = {"l": "low_quality", "m": "medium_quality", "h": "high_quality"}
 
 
 def opzioni_manim(cfg: Config, qualita: str = "h", trasparente: bool = False, media_dir: Path | None = None,

@@ -14,19 +14,18 @@ from datetime import datetime
 from pathlib import Path
 
 from tools.anim.config import Config, carica
+from tools.reel.percorsi import relativo, riepilogo
 from tools.reel.model import Diagnostica, Scena, avviso
 from tools.reel.parser import parse
 from tools.reel.stima import durata_stimata_s
 
-RADICE = Path(__file__).resolve().parents[2]
+from tools.anim.config import RADICE
 VERSIONE = 1
 
 # Tre registri. L'animazione spiega, il filmato tiene l'attenzione; le immagini composte sono il
 # ripiego quando per quella scena non esiste né una clip filmata né una animata: si montano sui beat,
 # una per frase, per richiamare quello che il presentatore sta dicendo in quel momento.
-REGISTRI = ("animazione", "filmato", "immagini")
 ESTERNI = ("filmato", "immagini")       # i registri che producono un file per la scena
-STATI_SCENA = ("da-scegliere", "scelto", "reso")
 # i tipi di scena che possono andare a filmato. La chiusura è la CTA, e una scena [schermo] ha già il suo
 # materiale nella finestra 900x980. **Nemmeno l'hook, dal 2026-09-21**: l'apertura è il presentatore a
 # tutta tela che pone il problema guardando in camera (decisione di Flavio, che supera quella del
@@ -89,6 +88,10 @@ class ScenaBroll:
     file: str | None = None
     note: str = ""
 
+    def nome_file(self) -> str:
+        """Il file della scena: quello del piano, o il nome che `broll rendi` gli darà."""
+        return self.file or f"broll-scena-{self.n:02d}.mp4"
+
     def to_dict(self) -> dict:
         return {"n": self.n, "tipo": self.tipo, "durata_s": self.durata_s, "origine_durata": self.origine_durata,
                 "inizi_frasi_s": self.inizi_frasi_s, "origine_tempi": self.origine_tempi,
@@ -145,12 +148,6 @@ def file_piano(slug: str) -> Path:
     return cartella(slug) / "piano.json"
 
 
-def _rel(p: Path) -> str:
-    try:
-        return str(p.resolve().relative_to(RADICE))
-    except ValueError:
-        return str(p)
-
 
 def hash_sceneggiatura(md: Path) -> str:
     """Lo stesso calcolo di monta.py, così i due hash si confrontano."""
@@ -185,7 +182,7 @@ def _durate_dal_report(slug: str) -> dict[int, dict]:
     Gli inizi frase servono al registro `immagini`: un'immagine per beat, così il montaggio segue quello
     che il presentatore sta dicendo. Sono esatti con la voce di prova e con le prese di `reel registra`.
     """
-    out = RADICE / "contenuti" / "render" / slug
+    out = riepilogo(slug)
     for nome in ("report.json", "report-prova.json"):
         f = out / nome
         if not f.exists():
@@ -268,13 +265,13 @@ def da_sceneggiatura(md: Path, cfg: Config | None = None) -> tuple[Piano, list[D
         if s.tipo == "broll" or s.n in proposte:
             sb.registro = "filmato"
             sb.query = query_scena(s, cfg)
-            sb.file = f"broll-scena-{s.n:02d}.mp4"
+            sb.file = sb.nome_file()
         elif s.tipo in AMMESSE:
             sb.note = "animata: " + ", ".join(_marcatori(s)) if _marcatori(s) else "animata: alternanza"
         scene.append(sb)
 
     sc = cfg.dati["schermo"]
-    p = Piano(slug=r.slug, sorgente=_rel(md), hash_md=hash_sceneggiatura(md), scene=scene,
+    p = Piano(slug=r.slug, sorgente=relativo(md), hash_md=hash_sceneggiatura(md), scene=scene,
               cornice={"pieno": [cfg.larghezza, cfg.altezza],
                        "finestra": [int(sc["larghezza"]), int(sc["altezza"])]})
     return p, diag + controlla(p)

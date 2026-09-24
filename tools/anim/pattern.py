@@ -17,13 +17,12 @@ import argparse
 import sys
 from pathlib import Path
 
-import numpy as np
-from manim import DOWN, LEFT, RIGHT, UP, FadeIn, FadeOut, Rectangle, Succession, VGroup, rate_functions
+from manim import DOWN, UP, FadeIn, FadeOut, Rectangle, VGroup
 
 from .base import ScenaReel
 from .componenti import Fila, Icona, Sagome, testo
 from .config import RADICE, carica
-from .misure import CORPO_PX, px, tratto
+from .misure import px, tratto
 
 DURATA_S = 6.0
 SCENA = {"voce": ["uno due tre", "quattro cinque sei", "sette otto nove"], "riquadro": "si"}

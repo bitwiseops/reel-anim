@@ -7,10 +7,11 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 
 from ..anim.config import Config, carica
+from .clip import ESTENSIONI as ESTENSIONI_VIDEO
 from .ffmpeg import esegui, trova_ffmpeg
 from .model import PIENO
 
-RADICE = Path(__file__).resolve().parents[2]
+from ..anim.config import RADICE
 MASCHERE = RADICE / "assets" / "presentatore"
 
 
@@ -214,7 +215,7 @@ def comando_scena(src: Sorgenti, dest: Path, cfg: Config | None = None, anteprim
     # base: sfondo pieno + b-roll nella cornice, oppure direttamente la grafica opaca
     elif src.schermo:
         i_base = aggiungi("-f", "lavfi", "-i", f"color=c={cfg.palette.sfondo}:s={W}x{H}:r={fps}:d={src.durata_s:.3f}")
-        i_br = aggiungi("-stream_loop", "-1", "-i", str(src.schermo)) if src.schermo.suffix.lower() in (".mp4", ".mov", ".webm", ".m4v") \
+        i_br = aggiungi("-stream_loop", "-1", "-i", str(src.schermo)) if src.schermo.suffix.lower() in ESTENSIONI_VIDEO \
             else aggiungi("-loop", "1", "-t", d_img, "-i", str(src.schermo))
         i_msk_s = aggiungi("-loop", "1", "-t", d_img, "-i", str(maschera_schermo(cfg)))
         sc = cfg.dati["schermo"]
@@ -229,7 +230,7 @@ def comando_scena(src: Sorgenti, dest: Path, cfg: Config | None = None, anteprim
     elif src.filmato:
         # `broll rendi` consegna già 1080×1920 a fps giusti; un file messo a mano no, e stirarlo lo deformerebbe:
         # si riempie la tela e si ritaglia al centro. Niente ripetizione: se è corto lo dice `monta`.
-        i_gr = aggiungi("-i", str(src.grafica)) if src.grafica.suffix.lower() in (".mp4", ".mov", ".webm", ".m4v") \
+        i_gr = aggiungi("-i", str(src.grafica)) if src.grafica.suffix.lower() in ESTENSIONI_VIDEO \
             else aggiungi("-loop", "1", "-t", d_img, "-i", str(src.grafica))
         filtri.append(f"[{i_gr}:v]scale={W}:{H}:force_original_aspect_ratio=increase:flags=lanczos,crop={W}:{H},"
                       f"fps={fps},setsar=1[v0]")

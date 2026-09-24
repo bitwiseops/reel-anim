@@ -15,7 +15,7 @@ from manim import tempconfig
 from ..anim.base import ScenaReel
 from ..anim.config import Config, carica, opzioni_manim
 
-RADICE = Path(__file__).resolve().parents[2]
+from ..anim.config import RADICE
 
 
 class AnimazioneMancante(RuntimeError):
@@ -76,14 +76,6 @@ def classe_scena(mod: ModuleType, n: int) -> type[ScenaReel]:
         presenti = [k for k, v in vars(mod).items() if inspect.isclass(v) and issubclass(v, ScenaReel) and v is not ScenaReel]
         raise AnimazioneMancante(f"manca la classe {nome}(ScenaReel) in {mod.__file__} (presenti: {', '.join(presenti) or 'nessuna'})")
     return cls
-
-
-def hash_classe(cls: type) -> str:
-    try:
-        src = inspect.getsource(cls)
-    except OSError:
-        src = cls.__name__
-    return hashlib.sha256(src.encode("utf-8")).hexdigest()[:16]
 
 
 def hash_sorgenti(animazione: Path) -> str:

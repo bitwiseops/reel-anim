@@ -155,8 +155,8 @@ def test_le_durate_del_report_valgono_solo_per_la_stessa_voce(tmp_path, monkeypa
                   "## Scena 1 [hook]\nTITOLO: T\nVOCE: ti apro con una domanda?\n\n"
                   "## Scena 2 [spiegazione]\nVOCE: una frase qui.\nVOCE: e poi un'altra.\nANIMAZIONE: a\nFIGURA: f\n\n"
                   "## Scena 3 [chiusura]\nMESSAGGIO: M\nCTA: c\nVOCE: chiudo.\n", encoding="utf-8")
-    monkeypatch.setattr(piano, "RADICE", tmp_path)
     out = tmp_path / "contenuti" / "render" / "prova-durate"
+    monkeypatch.setattr(piano, "riepilogo", lambda slug: out)
     out.mkdir(parents=True)
     elementi = [{"scena": 2, "durata_s": 14.2, "inizi_frasi_s": [0.0, 1.0], "parole_voce": 6},    # stessa voce
                 {"scena": 3, "durata_s": 99.0, "inizi_frasi_s": [0.0, 1.0, 2.0], "parole_voce": 30}]  # un'altra

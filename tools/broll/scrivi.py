@@ -52,11 +52,6 @@ def _intestazione(riga: str) -> str:
     return f"## Scena {m.group(1)} [{', '.join([tipo, *[p for p in parti if '=' in p]])}]"
 
 
-def nome_file(s: ScenaBroll) -> str:
-    """Il file della scena: quello del piano, o il nome che `broll rendi` gli darebbe."""
-    return s.file or f"broll-scena-{s.n:02d}.mp4"
-
-
 def applica(testo: str, scene: list[ScenaBroll], media: Path,
             presto: bool = False) -> tuple[str, list[int], list[Diagnostica]]:
     """Il testo della sceneggiatura con le scene rese convertite. Ritorna (testo, scene scritte, diagnostica).
@@ -85,7 +80,7 @@ def applica(testo: str, scene: list[ScenaBroll], media: Path,
         if any(r.strip().lower().replace(" ", "") == "riquadro:no" for r in corpo):
             diag.append(avviso("ha RIQUADRO: no: sopra il filmato il presentatore non si vedrà. Se è l'hook, "
                                "togli quella riga: il titolo non è più a schermo", scena=s.n))
-        nuova = [_intestazione(righe[inizio]), f"SCHERMO: {nome_file(s)}"]
+        nuova = [_intestazione(righe[inizio]), f"SCHERMO: {s.nome_file()}"]
         nuova += [r for r in corpo if not r.strip().lower().startswith(RE_SCHERMO)]
         if righe[inizio:fine] != nuova:
             righe[inizio:fine] = nuova
