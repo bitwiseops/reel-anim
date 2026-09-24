@@ -6,3 +6,6 @@ nell'agente, qui si aggiunge in fondo una riga datata quando serve ricordarne il
 ## 2026-09-24 · forbice-ia-lavoro, gpu-comprare-affittare, dove-finiscono-chat
 - `piano` ha sbagliato registro due volte su GPU (scene 3 e 5, «calcolo», «barra») e una volta al contrario su chat (scena 3 animata proposta a filmato dopo un secondo `piano`).
 - forbice scena 6: il candidato consigliato dai provini (34948757) mostrava un volto solo dopo il render.
+
+## 2026-09-24 · piano.json condiviso
+- Due agenti (broll scena 5, immagini scena 3) sullo stesso reel GPU in parallelo: rischio di scelte perse (piano riscritto intero). Probabile causa della scelta persa sulla scena 2 di forbice. Regola del coordinatore in pipeline.md.

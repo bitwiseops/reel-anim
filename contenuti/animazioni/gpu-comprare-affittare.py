@@ -539,15 +539,24 @@ def spina(scena, s: VGroup) -> VGroup:
     presa = RoundedRectangle(width=px(40), height=px(56), corner_radius=px(10), stroke_color=col.testo,
                              stroke_width=tratto(4), fill_color=col.sfondo, fill_opacity=1).move_to(presa_c)
     fori = VGroup(*[Dot(presa_c + UP * d, radius=px(4), color=col.testo) for d in (px(10), -px(10))])
-    corpo = RoundedRectangle(width=px(34), height=px(38), corner_radius=px(6), stroke_color=col.testo,
-                             stroke_width=tratto(4), fill_color=col.sfondo, fill_opacity=1)
-    corpo.next_to(presa, LEFT, buff=px(14))
-    denti = VGroup(*[Line(corpo.get_right() + UP * d, corpo.get_right() + UP * d + RIGHT * px(14),
-                          stroke_color=col.testo, stroke_width=tratto(5)) for d in (px(10), -px(10))])
+    corpo, denti = forma_spina(scena, col.testo)
+    VGroup(corpo, denti).next_to(presa, LEFT, buff=0)
     fine = corpo.get_left()
     cavo = CubicBezier(inizio, inizio + RIGHT * px(30) + DOWN * px(20), fine + LEFT * px(40), fine,
                        stroke_color=col.testo, stroke_width=tratto(4))
     return VGroup(presa, cavo, corpo, denti, fori)
+
+
+def forma_spina(scena, colore, scala: float = 1.0) -> VGroup:
+    """La spina: corpo e due denti verso destra (scene 6 e 8, stessa forma; il tratto non si scala)."""
+    col = scena.cfg.palette
+    corpo = RoundedRectangle(width=px(34), height=px(38), corner_radius=px(6), stroke_color=colore,
+                             stroke_width=tratto(4), fill_color=col.sfondo, fill_opacity=1)
+    denti = VGroup(*[Line(corpo.get_right() + UP * d, corpo.get_right() + UP * d + RIGHT * px(14),
+                          stroke_color=colore, stroke_width=tratto(5)) for d in (px(10), -px(10))])
+    g = VGroup(corpo, denti)
+    g.scale(scala)
+    return g
 
 
 def spia(scena, s: VGroup, colore) -> Dot:
@@ -742,6 +751,13 @@ class Scena08(ScenaReel):
         e150.move_to(g8(a, 0, QUOTA) + LEFT * px(20), aligned_edge=RIGHT)
         compra = Line(g8(a, 0, QUOTA), g8(a, 300, QUOTA + 300 * CASA_H), stroke_color=col.attenuato,
                       stroke_width=tratto(7))
+        # la spina (la stessa della scena 6, piccola e grigia) attaccata con un filo alla linea del comprare: la linea
+        # sale per la corrente
+        ore_sp = 245
+        attacco = g8(a, ore_sp, QUOTA + ore_sp * CASA_H)
+        sp8 = forma_spina(self, col.attenuato, 1.1)
+        sp8.move_to(attacco + DOWN * px(72))
+        filo_sp = Line(attacco, sp8[0].get_top(), stroke_color=col.attenuato, stroke_width=tratto(3))
         self.add(fettine)
         self.attendi_fino(T[1] + 0.2)
         # una animazione sola per fettina: le 35 si aprono a ventaglio, la prima vola sull'asse e diventa il punto
@@ -751,7 +767,8 @@ class Scena08(ScenaReel):
                     for i in range(1, 36)],
                   Transform(fettine[0], punto150, rate_func=fin(0.1, 0.55)),
                   FadeIn(e150, shift=RIGHT * px(10), rate_func=fin(0.5, 0.66)),
-                  Create(compra, rate_func=fin(0.6, 1)),
+                  Create(compra, rate_func=fin(0.6, 0.92)),
+                  Create(filo_sp, rate_func=fin(0.84, 0.94)), FadeIn(sp8, shift=UP * px(10), rate_func=fin(0.88, 1)),
                   run_time=self.arrotonda(2.6))
 
         # beat 2 — «Comprare conviene sopra circa centosettanta ore al mese»: la linea dell'affitto si disegna da zero,

@@ -141,6 +141,8 @@ il report unico.
 la qualità). `broll`, `immagini`, `controllore-fotogrammi`, `verificatore-fonte`: `sonnet` (nel loro frontmatter).
 T0b e T0c: nessun agente, sono comandi (T0c chiama i modelli esterni della catena). Gli agenti non lanciano altri agenti: il lavoro in parallelo lo apri tu, con più
 Agent nello stesso messaggio (T2 verificatori, T2b ∥ T3, T3b controllori; due reel insieme vanno benissimo).
+Mai due agenti `broll`/`immagini` insieme sullo **stesso reel**: ogni comando `broll` rilegge e riscrive tutto
+`piano.json`, e la scelta dell'uno può cancellare quella dell'altro. Sullo stesso reel vanno in fila; dopo, `broll stato`.
 
 Prima di chiudere: le lezioni della corsa (rimandi del revisore, difetti trovati nei fotogrammi, note del presentatore)
 **modificano la regola in vigore** nel tema giusto dell'agente giusto, senza date; una regola superata si toglie, non
