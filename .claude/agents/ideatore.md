@@ -13,9 +13,9 @@ Prima di scrivere leggi:
 - lo spunto (`contenuti/spunti/<data>-<slug>.md`: frontmatter `fonte: url | testo | tema`, `url:`, `data:`,
   `stato: spunto`; nel corpo le righe del presentatore, il tema o una nota sul link)
 - `docs/regole-editoriali.md` (le regole del presentatore che valgono per ogni reel: è corto, leggilo tutto)
-- `docs/linguaggio-reel.md` §1 (hook come promessa al «tu», fallo provare, payoff) e `docs/stile-parlato.md`
+- `docs/linguaggio-reel.md` §1 (hook come promessa al «tu», fallo provare, payoff)
 - i **pattern narrativi** di reelkit: il file `pattern` di `config.toml [stile]` (oggi
-  `~/Projects/reelkit/pattern.md`; `uv run reel stile` dice se c'è e quanti reel conta). Ha tre parti: «Tecniche
+  `~/Projects/reelkit/pattern.md`). Ha tre parti: «Tecniche
   condivise» (tag usati da account diversi), «Firme di un solo account», «Schemi riutilizzabili» (per account e reel,
   con lo schema fra `>`). Scelto lo schema, leggi anche l'analisi e la trascrizione del reel da cui viene:
   `analisi/<id>.md` e `trascrizioni/<id>.txt`, nella stessa cartella di `pattern.md`
@@ -79,6 +79,8 @@ Regole:
   numeri qui si scrivono in cifre con la fonte già verificata: il modello li dirà in lettere e **non aggiunge fatti**,
   quindi quello che non c'è non entra nel reel. Le tappe sono il Percorso: alternano i registri (sotto, «Percorso e
   registri») e fissano il numero di scene.
+- **Suggerimenti per il parlato** (facoltativo): se per questo reel serve un tono o un accorgimento preciso, 3-5 righe
+  in `## Suggerimenti per il parlato`; `reel copione` le passa al modello così come sono.
 - **Tappe magre** (2026-09-23): il modello del copione dice tutto quello che trova nella riga, e gpt-5.4 su tappe
   dense (un esperimento con cinque numeri in una riga) ha scritto 382 parole contro 235 ed è stato scartato. Al massimo
   due fatti per tappa; il dettaglio che non deve dire a voce (campione, anno, bracci) sta in `## Fonte`, non nella riga.

@@ -50,6 +50,7 @@ class Idea(NamedTuple):
     tema: str
     messaggio: str
     tappe: list[Tappa]
+    suggerimenti: str = ""   # `## Suggerimenti per il parlato`: poche righe scelte dall'ideatore per questo reel
 
 
 class Esame(NamedTuple):
@@ -92,7 +93,8 @@ def leggi_idea(testo: str) -> Idea:
         raise ErroreCopione(f"{len(tappe)} tappe: il reel ne vuole {n_min}-{n_max}")
     if not messaggio:
         raise ErroreCopione("l'idea non ha «## Messaggio centrale»")
-    return Idea(tema.group(1).strip() if tema else "", " ".join(messaggio.split()), tappe)
+    return Idea(tema.group(1).strip() if tema else "", " ".join(messaggio.split()), tappe,
+                " ".join((sezione(testo, "Suggerimenti per il parlato") or "").split()))
 
 
 def riga_copione(testo_idea: str, percorso: str) -> str:
@@ -102,6 +104,29 @@ def riga_copione(testo_idea: str, percorso: str) -> str:
 
 
 # --- il prompt ---------------------------------------------------------------------------------------------
+
+def trascrizioni(cfg, lingua: str | None = None, account: str | None = None) -> list[dict]:
+    """I reel trascritti di reelkit (`[stile] indice` e `trascrizioni`), solo quelli che hanno il file del testo:
+    danno al modello il passo del parlato vero, che una regola non trasmette."""
+    import json
+    indice, cartella = cfg.percorso("stile", "indice"), cfg.percorso("stile", "trascrizioni")
+    if indice is None or cartella is None or not indice.is_file() or not cartella.is_dir():
+        return []
+    try:
+        voci = json.loads(indice.read_text(encoding="utf-8")).get("voci", [])
+    except (json.JSONDecodeError, AttributeError):
+        return []
+    out = []
+    for v in voci:
+        f = cartella / f"{v.get('id')}.txt"
+        if not f.is_file() or (lingua and v.get("lingua") != lingua) or (account and v.get("account") != account):
+            continue
+        parole = len(f.read_text(encoding="utf-8").split())
+        durata = float((v.get("registrazione") or {}).get("durata_s") or 0)
+        out.append({"id": v["id"], "account": v.get("account") or "?", "durata_s": durata, "parole": parole,
+                    "parole_al_s": round(parole / durata, 1) if durata else None, "file": f})
+    return out
+
 
 def scegli_trascrizioni(voci: list[dict], seme: str, quante: int = 6, secondi: float = 85) -> list[dict]:
     """Sei reel di durata vicina alla nostra, uno per account finché ce ne sono (così il passo non è di uno solo),
@@ -142,7 +167,9 @@ def componi_prompt(template: str, idea: Idea, trascrizioni: list[tuple[str, str]
         "hook_max": str(round(LIMITI["parole_voce_hook_max"] * fattore)),
         "chiusura_max": str(round(LIMITI["parole_voce_chiusura_max"] * fattore)),
         "scena_max": str(round(LIMITI["parole_voce_max"] * fattore)),
-        "nota": f"\nRichiesta del presentatore per questa versione: {' '.join(nota.split())}\n" if nota.strip() else "",
+        "nota": "".join(f"\n{etichetta}: {' '.join(testo.split())}\n" for etichetta, testo in
+                        (("Suggerimenti per il parlato di questo reel", idea.suggerimenti),
+                         ("Richiesta del presentatore per questa versione", nota)) if testo.strip()),
     }
     out = re.sub(r"\{\{(\w+)\}\}", lambda m: valori[m.group(1)], corpo)
     return out.strip() + "\n"
@@ -387,7 +414,6 @@ class Corsa:
     modello, e i tre gesti che `catena` chiede (saltare, chiamare, archiviare)."""
 
     def __init__(self, idea_p: Path, cfg, parole: int | None = None, nota: str = ""):
-        from .stile import trascrizioni
         from .stima import parole_al_secondo
         self.idea_p, self.nota = idea_p, nota
         self.testo_idea = idea_p.read_text(encoding="utf-8")

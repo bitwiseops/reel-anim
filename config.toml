@@ -106,13 +106,10 @@ lra = 11
 lavoro = "~/Library/Caches/reel-anim"   # il transitorio (Manim, scene montate, voce di prova, strisce): `reel pulisci`
 cache_broll = "~/Library/Application Support/reel-anim/cache-broll"   # filmati scaricati e immagini Meshy (pagate)
 
-[stile]                   # corpus di reel altrui trascritti (reelkit): docs/stile-parlato.md ne distilla le regole
-corpus = "~/Projects/reelkit/export.md"   # override in config.local.toml; "" = nessun corpus
-guida = "docs/stile-parlato.md"           # relativo alla radice del repo
-pattern = "~/Projects/reelkit/pattern.md" # pattern narrativi (./reelkit pattern): ideatore e sceneggiatore lo leggono così com'è
-indice = "~/Projects/reelkit/indice.json"         # l'indice di reelkit: account, lingua e durata di ogni reel trascritto
-trascrizioni = "~/Projects/reelkit/trascrizioni"  # il parlato vero, un file per reel: lo sceneggiatore ne legge alcune
-                                                  # intere prima di scrivere la VOCE (`uv run reel stile --trascrizioni`)
+[stile]                   # reel altrui trascritti con reelkit (override in config.local.toml)
+pattern = "~/Projects/reelkit/pattern.md"         # pattern narrativi: l'ideatore li legge così come sono
+indice = "~/Projects/reelkit/indice.json"         # account, lingua e durata di ogni reel trascritto
+trascrizioni = "~/Projects/reelkit/trascrizioni"  # il parlato vero, un file per reel: `reel copione` ne mette sei nel prompt
 
 [uscite]                  # `uv run reel uscite` (tappa T0b): le uscite vere dei testi attribuiti a un modello
 anonimizza = []           # coppie ["vero", "finto"] oltre a nome ed email di git (dominio, città…): i dati veri stanno in config.local.toml

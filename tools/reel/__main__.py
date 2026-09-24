@@ -468,55 +468,6 @@ def cmd_setup(args) -> int:
     return 0
 
 
-def cmd_stile(args) -> int:
-    from .stile import stato, trascrizioni
-    cfg = carica()
-    if args.trascrizioni:
-        tr = trascrizioni(cfg, lingua=args.lingua, account=args.account)
-        if not tr:
-            print("-> nessuna trascrizione: controlla [stile] indice e trascrizioni nel config", file=sys.stderr)
-            return 1
-        for x in sorted(tr, key=lambda x: (x["account"], x["id"])):
-            passo = f"{x['parole_al_s']:.1f} parole/s" if x["parole_al_s"] else "—"
-            print(f"  {x['id']}  {x['account']:<24} {x['lingua']:<4} {x['durata_s']:5.0f} s  {x['parole']:4d} parole  {passo:<14} {x['file']}")
-        print(f"-> {len(tr)} trascrizioni: leggine alcune INTERE (Read) prima di scrivere la VOCE; si prende il passo, non le frasi")
-        return 0
-    s = stato(cfg)
-    c = s["corpus"]
-    if c is None:
-        print("corpus: nessuno ([stile].corpus vuoto)")
-    elif not s["corpus_esiste"]:
-        print(f"corpus: {c} (assente: in reelkit, `./reelkit export` dopo aver analizzato dei reel)")
-    else:
-        print(f"corpus: {c} ({s['reel']} reel, modificato il {s['corpus_data']})")
-    g = s["guida"]
-    if not s["guida_esiste"]:
-        print(f"guida: {g} (assente)")
-    else:
-        print(f"guida: {g} (letta il {s['guida_data'] or '?'}, {s['guida_reel'] if s['guida_reel'] is not None else '?'} reel)")
-    pt = s["pattern"]
-    if pt is None:
-        print("pattern: nessuno ([stile].pattern vuoto)")
-    elif not s["pattern_esiste"]:
-        print(f"pattern: {pt} (assente: in reelkit, `./reelkit pattern`)")
-    else:
-        n = "?" if s["pattern_reel"] is None else s["pattern_reel"]
-        m = "?" if s["pattern_tag"] is None else s["pattern_tag"]
-        print(f"pattern: {pt} ({n} reel, {m} tag, modificato il {s['pattern_data']})")
-    if s["trascrizioni_n"]:
-        print(f"trascrizioni: {s['trascrizioni']} ({s['trascrizioni_n']} reel, {s['trascrizioni_it']} in italiano: "
-              "`uv run reel stile --trascrizioni`)")
-        if s["corpus_esiste"] and s["trascrizioni_n"] > s["reel"]:
-            print(f"  ⚠ {s['trascrizioni_n']} reel trascritti ma il corpus ne ha {s['reel']}: in reelkit `./reelkit export` "
-                  "(entrano quelli analizzati), poi la guida sarà da rifare")
-    spiega = {"manca": "lancia l'agente stilista",
-              "provvisoria": "nata dalle regole dei docs, senza reel veri: si rifà quando il corpus ha dei reel",
-              "aggiornata": "distillata da tutti i reel del corpus",
-              "da rifare": "il corpus è cambiato dopo la guida: rilancia l'agente stilista"}
-    print(f"verdetto: {s['verdetto']} ({spiega[s['verdetto']]})")
-    return 0
-
-
 def _avatar_segnaposto(dest: Path, cfg) -> None:
     """Un cerchio pieno con le iniziali del presentatore: sta nel riquadro finché non c'è la clip vera."""
     from PIL import Image, ImageDraw, ImageFont
@@ -571,11 +522,6 @@ def main(argv: list[str] | None = None) -> int:
     p.set_defaults(fn=cmd_registra)
     p = sub.add_parser("setup", help="controlla ffmpeg/manim/font, genera avatar segnaposto e maschere"); p.add_argument("--forza", action="store_true")
     p.set_defaults(fn=cmd_setup)
-    p = sub.add_parser("stile", help="corpus di reelkit e stato della guida docs/stile-parlato.md")
-    p.add_argument("--trascrizioni", action="store_true", help="elenca i reel trascritti (il parlato vero) con il percorso del testo")
-    p.add_argument("--lingua", help="con --trascrizioni: solo questa lingua (es. it)")
-    p.add_argument("--account", help="con --trascrizioni: solo questo account")
-    p.set_defaults(fn=cmd_stile)
     p = sub.add_parser("strisce", help="fotogrammi fitti attorno a ogni beat e lungo la scena: ciò che il filmstrip a 6 istanti non mostra")
     p.add_argument("file"); p.add_argument("--out", help="cartella di render (default contenuti/render/<slug>/)")
     p.add_argument("--scena", type=int, default=None, help="solo questa scena (default: tutte quelle che hanno il video)")

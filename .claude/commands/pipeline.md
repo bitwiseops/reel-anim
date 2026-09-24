@@ -70,9 +70,7 @@ scrive `contenuti/copioni/<idea>.md`, la riga `**Copione:**` e lo stato `copione
 al giorno): non rilanciarlo per gusto. Se tutta la catena fallisce, fermati in entrambe le modalità. Nessuna fermata
 propria: il copione si rivede alla FERMATA 2.
 
-**T1 · sceneggiatura.** Prima lancia `uv run reel stile`: se il verdetto è `da rifare` o `manca`, dillo nel report
-(lo `stilista` si lancia a parte, non blocca); riporta anche la riga `pattern:` (se manca, lo schema dell'idea non ha
-una fonte da rileggere). Poi lancia `sceneggiatore` sull'idea: deve passare `uv run reel valida`
+**T1 · sceneggiatura.** Lancia `sceneggiatore` sull'idea: deve passare `uv run reel valida`
 senza errori (rilancialo con gli errori al massimo due volte). Con Edit aggiorna l'idea: `**Stato:** sceneggiata` e
 `**Sceneggiatura:** <percorso>` sotto la riga dello stato.
 A fermate → FERMATA 2: percorso, il copione (modello che l'ha scritto, anelli saltati, avvisi), gli scostamenti dal
@@ -155,7 +153,7 @@ il report unico.
   estratti a mano. Si controllano durate, `origine_tempi` e caption nel report.
 
 ## Chi gira su che modello
-`ideatore`, `sceneggiatore`, `revisore-tecnico`, `animatore`, `stilista`: il modello della sessione (il più forte: è
+`ideatore`, `sceneggiatore`, `revisore-tecnico`, `animatore`: il modello della sessione (il più forte: è
 lì che nasce la qualità). `broll`, `controllore-fotogrammi`, `verificatore-fonte`: `sonnet` (nel loro frontmatter).
 T0b e T0c: nessun agente, sono comandi (T0c chiama i modelli esterni della catena). Gli agenti non lanciano altri agenti: il lavoro in parallelo lo apri tu, con più
 Agent nello stesso messaggio (T2 verificatori, T2b ∥ T3, T3b controllori; due reel insieme vanno benissimo).

@@ -218,3 +218,43 @@ def test_la_taratura_scala_anche_i_limiti_per_scena():
     idea = leggi_idea(IDEA)
     p = componi_prompt(cp.TEMPLATE.read_text(encoding="utf-8"), idea, [], 188, fattore=0.8)
     assert "l'apertura al massimo 20 parole" in p and "niente due punti come snodo" in p
+
+
+def test_trascrizioni_dall_indice_di_reelkit(tmp_path):
+    """Il parlato vero per il copione: l'elenco viene dall'indice, e conta solo i testi che esistono."""
+    import json
+
+    from tools.reel.copione import trascrizioni
+
+    rk = tmp_path / "reelkit"
+    (rk / "trascrizioni").mkdir(parents=True)
+    (rk / "trascrizioni" / "r0001.txt").write_text("uno due tre quattro cinque sei", encoding="utf-8")
+    (rk / "trascrizioni" / "r0002.txt").write_text("one two", encoding="utf-8")
+    voce = lambda i, acc, lin, d: {"id": i, "account": acc, "lingua": lin, "stato": "trascritto",   # noqa: E731
+                                   "registrazione": {"durata_s": d}}
+    (rk / "indice.json").write_text(json.dumps({"versione": 1, "voci": [
+        voce("r0001", "a", "it", 3.0), voce("r0002", "b", "en", 2.0), voce("r0003", "a", "it", 9.0)]}), encoding="utf-8")
+
+    class Cfg:
+        def percorso(self, sezione, chiave):
+            return {"indice": rk / "indice.json", "trascrizioni": rk / "trascrizioni"}.get(chiave)
+
+    tutte = trascrizioni(Cfg())
+    assert [x["id"] for x in tutte] == ["r0001", "r0002"]                 # r0003 è nell'indice ma non ha il testo
+    assert (tutte[0]["parole"], tutte[0]["parole_al_s"]) == (6, 2.0)
+    assert [x["id"] for x in trascrizioni(Cfg(), lingua="it")] == ["r0001"]
+    assert trascrizioni(Cfg(), account="b")[0]["file"] == rk / "trascrizioni" / "r0002.txt"
+
+    class Vuoto:
+        def percorso(self, sezione, chiave):
+            return None
+
+    assert trascrizioni(Vuoto()) == []
+
+
+def test_suggerimenti_facoltativi_nel_prompt():
+    tpl = cp.TEMPLATE.read_text(encoding="utf-8")
+    idea = leggi_idea(IDEA.replace("## Note per il reel", "## Suggerimenti per il parlato\nDomande a chi guarda.\n\n## Note per il reel"))
+    assert idea.suggerimenti == "Domande a chi guarda."
+    assert "Suggerimenti per il parlato di questo reel: Domande a chi guarda." in componi_prompt(tpl, idea, [], 200)
+    assert "Suggerimenti" not in componi_prompt(tpl, leggi_idea(IDEA), [], 200)

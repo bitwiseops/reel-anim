@@ -12,9 +12,8 @@ Piano completo: `~/.claude/plans/dobbiamo-revisionare-il-modello-lovely-piglet.m
 
 ## Struttura
 - `config.toml` — identità e misure (video 1080×1920 @30, safe area, riquadro, schermo, palette, font, voce di prova)
-  e `[stile]` (corpus di reelkit, guida del parlato, `pattern` = `~/Projects/reelkit/pattern.md` con i pattern
-  narrativi che ideatore e sceneggiatore leggono direttamente, `indice` e `trascrizioni` = il parlato vero reel per
-  reel: lo sceneggiatore ne legge 4-6 intere prima della VOCE, `uv run reel stile --trascrizioni --lingua it`)
+  e `[stile]` (`pattern` = i pattern narrativi di reelkit che legge l'ideatore; `indice` e `trascrizioni` = il parlato
+  vero, sei reel nel prompt di `reel copione`)
 - `tools/anim/` — libreria Manim: `config` (TOML + font Pango + opzioni `tempconfig`), `misure` (px ↔ unità,
   minimi di leggibilità, `FATTORE_FONT_SIZE` misurato con `calibra.py`), `base` (`ScenaReel` con `durata_s`,
   `beat(i)` sugli inizi delle frasi, `durata_beat`, `arrotonda`, `fino_a`, `chiudi`, aree contenuto/riquadro/schermo, `debug` con guide; cambi grandi `punch(s)` e `zoom_su(mob)`/`torna()`), `componenti` (Titolo,

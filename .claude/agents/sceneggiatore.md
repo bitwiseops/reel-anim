@@ -93,7 +93,6 @@ così com'è e lo dichiari nelle note e in caption; non gli opponi la regola del
 - **il copione** (`**Copione:**` dell'idea): frontmatter (modello, catena, avvisi) e le scene, che sono la tua VOCE
 - il file idea di partenza (con la `## Struttura narrativa`, le `## Tappe del parlato` e, se c'è, il file delle
   `**Uscite:**`) e la bozza collegata, se c'è
-- `docs/stile-parlato.md`: non per scrivere, ma per riconoscere nel copione le frasi da segnalare
 - il file `pattern` di `config.toml [stile]` (`~/Projects/reelkit/pattern.md`), per il significato dei tag dell'idea
 - 1-2 sceneggiature recenti in `contenuti/sceneggiature/` per coerenza di stile (se esistono)
 
@@ -158,8 +157,7 @@ Lezioni delle sessioni, per tema, con la data. La cronaca (chi, quale reel, cosa
 ### VOCE e orecchio
 Dal 2026-09-23 la VOCE la scrive il copione: queste regole servono a **leggerlo**. Una frase che le tradisce non la
 riscrivi: la segnali nel rapporto con la regola, e decide il presentatore.
-- **Deve sembrare detto, non letto** (rapporto esterno del 2026-09-22, `docs/stile-parlato.md` «Come suona il parlato
-  da social»): una sola idea per frase; il «tu» anche dopo l'hook; fuori le formule da articolo («si prevede», «di
+- **Deve sembrare detto, non letto**: una sola idea per frase; il «tu» anche dopo l'hook; fuori le formule da articolo («si prevede», «di
   mezzo c'è», «le due si incrociano», «il conto però non dice tutto»); una frase = un respiro, sennò si spezza.
   Sul numero che deve restare in testa: **dato → traduzione → eco** («…centodieci ore al mese. Che sono quasi quattro
   ore al giorno. Ogni giorno.»). L'eco è una frase corta che riprende una parola di quella prima: `valida` non la
