@@ -32,7 +32,7 @@ PAD = 16
 RISERVA_ALTEZZA = 330      # prima stima di barra dei menu, titolo e comandi: poi si misura (`_adatta_allo_schermo`)
 CORNICE_ALTEZZA = 70       # barra dei menu di macOS + titolo della finestra, che Tk non conta nella finestra
 ALTO_MINIMO = 240          # sotto, i pannelli non servono più: meglio che la finestra sbordi
-LARGHEZZA_KARAOKE = 520    # stretta e al centro, sotto la fotocamera: gli occhi si spostano poco (2026-09-23)
+LARGHEZZA_KARAOKE = 520    # stretta e al centro, sotto la fotocamera: gli occhi si spostano poco
 AIUTO_ERRORE = ("Controlla Impostazioni di Sistema → Privacy e sicurezza → Fotocamera e Microfono per l'app del terminale, "
                 "che nessun'altra app usi la fotocamera, oppure scegli il dispositivo: `uv run reel registra --dispositivi`, `--video N`.")
 
@@ -85,8 +85,7 @@ class AppRegistra:
 
     def _adatta_allo_schermo(self) -> None:
         """La riserva per i comandi era una stima: qui si misura la finestra vera e, se sborda dallo schermo (in
-        altezza o in larghezza), si rifanno i pannelli più bassi. Succede una volta, prima che partano le catture
-        (2026-09-23: sul portatile i comandi finivano fuori schermo anche a tutto schermo)."""
+        altezza o in larghezza), si rifanno i pannelli più bassi. Succede una volta, prima che partano le catture."""
         try:
             if self.opz.get("altezza_pannelli_px"):
                 return
@@ -194,7 +193,7 @@ class AppRegistra:
         self.t_rec = self.c_reel.create_text(w - 14, 16, text="", font=self.f_medio, fill=self.colori["rec"], anchor="ne")
 
         # il karaoke al centro, fra webcam e reel: con la finestra centrata in alto sta subito sotto la fotocamera del
-        # portatile, e leggendo lo sguardo resta in camera (il presentatore, 2026-09-23)
+        # portatile, e leggendo lo sguardo resta in camera
         dx = tk.Frame(pannelli, bg=pal.sfondo, width=lk, height=alto)
         dx.grid(row=0, column=1, sticky="n", padx=PAD)
         dx.pack_propagate(False)

@@ -47,7 +47,7 @@ def tempi_presa(clip: Path) -> list[float] | None:
 
 def voce_presa(clip: Path | None) -> list[str] | None:
     """Il testo mostrato nel karaoke durante la presa (righe grezze, con ==evidenzia==), se il sidecar lo ha: è quello
-    che il presentatore ha recitato, e le caption si fanno da qui. None per le prese di prima del 2026-09-22."""
+    che il presentatore ha recitato, e le caption si fanno da qui. None per le prese più vecchie, che non lo salvavano."""
     if clip is None or not sidecar(clip).exists():
         return None
     try:

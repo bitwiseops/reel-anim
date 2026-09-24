@@ -57,8 +57,7 @@ def query_scena(s: Scena, cfg: Config | None = None) -> list[str]:
 
     **Solo dal brief `ANIMAZIONE:`, che è già una descrizione di cosa si vede.** La VOCE entra soltanto
     se il brief manca: un sacchetto delle sue parole più frequenti non descrive un'immagine, e cercandolo
-    tornano filmati a caso — verificato il 2026-09-19 sui provini, dove «pensa scegli fretta cambiata
-    volte» ha riportato un traliccio, un'impalcatura e un'auto.
+    tornano filmati a caso («pensa scegli fretta cambiata volte» riporta un traliccio e un'impalcatura).
     """
     query: list[str] = []
     for riga in s.animazione:

@@ -37,7 +37,7 @@ SCADENZA_S = 60
 INTERVALLO_S = 5.0
 ATTESA_MAX_S = 900.0
 
-CACHE = cache_broll()   # fuori dal progetto e mai ripulita da sé: le immagini generate si pagano (2026-09-23)
+CACHE = cache_broll()   # fuori dal progetto e mai ripulita da sé: le immagini generate si pagano
 
 
 class CreditiEsauriti(RichiestaFallita):

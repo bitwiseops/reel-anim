@@ -10,12 +10,12 @@ successivo, l'ultima fino alla fine della scena.
 
 Un fermo immagine per otto secondi è il «fermo morto» che `docs/animazioni.md` vieta: ogni immagine si
 muove, e la mossa cambia a ogni immagine (`MOSSE`: spinta dentro, carrellata, allargamento, diagonale),
-così il movimento non sembra un metronomo. Dal 2026-09-23 metà delle clip del reel sono immagini Meshy, e
-devono reggere il confronto con un filmato: per questo lo zoom (`zoompan` su un'immagine raddoppiata, che
-toglie lo scatto dei pixel interi) e non più la sola carrellata.
+così il movimento non sembra un metronomo. Metà delle clip del reel sono immagini generate e devono reggere il
+confronto con un filmato: per questo lo zoom (`zoompan` su un'immagine raddoppiata, che toglie lo scatto dei
+pixel interi).
 
 Fra un'immagine e l'altra c'è una **transizione** (`xfade`) presa in giro da `config.toml [transizioni]
-immagini` (zoomin, circleopen…: le «wow» chieste dal presentatore), lunga `immagini_s`; senza la chiave
+immagini` (zoomin, circleopen…), lunga `immagini_s`; senza la chiave
 resta la dissolvenza del reel. Comincia **sull'inizio frase**, così il cambio resta ancorato a quello che il
 presentatore sta dicendo.
 
@@ -65,8 +65,8 @@ def finestre(inizi_frasi_s: list[float], durata_s: float) -> list[tuple[float, f
 
 def dividi_per_immagini(tenute: list[tuple[float, float]], n_immagini: int) -> list[tuple[float, float]]:
     """Più immagini che frasi: si divide a metà la tenuta più lunga finché ogni immagine ha la sua, purché le metà
-    restino di almeno `TENUTA_DIVISA_MIN_S`. Le immagini generate si pagano: una generata e mai vista è sprecata
-    (2026-09-23, ia-e-lavoro: 2 frasi e 3 gesti). Il cambio in più cade a metà frase, non su un inizio."""
+    restino di almeno `TENUTA_DIVISA_MIN_S`. Le immagini generate si pagano: una generata e mai vista è sprecata.
+    Il cambio in più cade a metà frase, non su un inizio."""
     out = list(tenute)
     while len(out) < n_immagini:
         k = max(range(len(out)), key=lambda i: out[i][1])

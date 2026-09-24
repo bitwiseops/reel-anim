@@ -128,7 +128,7 @@ def anima(r: Reel, diag: list[Diagnostica], out: Path, qualita: str = "l", solo:
         try:
             cls = classe_scena(mod, s.n)
         except AnimazioneMancante as e:
-            if s.a_volto_pieno:    # l'apertura a volto pieno è lui e basta: non c'è niente da animare (2026-09-21)
+            if s.a_volto_pieno:    # l'apertura a volto pieno è lui e basta: non c'è niente da animare
                 continue
             diag.append(errore(str(e), s.riga, s.n))
             info.append({**base, "errore": str(e), "traceback": ""})
@@ -170,7 +170,7 @@ def voce_recitata(r: Reel, s: Scena, t: TempiScena) -> list[str]:
 def raccordi_riquadro(r: Reel, s: Scena) -> tuple[str | None, str | None]:
     """(entrata, uscita) di una scena a volto pieno: il riquadro della scena prima e di quella dopo, quando ce l'hanno.
 
-    Serve al raccordo del 2026-09-22: fra l'apertura a volto pieno e la prima scena col riquadro (e fra l'ultima
+    Serve al raccordo: fra l'apertura a volto pieno e la prima scena col riquadro (e fra l'ultima
     scena col riquadro e la chiusura) il volto non stacca, si rimpicciolisce fino al cerchio del riquadro. Se la
     scena vicina non ha riquadro (o non c'è) resta lo stacco secco.
     """

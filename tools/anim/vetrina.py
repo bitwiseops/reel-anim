@@ -102,7 +102,7 @@ class VetrinaCodice(ScenaReel):
 
 
 class VetrinaIcone(ScenaReel):
-    PER_PAGINA = 12     # 4 × 3: con più icone la griglia usciva dall'area; si sfogliano a pagine (2026-09-23)
+    PER_PAGINA = 12     # 4 × 3: con più icone la griglia usciva dall'area; si sfogliano a pagine
 
     def costruisci(self):
         att = self.cfg.palette.attenuato

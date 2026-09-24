@@ -1,12 +1,10 @@
 """Il copione: il parlato del reel scritto da un modello esterno, prima della sceneggiatura (`uv run reel copione`).
 
-Dal 2026-09-23 la VOCE non la scrive più lo sceneggiatore: nella prova alla cieca sul reel GPU il presentatore ha messo
-gpt-5.4 davanti a deepseek-v4-pro, gemini-3.1-pro e Claude. Il comando legge dall'idea tema, messaggio e
-`## Tappe del parlato`, compone il prompt da `templates/copione.md` con sei trascrizioni di reelkit per l'orecchio, e lo
-manda al primo modello della catena (`config.toml [copione] modelli`); si scende al successivo solo se il precedente
-fallisce: errore, punti Poe che non bastano, cifre o un reel oltre i 120 s anche dopo una correzione (le lunghezze
-oltre i limiti, come in `valida`, restano avvisi). Lo sceneggiatore poi spezza
-il copione in beat e ci costruisce attorno le animazioni.
+Il comando legge dall'idea tema, messaggio e `## Tappe del parlato`, compone il prompt da `templates/copione.md` con
+sei trascrizioni di reelkit per l'orecchio, e lo manda al primo modello della catena (`config.toml [copione] modelli`).
+Si scende al successivo solo se il precedente fallisce: errore, punti Poe che non bastano, cifre o un reel oltre
+l'errore di `valida` anche dopo una correzione (le altre lunghezze restano avvisi). Lo sceneggiatore poi spezza il
+copione in beat.
 
 La logica è pura; le chiamate stanno in `Poe` e `chiama_claude`, che i test sostituiscono.
 """
@@ -31,7 +29,7 @@ TEMPLATE = RADICE / "templates" / "copione.md"
 POE = "https://api.poe.com"
 CLAUDE = "claude"               # l'anello della catena che non passa da Poe: `claude -p`, modello `opus`
 TIMEOUT_S = 600.0
-USD_PER_PUNTO = 0.30 / 10_000   # ricarica giornaliera di Poe: 10.000 punti ≈ 0,30 $ (letto il 2026-09-23)
+USD_PER_PUNTO = 0.30 / 10_000   # ricarica giornaliera di Poe: 10.000 punti ≈ 0,30 $
 CARATTERI_PER_TOKEN = 3.2       # italiano, stima prudente: serve solo a decidere se i punti bastano
 
 
@@ -129,7 +127,7 @@ def secondi_per(parole: int, parole_al_s: float = 2.8) -> int:
 def componi_prompt(template: str, idea: Idea, trascrizioni: list[tuple[str, str]], parole: int, nota: str = "",
                    parole_al_s: float = 2.8, fattore: float = 1.0) -> str:
     """`fattore` è la taratura del modello (`[copione] taratura`): scala anche i limiti per scena, perché chi sfora il
-    totale sfora anche l'apertura (gpt-5.4: 26-28 parole su 25, il 2026-09-24)."""
+    totale sfora anche l'apertura."""
     corpo = re.sub(r"^<!--.*?-->\s*", "", template, flags=re.S)
     valori = {
         "trascrizioni": "\n\n".join(f"--- trascrizione {i} ---\n{t.strip()}" for i, t in trascrizioni),
@@ -179,8 +177,7 @@ def parole_totali(scene: dict[int, str]) -> int:
 
 def esamina(scene: dict[int, str], n_tappe: int, parole: int, tetto: int | None = None) -> Esame:
     """Come `valida`: i limiti di parole sono una richiesta (una correzione, poi avvisi), mentre le cifre e un reel
-    oltre `tetto` parole (l'errore di `valida`, 120 s) scartano il copione. Nella prova gpt-5.4 era il preferito anche
-    a 310 parole: una regola più severa di `valida` lo scartava (2026-09-23)."""
+    oltre `tetto` parole (l'errore di `valida`) scartano il copione."""
     errori, corr, avvisi, duri = [], [], [], []
     if sorted(scene) != list(range(1, n_tappe + 1)):
         errori.append(f"scene {', '.join(map(str, sorted(scene))) or 'nessuna'} invece di 1-{n_tappe}")
@@ -193,7 +190,7 @@ def esamina(scene: dict[int, str], n_tappe: int, parole: int, tetto: int | None 
         massimo, nome = ((LIMITI["parole_voce_hook_max"], "apertura") if n == 1 else
                          (LIMITI["parole_voce_chiusura_max"], "chiusura") if n == n_tappe else
                          (LIMITI["parole_voce_max"], f"scena {n}"))
-        if k > massimo:   # dal 2026-09-23 solo l'apertura si corregge: l'aggancio sta nei primi 15 s; il resto è avviso
+        if k > massimo:   # si corregge solo l'apertura (l'aggancio sta nei primi 15 s); il resto è avviso
             (corr if n == 1 else avvisi).append(f"la {nome} ha {k} parole: al massimo {massimo}")
         if re.search(r"\d", t):
             cifre = ", ".join(sorted(set(re.findall(r"\d[\d.,]*", t))))
@@ -224,13 +221,12 @@ def catena(prompt: str, modelli: list[str], n_tappe: int, parole: int,
            archivia: Callable[[str, str, str], None] | None = None) -> Esito:
     """Il primo modello che consegna un copione senza errori. `salta(modello, prompt)` dice perché non chiamarlo
     (punti che non bastano); `chiama(modello, prompt)` risponde o solleva ErroreChiamata. Un copione con cifre o con
-    l'apertura troppo lunga riceve **una** correzione dallo stesso modello; le altre lunghezze sono avvisi (2026-09-23:
-    il presentatore preferisce il parlato di gpt-5.4 anche se più lungo). `archivia(modello, fase, testo)` salva ogni
-    risposta, anche scartata."""
+    l'apertura troppo lunga riceve **una** correzione dallo stesso modello; le altre lunghezze sono avvisi.
+    `archivia(modello, fase, testo)` salva ogni risposta, anche scartata."""
     tentativi: list[str] = []
     dillo = avanzamento or (lambda s: None)
     chiama_e_archivia = chiama
-    if archivia:     # ogni risposta si salva, anche scartata: i punti Poe spesi non si buttano (2026-09-23)
+    if archivia:     # ogni risposta si salva, anche scartata: i punti Poe spesi non si buttano
         def chiama_e_archivia(m: str, p: str, fase: str = "prima") -> str:
             testo = chiama(m, p)
             archivia(m, fase, testo)
@@ -337,8 +333,8 @@ class Poe:
         return int(usd / USD_PER_PUNTO) + 1
 
     def saldo_prudente(self) -> int:
-        """Il saldo che Poe mostra si aggiorna in ritardo: dopo una chiamata può sembrare intatto (il 23/09 deepseek è
-        partito con 480 punti veri e ha risposto vuoto). Vale il minore fra il letto e il primo meno le stime spese."""
+        """Il saldo che Poe mostra si aggiorna in ritardo: dopo una chiamata può sembrare intatto, e un modello
+        chiamato senza punti risponde vuoto. Vale il minore fra il letto e il primo meno le stime spese."""
         letto = self.saldo()
         if self._primo_saldo is None:
             self._primo_saldo = letto

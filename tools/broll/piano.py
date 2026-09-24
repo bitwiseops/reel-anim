@@ -26,11 +26,8 @@ VERSIONE = 1
 # ripiego quando per quella scena non esiste né una clip filmata né una animata: si montano sui beat,
 # una per frase, per richiamare quello che il presentatore sta dicendo in quel momento.
 ESTERNI = ("filmato", "immagini")       # i registri che producono un file per la scena
-# i tipi di scena che possono andare a filmato. La chiusura è la CTA, e una scena [schermo] ha già il suo
-# materiale nella finestra 900x980. **Nemmeno l'hook, dal 2026-09-21**: l'apertura è il presentatore a
-# tutta tela che pone il problema guardando in camera (decisione di Flavio, che supera quella del
-# 2026-09-19 sull'hook a filmato). I due estremi del reel sono suoi e non si propongono mai; `_proponi`
-# lavora sulle scene in mezzo, che sono anche quelle su cui si misura l'equilibrio fra i due registri.
+# I tipi di scena che possono andare a filmato: né l'apertura né la chiusura (sono il presentatore a volto pieno)
+# né una scena [schermo], che ha già il suo materiale.
 AMMESSE = ("spiegazione",)
 
 # Quello che si spiega disegnando: meccanismi, quantità, e le figure della libreria. Se una scena nomina
@@ -62,7 +59,7 @@ def _pattern(marcatori: tuple[str, ...]) -> list[str]:
 
 RE_TECNICA = re.compile("|".join(_pattern(TECNICI)))
 # Le quantità dette a lettere contano solo dove chi guarda le sente o le legge (VOCE e TESTO): nel brief di un
-# filmato descrivono l'immagine, non un numero da mostrare («si ferma a metà pagina», 2026-09-21, scrivere-con-ia).
+# filmato descrivono l'immagine, non un numero da mostrare («si ferma a metà pagina»).
 RE_QUANTITA = re.compile("|".join(_pattern(NUMERI) + list(_COMPOSTI)))
 
 
@@ -224,7 +221,7 @@ def da_sceneggiatura(md: Path, cfg: Config | None = None) -> tuple[Piano, list[D
     for s in r.scene:
         d = durate.get(s.n)
         # il report vale solo per una scena che dice ancora le stesse cose: dopo una ristrutturazione la «scena 3»
-        # del montaggio di prima è un'altra scena (2026-09-21, ia-e-lavoro da 7 a 9 scene), e la sua durata no
+        # del montaggio di prima è un'altra scena, e la sua durata no
         if d and (d.get("parole_voce") != s.parole_voce or len(d["inizi_frasi_s"]) != len(s.voce)):
             d = None
         sb = ScenaBroll(n=s.n, tipo=s.tipo,
@@ -253,10 +250,9 @@ def eredita(nuovo: Piano, vecchio: Piano, fps: int = 30) -> list[int]:
     """Rifare il piano non deve disfare le decisioni: porta nel nuovo candidati e scelte del vecchio.
 
     Una scena eredita se è ancora a materiale esterno e dice ancora le stesse frasi (se la VOCE è cambiata prima
-    della scelta, il filmato rispondeva a un'altra scena). **Eccezione dal 2026-09-23**: una scena già scritta
-    `[broll]` nella sceneggiatura eredita anche con la VOCE cambiata, perché dal 22/09 la VOCE si corregge
-    registrando (`reel parlato --applica`) e la scena resta la stessa; buttare la scelta buttava anche le immagini
-    Meshy pagate. Resta una nota: il filmato va riguardato sul testo nuovo. Se nel frattempo è
+    della scelta, il filmato rispondeva a un'altra scena). Eccezione: una scena già `[broll]` eredita anche con la
+    VOCE cambiata, perché la VOCE si corregge registrando (`reel parlato --applica`) e la scena resta la stessa;
+    buttare la scelta butterebbe anche le immagini generate, che si pagano. Resta una nota: il filmato va riguardato. Se nel frattempo è
     cambiata la durata — è arrivata la presa vera al posto della stima — la scelta resta ma la resa no: si
     torna a `scelto`, e `broll rendi` la rifà lunga giusta. Ritorna le scene che hanno ereditato.
 

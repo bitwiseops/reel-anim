@@ -11,26 +11,25 @@ from .stima import durata_stimata_s
 
 LIMITI = {
     "scene_min": 5,
-    "scene_max": 10,   # dal 2026-09-21: i due registri a metà vogliono più scene, non più minuti
+    "scene_max": 10,
     "scene_tipiche": (6, 9),
-    "parole_voce_max": 70,        # per scena (≈ 25 s): dal 2026-09-23 il parlato del copione è più lungo (era 50, prima 35)
-    "parole_voce_hook_max": 25,   # dal 2026-09-22: l'hook parlato fa una domanda e la rilancia («Ok. Ma prima…»)
-    "parole_voce_chiusura_max": 25,   # la chiusura è un payoff, non un riassunto (docs/linguaggio-reel.md §8); 18 → 25 il 2026-09-23
-    "beat_max": 8,                # righe VOCE per scena (una riga = un beat); 6 dal 2026-09-22, 8 dal 2026-09-23 (scene più lunghe)
+    "parole_voce_max": 70,        # per scena (≈ 25 s a 2,8 parole/s)
+    "parole_voce_hook_max": 25,   # l'aggancio si gioca nei primi secondi: l'hook resta corto
+    "parole_voce_chiusura_max": 25,   # la chiusura è un payoff, non un riassunto
+    "beat_max": 8,                # righe VOCE per scena (una riga = un beat)
     "parole_titolo_max": 10,
     "parole_messaggio_max": 25,
-    "parole_messaggio_consigliate": 12,   # una frase grande a schermo; il resto in caption
-    "testo_max": 2,               # dal 2026-09-20 i reel si guardano muti: a spiegare è la caption, il TESTO è un extra
-    "parole_testo_max": 2,        # numeri e percentuali non contano come parole (tools/anim/controlli.parole_di_contenuto)
+    "parole_messaggio_consigliate": 12,
+    "testo_max": 2,               # il reel si guarda muto: a spiegare è la caption, il TESTO è un extra
+    "parole_testo_max": 2,        # numeri e percentuali non contano come parole
     "evidenzia_max": 1,           # ==evidenzia== per scena
     "emoji_scena_max": 1,
     "scena_min_s": 2.5,
-    "scena_max_s": 26,            # 19 → 26 il 2026-09-23
+    "scena_max_s": 26,
     "reel_min_s": 30,
-    "reel_max_s": 150,            # Instagram non penalizza i video lunghi (docs/linguaggio-reel.md §0); 90 → 100 → 150 (2026-09-23):
-                                  # l'aggancio si gioca nei primi 15 s (hook), non sulla durata totale
+    "reel_max_s": 150,            # conta l'aggancio dei primi 15 s, non la durata totale
     "reel_errore_s": 180,
-    "frasi_titolo_reel_max": 2,   # aforismi per reel fuori dalla chiusura (le eco non contano: vedi frasi_titolo)
+    "frasi_titolo_reel_max": 2,   # aforismi fuori dalla chiusura (le eco non contano: vedi frasi_titolo)
     "parole_figura_max": 20,      # FIGURA: cosa si capisce guardando, in una riga
 }
 
@@ -103,7 +102,7 @@ def check(r: Reel) -> list[Diagnostica]:
             if n_msg > L["parole_messaggio_max"]:
                 a(f"MESSAGGIO lungo ({n_msg} parole, max {L['parole_messaggio_max']})")
             elif n_msg > L["parole_messaggio_consigliate"] and not s.a_volto_pieno:
-                # a volto pieno il MESSAGGIO non va a schermo (dal 2026-09-21: solo lui e le caption): è il testo
+                # a volto pieno il MESSAGGIO non va a schermo (solo lui e le caption): è il testo
                 # per la caption del post, e lì la misura di una frase grande non conta
                 a(f"MESSAGGIO di {n_msg} parole: a schermo ne reggono {L['parole_messaggio_consigliate']} "
                   "(una frase grande; il resto in caption)")
@@ -117,7 +116,7 @@ def check(r: Reel) -> list[Diagnostica]:
         if len(s.voce) > L["beat_max"]:
             a(f"{len(s.voce)} righe VOCE (max {L['beat_max']}): troppi beat per una scena")
         if s.a_volto_pieno:
-            # "pieno": il presentatore È la tela e la grafica (trasparente) gli va sopra. Dal 2026-09-21 è il default
+            # "pieno": il presentatore È la tela e la grafica (trasparente) gli va sopra: è il default
             # della chiusura: la conclusione la dice lui guardando in camera.
             if s.schermo:
                 e("RIQUADRO: pieno con SCHERMO:: sotto il presentatore a tutta tela non va un filmato, la tela è lui")
@@ -134,7 +133,7 @@ def check(r: Reel) -> list[Diagnostica]:
                   "resta una clip con una voce sopra")
         elif not s.a_volto_pieno and s.tipo != "hook" and not s.animazione:
             a("scena senza ANIMAZIONE: l'animatore non sa cosa disegnare")
-        # a volto pieno (apertura e chiusura, dal 2026-09-21) si vede lui con le caption: niente da disegnare
+        # a volto pieno (apertura e chiusura) si vede lui con le caption: niente da disegnare
         if not s.a_filmato and not s.a_volto_pieno and s.tipo != "hook" and not s.figura:
             a("scena senza FIGURA: scrivi in una riga cosa si capisce guardando, senza leggere niente a schermo "
               "(i reel si guardano muti: a spiegare è la caption)")
@@ -219,7 +218,7 @@ def frasi_di(righe: list[str]) -> list[str]:
 
 def _eco(frase: str, prima: str | None) -> bool:
     """Una frase corta che **riprende una parola** di quella prima non è un titolo: è il respiro del parlato
-    («Che sono quasi quattro ore al giorno. Ogni giorno.»), e dà peso al dato invece di recitarlo (2026-09-22)."""
+    («Che sono quasi quattro ore al giorno. Ogni giorno.»), e dà peso al dato invece di recitarlo."""
     if not prima:
         return False
     parole = {p.lower().strip(".,;:!?…»«\"'") for p in frase.split() if len(p) > 3}

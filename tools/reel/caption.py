@@ -1,6 +1,6 @@
 """Caption: i sottotitoli che seguono la voce, disegnati con Pillow e bruciati nel montaggio.
 
-I reel si guardano senza audio (regola del presentatore del 2026-09-20), quindi il parlato deve comparire scritto.
+I reel si guardano senza audio (regole editoriali §1), quindi il parlato deve comparire scritto.
 Le caption **non** stanno dentro Manim: la grafica si renderizza prima della registrazione, con i tempi della voce
 sintetica, mentre i tempi buoni sono quelli della presa. Si bruciano quindi nel compositing (`compositing.Sorgenti`),
 dopo che la clip del presentatore esiste; così valgono anche per le scene `[broll]`, che da Manim non passano.

@@ -11,7 +11,7 @@ TIPI_SCENA = ("hook", "spiegazione", "schermo", "broll", "chiusura")
 CON_FILE = ("schermo", "broll")         # i tipi che senza SCHERMO: <file> non hanno niente da mostrare
 TRANSIZIONI = ("taglio", "dissolvenza")
 POSIZIONI_RIQUADRO = ("basso-destra", "basso-sinistra", "alto-destra", "alto-sinistra")
-# RIQUADRO: pieno = il presentatore a tutta tela, con la grafica Manim (trasparente) sopra di lui. Dal 2026-09-21 è
+# RIQUADRO: pieno = il presentatore a tutta tela, con la grafica Manim (trasparente) sopra di lui. È
 # il default di [hook] e [chiusura]: lui che parla guardando in camera, con le caption e nient'altro (il MESSAGGIO
 # della chiusura non va a schermo: è il testo per la caption del post).
 PIENO = "pieno"
@@ -93,7 +93,7 @@ class Scena:
         return self.tipo == "broll" or (self.tipo == "hook" and bool(self.schermo))
 
     def riquadro_effettivo(self) -> str:
-        """Dove sta il presentatore. Dal 2026-09-21 **i due estremi del reel sono suoi, a tutta tela**: l'apertura
+        """Dove sta il presentatore. **I due estremi del reel sono suoi, a tutta tela**: l'apertura
         (pone il problema guardando in camera) e la chiusura (dice la conclusione). In mezzo sta nel riquadro, e
         sopra un filmato `[broll]` pure. `RIQUADRO: si` riporta una di quelle due al riquadro di prima, `no` lo
         toglie del tutto."""

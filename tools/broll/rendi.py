@@ -26,7 +26,7 @@ from .piano import ScenaBroll
 from .scelta import confini
 
 from tools.anim.config import RADICE
-CACHE = cache_broll()   # config.toml [percorsi] cache_broll, fuori dal progetto (2026-09-23)
+CACHE = cache_broll()   # config.toml [percorsi] cache_broll, fuori dal progetto
 FORNITORI = {pexels.NOME: pexels}
 MARGINE_S = 0.5         # si legge un po' oltre il taglio: a chiuderlo al fotogramma ci pensa `trim`
 

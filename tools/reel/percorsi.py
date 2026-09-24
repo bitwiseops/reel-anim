@@ -1,4 +1,4 @@
-"""Dove vanno i file di un reel: il riepilogo nel progetto, il lavoro transitorio fuori (dal 2026-09-23).
+"""Dove vanno i file di un reel: il riepilogo nel progetto, il lavoro transitorio fuori.
 
 `contenuti/render/<slug>/` tiene solo quello che il presentatore guarda e che i comandi rileggono: `reel-9x16.mp4`,
 `reel-prova.mp4`, `contact-sheet.png`, le copertine, `scene/NN.png`, i filmstrip di scena e `report.json`. Tutto il

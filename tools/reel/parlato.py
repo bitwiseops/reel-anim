@@ -1,6 +1,6 @@
 """Il testo recitato contro la VOCE della sceneggiatura: `uv run reel parlato <file> [--applica]`.
 
-Dal 2026-09-22 la VOCE la rivede il presentatore mentre registra: nella finestra di `reel registra` corregge le righe
+La VOCE la rivede il presentatore mentre registra: nella finestra di `reel registra` corregge le righe
 (contenuti/media/<slug>/parlato.json) e la presa scrive nel sidecar `scena-NN.json` il testo che ha recitato. Le
 caption si fanno già da lì (`monta.voce_recitata`); questo comando mostra cosa è cambiato e, con `--applica`, lo
 riporta nelle righe `VOCE:` del .md, così la sceneggiatura resta uguale al parlato vero (pacchetto social, archivio).

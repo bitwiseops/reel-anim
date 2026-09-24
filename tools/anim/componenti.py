@@ -720,7 +720,7 @@ __all__ = ["testo", "markup", "avvolgi", "tratto", "etichetta", "Riga", "Blocco"
 
 
 # --- spiegare senza parole -------------------------------------------------------------------------------
-# Dal 2026-09-20 i reel si guardano muti, con le caption che dicono il parlato: la figura deve reggere il
+# I reel si guardano muti, con le caption che dicono il parlato: la figura deve reggere il
 # concetto da sola. Questi componenti non contengono testo (o ne contengono al massimo un'etichetta).
 
 class Sagome(VGroup):

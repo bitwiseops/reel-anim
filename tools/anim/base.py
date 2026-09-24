@@ -107,7 +107,7 @@ def aree(cfg: Config, riquadro: str | None = None, caption: str | bool | None = 
     contenuto = Area(x0, y0, x1, y1)
     r = cfg.dati["riquadro"]
     area_riq = None
-    # "pieno": il presentatore sta *dietro* a tutta tela (chiusura, dal 2026-09-21), quindi non c'è nessuna fascia
+    # "pieno": il presentatore sta *dietro* a tutta tela (apertura e chiusura), quindi non c'è nessuna fascia
     # da lasciargli libera: la grafica è trasparente e gli va sopra. Resta la fascia delle caption.
     if riquadro and riquadro not in ("no", "pieno"):
         pos = riquadro if riquadro != "si" else r["posizione"]

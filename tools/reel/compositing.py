@@ -28,7 +28,7 @@ class Sorgenti:
     filmato: bool = False                    # scena [broll]: `grafica` è materiale esterno a tutta tela, non Manim
     caption: tuple[tuple[Path, float, float], ...] = ()   # (png, t0, t1) dei blocchi di sottotitolo, bruciati sopra tutto
     caption_xy: tuple[int, int] | None = None             # angolo in alto a sinistra della fascia (tools/reel/caption.fascia)
-    # raccordo fra volto pieno e riquadro (2026-09-22): solo a `riquadro == PIENO`. `uscita_a_riquadro` è la posizione
+    # raccordo fra volto pieno e riquadro: solo a `riquadro == PIENO`. `uscita_a_riquadro` è la posizione
     # del riquadro della scena DOPO ("si" o "alto-destra"…): negli ultimi `durata_raccordo_s` il volto a tutta tela si
     # rimpicciolisce fino a coincidere con quel riquadro, prendendone la forma. `entrata_da_riquadro` è il contrario
     # nei primi secondi, col riquadro della scena PRIMA. None (vicino senza riquadro, o assente) = stacco secco.
@@ -187,7 +187,6 @@ def comando_scena(src: Sorgenti, dest: Path, cfg: Config | None = None, anteprim
     W, H, fps = cfg.larghezza, cfg.altezza, cfg.fps
     # ogni immagine letta in loop (avatar, maschere, caption, uno SCHERMO fisso) porta la durata della scena: senza
     # `-t` è un ingresso infinito, e ffmpeg 8.1 a volte resta appeso a CPU piena invece di chiudere con gli altri
-    # (visto il 2026-09-21 su scrivere-con-ia: 3 volte su 3 senza, 4 su 4 con)
     d_img = f"{src.durata_s:.3f}"
     inputs: list[str] = []
     filtri: list[str] = []
@@ -200,8 +199,7 @@ def comando_scena(src: Sorgenti, dest: Path, cfg: Config | None = None, anteprim
         n += 1
         return i
 
-    # base: il presentatore a tutta tela, con la grafica Manim (trasparente) sopra di lui. È la chiusura dal
-    # 2026-09-21: la conclusione la dice lui guardando in camera, il MESSAGGIO arriva grande in coda.
+    # base: il presentatore a tutta tela (apertura e chiusura), con l'eventuale grafica trasparente sopra di lui
     i_pres_base = None
     if src.riquadro == PIENO and (src.video_presentatore or src.avatar):
         i_pres_base = aggiungi("-i", str(src.video_presentatore)) if src.video_presentatore \
@@ -267,7 +265,7 @@ def comando_scena(src: Sorgenti, dest: Path, cfg: Config | None = None, anteprim
         cx, cy = src.caption_xy or (0, 0)
         for k, (png, t0, t1) in enumerate(src.caption):
             # un fotogramma solo, che l'overlay ripete (`eof_action=repeat`): con una caption in loop per blocco una
-            # scena lunga arrivava a 13 ingressi infiniti, e ffmpeg 8.1 restava in stallo a CPU zero (2026-09-21)
+            # scena lunga arrivava a 13 ingressi infiniti, e ffmpeg 8.1 restava in stallo a CPU zero
             i_cap = aggiungi("-i", str(png))
             filtri.append(f"[{i_cap}:v]format=rgba[cap{k}]")
             prossimo = f"c{k}"
@@ -351,11 +349,10 @@ def durata_concat(scene: list[tuple[Path, float]], transizione: str, durata_tran
     return round(tot, 3)
 
 
-# --- audio della voce (2026-09-23) --------------------------------------------------------------------------------
-# Le prese erano a −37 LUFS: il loudnorm per scena le alzava di 20 dB, e con loro il rumore della stanza. Ora la voce
-# si pulisce scena per scena (passa-alto, riduzione del rumore, de-esser) e il volume si porta al bersaglio una volta
-# sola, sul reel intero, con loudnorm in due passaggi. La presa .wav non si tocca mai. `[audio] catena = false` torna
-# al loudnorm per scena di prima.
+# --- audio della voce ---------------------------------------------------------------------------------------------
+# La voce si pulisce scena per scena (passa-alto, riduzione del rumore, de-esser) prima di alzarla: alzare una presa
+# bassa alza anche il rumore della stanza. Il volume si porta al bersaglio una volta sola, sul reel intero, con loudnorm
+# in due passaggi. La presa .wav non si tocca mai; `[audio] catena = false` torna al loudnorm per scena.
 
 def _audio(cfg: Config | None) -> dict:
     return dict((cfg or carica()).dati.get("audio") or {})

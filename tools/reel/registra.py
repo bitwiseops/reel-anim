@@ -250,8 +250,8 @@ def karaoke(tl: Timeline, t: float) -> Karaoke:
 
 # --- livello del microfono (vu-meter) ------------------------------------------------------------------
 
-# Il 23/09 le prese di ia-e-lavoro erano a −37 LUFS: il montaggio le alzava di 20 dB, e con la voce il rumore della
-# stanza. Il bersaglio sono picchi del parlato fra −18 e −3 dBFS (le soglie dicono il primo giudizio che vale).
+# Più segnale all'origine vuol dire meno rumore da togliere dopo. Il bersaglio sono picchi del parlato fra −18 e −3 dBFS
+# (le soglie dicono il primo giudizio che vale).
 SOGLIE_LIVELLO = ((-1.0, "satura"), (-3.0, "alto"), (-18.0, "buono"), (-30.0, "basso"))
 SILENZIO_DB = -90.0
 
@@ -415,7 +415,7 @@ def comando_taglio(p: Presa, s: ScenaTL, presa: Path, dest: Path, opz: dict, aud
         cmd += ["-ss", f"{p.t_audio(s.t_inizio_s):.3f}", "-i", str(audio)]
     cmd += ["-t", f"{durata:.3f}", "-map", "0:v"]
     cmd += ["-map", "1:a"] if audio is not None else (["-map", "0:a"] if not p.audio else ["-an"])
-    # a volto pieno (apertura e chiusura, dal 2026-09-21) la tela è lui: si tiene il fotogramma intero, e il
+    # a volto pieno (apertura e chiusura) la tela è lui: si tiene il fotogramma intero, e il
     # montaggio lo porta a 1080×1920. Il quadrato dell'inquadratura serve solo alle scene col riquadro.
     if p.inquadratura and s.riquadro != PIENO:
         q = p.inquadratura

@@ -27,7 +27,7 @@ def filmstrip_scena(video: Path, durata_s: float, dest: Path, quanti: int = 6, c
 
 
 # --- il volto del presentatore nelle immagini di controllo ------------------------------------------------------
-# Regola del presentatore (2026-09-22): il suo volto lo guarda solo lui. Con le clip vere i fotogrammi che legge
+# Il volto del presentatore lo guarda solo lui (regole editoriali §8). Con le clip vere i fotogrammi che legge
 # Claude (scene/NN.png, filmstrip, strisce, contact sheet) si scrivono già coperti: nel riquadro torna l'avatar
 # segnaposto del `--prova`, e una scena a volto pieno diventa un cartello con le caption di quell'istante.
 

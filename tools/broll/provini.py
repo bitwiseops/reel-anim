@@ -20,7 +20,7 @@ SCADENZA_S = 30
 
 
 def cartella(slug: str) -> Path:
-    """Provini, contact sheet dei candidati e strisce di resa: lavoro transitorio, fuori dal progetto (2026-09-23)."""
+    """Provini, contact sheet dei candidati e strisce di resa: lavoro transitorio, fuori dal progetto."""
     from tools.reel.percorsi import lavoro
     return lavoro(slug) / "broll"
 

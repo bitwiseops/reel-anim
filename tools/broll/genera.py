@@ -1,7 +1,7 @@
 """`broll genera`: le immagini di una scena, fatte con Meshy quando su Pexels non c'è niente di buono.
 
-Decisione del presentatore del 2026-09-22: **quando un candidato buono non esiste, la clip della scena si
-fa unendo 2-3 immagini generate**, con una dissolvenza fra l'una e l'altra. Non è un ripiego grafico ed è
+Quando un candidato buono non esiste (regole editoriali §3), **la clip della scena si fa unendo 2-3 immagini
+generate**, animate e unite da una transizione. Non è un ripiego grafico ed è
 l'opposto del testo di riserva: è materiale nuovo, fatto apposta per quella scena, che entra nel reel come
 un filmato qualunque — un file per scena, 1080×1920, muto, lungo quanto la scena.
 
@@ -27,8 +27,8 @@ from .query import _parole
 QUANTE_PREDEFINITE = 3
 PAROLE_PER_PROMPT = 8
 
-# La coda fissa di ogni prompt ricavato dal brief. «no text» non è un vezzo: dal 2026-09-20 i reel si
-# guardano muti e le parole a schermo sono le caption, quindi un'immagine con scritte dentro è inservibile.
+# La coda fissa di ogni prompt ricavato dal brief. «no text»: il reel si guarda muto e le parole a schermo sono le
+# caption, quindi un'immagine con scritte dentro è inservibile.
 STILE = ("cinematic still, vertical 9:16, single clear subject, dark background, soft rim light, "
          "shallow depth of field, no text, no words, no letters, no logos, no watermark")
 # Quando le immagini sono più dei soggetti che il brief offre, si cambia inquadratura invece di ripetere.
