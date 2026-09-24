@@ -65,8 +65,8 @@ Regole (quelle del presentatore sono in `docs/regole-editoriali.md`; qui cosa ca
 - **Tappe del parlato**: il parlato lo scrive un modello esterno (`uv run reel copione <idea>`, `templates/copione.md`),
   che riceve **solo** tema, messaggio e queste righe (`docs/sceneggiatura.md` §5). Una riga numerata per scena,
   `N. (registro) i fatti della scena, e solo quelli`; il registro è `apertura`, `filmato: l'immagine concreta`,
-  `animazione` (o `animazione, grafico`…) o `chiusura`. L'ultima è la conclusione (e «Battuta finale.» se ne vuoi
-  una). I numeri si scrivono in cifre con la fonte già verificata: il modello **non aggiunge fatti**, quindi quello
+  `animazione` (o `animazione, grafico`…) o `chiusura`. L'ultima è la conclusione: la risposta alla domanda dell'apertura, o il perché
+  della sua affermazione (niente battuta finale, regole editoriali §10). I numeri si scrivono in cifre con la fonte già verificata: il modello **non aggiunge fatti**, quindi quello
   che non c'è non entra nel reel. Le tappe fissano il numero di scene e l'alternanza dei registri.
 - **Tappe magre**: il modello del copione dice tutto quello che trova nella riga, e su tappe dense sfora. Al massimo
   due fatti per tappa; il dettaglio che non deve dire a voce (campione, anno, bracci) sta in `## Fonte`.

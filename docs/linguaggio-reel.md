@@ -104,16 +104,17 @@ stessa scala), l'occhio si abitua. È una regola di mestiere, non un numero misu
 - **Sceneggiatore**: il brief segna il cambio grande della scena (`GRANDE: …` nella riga ANIMAZIONE).
 - **Animatore**: due scene di fila non hanno mai la stessa composizione.
 
-### 6. Chiudi con un payoff, non con un riassunto
-L'ultima scena è quella con meno spettatori; il riassunto in lista è materiale da carosello o da caption. Una
-chiusura da reel è una frase che ripaga l'hook o fa ridere, con una sola azione, e finisce subito dopo la battuta.
-Se l'ultima frase si aggancia alla prima, il replay sembra continuo, e i replay contano.
+### 6. Chiudi rispondendo all'hook
+L'ultima scena chiude il discorso che l'apertura ha aperto (`docs/regole-editoriali.md` §10): a una domanda si
+risponde, un'affermazione si motiva in breve. Una sola azione per chi guarda, niente battuta finale né frase a
+effetto; il riassunto in lista è materiale da caption. Se l'ultima frase si aggancia alla prima, il replay sembra
+continuo, e i replay contano.
 
 | Male | Bene |
 |---|---|
 | tre mosse elencate | una mossa, detta come un gesto («scrivi nella richiesta quello che sai solo tu») |
-| messaggio + carta + CTA, tutto testo | il volto a tutta tela e la battuta detta a voce |
-| «in sintesi…» | un richiamo all'hook o alla battuta |
+| messaggio + carta + CTA, tutto testo | il volto a tutta tela e la risposta detta a voce |
+| «in sintesi…» o una battuta a effetto | la risposta alla domanda dell'hook, o il perché della sua affermazione |
 | «seguimi per altri video» | una CTA con uno scopo legato al reel |
 
 - **Sceneggiatore**: VOCE di 2-3 frasi (limite in `LIMITI`), con la più forte per ultima; la lista completa va in caption.

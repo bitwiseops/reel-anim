@@ -104,7 +104,9 @@ Tutto in italiano; si scrive «IA», mai «AI». **Eccezione**: i nomi delle cos
 chi le compra — «GPU», «cloud», «PC» stanno nella voce senza traduzione. Restano fuori le espressioni da gergo che
 hanno un equivalente comune («break even» → «punto di pareggio»), e valgono i registri (§3): nelle scene a filmato la
 voce non dice termini tecnici, quindi GPU e cloud stanno nelle animate. Nessun personaggio e nessun dialogo: il
-presentatore parla a camera. La chiusura è una battuta, mai un elenco letto a camera (gli elenchi vanno in caption).
+presentatore parla a camera. **La chiusura risponde all'apertura**: se l'hook è una domanda, la chiusura dà la
+risposta; se è un'affermazione, riassume in breve perché è vera. Niente battuta finale né frase a effetto, e mai un
+elenco letto a camera (gli elenchi vanno in caption).
 Il reel non è né una lode né una stroncatura: potenziale e limite stanno nella stessa idea. I testi attribuiti a un
 modello sono **uscite vere** (`uv run reel uscite`, `contenuti/idee/uscite/`), con i tagli dichiarati. Dettaglio:
 `docs/linguaggio-reel.md`.

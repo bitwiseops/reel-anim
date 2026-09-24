@@ -115,10 +115,10 @@ con la regola, e decide il presentatore.
 ### Apertura e chiusura
 - L'hook che funziona è **un problema o una domanda di chi guarda**, non la tesi né un preambolo. La spiegazione
   comincia dopo.
-- **La chiusura non è un elenco letto a camera** (la lista va in caption): funziona la battuta sulla persona.
-- Per stare corta la mossa generale diventa un pronome che riprende la battuta; la generalizzazione la porta la
-  caption. **La battuta finale non si taglia**; la spiegazione della mossa dopo i due punti è la prima da tagliare.
-- Il `MESSAGGIO:` può essere la sola battuta: la mossa concreta sta nella VOCE.
+- **La chiusura risponde all'hook** (regole editoriali §10): a una domanda la risposta, a un'affermazione il perché.
+  Niente battuta finale; se il copione ne ha una, segnalala (è la prima frase da togliere per stare nei limiti).
+  Mai un elenco letto a camera (la lista va in caption).
+- Il `MESSAGGIO:` riprende la risposta: la mossa concreta sta nella VOCE.
 
 ### Numeri, conti e diagrammi
 - **Un aggettivo sul risultato si verifica sul caso che si mostra** («nuovo», «originale», «creativo» detti di un
@@ -154,8 +154,8 @@ con la regola, e decide il presentatore.
   riparte da uno stacco: il brief non chiede di «continuare».
 
 ### Durata e tagli
-- La battuta di chiusura costa secondi: tieni corte le scene di spiegazione fin dalla prima stesura; se si deve
-  tagliare, la frase candidata è la più astratta.
+- La chiusura costa secondi: tieni corte le scene di spiegazione fin dalla prima stesura; se si deve tagliare, la
+  frase candidata è la più astratta.
 - **Non comprimere il parlato per la stima**, che è larga: se l'idea chiede una durata e sfori, elenca i tagli pronti
   e lascia decidere al presentatore.
 

@@ -15,7 +15,7 @@ LIMITI = {
     "scene_tipiche": (6, 9),
     "parole_voce_max": 70,        # per scena (≈ 25 s a 2,8 parole/s)
     "parole_voce_hook_max": 25,   # l'aggancio si gioca nei primi secondi: l'hook resta corto
-    "parole_voce_chiusura_max": 25,   # la chiusura è un payoff, non un riassunto
+    "parole_voce_chiusura_max": 25,   # la chiusura risponde all'hook: niente riassunto né battuta
     "beat_max": 8,                # righe VOCE per scena (una riga = un beat)
     "parole_titolo_max": 10,
     "parole_messaggio_max": 25,
@@ -108,7 +108,7 @@ def check(r: Reel) -> list[Diagnostica]:
                   "(una frase grande; il resto in caption)")
             if s.parole_voce > L["parole_voce_chiusura_max"]:
                 a(f"VOCE della chiusura di {s.parole_voce} parole (max {L['parole_voce_chiusura_max']}): "
-                  "la chiusura è un payoff, non un riassunto")
+                  "la chiusura risponde all'hook, senza riassunto né battuta")
             if not s.cta:
                 a("chiusura senza CTA")
         if s.parole_voce > L["parole_voce_max"]:

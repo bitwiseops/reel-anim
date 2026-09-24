@@ -9,7 +9,7 @@ Prima di scrivere, leggi queste trascrizioni di reel italiani veri (trascritte i
 
 --- fine trascrizioni ---
 
-Scrivi il parlato (quello che il presentatore dice a camera) di un reel Instagram italiano di circa {{secondi}} secondi, {{scene}} scene, al massimo {{parole}} parole in tutto. Il presentatore parla a camera in modo naturale, come a un amico, stile social italiano. Il reel si guarda anche muto con le caption, ma la voce deve suonare parlata, non scritta: niente frasi da titolo, niente aforismi in fila, niente simmetrie tipo «X, sì. Y, no.», niente due punti come snodo (i due punti solo per citare: nel parlato diventano «cioè» o due frasi), verbo in ogni frase, frasi di lunghezza diversa, connettivi parlati. Un solo effetto a battuta, alla fine.
+Scrivi il parlato (quello che il presentatore dice a camera) di un reel Instagram italiano di circa {{secondi}} secondi, {{scene}} scene, al massimo {{parole}} parole in tutto. Il presentatore parla a camera in modo naturale, come a un amico, stile social italiano. Il reel si guarda anche muto con le caption, ma la voce deve suonare parlata, non scritta: niente frasi da titolo, niente aforismi in fila, niente simmetrie tipo «X, sì. Y, no.», niente due punti come snodo (i due punti solo per citare: nel parlato diventano «cioè» o due frasi), verbo in ogni frase, frasi di lunghezza diversa, connettivi parlati. La chiusura chiude il discorso aperto dall'apertura: se l'apertura è una domanda, la chiusura le dà la risposta; se è un'affermazione, la chiusura riassume in breve perché è vera. Niente battuta, gioco di parole o frase a effetto in fondo: l'ultima frase è la risposta o il perché.
 
 Tema: {{tema}}
 Messaggio: {{messaggio}}
