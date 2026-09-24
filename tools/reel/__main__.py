@@ -400,9 +400,23 @@ def cmd_copione(args) -> int:
     def salta(m: str, p: str) -> str | None:
         if m == cp.CLAUDE:
             return None
-        return "manca POE_API_KEY (ambiente o .env)" if poe is None else poe.salta(m, p)
+        return "manca POE_API_KEY (ambiente o .env)" if poe is None else poe.salta(m, per_modello(m, p))
+
+    taratura = dict(conf.get("taratura") or {})
+    prompti: dict[str, str] = {}
+
+    def per_modello(m: str, p: str) -> str:
+        """Il prompt base con le parole tarate per quel modello; la correzione (un altro prompt) resta com'è."""
+        if p != prompt or cp.parole_per(m, parole, taratura) == parole:
+            return p
+        if m not in prompti:
+            prompti[m] = cp.componi_prompt(cp.TEMPLATE.read_text(encoding="utf-8"), idea, tr,
+                                           cp.parole_per(m, parole, taratura), args.nota or "", pas,
+                                           fattore=float(taratura.get(m, 1.0)))
+        return prompti[m]
 
     def chiama(m: str, p: str) -> str:
+        p = per_modello(m, p)
         if m == cp.CLAUDE:
             return cp.chiama_claude(p, str(conf.get("claude_modello", "opus")))
         return poe.chiama(m, p)

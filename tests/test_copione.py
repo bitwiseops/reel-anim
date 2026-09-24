@@ -80,6 +80,7 @@ def test_prompt_riempie_i_segnaposto():
     assert "{{" not in p and "<!--" not in p
     assert "--- trascrizione r01 ---\nciao a tutti" in p
     assert "5 scene, al massimo 200 parole" in p and "fino a Scena 5." in p
+    assert "fra 160 e 200 parole in tutto, cioè circa 40 per scena" in p and "tieni i due che contano di più" in p
     assert "2. (filmato: uno sul divano) Le schede costano più di prima." in p
     assert "Richiesta del presentatore per questa versione: più corto" in p
     assert "Richiesta del presentatore" not in componi_prompt(tpl, idea, [], 200)
@@ -210,3 +211,15 @@ def test_ogni_risposta_si_archivia_anche_scartata():
                archivia=lambda m, fase, t: salvate.append((m, fase)))
     assert e.modello == "deep"
     assert salvate == [("gpt", "prima"), ("gpt", "correzione"), ("deep", "prima")]
+
+
+def test_taratura_delle_parole_per_modello():
+    assert cp.parole_per("gpt-5.4", 235, {"gpt-5.4": 0.8}) == 188
+    assert cp.parole_per("claude", 235, {"gpt-5.4": 0.8}) == 235
+    assert cp.parole_per("gpt-5.4", 235, None) == 235
+
+
+def test_la_taratura_scala_anche_i_limiti_per_scena():
+    idea = leggi_idea(IDEA)
+    p = componi_prompt(cp.TEMPLATE.read_text(encoding="utf-8"), idea, [], 188, fattore=0.8)
+    assert "l'apertura al massimo 20 parole" in p and "niente due punti come snodo" in p

@@ -123,5 +123,7 @@ modelli = ["gpt-5.4", "deepseek-v4-pro", "gemini-3.1-pro", "claude"]  # catena d
 claude_modello = "opus"
 parole = 235              # quante se ne chiedono (≈ 85 s); dal 2026-09-23 oltre è solo un avviso: si scarta oltre i 180 s di `valida`
 trascrizioni = 6          # reel di reelkit nel prompt, per l'orecchio
+taratura = { "gpt-5.4" = 0.8 }   # quante parole si chiedono a un modello rispetto a `parole`: gpt-5.4 sfora con
+                                 # costanza del 25 % (299 e 289 su 235 il 2026-09-24, anche con la nota sulla lunghezza)
 token_uscita = 6000       # per stimare il costo massimo di una chiamata (Poe lo riserva prima di rispondere)
 punti_minimi = 1500       # sotto questo saldo i modelli Poe si saltano

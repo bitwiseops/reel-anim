@@ -189,6 +189,9 @@ modello esterno, e la sceneggiatura si adatta a lui**:
    `contenuti/copioni/<idea>.md` (frontmatter: modello, catena, punti spesi, avvisi di stile) e il prompt accanto,
    aggiunge all'idea `**Copione:**` e porta lo stato a `copione`. `--prova-a-secco` stampa il prompt con saldo e stime;
    `--nota "…"` lo rigenera con una richiesta; `--modello X` usa un solo anello.
+   **Taratura** (`[copione] taratura`, 2026-09-24): gpt-5.4 sfora con costanza del 25 % anche con la nota fissa
+   sulla lunghezza del prompt, quindi gli si chiede l'80 % delle parole e dei limiti per scena (188 invece di 235: ha
+   consegnato 253, dentro il 10 %). Gli altri modelli ricevono la richiesta piena.
 2. **I beat.** Lo sceneggiatore prende ogni scena del copione **alla lettera** e la spezza in righe `VOCE:` nei punti
    in cui cambia lo schermo: una riga = un beat = un pezzo di parlato (una o due proposizioni), non per forza una
    frase chiusa. 2-6 righe per scena. Può dividere una scena in due, non cambiare parole.

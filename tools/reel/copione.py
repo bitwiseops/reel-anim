@@ -140,23 +140,32 @@ def secondi_per(parole: int, parole_al_s: float = 2.8) -> int:
 
 
 def componi_prompt(template: str, idea: Idea, trascrizioni: list[tuple[str, str]], parole: int, nota: str = "",
-                   parole_al_s: float = 2.8) -> str:
+                   parole_al_s: float = 2.8, fattore: float = 1.0) -> str:
+    """`fattore` è la taratura del modello (`[copione] taratura`): scala anche i limiti per scena, perché chi sfora il
+    totale sfora anche l'apertura (gpt-5.4: 26-28 parole su 25, il 2026-09-24)."""
     corpo = re.sub(r"^<!--.*?-->\s*", "", template, flags=re.S)
     valori = {
         "trascrizioni": "\n\n".join(f"--- trascrizione {i} ---\n{t.strip()}" for i, t in trascrizioni),
         "secondi": str(secondi_per(parole, parole_al_s)),
         "scene": str(len(idea.tappe)),
         "parole": str(parole),
+        "parole_min": str(int(parole * 0.8)),
+        "per_scena": str(round(parole / max(1, len(idea.tappe)))),
         "tema": idea.tema,
         "messaggio": idea.messaggio,
         "tappe": "\n".join(f"{t.n}. {t.testo}" for t in idea.tappe),
-        "hook_max": str(LIMITI["parole_voce_hook_max"]),
-        "chiusura_max": str(LIMITI["parole_voce_chiusura_max"]),
-        "scena_max": str(LIMITI["parole_voce_max"]),
+        "hook_max": str(round(LIMITI["parole_voce_hook_max"] * fattore)),
+        "chiusura_max": str(round(LIMITI["parole_voce_chiusura_max"] * fattore)),
+        "scena_max": str(round(LIMITI["parole_voce_max"] * fattore)),
         "nota": f"\nRichiesta del presentatore per questa versione: {' '.join(nota.split())}\n" if nota.strip() else "",
     }
     out = re.sub(r"\{\{(\w+)\}\}", lambda m: valori[m.group(1)], corpo)
     return out.strip() + "\n"
+
+
+def parole_per(modello: str, parole: int, taratura: dict | None = None) -> int:
+    """Le parole da chiedere a un modello perché ne consegni circa `parole` (`[copione] taratura`)."""
+    return round(parole * float((taratura or {}).get(modello, 1.0)))
 
 
 def prompt_correzione(scene: dict[int, str], problemi: list[str], parole: int) -> str:
