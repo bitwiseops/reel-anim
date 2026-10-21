@@ -295,7 +295,7 @@
           "task": "01a0d3e4-7f79-707e-a4b6-8303ab0ed2d7",
           "quando": "2026-09-24",
           "licenza": "Meshy — immagine generata",
-          "file": "/Users/bitwise/Library/Application Support/reel-anim/cache-broll/meshy-9187240a8d6160c1f1ea110731a1bc7959310bed-1.png",
+          "file": "~/Library/Application Support/reel-anim/cache-broll/meshy-9187240a8d6160c1f1ea110731a1bc7959310bed-1.png",
           "candidato": "meshy:9187240a8d-1",
           "da_cache": false
         },
@@ -308,7 +308,7 @@
           "task": "01a0d3e4-dbf3-7038-9842-bce2488a9a26",
           "quando": "2026-09-24",
           "licenza": "Meshy — immagine generata",
-          "file": "/Users/bitwise/Library/Application Support/reel-anim/cache-broll/meshy-a27f1fe6454d43f296afbc53d1b23ec89a4d7d42-2.png",
+          "file": "~/Library/Application Support/reel-anim/cache-broll/meshy-a27f1fe6454d43f296afbc53d1b23ec89a4d7d42-2.png",
           "candidato": "meshy:a27f1fe645-2",
           "da_cache": false
         }
@@ -847,7 +847,7 @@
           "task": "01a0d31f-aa1d-7024-9fa5-26e5d7127cee",
           "quando": "2026-09-24",
           "licenza": "Meshy — immagine generata",
-          "file": "/Users/bitwise/Library/Application Support/reel-anim/cache-broll/meshy-a20f7c826969b0e4a519c9c8390664907cba442d-1.png",
+          "file": "~/Library/Application Support/reel-anim/cache-broll/meshy-a20f7c826969b0e4a519c9c8390664907cba442d-1.png",
           "candidato": "meshy:a20f7c8269-1",
           "da_cache": false
         },
@@ -860,7 +860,7 @@
           "task": "01a0d31d-989b-73a0-9d8b-963e0f2b4f0d",
           "quando": "2026-09-24",
           "licenza": "Meshy — immagine generata",
-          "file": "/Users/bitwise/Library/Application Support/reel-anim/cache-broll/meshy-9fa0ad92a3783f7cd0bf79dca8f6fa3b4f173e80-2.png",
+          "file": "~/Library/Application Support/reel-anim/cache-broll/meshy-9fa0ad92a3783f7cd0bf79dca8f6fa3b4f173e80-2.png",
           "candidato": "meshy:9fa0ad92a3-2",
           "da_cache": true
         },
@@ -873,7 +873,7 @@
           "task": "01a0d31d-f675-7752-b734-0867188addeb",
           "quando": "2026-09-24",
           "licenza": "Meshy — immagine generata",
-          "file": "/Users/bitwise/Library/Application Support/reel-anim/cache-broll/meshy-a8408dc2da9b552bb4f771a6e5ea6e51fd1add51-3.png",
+          "file": "~/Library/Application Support/reel-anim/cache-broll/meshy-a8408dc2da9b552bb4f771a6e5ea6e51fd1add51-3.png",
           "candidato": "meshy:a8408dc2da-3",
           "da_cache": true
         }

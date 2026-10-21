@@ -65,7 +65,7 @@ VOCE (esatti con la voce di prova e con `reel registra`); `report.json` ha per s
 - **Claude non guarda mai il volto del presentatore**: dopo la registrazione solo le immagini coperte
   (`fotogrammi.copri_volto`), mai `copertina*.png`, video montati o fotogrammi estratti a mano.
 - La pubblicazione la lancia il presentatore. Mai spostare file fra le cartelle dei contenuti: lo fa lui.
-- Aggiornare la memoria (`~/.claude/projects/-Users-bitwise-Projects-reel-anim/memory/`) a ogni milestone.
+- Aggiornare la memoria del progetto (in `~/.claude/projects/`) a ogni milestone.
 - **Gli agenti imparano**: ogni lezione **modifica la regola in vigore** nel tema giusto dell'agente giusto, senza
   date; una regola superata **si toglie, non si marca**; la cronaca (chi, quale reel, quando, perché) va in
   `.claude/agents/storico/<agente>.md`. Una lezione sulla libreria va in `docs/animazioni.md` o

@@ -81,7 +81,7 @@ def file_immagini(s: ScenaBroll) -> list[Path]:
     """Le immagini generate della scena, nell'ordine del piano. I percorsi sono relativi alla radice."""
     fuori: list[Path] = []
     for t in s.scelti:
-        f = Path(t.get("file") or "")
+        f = Path(t.get("file") or "").expanduser()
         f = f if f.is_absolute() else RADICE / f
         if not f.exists() and (CACHE / f.name).exists():   # un piano di prima dello spostamento della cache
             f = CACHE / f.name

@@ -63,7 +63,7 @@ def provini_immagini(slug: str, n: int, scelti: list[dict]) -> tuple[Path | None
     diag: list[Diagnostica] = []
     elementi = []
     for i, t in enumerate(scelti, start=1):
-        f = Path(t.get("file") or "")
+        f = Path(t.get("file") or "").expanduser()
         f = f if f.is_absolute() else RADICE / f
         if not f.exists():
             diag.append(avviso(f"immagine {i} non trovata ({f.name})", scena=n))
